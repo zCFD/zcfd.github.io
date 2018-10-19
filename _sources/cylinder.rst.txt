@@ -1,0 +1,105 @@
+
+2D Cylinder
+-----------
+
+Overview
+^^^^^^^^
+The periodic shedding of laminar flow over a 2D cylinder at a Reynolds Number of 150 can be used to verify the time accuracy of the solver. For this case the shedding frequency is measured by monitoring the variation in pressure downstream of the cylinder and away from the centre of the wake so that it is not affected by the vortex shed by the opposite side.
+
+.. figure:: images/cylinder_cp.png
+    :width: 75%
+    :align: center
+    :alt: alternate tex
+    :figclass: align-center
+
+    Unsteady periodic laminar flow over a 2D cylinder, with diameter = 1.0 m.
+
+Conditions
+^^^^^^^^^^
+
+Laminar flow over a 2D cylinder with Reynolds Number 150 can be simulated using different physical parameters provided that the non-dimensional parameters are the same.  For this case, we choose:
+
+Reynolds Number: :math:`Re` = 150
+
+Mach Number: :math:`M` = 0.2
+
+Cylinder diameter: :math:`D` = 1.0 m
+
+Temperature: 277.78 Kelvin
+
+Pressure: 101325.00 Pascals
+
+Freestream velocity: :math:`U` = 66.8163 m/s
+
+The dimensional shedding frequency :math:`f` can be scaled to give the non-dimensional frequency  or *Strouhal Number*:
+
+Strouhal Number: :math:`St=fD/U`
+
+The experimental value of the Strouhal Number is in the range :math:`(0.179 < St < 0.182)`.
+
+The simulation is an unsteady (time-varying) case, where the accuracy of the solution is dependent upon the mesh density, the physical time-step and the number of inner-loop pseudo-timesteps per physical time-step cycle. We choose:
+
+Physical timestep: :math:`\Delta t` = 0.002 seconds
+
+Number of pseudo-timesteps: :math:`N_{CYCLES}` = 20
+
+Note that further reduction in :math:`\Delta t` to 0.001 seconds will slightly improve the result, but reduction beyond this has very little effect.
+
+Mesh
+^^^^
+
+The mesh for the 2D laminar flow cylinder test case is available for download here:
+
+.. code-block:: bash
+
+    > wget TODO
+    > cylinder.h5
+
+The mesh has been converted from the NASA mesh file described in the reference below.
+
+Input Files
+^^^^^^^^^^^
+
+The input file for the 2D laminar flow cylinder test case is available for download here:
+
+.. code-block:: bash
+
+    > wget TODO
+
+The input file is called
+
+.. code-block:: bash
+
+    cylinder.py
+
+Results
+^^^^^^^
+
+The pressure coefficient :math:`C_P` at the probe point :math:`(x=1.07, y=0.313)` is meaured over time.  The solver starts the unsteady time integration immediately (there are no steady-state cycles at the beginning) and runs for a physical time of 2 seconds. We identify the oscillations in pressure by capturing pressure peaks after 1 physical second.
+
+.. figure:: images/cylinder_probe.png
+	:width: 100%
+	:align: center
+	:alt: alternate tex
+	:figclass: align-center
+
+	Time history of pressure at monitor poin
+
+The period of an oscillation :math:`T` is calculated as the average period for complete oscillations between 1 and 2 seconds. The frequency :math:`f=1/T` can then be used to determine the Strouhal Number.
+
+For this case, we obtain a Strouhal Number of :math:`St=0.1792` seconds.
+
+Notebook
+^^^^^^^^
+
+A python notebook containing all of the post-processing steps plus version regression data is available here: `CYLINDER Notebook <https://github.com/zenotech/zPost/tree/master/ipynb/CYLINDER>`_
+
+Metric
+^^^^^^
+
+The Strouhal Number validation values should lie in the ranges :math:`0.1790<St<0.1820`. This value is automatically checked as part of the verification process.
+
+References
+^^^^^^^^^^
+
+`<http://www.grc.nasa.gov/WWW/wind/valid/lamcyl/Study1_files/Study1.html>`_
