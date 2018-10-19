@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Zenotech" />
+  <title>Solver Reference Guide</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Solver Reference Guide</h1>
+<p class="author">Zenotech</p>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#zcfd">zCFD</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+</ul></li>
+<li><a href="#navier-stokes-equation">Navier Stokes Equation</a><ul>
+<li><a href="#compressible-form">Compressible Form</a></li>
+<li><a href="#incompressible-form">Incompressible Form</a></li>
+<li><a href="#integral-form">Integral Form</a></li>
+<li><a href="#semi-discrete-form">Semi Discrete Form</a></li>
+<li><a href="#dual-time-step">Dual Time Step</a></li>
+<li><a href="#precondition">Precondition</a></li>
+<li><a href="#geometric-conservation-law">Geometric Conservation Law</a></li>
+<li><a href="#arbitrary-lagrangian-eulerian">Arbitrary Lagrangian-Eulerian</a></li>
+<li><a href="#multiple-reference-frames">Multiple Reference Frames</a><ul>
+<li><a href="#rotating-reference-frames">Rotating Reference Frames</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#thermodynamics">Thermodynamics</a><ul>
+<li><a href="#basic">Basic</a><ul>
+<li><a href="#total-energy">Total Energy</a></li>
+<li><a href="#enthalpy">Enthalpy</a></li>
+<li><a href="#total-enthalpy">Total Enthalpy</a></li>
+<li><a href="#entropy">Entropy</a></li>
+<li><a href="#specific-heats">Specific Heats</a></li>
+</ul></li>
+<li><a href="#equation-of-state---eos">Equation Of State - EOS</a><ul>
+<li><a href="#definition">Definition</a></li>
+<li><a href="#ideal-gas-eos">Ideal Gas EOS</a></li>
+<li><a href="#tammann-eos">Tammann EOS</a></li>
+<li><a href="#tait-eos">Tait EOS</a></li>
+</ul></li>
+<li><a href="#material-properties">Material Properties</a><ul>
+<li><a href="#air">Air</a></li>
+<li><a href="#water">Water</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#non-dimensionalisation">Non Dimensionalisation</a><ul>
+<li><a href="#basic-1">Basic</a><ul>
+<li><a href="#ideal-gas-eos-1">Ideal Gas EOS</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#solver">Solver</a><ul>
+<li><a href="#explicit">Explicit</a><ul>
+<li><a href="#runge-kutta">Runge Kutta</a></li>
+</ul></li>
+<li><a href="#implicit">Implicit</a><ul>
+<li><a href="#finite-difference-jacobian">Finite Difference Jacobian</a></li>
+<li><a href="#analytic-jacobian">Analytic Jacobian</a></li>
+</ul></li>
+<li><a href="#point-implicit">Point Implicit</a></li>
+<li><a href="#preconditioner">Preconditioner</a><ul>
+<li><a href="#wave-speeds">Wave Speeds</a></li>
+<li><a href="#matrix-p">Matrix P</a></li>
+</ul></li>
+<li><a href="#geometric-multigrid">Geometric Multigrid</a><ul>
+<li><a href="#residual-restrict-operator">Residual Restrict Operator</a></li>
+<li><a href="#solution-restrict-operator">Solution Restrict Operator</a></li>
+<li><a href="#coarse-mesh-explicit-solve">Coarse Mesh Explicit Solve</a></li>
+<li><a href="#coarse-residual-restrict-operator">Coarse Residual Restrict Operator</a></li>
+</ul></li>
+<li><a href="#prolongate-operator">Prolongate Operator</a><ul>
+<li><a href="#correction">Correction</a></li>
+<li><a href="#laplace-smooth">Laplace Smooth</a></li>
+<li><a href="#update-solution">Update solution</a></li>
+</ul></li>
+<li><a href="#ale-preconditioned-hllc-flux">ALE Preconditioned HLLC Flux</a><ul>
+<li><a href="#implicit-hllc-flux">Implicit HLLC Flux</a></li>
+</ul></li>
+<li><a href="#gradients">Gradients</a><ul>
+<li><a href="#face-gradient">Face Gradient</a></li>
+</ul></li>
+<li><a href="#muscl-reconstruction">MUSCL Reconstruction</a><ul>
+<li><a href="#first-order">First Order</a></li>
+<li><a href="#higher-order">Higher Order</a></li>
+<li><a href="#van-albada-limiter">Van Albada Limiter</a></li>
+</ul></li>
+<li><a href="#time-step">Time Step</a></li>
+<li><a href="#boundary-conditions">Boundary Conditions</a><ul>
+<li><a href="#open-boundary-conditions">Open boundary conditions</a></li>
+<li><a href="#euler-wall-and-symmetry-plane-weak-euler">Euler Wall and Symmetry Plane (Weak euler)</a></li>
+<li><a href="#viscous-wall-weak-adiabatic-weak-isothermal">Viscous Wall (Weak Adiabatic, Weak Isothermal)</a></li>
+<li><a href="#mass-flow-outlet">Mass flow outlet</a></li>
+<li><a href="#farfield">Farfield</a></li>
+<li><a href="#total-states-inlet">Total States Inlet</a></li>
+<li><a href="#outflow-pressure">Outflow pressure</a></li>
+<li><a href="#actuator-disc">Actuator Disc</a></li>
+<li><a href="#actuator-line">Actuator Line</a></li>
+<li><a href="#profile">Profile</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#piso">PISO</a><ul>
+<li><a href="#predictor-step">Predictor Step</a></li>
+<li><a href="#corrector-step">Corrector Step</a></li>
+</ul></li>
+<li><a href="#simple">SIMPLE</a><ul>
+<li><a href="#predictor-step-1">Predictor Step</a></li>
+<li><a href="#corrector-step-1">Corrector Step</a></li>
+</ul></li>
+<li><a href="#rhie-chow-interpolation">Rhie-Chow Interpolation</a></li>
+<li><a href="#coupled-incompressible">Coupled Incompressible</a></li>
+<li><a href="#turbulence-modelling">Turbulence Modelling</a><ul>
+<li><a href="#menter-sst-2003vsust-two-equation-model">Menter SST-2003Vsust Two Equation Model</a></li>
+<li><a href="#diffusive-jacobian">Diffusive Jacobian</a></li>
+<li><a href="#source-term-jacobian">Source Term Jacobian</a></li>
+<li><a href="#wall-function">Wall Function</a><ul>
+<li><a href="#boundary-layer-profile">Boundary Layer Profile</a></li>
+<li><a href="#roughness">Roughness</a></li>
+<li><a href="#temperature-wall-function">Temperature Wall Function</a></li>
+<li><a href="#species-wall-function">Species Wall Function</a></li>
+<li><a href="#abl-stability">ABL Stability</a></li>
+</ul></li>
+<li><a href="#synthetic-turbulent-inlet">Synthetic Turbulent Inlet</a></li>
+<li><a href="#menter-sst-sas">Menter SST SAS</a><ul>
+<li><a href="#wale-model">WALE Model</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#gravity">Gravity</a><ul>
+<li><a href="#force-potential">Force Potential</a></li>
+<li><a href="#pressure-gradient">Pressure Gradient</a></li>
+<li><a href="#lapse-rates">Lapse Rates</a><ul>
+<li><a href="#temperature">Temperature</a></li>
+<li><a href="#density">Density</a></li>
+<li><a href="#pressure">Pressure</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#force-potential-1">Force Potential</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#atmospheric-physics">Atmospheric Physics</a><ul>
+<li><a href="#richardson-number">Richardson Number</a></li>
+<li><a href="#potential-temperature">Potential temperature</a></li>
+<li><a href="#virtual-temperature">Virtual Temperature</a></li>
+<li><a href="#obukhov-length">Obukhov Length</a></li>
+<li><a href="#coriolis-force">Coriolis Force</a></li>
+<li><a href="#turbulence-profile">Turbulence Profile</a></li>
+</ul></li>
+<li><a href="#radial-basis-functions-rbf">Radial Basis Functions (RBF)</a><ul>
+<li><a href="#rbf-interpolation-method">RBF interpolation method</a></li>
+</ul></li>
+<li><a href="#wall-distance">Wall Distance</a></li>
+<li><a href="#flux-reconstruction">Flux Reconstruction</a></li>
+<li><a href="#appendix-a">Appendix A</a></li>
+</ul>
+</nav>
+<p><embed src="images/ZCFD_Mark_CMYK.eps" style="width:60.0%" /> <br />
+<span class="smallcaps">by Zenotech</span><br />
+</p>
+<hr />
+<p><br />
+<span> <strong></strong></span><br />
+</p>
+<hr />
+<p><br />
+</p>
+
+
+
+<h1 id="preface" class="unnumbered">Preface</h1>
+<p>This document contains algorithmic details of the Computational Fluid Dynamics solver zCFD. This is primarily a reference for users and developers of the software. It does not detail the software implementation of the equations although the most of the equations map directly on the code.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1 id="zcfd">zCFD</h1>
+<h2 id="introduction">Introduction</h2>
+<p>zCFD is a many-core accelerated Computational Fluid Dynamics solver that solves the Steady or Unsteady Reynolds Averaged Navier Stokes (RANS) equations using the finite volume technique. This is based on a cell centred approach on arbitrary polyhedral meshes with the boundary conditions applied in a weak formulation. The scheme implemented is formally <span class="math inline">\(2^{nd}\)</span> order accurate in time and <span class="math inline">\(3^{rd}\)</span> order accurate in space.</p>
+<p>The spacial accuracy is achieved by using a slope limited MUSCL reconstruction at cell interfaces. The HLLC scheme is then used with the reconstructed values to calculate the interface flux.</p>
+<p>The primary solver is based on a multi-stage Explicit solver using local time stepping and geometric multigrid to accelerate convergence.</p>
+<p>Turbulence modelling is provided by an implementation of Menter SST two equation model which is can be used in low Reynolds number mode (i.e. integration to the wall) or high Reynolds number mode (i.e. wall functions)</p>
+<h1 id="navier-stokes-equation">Navier Stokes Equation</h1>
+<h2 id="compressible-form">Compressible Form</h2>
+
+<p><span class="math display">\[\frac{\partial \rho}{\partial t}+\frac{\partial (\rho u)}{\partial x} +\frac{\partial (\rho v)}{\partial y} +\frac{\partial (\rho w)}{\partial z} = 0\]</span></p>
+<p><span class="math display">\[\frac{\partial \rho}{\partial t}+\nabla \cdot \rho V = 0\]</span></p>
+<p>Momentum <span class="math display">\[\begin{split}
+\frac{\partial (\rho u)}{\partial t}+\frac{\partial (\rho u \, u)}{\partial x} +\frac{\partial (\rho u \, v)}{\partial y} +\frac{\partial (\rho u \, w)}{\partial z} = &amp; 
+\frac{\partial \sigma_{xx}}{\partial x} + \frac{\partial \sigma_{xy}}{\partial y} + \frac{\partial \sigma_{xz}}{\partial z} \\ &amp;  
++ \frac{\partial \varphi}{\partial x} +  \rho f_{c_x} + \rho F_{ext_x}
+\end{split}\]</span> <span class="math display">\[\begin{split}
+\frac{\partial (\rho v)}{\partial t}+\frac{\partial (\rho v \, u)}{\partial x} +\frac{\partial (\rho v \, v)}{\partial y} +\frac{\partial (\rho v \, w)}{\partial z} = &amp; 
+ \frac{\partial \sigma_{xy}}{\partial x} + \frac{\partial \sigma_{yy}}{\partial y} + \frac{\partial \sigma_{yz}}{\partial z} \\ &amp; 
++ \frac{\partial \varphi}{\partial y} +  \rho f_{c_y}  + \rho F_{ext_y}
+\end{split}\]</span> <span class="math display">\[\begin{split}
+\frac{\partial (\rho w)}{\partial t}+\frac{\partial (\rho w \, u)}{\partial x} +\frac{\partial (\rho w \, v)}{\partial y} +\frac{\partial (\rho w \, w)}{\partial z} = &amp; 
+ \frac{\partial \sigma_{xz}}{\partial x} + \frac{\partial \sigma_{yz}}{\partial y} + \frac{\partial \sigma_{zz}}{\partial z} \\ &amp; 
++ \frac{\partial \varphi}{\partial z} +  \rho f_{c_z}  + \rho F_{ext_z}
+\end{split}\]</span> In vector notation <span class="math display">\[\frac{\partial}{\partial t} (\rho V)+\nabla \cdot \left(\rho V \cdot V \right) =  \nabla \cdot \sigma + \nabla \varphi + \rho f_c  + \rho F_{ext}\]</span> For air <span class="math display">\[\frac{\partial}{\partial t} (\rho V)+\nabla \cdot \left(\rho V \cdot V \right) =  -\nabla p + \nabla \cdot \tau + \nabla \varphi + \rho f_c  + \rho F_{ext}\]</span></p>
+<p>Note that gravity is treated as a force potential <span class="math display">\[F=-\nabla \varphi = -\rho g\]</span></p>
+<p>Energy <span class="math display">\[\begin{split}
+\frac{\partial}{\partial t}(\rho E)+\frac{\partial}{\partial x}(\rho E \, u) +\frac{\partial}{\partial y} (\rho E \, v) +\frac{\partial}{\partial z} (\rho E \,w) = &amp; 
+ - \frac{\partial q}{\partial x} - \frac{\partial q}{\partial y} - \frac{\partial q}{\partial z} \\ 
+&amp; + \frac{\partial }{\partial x}(u \sigma_{xx} + v \sigma_{xy} + w \sigma_{xz}) \\ 
+&amp; + \frac{\partial}{\partial y} (u \sigma_{xy} + v \sigma_{yy} + w \sigma_{yz}) \\ 
+&amp; + \frac{\partial}{\partial z} (u \sigma_{xz} + v \sigma_{yz} + w \sigma_{zz}) \\
+&amp; + \frac{\partial}{\partial x} (u \, \varphi) 
++ \frac{\partial}{\partial y} (v \, \varphi) 
++ \frac{\partial}{\partial z} (w \, \varphi) \\
+&amp; + u\left(\rho f_{c_x}  + \rho F_{ext_x}\right) \\
+&amp; + v\left(\rho f_{c_y}  + \rho F_{ext_y}\right) \\
+&amp; + w\left(\rho f_{c_z}  + \rho F_{ext_z}\right) 
+\end{split}\]</span></p>
+<p>In vector notation <span class="math display">\[\frac{\partial}{\partial t}(\rho E)+ \nabla \cdot ( \rho E \cdot V) = \nabla \cdot (V \cdot \left(\varphi\right)) - \nabla \cdot q + \nabla \cdot (V \cdot \sigma) + V \cdot \left(\rho f_c + \rho F_{ext}\right)\]</span> For air <span class="math display">\[\frac{\partial}{\partial t}(\rho E)+ \nabla \cdot ( \rho E \cdot V) = - \nabla \cdot (V \cdot \left(p-\varphi\right)) - \nabla \cdot q + \nabla \cdot (V \cdot \tau) + V \cdot \left(\rho f_c + \rho F_{ext}\right)\]</span></p>
+<p>Newtonian Stress tensor <span class="math inline">\(\sigma_{ij}\)</span> is</p>
+<p><span class="math display">\[\sigma_{ij} = - \left[ p + \left( \frac{2}{3} \mu - \lambda \right) \nabla \cdot V  \right] \delta_{ij} + \mu 2 S_{ij}\]</span></p>
+<p>For dilute monatomic gases the expansion viscosity <span class="math inline">\(\lambda=0\)</span>, for water <span class="math inline">\(\lambda = 3 \mu\)</span> and for complex liquids like benzene <span class="math inline">\(\lambda = 100 \mu\)</span></p>
+<p>For air assume <span class="math display">\[\sigma_{ij} = - p \delta_{ij} + \tau_{ij}\]</span></p>
+<p>Viscous stress <span class="math display">\[\tau_{ij}=2\mu \left(S_{ij}-\frac{1}{3}\frac{\partial u_{k}}{\partial x_{k}}\delta_{ij}\right)\]</span> Viscous strain rate tensor <span class="math display">\[S_{ij}=\frac{1}{2}\left(\frac{\partial u_{i}}{\partial x_{j}} + \frac{\partial u_{j}}{\partial x_{i}} \right)\]</span> Heat flux from Fourier’s Law <span class="math display">\[q_{i}=k_h\frac{\partial T}{\partial x_{j}}=-C_{p}\frac{\mu}{\mathit{Pr}}\frac{\partial T}{\partial x_{j}}\]</span> Note when gravity is active the temperature gradient is replaced by the potential temperature gradient so as to recover the correct temperature lapse rate. <span class="math display">\[q_{i}=k_h\frac{\partial T}{\partial x_{j}}=-C_{p}\frac{\mu}{\mathit{Pr}}\left[\frac{\partial T}{\partial x_{j}}-\frac{g_j}{C_p}\right]\]</span></p>
+<h2 id="incompressible-form">Incompressible Form</h2>
+<p>Continuity for incompressible flows</p>
+<p><span class="math display">\[\frac{\partial \rho}{\partial t}+\nabla \cdot \rho V = 0\]</span></p>
+<p><span class="math display">\[\nabla \cdot \rho V = 0\]</span></p>
+<p>Momentum equation</p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho V)+\nabla \cdot \left(\rho V \cdot V \right) = \nabla \cdot \sigma_{ij} + \nabla \cdot \rho F_{ext}\]</span></p>
+<p>Expanding the Newtonian stress tensor assuming <span class="math inline">\(\nabla \cdot V = 0\)</span></p>
+<p><span class="math display">\[\nabla \cdot \sigma_{ij} = -\nabla p + \nabla \cdot 2 \mu S_{ij} = -\nabla p + \nabla \cdot \mu \nabla V = -\nabla p + \mu \nabla^2 V\]</span></p>
+<p>Therefore</p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho V)+\nabla \cdot \left(\rho V \cdot V \right) = -\nabla p +  \nabla \cdot \mu \nabla V + \nabla \cdot \rho F_{ext}\]</span></p>
+<p>Derive incompressible internal energy equation</p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho E) + \nabla \cdot ( \rho E \cdot V) =  - \nabla \cdot q + \nabla \cdot (\sigma_{ij} V) + \rho V F_{ext}\]</span></p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho E) + \nabla \cdot ( \rho (e + \frac{V^2}{2}) \cdot V) =  - \nabla \cdot q + \nabla \cdot (\sigma_{ij} V) + \rho V F_{ext}\]</span></p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho E) + \nabla \cdot (\rho e \cdot V) + \nabla (\rho V \cdot V) =  - \nabla \cdot q + V \nabla \cdot \sigma_{ij} -p \nabla \cdot V + V \nabla . \tau_{ij} + \rho V F_{ext}\]</span></p>
+<p>Cancelling terms that relate to momentum conservation and expanding viscous stress <span class="math inline">\(\tau_{ij}\)</span></p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho e) + \nabla \cdot ( \rho e \cdot V) =  - \nabla \cdot k \nabla T - p \nabla \cdot V + \nabla \cdot (V \cdot \mu \nabla V)\]</span></p>
+<p>For incompressible flow <span class="math inline">\(\nabla \cdot V = 0\)</span></p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho e) + \nabla \cdot ( \rho e \cdot V) =  - \nabla \cdot k_h \nabla T  + \nabla \cdot (V \cdot \mu \nabla V)\]</span></p>
+<h2 id="integral-form">Integral Form</h2>
+<p>Combining the vector form of each individual equation into tensor form and grouping the derivatives in advective <span class="math inline">\(F\)</span>, diffusive <span class="math inline">\(G\)</span> and source terms <span class="math inline">\(S\)</span>. <span class="math display">\[\frac{\partial W}{\partial t}+ \nabla \cdot F - \nabla \cdot G = S\]</span> This equation is integrated over each control volume <span class="math inline">\(\Omega\)</span> <span class="math display">\[\frac{\partial}{\partial t} \int_{\Omega} W dV + \int_{\Omega} \nabla \cdot F dV - \int_{\Omega} \nabla \cdot G dV = \int_{\Omega} S dV\]</span> The next step relies on application of the Divergence theorem which states that the surface integral of a scalar function is equal to the volume integral of the gradient of the scalar function <span class="math display">\[\int_{\Omega} \nabla \cdot F dV  = \int F \cdot n dA\]</span> Hence <span class="math display">\[\frac{\partial}{\partial t} \int_{\Omega} W dV + \int_{} F\cdot n dA - \int_{} G\cdot n dA = \int_{\Omega} S dV\]</span> where <span class="math display">\[W=\left[\rho,\rho u,\rho v,\rho w, \rho E, \rho \phi\right]^{T}\]</span></p>
+<p><span class="math display">\[Q=\left[p,u,v,w,T,\phi\right]^{T}\]</span></p>
+<p><span class="math display">\[F=\begin{pmatrix} 
+\rho u &amp; \rho v &amp; \rho w \\ 
+\rho u^{2}+p-\varphi &amp; \rho uv &amp; \rho uw \\
+\rho uv &amp; \rho v^{2}+p-\varphi &amp; \rho vw \\
+\rho uw &amp; \rho vw &amp; \rho w^{2}+p-\varphi \\
+\rho u E+up-u\varphi &amp; \rho v E+vp-v\varphi &amp; \rho w E+wp-w\varphi \\
+\rho u \phi&amp; \rho v \phi&amp; \rho w \phi
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[G=\begin{pmatrix} 
+0 &amp; 0 &amp; 0 \\ 
+\tau_{xx} &amp; \tau_{xy} &amp; \tau_{xz} \\
+\tau_{xy} &amp; \tau_{yy} &amp; \tau_{yz} \\
+\tau_{xz} &amp; \tau_{yz} &amp; \tau_{zz} \\
+\tau_{xx} u + \tau_{xy} v + \tau_{xz} w + k_h\frac{\partial T}{\partial x} &amp; \tau_{xy} u + \tau_{yy} v + \tau_{yz} w + k_h\frac{\partial T}{\partial y} &amp; \tau_{xz} u + \tau_{yz} v + \tau_{zz} w + k_h\frac{\partial T}{\partial z} \\
+0 &amp; 0 &amp; 0
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[S=\left[0,\rho f_{c_x}+\rho F_{ext_{x}}, \rho f_{c_y}+\rho F_{ext_{y}}, \rho f_{c_z}+\rho F_{ext_{z}}, V \cdot \left(\rho f_c+ \rho F_{ext}\right), 0\right]^{T}\]</span></p>
+<h2 id="semi-discrete-form">Semi Discrete Form</h2>
+<p>Assuming piecewise constant solution over the volume <span class="math inline">\(i\)</span> <span class="math display">\[\frac{\partial \left(\Omega_{i} W_{i}\right)}{\partial t}  + \sum_{} \left[ F(W) - G(W) \right]\cdot A - \Omega_i S_{i} = 0\]</span> Re-arrange and define Residual function <span class="math inline">\(R(W)=\sum_{} \left[ F(W) - G(W) \right]\cdot A - \Omega_i S_{i}\)</span> <span class="math display">\[\frac{\partial \left(\Omega_{i} W_{i}\right)}{\partial t} + R(W) = 0\]</span></p>
+<h2 id="dual-time-step">Dual Time Step</h2>
+
+<p>the time derivative terms with <span class="math inline">\(2^{nd}\)</span> order accurate <a href="http://en.wikipedia.org/wiki/Backward_differentiation_formula">Backward Difference Formula</a> with a view to solving implicitly. <span class="math display">\[\frac{\left(3\Omega_{i}^{n+1}W_{i}^{n+1} - 4\Omega_{i}^{n}W_{i}^{n} + \Omega_{i}^{n-1}W_{i}^{n-1}\right) }{2\Delta t} + R(W^{n+1}) = 0\]</span><br />
+This equation can be treated as a modified steady state problem solved using local time steps and multigrid in a fictious/pseudo time step <span class="math inline">\(\tau\)</span>. <span class="math display">\[\Omega_{i}^{n+1}\frac{\partial W_{i}}{\partial \tau} + R^{*}(W) = 0\]</span> <span class="math display">\[R^{*}(W)=R(W) + \frac{\left(3\Omega_{i}^{n+1}W_{i} - 4\Omega_{i}^{n}W_{i}^{n} + \Omega_{i}^{n-1}W_{i}^{n-1}\right) }{2\Delta t}\]</span> See <span class="citation" data-cites="Jameson1991DualTime"></span> for more details.<br />
+Expand the pseudo time derivative using a <a href="http://en.wikipedia.org/wiki/Finite_difference">forward difference approximation</a> .</p>
+<p><span class="math display">\[\Omega_{i}^{n+1}\frac{\left(W_{i}^{k+1} - W_{i}^{k}\right)}{\Delta \tau} = - R^{*}(W)\]</span></p>
+<h2 id="precondition">Precondition</h2>
+<p>We introduce a preconditioner to improve the condition number of the system at low speeds. This is achieved through the use of a modified Jacobian that effectively changes the wave speeds in the preconditioned system. This can be intuitively specified in primitive variables <span class="math inline">\(Q\)</span> but the solver operates on conserved variables. Therefore the preconditioning matrix consist of transforming the variables into primitive form before converting them back using the modified/preconditioned transformation which is described in more detail on page 17. <span class="math display">\[P=\frac{\partial W}{\partial Q}\left(\frac{\partial W}{\partial Q}\right)^{-1}\bigg|_{m}\]</span></p>
+<p><span class="math display">\[\label{eq:precond1}
+\frac{\partial W}{\partial Q}=\begin{pmatrix} 
+\rho_p&amp; 0 &amp; 0 &amp; 0 &amp; \rho_T &amp; 0 \\
+u\rho_p&amp; \rho &amp; 0 &amp; 0 &amp; u\rho_T &amp; 0 \\
+v\rho_p&amp; 0 &amp; \rho &amp; 0 &amp; v\rho_T &amp; 0 \\
+w\rho_p&amp; 0 &amp; 0 &amp; \rho &amp; w\rho_T &amp; 0 \\
+\rho_p H-1+\rho h_p &amp; \rho u &amp; \rho v &amp; \rho w &amp; H \rho_T + \rho h_T &amp; 0 \\
+\phi \rho_p &amp; 0 &amp; 0 &amp; 0 &amp; \phi \rho_T &amp; \rho
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[\label{eq:precond2}
+\left(\frac{\partial W}{\partial Q}\right)^{-1}=\begin{pmatrix} 
+\frac{\rho h_T+\rho_T\left( H - V^2 \right)}{d}&amp; \frac{\rho_T}{d}u &amp; \frac{\rho_T}{d}v &amp; \frac{\rho_T}{d}w &amp; -\frac{\rho_T}{d} &amp; 0 \\
+-\frac{u}{\rho} &amp; \frac{1}{\rho} &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+-\frac{v}{\rho}&amp; 0 &amp; \frac{1}{\rho} &amp; 0 &amp; 0 &amp; 0 \\
+-\frac{w}{\rho}&amp; 0 &amp; 0 &amp; \frac{1}{\rho} &amp; 0 &amp; 0 \\
+\frac{-\rho_p\left( H-V^2 \right)+1-\rho h_p}{d} &amp; -\frac{\rho_p}{d}u &amp; -\frac{\rho_p}{d}v &amp; -\frac{\rho_p}{d}w &amp; \frac{\rho_p}{d} &amp; 0 \\
+-\frac{\phi}{\rho} &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \frac{1}{\rho}
+\end{pmatrix}\]</span> where <span class="math inline">\(d=\rho \rho_p h_T + \rho_T\left(1-\rho h_p \right)\)</span><br />
+Introduce the transformation matrix <span class="math inline">\(P^{-1}=\left(\frac{\partial W}{\partial Q}\right)\bigg|_{m} \frac{\partial Q}{\partial W}\)</span> <span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\partial W_{i}}{\partial \tau} + R^{*}(W) = 0\]</span> Rearrange and expand the pseudo time derivative using a forward difference approximation <span class="math display">\[\label{eq:semidiscrete}
+\Omega_{i}^{n+1}P^{-1}\frac{\left(W_{i}^{k+1} - W_{i}^{k}\right)}{\Delta \tau} = -R^{*}(W)\]</span></p>
+<h2 id="geometric-conservation-law">Geometric Conservation Law</h2>
+<p>When the control volume is moving and/or deforming, the conservation property may be violated unless the following geometric conservation law (GCL) is satisfied <span class="math display">\[\frac{\partial \Omega}{\partial t}-\int \dot{x} dA = 0\]</span></p>
+<p>Expanding the time derivative using a <span class="math inline">\(2^{nd}\)</span> order accurate backward difference <span class="math display">\[\frac{3\Omega_i^{n+1}-4\Omega_i^{n}+\Omega_i^{n-1}}{2\Delta t}=\sum \dot{x}\cdot A_f\]</span> Rearranging <span class="math display">\[\Omega_i^{n+1}=\frac{2\Delta t}{3}\left(\sum \dot{x}\cdot A_f + 4\Omega_i^{n}-\Omega_i^{n-1}\right)\]</span></p>
+<h2 id="arbitrary-lagrangian-eulerian">Arbitrary Lagrangian-Eulerian</h2>
+<p>The advective flux tensor <span class="math inline">\(F\)</span> for a moving control volume (i.e when <span class="math inline">\(\Omega\)</span> is a function of time) is <span class="math display">\[F=\begin{pmatrix} 
+\rho (u-\dot{x}_u) &amp; \rho (v-\dot{x}_v) &amp; \rho (w - \dot{x}_w)\\ 
+\rho u(u-\dot{x}_u)+p &amp; \rho u(v-\dot{x}_v) &amp; \rho u(w-\dot{x}_w) \\
+\rho v(u-\dot{x}_u) &amp; \rho v(v-\dot{x}_v)+p &amp; \rho v(w-\dot{x}_w) \\
+\rho w(u-\dot{x}_u) &amp; \rho w(v-\dot{x}_v) &amp; \rho w(w-\dot{x}_w)+p \\
+\rho E(u-\dot{x}_u)+pu &amp; \rho E(v-\dot{x}_v)+pv &amp; \rho E(w-\dot{x}_w)+pw \\
+\rho \phi(u-\dot{x}_u) &amp; \rho \phi(v-\dot{x}_v) &amp; \rho \phi(w-\dot{x}_w) 
+\end{pmatrix}\]</span> when <span class="math inline">\(\dot{x}=0\)</span> this system corresponds to the Eulerian description whereas <span class="math inline">\(\dot{x}=V\)</span> results in the Lagrangian description where the control volume moves with the fluid velocity.</p>
+<h2 id="multiple-reference-frames">Multiple Reference Frames</h2>
+<h3 id="rotating-reference-frames">Rotating Reference Frames</h3>
+<p>Using equation (2.14) with <span class="math inline">\(\dot{x}=\psi \times r\)</span> from the advective flux tensor F (section 2.7), hence the Source term S then becomes <span class="math display">\[\begin{pmatrix}
+0\\
+\rho(\psi \times V)\cdot i\\
+\rho(\psi \times V)\cdot j\\
+\rho(\psi \times V)\cdot k\\
+0
+\end{pmatrix}\]</span> where <span class="math inline">\(i\)</span>,<span class="math inline">\(j\)</span>,<span class="math inline">\(k\)</span> are unit vectors in the usual sense.</p>
+<h1 id="thermodynamics">Thermodynamics</h1>
+<h2 id="basic">Basic</h2>
+<h3 id="total-energy">Total Energy</h3>
+<p><span class="math display">\[E=e+\frac{V^{2}}{2}+k\]</span></p>
+<h3 id="enthalpy">Enthalpy</h3>
+<p><span class="math display">\[h=e+\frac{p}{\rho}\]</span></p>
+<h3 id="total-enthalpy">Total Enthalpy</h3>
+<p><span class="math display">\[H=h+\frac{V^{2}}{2}+k\]</span></p>
+<p><span class="math display">\[H=E+\frac{p}{\rho}\]</span></p>
+<h3 id="entropy">Entropy</h3>
+<p><span class="math display">\[ds = \frac{dh}{T}-\frac{1}{\rho T}dp\]</span> <span class="math display">\[\frac{\partial h}{\partial T}\bigg|_{p}=\frac{\partial e}{\partial T}\bigg|_{p} + P\frac{\partial v}{\partial T}\bigg|_{p}=C_{p}\]</span> <span class="math display">\[\frac{\partial e}{\partial T}\bigg|_{v}=C_{v}\]</span> <span class="math display">\[\frac{\partial e}{\partial s}=T\]</span> <span class="math display">\[\frac{\partial e}{\partial V}=P\]</span></p>
+<h3 id="specific-heats">Specific Heats</h3>
+<p><span class="math display">\[\gamma=\frac{C_{p}}{C_{v}}\]</span> <span class="math display">\[R=C_{p}-C_{v}\]</span> <span class="math display">\[C_{p}=\frac{R}{\gamma - 1}+R=\frac{\gamma R}{\gamma - 1}\]</span> <span class="math display">\[C_{v}=\frac{R}{\gamma - 1}\]</span></p>
+<h2 id="equation-of-state---eos">Equation Of State - EOS</h2>
+<h3 id="definition">Definition</h3>
+<p>The equation of state defines the relationship between pressure, density and energy <span class="math display">\[p=p\left(  \rho,e \right)\]</span></p>
+<p><span class="math display">\[c^{2}\equiv\frac{dp(\rho,s)}{d\rho}\bigg|_{s}=\frac{\partial p}{\partial e} \frac{p}{\rho^{2}}+\frac{\partial p}{\partial \rho}=\frac{\rho \frac{\partial h}{\partial T}}{\rho \frac{\partial \rho}{\partial p} \frac{\partial h}{\partial T}+\frac{\partial \rho}{\partial T}\left(1-\rho \frac{\partial h}{\partial p}\right)}\]</span> The following partial derivatives have been calculated in their most general forms with the arbitrary constants <span class="math inline">\(\xi\)</span> and <span class="math inline">\(\beta\)</span> varying for different EOS.</p>
+<p><span class="math display">\[\rho_{p}=\frac{\partial \rho}{\partial p}\bigg|_{T}=\rho \xi\]</span> <span class="math display">\[\rho_{T}=\frac{\partial \rho}{\partial T}\bigg|_{p}=-\rho \beta\]</span> <span class="math display">\[h_{T}=\frac{\partial h}{\partial T}\bigg|_{p}=C_{p}\]</span> <span class="math display">\[h_{p}=\frac{\partial h}{\partial p}\bigg|_{T}=\frac{1-\beta T}{\rho}\]</span></p>
+<h3 id="ideal-gas-eos">Ideal Gas EOS</h3>
+<p><span class="math display">\[p=(\gamma-1)\rho e=(\gamma-1)\left(\rho E-\frac{\rho V^{2}}{2} - \rho k \right)\]</span> <span class="math display">\[T=\frac{(\gamma-1)}{R}e\]</span> Assuming a thermally perfect fluid <span class="math display">\[h=C_{p}T\]</span> <span class="math display">\[e=C_{v}T\]</span> <span class="math display">\[p=\rho (C_{p}-C_{v})T=\rho RT\]</span> <span class="math display">\[c^{2}=\gamma \frac{p}{\rho}\]</span> <span class="math display">\[\xi=\frac{1}{p}\]</span> <span class="math display">\[\beta=\frac{1}{T}\]</span></p>
+<h3 id="tammann-eos">Tammann EOS</h3>
+<p><span class="math display">\[p=\left(\gamma-1\right)\left(\rho e-\frac{\rho V^{2}}{2}-P_{c}\right)=\left(\gamma-1\right)\rho e -\gamma P_{c}\]</span> Assuming a thermally perfect fluid <span class="math display">\[h=C_{p}T\]</span> <span class="math display">\[e=C_{v}T\]</span> <span class="math display">\[p=\rho (C_{p}-C_{v})T-\gamma P_{c}=\rho RT-\gamma P_{c}\]</span> <span class="math display">\[c^{2}=\gamma \frac{p+P_{c}}{\rho}\]</span> <span class="math display">\[\xi=\frac{1}{p-\gamma p_{c}}\]</span> <span class="math display">\[\beta=\frac{1}{T}\]</span></p>
+<h3 id="tait-eos">Tait EOS</h3>
+<p><span class="math display">\[p=B\left[\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}-1\right]+A\]</span> <span class="math display">\[A=1.0\times 10^{6},\:
+B=3.31\times 10^{9},\:
+\rho_{0}=1.0,\:
+\gamma=7.15\]</span> <span class="math display">\[c^{2}=\gamma\frac{B\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}}{\rho}\]</span> <span class="math display">\[c^{2}=\gamma\frac{p+B-A}{\rho}\]</span> <span class="math display">\[\xi=\gamma \rho_{0}\left[\frac{p-A}{B}+1\right]^{\frac{1-\gamma}{\gamma}}\frac{\rho_{0}}{\rho B}\]</span> <span class="math display">\[\beta=0\]</span> <span class="math display">\[h=C_{p}T\]</span> <span class="math display">\[e=C_{v}T\]</span> When <span class="math inline">\(C_{p}\)</span> not a function of temperature <span class="math display">\[T=\frac{E-\frac{V^{2}}{2}-gz+\frac{p}{\rho}}{C_{p}}\]</span></p>
+<h2 id="material-properties">Material Properties</h2>
+<h3 id="air">Air</h3>
+<p>Dynamic viscosity is calculated using Sutherland’s Law <span class="math display">\[\mu=\mu_{ref}\left(\frac{T}{T_{ref}}\right)^{\frac{3}{2}}\frac{T_{ref}+S}{T+S}\]</span> where for air the Sutherland temperature is <span class="math inline">\(S=110.4K\)</span></p>
+<h3 id="water">Water</h3>
+<p>Dynamic viscosity is calculated using <span class="math display">\[\mu=A \:(10)^{\frac{B}{T-C}}\]</span> where for water <span class="math inline">\(A=2.414 \times 10^{-5} Pa s\)</span> ; <span class="math inline">\(B = 247.8 K\)</span> and <span class="math inline">\(C = 140 K\)</span></p>
+<h1 id="non-dimensionalisation">Non Dimensionalisation</h1>
+<h2 id="basic-1">Basic</h2>
+<p><span class="math display">\[\frac{\rho}{\rho_\infty} = \frac{\rho^{*}}{\rho^{*}_\infty} \quad \textrm{with} \quad \rho_\infty=1\]</span></p>
+<p><span class="math display">\[\frac{p}{p_\infty}=\frac{p^{*}}{p^{*}_\infty} \quad \textrm{with} \quad p_\infty=1\]</span></p>
+<p><span class="math display">\[\frac{T}{T_\infty}=\frac{T^{*}}{T^{*}_\infty} \quad \textrm{with} \quad T_\infty=1\]</span></p>
+<p><span class="math display">\[\frac{U}{U_\infty} = \frac{U^{*}}{U^{*}_\infty} \quad \textrm{with} \quad  U_\infty=M_\infty c_\infty=M_\infty\sqrt{\frac{\gamma p_\infty}{\rho_\infty}}=\sqrt{\gamma}M_\infty\]</span></p>
+<p><span class="math display">\[\mu_\infty = \frac{\rho_\infty U_\infty L_{ref}}{Re}\]</span></p>
+<p><span class="math display">\[\frac{t}{t^{*}} = \frac{c^{*}_\infty}{c_\infty} = \frac{c^{*}_\infty}{\sqrt{\gamma}} = \sqrt{R^{*}T^{*}_\infty}\]</span></p>
+<p><span class="math display">\[\frac{g}{g^{*}}=\left(\frac{t^{*}}{t}\right)^2=\left(\frac{c_\infty}{c^{*}_\infty}\right)^2 = \frac{1}{R^{*}T^{*}_\infty}\]</span></p>
+<h3 id="ideal-gas-eos-1">Ideal Gas EOS</h3>
+<p><span class="math display">\[p_\infty=\rho_\infty R T_\infty \quad \textrm{with} \quad R = 1\]</span></p>
+<h1 id="solver">Solver</h1>
+<h2 id="explicit">Explicit</h2>
+
+<p>explicit scheme by definition uses the current solution to calculate the derivative terms which are then used to march the solution forward in time. <span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\partial W_{i}}{\partial \tau} + R^{*}(W^{k}) = 0\]</span> Using <a href="#eq:semidiscrete" data-reference-type="eqref" data-reference="eq:semidiscrete">[eq:semidiscrete]</a> <span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\left(W_{i}^{k+1} - W_{i}^{k}\right)}{\Delta \tau} = -R^{*}(W^k)\]</span></p>
+<h3 id="runge-kutta">Runge Kutta</h3>
+<p>A multi stage time marcher enables larger time steps to be taken compared to purely Euler marching through increased stability. A typical <span class="math inline">\(m\)</span> stage scheme with <span class="math inline">\(\alpha_{m}\)</span> coefficients: <span class="math display">\[W_{i}^{k,m=1}=W_{i}^{k}\]</span> <span class="math display">\[W_{i}^{k,m+1}=W_{i}^{k,m}-\alpha_{m}P\frac{\Delta \tau_{i}}{\Omega_{i}^{n+1}}R^{*}(W^{k,m})\]</span> <span class="math display">\[\vdots\]</span> <span class="math display">\[W_{i}^{k+1}=W_{i}^{k,m=5}\]</span></p>
+<h2 id="implicit">Implicit</h2>
+<p>An implicit scheme calculates the derivative terms using the solution at the next time step. This results in a linear system of equations that can be solved using a range of linear solvers and benefits from increased stability enabling very large time steps to be taken. <span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\partial W_{i}}{\partial \tau} + R^{*}(W^{k+1}) = 0\]</span> Using <a href="#eq:semidiscrete" data-reference-type="eqref" data-reference="eq:semidiscrete">[eq:semidiscrete]</a></p>
+<p><span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\left(W_{i}^{k+1} - W_{i}^{k}\right)}{\Delta \tau} = -R^{*}\left(W^{k+1}\right)\]</span> Estimate residual at next time level through a truncated Taylor series expansion <span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\left(W_{i}^{k+1} - W_{i}^{k}\right)}{\Delta \tau} = -\left[ R^*(W^{k}) + \frac{\partial R^{*}}{\partial W}\left(W_{i}^{k+1}-W_{i}^{k}\right)\right]\]</span></p>
+<p>Rearranging <span class="math display">\[\left[\frac{\Omega_{i}^{n+1}}{\Delta \tau} P^{-1} + \frac{\partial R^*}{\partial W} \right] \left(W_i^{k+1}-W_i^k\right)=-R^{*}(W^k)\]</span> Solve system of linear equations for <span class="math inline">\(\delta W_i\)</span> by rewriting (4.9) in the form <span class="math display">\[A \delta W_i=B\]</span> With <span class="math inline">\(A=\left[\frac{\Omega_{i}^{n+1}}{\Delta \tau} P^{-1}+ \frac{\partial R^*}{\partial W} \right]\)</span>, <span class="math inline">\(\delta W_i=\left(W_i^{k+1}-W_i^k\right)\)</span> and <span class="math inline">\(B=-R^{*}(W^k)\)</span>. Then, the solution at the next pseudo time step is given by <span class="math display">\[W_i^{k+1}=\delta W_i + W_i^{k}\]</span> Note that by using (2.15) <span class="math display">\[\frac{\partial R^{*}}{\partial W}=\sum_{faces}\frac{\partial R}{\partial W}+\Omega\frac{3}{2\Delta t}I\]</span></p>
+<p><span class="math display">\[\frac{\partial R^{*}}{\partial W}=\sum_{faces}\left[\left(\frac{\partial F}{\partial W}-\frac{\partial G}{\partial W}\right)\cdot A_f\right]-\Omega\frac{\partial S}{\partial W}+\Omega\frac{3}{2\Delta t}I\]</span></p>
+<h3 id="finite-difference-jacobian">Finite Difference Jacobian</h3>
+<p>This approximates the jacobian using the <a href="http://en.wikipedia.org/wiki/Finite_difference">Finite Difference approximation</a> to perturb the solution vector one variable at a time by the value of <span class="math inline">\(\epsilon\)</span>, enabling numerical evaluation of the matrix entries. <span class="math display">\[\frac{\partial R^*}{\partial W}=\frac{R^*\left(W^k+\epsilon\right)-R^*\left(W^k\right)}{\epsilon}\]</span></p>
+<h3 id="analytic-jacobian">Analytic Jacobian</h3>
+<p>See <span class="citation" data-cites="Batten199738"></span><br />
+The total size of the system can be reduced by not storing the solution for the halo cells but accounting for their effect in the adjacent interior cell. Spliting contributions from interior cells <span class="math inline">\(k\)</span> and halo cell <span class="math inline">\(l\)</span>, the equation for cell <span class="math inline">\(i\)</span> in the linear system becomes <span class="math display">\[\begin{split}
+\left[\frac{\Omega_{i}^{n+1}}{\Delta \tau} P^{-1}+ \left(\sum_{n}\left[\left(\frac{\partial F}{\partial W_i}-\frac{\partial G}{\partial W_i}\right)\cdot A_f \right]-\Omega_i^{n+1}\frac{\partial S}{\partial W_i}+\Omega_i^{n+1}\frac{3}{2\Delta t}I\right) \right] \delta W_i \\ + 
+\sum_{n,n \neq l}\left[ \left(\frac{\partial F}{\partial W_n}-\frac{\partial G}{\partial W_n}\right)\cdot A_f\right]\delta W_n \\
++\left[\left(\frac{\partial F}{\partial W_l}-\frac{\partial G}{\partial W_l}\right)\cdot A_f \right]\delta W_l=-R^{*}(W^k)
+\end{split}\]</span> To remove the dependency on cell <span class="math inline">\(l\)</span> we can establish an implicit relation between the interior cell and the halo. <span class="math display">\[\delta W_l=C\delta W_i\]</span> <span class="math display">\[\begin{split}
+\left[\frac{\Omega_{i}^{n+1}}{\Delta \tau} P^{-1}+ \left(\sum_{n}\left(\frac{\partial F}{\partial W_i}-\frac{\partial G}{\partial W_i}\right)-\Omega_i^{n+1}\frac{\partial S}{\partial W_i}+\Omega_i^{n+1}\frac{3}{2\Delta t}I - \left(\frac{\partial F}{\partial W_l}-\frac{\partial G}{\partial W_l}\right)C\right) \right] \delta W_i \\+ \sum_{n,n \neq l} \left(\frac{\partial F}{\partial W_n}-\frac{\partial G}{\partial W_n}\right)\delta W_n =- R^{*}(W^k)
+\end{split}\]</span></p>
+<h2 id="point-implicit">Point Implicit</h2>
+<p><span class="math display">\[\Omega_{i}^{n+1}P^{-1}\frac{\left(W_{i}^{k+1} - W_{i}^{k}\right)}{\Delta \tau} = - R^{*}\left(W^{k+1}\right)\]</span></p>
+<p><span class="math display">\[\frac{\partial R^*}{\partial W}=\frac{R^*\left(W^k+\epsilon\right)-R^*\left(W^k-\epsilon\right)}{2\epsilon} = A\]</span></p>
+<p><span class="math inline">\(A\)</span> can then be split into 3 components, the viscous component <span class="math inline">\(A_{v}\)</span>, positive and negative components <span class="math inline">\(A^{+}\)</span> and <span class="math inline">\(A^{-}\)</span> with <span class="math inline">\(T \lambda T^{-1}\)</span> the <a href="http://en.wikipedia.org/wiki/Eigendecomposition_(matrix)">standard eigenvalue decomposition</a> of matrix <span class="math inline">\(A\)</span>. <span class="math display">\[A=A^{+}+A^{-}+A_v = \left(T\Lambda^{+}T^{-1}+\lambda_m I \right)+ \left(T\Lambda^{-}T^{-1}-\lambda_m I \right) + A_v\]</span> with <span class="math inline">\(m\)</span> eigenvalues given by <span class="math display">\[\lambda_m = \beta\left(\left|V_n\right|+c\right)\]</span> For point implicit consider only positive wave speeds <span class="math display">\[A=A^{+}+\frac{A_v}{2}\]</span></p>
+<h2 id="preconditioner">Preconditioner</h2>
+<p>The behaviour of the preconditioner is to de-couple pressure and density at low speeds, therefore we are looking to provide an alternative formulation for <span class="math inline">\(\rho_p\)</span>. See <span class="citation" data-cites="1995AIAAJ..33.2050W"></span> for more details.</p>
+<p>Define <span class="math display">\[\Theta=\left(\frac{1}{U_r^2}-\frac{\rho_T}{\rho h_T}\right)\]</span></p>
+<p><span class="math display">\[U_r=\min \left[ \max \left(V,\frac{\nu}{\Delta x},\frac{\alpha}{\Delta x},\epsilon \sqrt{\frac{\Delta p}{\rho}}\right),c  \right] \; where \: \epsilon \approx 10^{-3}\]</span></p>
+<p>Define <span class="math display">\[\left(\frac{\partial W}{\partial Q}\right)^{-1}\bigg|_{m}=\left(\frac{\partial W}{\partial Q}\right)^{-1} \; with \: \rho_p=\Theta\]</span></p>
+<h3 id="wave-speeds">Wave Speeds</h3>
+<p>Define the face normal velocity as <span class="math display">\[q = V \cdot n\]</span> The wave speeds before and after preconditioning are <span class="math display">\[\lambda = q \pm c\]</span> <span class="math display">\[\lambda^{&#39;} = q^{&#39;} \pm c^{&#39;}\]</span> where <span class="math display">\[q^{&#39;}=q \left(1-\frac{1}{2}\left(1-\frac{U_r^2}{c^2}\right) \right)=\frac{q}{2}\left(1+\frac{U_r^2}{c^2}\right)\]</span> <span class="math display">\[c^{&#39;}=\sqrt{\left(\frac{1}{2}\left(1-\frac{U_r^2}{c^2}\right)\right)^2 q^2+U_r^2}\]</span></p>
+<h3 id="matrix-p">Matrix P</h3>
+<p>Substitute <span class="math inline">\(\rho_p\)</span> with <span class="math inline">\(\Theta\)</span> in <a href="#eq:precond2" data-reference-type="eqref" data-reference="eq:precond2">[eq:precond2]</a> and multiply by <a href="#eq:precond1" data-reference-type="eqref" data-reference="eq:precond1">[eq:precond1]</a> <span class="math display">\[P=\frac{\partial W}{\partial Q}\left(\frac{\partial W}{\partial Q}\right)^{-1}\bigg|_{m}=\begin{pmatrix}
+A &amp; Bu &amp; Bv &amp; Bw &amp;-B &amp; 0 \\
+\left(A-1\right)u &amp; Bu^2 + 1 &amp; Buv &amp; Buw &amp; -Bu &amp; 0 \\
+\left(A-1\right)v &amp; Buv  &amp; Bv^2+1 &amp; Bvw &amp; -Bv &amp; 0 \\
+\left(A-1\right)w &amp; Buw  &amp; Bvw &amp; Bw^2+1  &amp; -Bw &amp; 0 \\
+D-V^2 &amp; \left( C+1 \right)u &amp; \left( C+1 \right)v &amp; \left( C+1 \right)w &amp; -C &amp; 0 \\
+\left(A-1\right)\phi &amp; Bu\phi &amp; Bv\phi &amp; Bw\phi &amp; -B\phi &amp; 1 
+\end{pmatrix}\]</span> Where <span class="math display">\[\begin{split}
+A&amp; =\frac{\rho\rho_p h_T-\rho_T\rho_p\left(H-V^2\right)-\rho\rho_T h_p-\rho_T\Theta\left(H-V^2\right)+\rho_T}{d_m} \\
+&amp; =\frac{\rho_p\left(\rho h_T+\rho_T\left(H-V^2\right)\right)-\rho_T\left(\rho h_p + \Theta\left(H-V^2\right)-1\right)}{d_m}
+\end{split}\]</span></p>
+<p><span class="math display">\[B=\frac{\left(\rho_p\rho_T-\rho_T\Theta\right)}{d_m}=\frac{\rho_T\left(\rho_p-\Theta\right)}{d_m}\]</span> <span class="math display">\[\begin{split}
+C&amp; =\frac{\rho\rho_T h_p+\rho_T\rho_p H - \rho_T - \rho\Theta h_T - \rho_T\Theta H}{d_m} \\
+&amp; =\frac{\rho_T\left(\rho h_p + \rho_p H - 1 \right) - \Theta \left(\rho h_T + \rho_T H \right)}{d_m}
+\end{split}\]</span> <span class="math display">\[D=\frac{\left(\rho h_p+\rho_p H - 1 \right)\left(\rho h_T + \rho_T\left(H-V^2\right)\right)-\left(\rho h_T + \rho_T H\right)\left(\rho h_p+\Theta\left(H-V^2\right)-1\right)}{d_m}\]</span> <span class="math display">\[d_m=\rho\Theta h_T + \rho_T\left(1-\rho h_p \right)\]</span></p>
+<h2 id="geometric-multigrid">Geometric Multigrid</h2>
+<p>Geometric multigrid is used as a low frequency smoother for the explicit solver. This operates on a hierarchy of pre generated coarse meshes that have a fixed child to parent cell relationship. The algorithm is split into three stages:</p>
+<ol>
+<li><p>Restrict from fine to coarse (subscript <span class="math inline">\(r\)</span>)</p></li>
+<li><p>Solve on coarse mesh (coarse cell subscript <span class="math inline">\(i_c\)</span>)</p></li>
+<li><p>Prolongate from coarse to fine (subscript <span class="math inline">\(p\)</span>)</p></li>
+</ol>
+<p>This is applied in a V cycle i.e. Stages 1 and 2 are applied recursively from fine to coarsest mesh before stage 3 is applied recursively from coarse to fine.</p>
+<h3 id="residual-restrict-operator">Residual Restrict Operator</h3>
+<p><span class="math display">\[R_{r,i_c}=\sum_1^{children}PR^{*}\left(W_i^k\right)\]</span></p>
+<h3 id="solution-restrict-operator">Solution Restrict Operator</h3>
+<p><span class="math display">\[W_{i_c}^k=\frac{1}{\Omega_{i_c}^{n+1}}\sum_{1}^{children}\Omega_i^{n+1}W_i^k\]</span></p>
+<h3 id="coarse-mesh-explicit-solve">Coarse Mesh Explicit Solve</h3>
+<p>Define <span class="math display">\[R^c\left(W_{i_c}^{k,m}\right)=\left[R(W_{i_c}^{k,m})+ \frac{\left(3\Omega_{i_c}^{k+1}W_{i_c}^{k,m} \right) }{2\Delta t} \right] + \underbrace{\left[ R_{r,i_c} - \left( R(W_{i_c}^{k})+ \frac{\left(3\Omega_{i_c}^{k+1}W_{i_c}^{k} \right) }{2\Delta t} \right) \right]}_{\textrm{Constant part of residual}}\]</span> The second term represents the error associated with solving on a coarser representation of the volume and is constant for all Runge Kutta stages. <span class="math display">\[W_{i_c}^{k,m=1}=W_{i_c}^k\]</span> <span class="math display">\[W_{i_c}^{k,m=1}= W_{i_c}^{k,m=1} -  \alpha_{m}P\frac{\Delta \tau_{i}}{\Omega_{i_c}^{k+1}}\left( R^c\left(W_{i_c}^{k,m}\right) \right)\]</span> <span class="math display">\[\vdots\]</span> <span class="math display">\[W_{i_c}^{k+1}=W_{i_c}^{k,m=5}\]</span></p>
+<h3 id="coarse-residual-restrict-operator">Coarse Residual Restrict Operator</h3>
+<p><span class="math display">\[R_{r,i_{c+1}}=\sum_1^{children}R^{c}\left(W_{i_c}^k\right)\]</span></p>
+<h2 id="prolongate-operator">Prolongate Operator</h2>
+<p>The prolongation operator applies the correction from coarse to fine mesh. The relaxed correction is directly applied to the fine mesh before the application of a smoother to remove any high frequency noise.</p>
+<h3 id="correction">Correction</h3>
+<p>The correction is the difference between the currently computed solution and the restricted solution from the finer mesh <span class="math display">\[W_{p,i_{c-1}}=0.75\left(W_{i_c}^k - W_{r,i_c}\right)\]</span></p>
+<h3 id="laplace-smooth">Laplace Smooth</h3>
+<p>The correction is then smoothed on the finer mesh using a Laplace smoother with <span class="math inline">\(f=0.5\)</span> <span class="math display">\[W_{p,i_{c-1}} = \frac{1}{area_{total}} \sum_{n=1}^{neighbours} area\left(fW_{p,i_{c-1}} + \left(1-f\right)W_{p,n_{c-1}}\right)\]</span></p>
+<h3 id="update-solution">Update solution</h3>
+<p>The smoothed correction is then applied to the finer mesh solution recursively for all meshes from coarse to fine. <span class="math display">\[W_{i_{c-1}}^k=W_{i_{c-1}}^k + W_{p,i_{c-1}}\]</span> <span class="math display">\[\vdots\]</span> <span class="math display">\[W_i^k=W_i^k+W_{p,i}\]</span></p>
+<h2 id="ale-preconditioned-hllc-flux">ALE Preconditioned HLLC Flux</h2>
+<p>Ref: A New Changing-Topology ALE Scheme for Moving Mesh Unsteady Simulations ON THE CHOICE OF WAVESPEEDS FOR THE HLLC RIEMANN SOLVER Batten</p>
+<p>The HLLC flux can be defined as <span class="math display">\[F_{HLLC}=\begin{cases}
+F_l, &amp; \text{if $S_L &gt; 0$}, \\
+F(W_l^{*}), &amp; \text{if $S_L \leq 0 &lt; S_M$}, \\
+F(W_r^{*}), &amp; \text{if $S_M \leq 0 \leq S_R$}, \\
+F_r, &amp; \text{if $S_R &lt; 0$}, 
+\end{cases}\]</span> where <span class="math display">\[W_l^{*}=\begin{pmatrix}
+\rho_l^{*} \\
+(\rho u)_l^{*} \\
+(\rho v)_l^{*} \\
+(\rho w)_l^{*} \\
+(\rho E)_l^{*} \\
+(\rho \phi)_l^{*}
+\end{pmatrix}=\frac{1}{S_L-S_M}\begin{pmatrix}
+\rho_l\left(S_L-q_l\right) \\
+\left(S_L-q_l\right)\left(\rho u\right)_l + \left(p^{*}-p_l\right)n_x \\
+\left(S_L-q_l\right)\left(\rho v\right)_l + \left(p^{*}-p_l\right)n_y \\
+\left(S_L-q_l\right)\left(\rho w\right)_l + \left(p^{*}-p_l\right)n_z \\
+\left(S_L-q_l\right)\left(\rho E\right)_l -p_l(V_l\cdot n) + p^{*}S_M \\
+\left(\rho\phi\right)_l\left(S_L-q_l\right) 
+\end{pmatrix}\]</span> <span class="math display">\[W_r^{*}=\begin{pmatrix}
+\rho_r^{*} \\
+(\rho u)_r^{*} \\
+(\rho v)_r^{*} \\
+(\rho w)_r^{*} \\
+(\rho E)_r^{*} \\
+(\rho \phi)_r^{*}
+\end{pmatrix}=\frac{1}{S_R-S_M}\begin{pmatrix}
+\rho_r\left(S_R-q_r\right) \\
+\left(S_R-q_r\right)\left(\rho u\right)_r + \left(p^{*}-p_r\right)n_x \\
+\left(S_R-q_r\right)\left(\rho v\right)_r + \left(p^{*}-p_r\right)n_y \\
+\left(S_R-q_r\right)\left(\rho w\right)_r + \left(p^{*}-p_r\right)n_z \\
+\left(S_R-q_r\right)\left(\rho E\right)_r -p_r(V_r\cdot n) + p^{*}S_M \\
+\left(\rho\phi\right)_r\left(S_R-q_r\right)
+\end{pmatrix}\]</span> <span class="math display">\[F_l=\begin{pmatrix}
+\rho_lq_l\\
+\left(\rho u\right)_l q_l+p_l n_x\\
+\left(\rho v\right)_l q_l+p_l n_y\\
+\left(\rho w\right)_l q_l+p_l n_z\\
+\left(\rho E\right)_l q_l+ p_l(V_l\cdot n) \\
+\left(\rho \phi\right)_l q_l
+\end{pmatrix} \; F_r=\begin{pmatrix}
+\rho_r q_r\\
+\left(\rho u\right)_r q_r+p_r n_x\\
+\left(\rho v\right)_r q_r+p_r n_y\\
+\left(\rho w\right)_r q_r+p_r n_z\\
+\left(\rho E\right)_r q_r+ p_r(V_r\cdot n) \\
+\left(\rho \phi\right)_l q_r
+\end{pmatrix}\]</span> <span class="math display">\[F_l^{*}\equiv F(W_l^{*})= F_l + S_L\left(W_l^{*}-W_l\right) - (\dot{x}\cdot n) W_l^{*} =\begin{pmatrix}
+\rho_l^{*}\left(S_M - \dot{x}\cdot n\right) \\
+\left(\rho u\right)_l^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}n_x \\
+\left(\rho v\right)_l^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}n_y \\
+\left(\rho w\right)_l^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}n_z \\
+\left(\rho E\right)_l^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}S_M \\
+\left(\rho\phi\right)_l^{*}\left(S_M - \dot{x}\cdot n\right) 
+\end{pmatrix}\]</span> <span class="math display">\[F_r^{*}\equiv F(W_r^{*})=F_r + S_R\left(W_r^{*}-W_r\right) - (\dot{x}\cdot n) W_r^{*}=\begin{pmatrix}
+\rho_r^{*}\left(S_M - \dot{x}\cdot n\right) \\
+\left(\rho u\right)_r^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}n_x \\
+\left(\rho v\right)_r^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}n_y \\
+\left(\rho w\right)_r^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}n_z \\
+\left(\rho E\right)_r^{*}\left(S_M - \dot{x}\cdot n\right)+p^{*}S_M \\
+\left(\rho\phi\right)_r^{*}\left(S_M - \dot{x}\cdot n\right) 
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[p^{*}=\rho_l\left(q_l-S_L\right)\left(q_l-S_M\right)+p_l=\rho_r\left(q_r-S_R\right)\left(q_r-S_M\right)+p_r\]</span> <span class="math display">\[q=(V-\dot{x})\cdot n \: \text{and} \: n=[n_x,n_y,n_z]^T \: \text{is the unit normal to the interface}\]</span> with <span class="math inline">\(\hat{V}=[\hat{u},\hat{v},\hat{w}]^T\)</span> and <span class="math inline">\(\hat{c}\)</span> are Roe’s average variables for velocity and speed of sound. <span class="math display">\[\hat{u}=\frac{\left(u_l+u_r R_p\right)}{\left(1+R_p\right)}\]</span> <span class="math display">\[\hat{v}=\frac{\left(v_l+v_r R_p\right)}{\left(1+R_p\right)}\]</span> <span class="math display">\[\hat{w}=\frac{\left(w_l+w_r R_p\right)}{\left(1+R_p\right)}\]</span> <span class="math display">\[\hat{c}^2=\left(\gamma-1\right)\left[\hat{H}-\frac{1}{2}\left(\hat{u}^2+\hat{v}^2+\hat{w}^2\right)\right]\]</span> <span class="math display">\[\hat{H}=\frac{\left(H_l+H_rR_P\right)}{\left(1+R_p\right)}\]</span> <span class="math display">\[R_p=\sqrt{\frac{\rho_r}{\rho_l}}\]</span></p>
+<p><span class="math display">\[S_M=\frac{\rho_r q_r\left(S_R-q_r\right)-\rho_l q_l\left(S_L-q_l\right)+p_l-p_r}{\rho_r\left(S_R-q_r\right)-\rho_l\left(S_L-q_l\right)}\]</span> The signal velocities for the un-preconditioned system are defined as <span class="math display">\[S_L=\min\left[q_l-c_l,\left(\hat{V}_l-\dot{x}\right)\cdot n - \hat{c}_l\right]\]</span> <span class="math display">\[S_R=\max\left[q_r+c_r,\left(\hat{V}_r-\dot{x}\right)\cdot n + \hat{c}_r\right]\]</span> The signal velocities for the preconditioned system are defined as <span class="math display">\[S_L=\left[q_l^{&#39;}-c_l^{&#39;}\right]\]</span> <span class="math display">\[S_R=\left[q_r^{&#39;}+c_r^{&#39;}\right]\]</span></p>
+<h3 id="implicit-hllc-flux">Implicit HLLC Flux</h3>
+<p><span class="math display">\[F_{HLLC}^{n+1}=\begin{cases}
+F_l^n + \frac{\partial F_l}{\partial W_l}\delta W_l, &amp; \text{if $S_L^n &gt; 0$}, \\
+(F_l^{*})^n + \frac{\partial F_l^{*}}{\partial W_l}\delta W_l+\frac{\partial F_l^{*}}{\partial W_r}\delta W_r, &amp; \text{if $S_L^n \leq 0 &lt; S_M^n$}, \\
+(F_r^{*})^n+ \frac{\partial F_r^{*}}{\partial W_l}\delta W_l+\frac{\partial F_r^{*}}{\partial W_r}\delta W_r, &amp; \text{if $S_M^n \leq 0 \leq S_R^n$}, \\
+F_r^n + \frac{\partial F_r}{\partial W_r}\delta W_r, &amp; \text{if $S_R^n &lt; 0$}, 
+\end{cases}\]</span> Assuming the conserved variables are independent define a new variable set. <span class="math display">\[W=\left[\rho,\rho u, \rho v , \rho w , \rho E,\rho \phi\right]^T=\left[x_1,x_2,x_3,x_4,x_5,x_6\right]^T\]</span> Substituting new variable set into equation for <span class="math inline">\(F\)</span> <span class="math display">\[q_i= \left[\begin{pmatrix}
+       \frac{x_2}{x_1} \\
+       \frac{x_3}{x_1} \\
+       \frac{x_4}{x_1}
+     \end{pmatrix} -\dot{x}\right]\cdot n  = \frac{1}{x_1} \left[\begin{pmatrix}
+       x_2 \\
+       x_3\\
+       x_4
+     \end{pmatrix} -x_1\dot{x}\right]\cdot n\]</span> <span class="math display">\[\frac{\partial q_i}{\partial x_1}=\frac{1}{x_1}\left[-\dot{x}\cdot n-q_i\right]=-\frac{V\cdot n}{x_1}\]</span> <span class="math display">\[\frac{\partial q_i}{\partial x_2}=\frac{n_x}{x_1}\]</span> <span class="math display">\[\frac{\partial q_i}{\partial x_3}=\frac{n_y}{x_1}\]</span> <span class="math display">\[\frac{\partial q_i}{\partial x_4}=\frac{n_z}{x_1}\]</span></p>
+<p><span class="math display">\[F_i=\begin{pmatrix}
+x_1 q_i   \\
+x_2 q_i + (\gamma-1)\left(x_5 - \frac{1}{2}\frac{1}{x_1}\left(x_2^2+x_3^2+x_4^2\right)\right)n_x \\
+x_3 q_i + (\gamma-1)\left(x_5 - \frac{1}{2}\frac{1}{x_1}\left(x_2^2+x_3^2+x_4^2\right)\right)n_y \\
+x_4 q_i + (\gamma-1)\left(x_5 - \frac{1}{2}\frac{1}{x_1}\left(x_2^2+x_3^2+x_4^2\right)\right)n_z \\
+x_5 q_i + q_i (\gamma-1)\left(x_5 - \frac{1}{2}\frac{1}{x_1}\left(x_2^2+x_3^2+x_4^2\right)\right) \\
+x_6 q_i 
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[\frac{\partial F}{\partial x_1}=\begin{pmatrix}
+-\dot{x} \cdot n  \\
+x_2\frac{-V\cdot n}{x_1}+\theta n_x  \\
+x_3\frac{-V\cdot n}{x_1}+\theta n_y \\
+x_4\frac{-V\cdot n}{x_1}+\theta n_z \\
+\frac{-V\cdot n}{1}\left(\gamma\frac{x_5}{x_1} - \theta\right) + q_i\theta \\
+x_6\frac{-V\cdot n}{x_1} 
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[\frac{\partial F}{\partial x_2}=\begin{pmatrix}
+n_x \\
+ q_i + \frac{x_2}{x_1}(2-\gamma)n_x  \\
+ x_3 \frac{n_x}{x_1} - (\gamma-1)\frac{x_2}{x_1}n_y \\
+ x_4 \frac{n_x}{x_1} - (\gamma-1)\frac{x_2}{x_1}n_z \\
+ \gamma\frac{x_5}{x_1}n_x - \theta n_x - q_i(\gamma-1)\frac{x_2}{x_1}  \\
+ x_6\frac{n_x}{x_1} 
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[\frac{\partial F}{\partial x_3}=\begin{pmatrix}
+ n_y  \\
+x_2 \frac{n_y}{x_1} - (\gamma-1)\frac{x_3}{x_1}n_x  \\
+ q_i + \frac{x_3}{x_1}(2-\gamma)n_y \\
+ x_4 \frac{n_y}{x_1} - (\gamma-1)\frac{x_3}{x_1}n_z \\
+ \gamma\frac{x_5}{x_1}n_y - \theta n_y - q_i(\gamma-1)\frac{x_3}{x_1}  \\
+ x_6\frac{n_y}{x_1} 
+\end{pmatrix}\]</span> <span class="math display">\[\frac{\partial F}{\partial x_4}=\begin{pmatrix}
+n_z  \\
+x_2 \frac{n_z}{x_1} - (\gamma-1)\frac{x_4}{x_1}n_x  \\
+x_3 \frac{n_z}{x_1} - (\gamma-1)\frac{x_4}{x_1}n_y \\
+q_i + \frac{x_4}{x_1}(2-\gamma)n_z\\
+ \gamma\frac{x_5}{x_1}n_z - \theta n_z - q_i(\gamma-1)\frac{x_4}{x_1} \\
+ x_6\frac{n_z}{x_1} 
+\end{pmatrix}\]</span> <span class="math display">\[\frac{\partial F}{\partial x_5}=\begin{pmatrix}
+ 0 \\
+ (\gamma-1)n_x  \\
+ (\gamma-1)n_y \\
+ (\gamma-1)n_z \\
+ \gamma q_i \\
+ 0 
+\end{pmatrix}\]</span> <span class="math display">\[\frac{\partial F}{\partial x_6}=\begin{pmatrix}
+ 0 \\
+ 0 \\
+0\\
+0\\
+0 \\
+q_i
+\end{pmatrix}\]</span><br />
+where <span class="math inline">\(\theta=(\gamma-1)\left(\frac{1}{2}\frac{1}{x_1^2}\left(x_2^2+x_3^2+x_4^2\right)\right)=\frac{(\gamma-1)}{2}V^2\)</span><br />
+Transforming back and building jacobian matrix <span class="math display">\[\frac{\partial F}{\partial W}=\begin{pmatrix}
+-\dot{x} \cdot n &amp; n_x &amp; n_y &amp; n_z &amp; 0 &amp; 0 \\
+\frac{(\gamma-1)}{2}V^2 n_x-u(V\cdot n) &amp; q - a_3un_x &amp; un_y - a_2vn_x &amp; un_z - a_2wn_x &amp; a_2n_x &amp;0 \\
+\frac{(\gamma-1)}{2}V^2 n_y-v(V\cdot n) &amp; vn_x - a_2un_y &amp; q - a_3vn_y &amp; vn_z - a_2wn_y &amp; a_2n_y &amp;0\\
+\frac{(\gamma-1)}{2}V^2 n_z-w(V\cdot n) &amp; wn_x - a_2un_z &amp; wn_y - a_2vn_z &amp; q - a_3wn_z &amp; a_2n_z &amp;0\\
+\frac{(\gamma-1)}{2}V^2q-a_1(V\cdot n)  &amp; a_1n_x - a_2uq &amp; a_1n_y - a_2vq &amp; a_1n_z - a_2wq &amp; \gamma q&amp;0 \\
+-\phi (V\cdot n) &amp; \phi n_x &amp; \phi n_y &amp; \phi n_z &amp; 0 &amp; q
+\end{pmatrix}\]</span> where <span class="math inline">\(a_1=\gamma E - \frac{(\gamma-1)}{2}V^2, \: a_2=\gamma-1, \: a_3=\gamma-2\)</span><br />
+<span class="math display">\[\frac{\partial F_l^{*}}{\partial W_l}=\begin{bmatrix}
+\left(\frac{\partial \rho_l^{*}}{\partial W_l}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_l}\right)^T\rho_l^{*} \\
+\left(\frac{\partial (\rho u)_l^{*}}{\partial W_l}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_l}\right)^T(\rho u)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_l}\right)^T n_x \\
+\left(\frac{\partial (\rho v)_l^{*}}{\partial W_l}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_l}\right)^T(\rho v)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_l}\right)^T n_y \\
+\left(\frac{\partial (\rho w)_l^{*}}{\partial W_l}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_l}\right)^T(\rho w)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_l}\right)^T n_z \\
+\left(\frac{\partial (\rho E)_l^{*}}{\partial W_l}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_l}\right)^T(\rho E)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_l}\right)^T S_M + \left(\frac{\partial S_M}{\partial W_l}\right)^Tp^{*} \\
+\left(\frac{\partial (\rho \phi)_l^{*}}{\partial W_l}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_l}\right)^T(\rho \phi)_l^{*}
+\end{bmatrix}\]</span> <span class="math display">\[\frac{\partial F_l^{*}}{\partial W_r}=\begin{bmatrix}
+\left(\frac{\partial \rho_l^{*}}{\partial W_r}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_r}\right)^T\rho_l^{*} \\
+\left(\frac{\partial (\rho u)_l^{*}}{\partial W_r}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_r}\right)^T(\rho u)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_r}\right)^T n_x \\
+\left(\frac{\partial (\rho v)_l^{*}}{\partial W_r}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_r}\right)^T(\rho v)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_r}\right)^T n_y \\
+\left(\frac{\partial (\rho w)_l^{*}}{\partial W_r}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_r}\right)^T(\rho w)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_r}\right)^T n_z \\
+\left(\frac{\partial (\rho E)_l^{*}}{\partial W_r}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_r}\right)^T(\rho E)_l^{*} + \left(\frac{\partial p^{*}}{\partial W_r}\right)^T S_M + \left(\frac{\partial S_M}{\partial W_r}\right)^Tp^{*} \\
+\left(\frac{\partial (\rho \phi)_l^{*}}{\partial W_r}\right)^T (S_M-\dot{x}\cdot n)+\left(\frac{\partial S_M}{\partial W_r}\right)^T(\rho \phi)_l^{*}
+\end{bmatrix}\]</span> Using the quotient rule and defining <span class="math inline">\(S_M=\frac{B}{A}\)</span> therefore <span class="math inline">\(\frac{\partial S_M}{\partial x}=\frac{A\frac{\partial B}{\partial x}-B\frac{\partial A}{\partial x}}{A^2}\)</span><br />
+where <span class="math inline">\(A=\rho_r\left(S_R-q_r\right)-\rho_l\left(S_L-q_l\right)\)</span> and <span class="math inline">\(B=\rho_r q_r\left(S_R-q_r\right)-\rho_l q_l\left(S_L-q_l\right)+p_l-p_r\)</span><br />
+Expressing <span class="math inline">\(S_M\)</span> in terms of independent variables</p>
+<p><span class="math display">\[\begin{aligned}
+\frac{\partial S_M}{\partial \rho_l}=&amp;\frac{1}{A}\left[-q_l^2+\frac{\partial p_l}{\partial \rho_l} - \frac{B}{A}(-q_l-(S_L-q_l))\right]\\
+ = &amp; \frac{1}{A}\left[-q_l^2+\frac{(\gamma-1)}{2}V^2 +S_M S_L \right]\end{aligned}\]</span> <span class="math display">\[\frac{\partial S_M}{\partial (\rho u)}=\frac{1}{A}\left[n_x(2q_l-S_L-S_M)+(1-\gamma)u_l\right]\]</span> <span class="math display">\[\frac{\partial S_M}{\partial (\rho v)}=\frac{1}{A}\left[n_y(2q_l-S_L-S_M)+(1-\gamma)v_l\right]\]</span> <span class="math display">\[\frac{\partial S_M}{\partial (\rho w)}=\frac{1}{A}\left[n_z(2q_l-S_L-S_M)+(1-\gamma)w_l\right]\]</span> <span class="math display">\[\frac{\partial S_M}{\partial (\rho E)}=\frac{1}{A}\left[\gamma-1\right]\]</span> <span class="math display">\[\frac{\partial S_M}{\partial (\rho \phi)}=\frac{1}{A}\left[0\right]\]</span></p>
+<p><span class="math display">\[\frac{\partial S_M}{\partial W_l}=\frac{1}{A}\begin{bmatrix}
+-q_l^2+\frac{(\gamma-1)}{2}V^2 +S_M S_L \\
+n_x(2q_l-S_L-S_M)+(1-\gamma)u_l \\
+n_y(2q_l-S_L-S_M)+(1-\gamma)v_l \\
+n_z(2q_l-S_L-S_M)+(1-\gamma)w_l \\
+\gamma-1 \\
+0
+\end{bmatrix}\]</span> <span class="math display">\[\frac{\partial S_M}{\partial W_r}=\frac{1}{A}\begin{bmatrix}
+q_r^2-\frac{(\gamma-1)}{2}V^2 -S_M S_R \\
+n_x(-2q_r+S_R+S_M)-(1-\gamma)u_r \\
+n_y(-2q_r+S_R+S_M)-(1-\gamma)v_r \\
+n_z(-2q_r+S_R+S_M)-(1-\gamma)w_r \\
+1-\gamma \\
+0
+\end{bmatrix}\]</span> <span class="math display">\[\frac{\partial p^{*}}{\partial W_l}=\rho_r\left(S_R-q_r\right)\frac{\partial S_M}{\partial W_l}\]</span> <span class="math display">\[\frac{\partial p^{*}}{\partial W_r}=\rho_l\left(S_l-q_l\right)\frac{\partial S_M}{\partial W_r}\]</span> <span class="math display">\[\frac{\partial \rho_l^{*}}{\partial W_l}=\frac{1}{S_L-S_M}\begin{bmatrix}
+S_L \\
+-n_x \\
+-n_y \\
+-n_z \\
+0 \\
+0 \\
+\end{bmatrix} + \frac{1}{S_L-S_M}\rho_l^{*}\frac{\partial S_M}{\partial W_l}\]</span> <span class="math display">\[\frac{\partial \rho_l^{*}}{\partial W_r}=\frac{1}{S_L-S_M}\rho_l^{*}\frac{\partial S_M}{\partial W_r}\]</span> <span class="math display">\[\frac{\partial (\rho u)_l^{*}}{\partial W_l}=\frac{1}{S_L-S_M}\begin{bmatrix}
+q_lu_l-n_x\frac{(\gamma-1}{2}V^2 \\
+S_L-q_l+n_x(\gamma-2)u_l \\
+-u_ln_y+n_x(\gamma-1)v_l \\
+-u_ln_z+n_x(\gamma-1)w_l \\
+(1-\gamma)n_x \\
+0
+\end{bmatrix} + \frac{1}{S_L-S_M}\left(n_x\frac{\partial p^{*}}{\partial W_l}+(\rho u)_l^{*}\frac{\partial S_M}{\partial W_l}\right)\]</span> <span class="math display">\[\frac{\partial (\rho u)_l^{*}}{\partial W_r}=\frac{1}{S_L-S_M}\left(n_x\frac{\partial p^{*}}{\partial W_r}+(\rho u)_l^{*}\frac{\partial S_M}{\partial W_r}\right)\]</span> <span class="math display">\[\frac{\partial (\rho v)_l^{*}}{\partial W_l}=\frac{1}{S_L-S_M}\begin{bmatrix}
+q_lv_l-n_y\frac{(\gamma-1}{2}V^2 \\
+-v_ln_x+n_y(\gamma-1)u_l \\
+S_L-q_l+n_y(\gamma-2)v_l \\
+-v_ln_z+n_y(\gamma-1)w_l \\
+(1-\gamma)n_y \\
+0
+\end{bmatrix} + \frac{1}{S_L-S_M}\left(n_y\frac{\partial p^{*}}{\partial W_l}+(\rho v)_l^{*}\frac{\partial S_M}{\partial W_l}\right)\]</span> <span class="math display">\[\frac{\partial (\rho v)_l^{*}}{\partial W_r}=\frac{1}{S_L-S_M}\left(n_y\frac{\partial p^{*}}{\partial W_r}+(\rho v)_l^{*}\frac{\partial S_M}{\partial W_r}\right)\]</span> <span class="math display">\[\frac{\partial (\rho w)_l^{*}}{\partial W_l}=\frac{1}{S_L-S_M}\begin{bmatrix}
+q_lw_l-n_z\frac{(\gamma-1}{2}V^2 \\
+-w_ln_x+n_z(\gamma-1)u_l \\
+-w_ln_y+n_z(\gamma-1)v_l \\
+S_L-q_l+n_z(\gamma-2)w_l \\
+(1-\gamma)n_z \\
+0
+\end{bmatrix} + \frac{1}{S_L-S_M}\left(n_z\frac{\partial p^{*}}{\partial W_l}+(\rho w)_l^{*}\frac{\partial S_M}{\partial W_l}\right)\]</span> <span class="math display">\[\frac{\partial (\rho w)_l^{*}}{\partial W_r}=\frac{1}{S_L-S_M}\left(n_z\frac{\partial p^{*}}{\partial W_r}+(\rho w)_l^{*}\frac{\partial S_M}{\partial W_r}\right)\]</span> <span class="math display">\[\begin{split}
+\frac{\partial (\rho E)_l^{*}}{\partial W_l}=&amp;\frac{1}{S_L-S_M}\begin{bmatrix}
+((\rho E)_l+p_l)\frac{q_l}{\rho_l}-q_l\frac{(\gamma-1)}{2}V^2 \\
+-n_x((\rho E)_l + p_l)/\rho_l+(\gamma-1)u_lq_l \\
+-n_y((\rho E)_l + p_l)/\rho_l+(\gamma-1)v_lq_l \\
+-n_z((\rho E)_l + p_l)/\rho_l+(\gamma-1)w_lq_l \\
+S_L-q_l\gamma \\
+0 
+\end{bmatrix} \\
+&amp;+ \frac{1}{S_L-S_M}\left(S_M\frac{\partial p^{*}}{\partial W_l} + (p^{*}+(\rho E)_l^{*})\frac{\partial S_M}{\partial W_l}\right)
+\end{split}\]</span> <span class="math display">\[\frac{\partial (\rho E)_l^{*}}{\partial W_r}=\frac{1}{S_L-S_M}\left(S_M\frac{\partial p^{*}}{\partial W_r} + (p^{*}+(\rho E)_l^{*})\frac{\partial S_M}{\partial W_r}\right)\]</span> <span class="math display">\[\frac{\partial (\rho \phi)_l^{*}}{\partial W_l}=\frac{1}{S_L-S_M}\begin{bmatrix}
+\phi q_l \\
+-\phi n_x \\
+-\phi n_y \\
+-\phi n_z \\
+0 \\
+S_L-q_l \\
+\end{bmatrix} + \frac{1}{S_L-S_M}\left((\rho \phi)_l^{*}\frac{\partial S_M}{\partial W_l} \right)\]</span> <span class="math display">\[\frac{\partial (\rho \phi)_l^{*}}{\partial W_r}=\frac{1}{S_L-S_M}\left((\rho \phi)_l^{*}\frac{\partial S_M}{\partial W_r} \right)\]</span></p>
+<h2 id="gradients">Gradients</h2>
+<p>This is based on the Green Gauss theorem and, hence by assuming <span class="math inline">\(\phi\)</span> is piecewise constant over the volume <span class="math display">\[\Omega_i \nabla \phi_i = \sum_{faces} \phi_f A_f\]</span> <span class="math display">\[\nabla \phi_i = \frac{1}{\Omega_i}\sum_{faces} \phi_f A_f\]</span></p>
+<h3 id="face-gradient">Face Gradient</h3>
+<p>Simplest gradient estimate at the face is an average <span class="math display">\[\overline{\nabla W_{ij}}=\frac{1}{2 }\left(\nabla W_i + \nabla W_j\right)\]</span> The average gradient results in odd even de-coupling of the solution, therefore we need a more accurate estimate. We can replace the normal gradient at the face calculated by the average with the accurate face normal gradient. Therefore the most accurate approximation of the gradient normal to a face is <span class="math display">\[\nabla W_{ij} \cdot n \approx \frac{W_j-W_i}{\|x_j-x_i\|}\]</span> where <span class="math inline">\(x_i\)</span> is the cell centre of cell <span class="math inline">\(i\)</span><br />
+An improved estimate of the gradient at the face is <span class="math display">\[\nabla W_{ij} = \frac{W_j-W_i}{\|x_j-x_i\|}\Delta x + \left[\overline{\nabla W_{ij}}-\left(\overline{\nabla W_{ij}}\cdot \Delta x\right)\Delta x\right]\]</span> where <span class="math inline">\(\Delta x = (x_j -x_i)/\|x_j-x_i\|\)</span><br />
+To reduce the stencil size for the viscous flux jacobians used in the implicit scheme we neglect the face tangential gradient component defining <span class="math display">\[\nabla W_{ij}^{TSL} \cdot n \approx \frac{W_j-W_i}{\|x_j-x_i\|}\]</span> <span class="math display">\[\nabla W_{ij}^{TSL} \approx \frac{W_j-W_i}{\|x_j-x_i\|}\cdot \Delta x\]</span> Where TSL stands for Thin Shear Layer.</p>
+<h2 id="muscl-reconstruction">MUSCL Reconstruction</h2>
+<p>Monotone Upstream-centered Schemes for Conservation Laws (MUSCL) provides Total Variation Diminishing (TVD) behaviour when reconstructing the states at cell boundaries from piecewise constant values at the cell enabling the higher spatial accuracy to be achieved. See <span class="citation" data-cites="Luo"></span><br />
+Consider the scalar quantity <span class="math inline">\(\phi\)</span> either side of an interface between cells <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> respectively.</p>
+<h3 id="first-order">First Order</h3>
+<p>First order spatial accuracy is achieved by setting the reconstructed states to the cell values. <span class="math display">\[\phi_i^{+}=\phi_i\]</span> <span class="math display">\[\phi_j^{-}=\phi_j\]</span></p>
+<h3 id="higher-order">Higher Order</h3>
+<p>The upwind biased interpolations for <span class="math inline">\(\phi_i^{+}\)</span> and <span class="math inline">\(\phi_j^{-}\)</span> are defined by: <span class="math display">\[\phi_i^{+}=\phi_i + \frac{s_i}{4}\left[\left(1-k_c s_i\right)\Delta_i^{-} + \left(1+k_c s_i\right)\left(\phi_j-\phi_i\right)\right]\]</span> <span class="math display">\[\phi_j^{-}=\phi_j + \frac{s_j}{4}\left[\left(1-k_c s_j\right)\Delta_j^{+} + \left(1+k_c s_j\right)\left(\phi_j-\phi_i\right)\right]\]</span> where the forward and backward difference operators are given by: <span class="math display">\[\Delta_i^{-}=\phi_i-\phi_{i-1}=2\nabla\phi_i\cdot l_{ij}-\left(\phi_j-\phi_i\right)=2\nabla\phi_i\cdot 2\left(x_f-x_i\right)-\left(\phi_j-\phi_i\right)\]</span> <span class="math display">\[\Delta_j^{+}=\phi_{j+1}-\phi_{j}=2\nabla\phi_j\cdot l_{ij}-\left(\phi_j-\phi_i\right)=2\nabla\phi_j\cdot 2\left(x_j-x_f\right)-\left(\phi_j-\phi_i\right)\]</span> where <span class="math inline">\(l_{ij}=x_j-x_i\approx 2\left(x_f-x_i\right)\approx 2\left(x_j-x_f\right)\)</span> and <span class="math inline">\(s_i\)</span> is a gradient or slope limiter<br />
+Parameter <span class="math inline">\(k_c\)</span> provides control over the family of schemes</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong><em>Scheme</em></strong></th>
+<th style="text-align: left;"><strong><span class="math inline">\(k_e\)</span></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Upwind</td>
+<td style="text-align: left;">-1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Semi upwind (Fromm’s scheme)</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Third order upwind</td>
+<td style="text-align: left;">1/3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Central difference</td>
+<td style="text-align: left;">1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="van-albada-limiter">Van Albada Limiter</h3>
+<p>This gives improved estimates for <span class="math inline">\(s_i\)</span> and <span class="math inline">\(s_j\)</span>. <span class="math display">\[s_i=\max\left[0,\frac{2\Delta_i^{-}\left(\phi_j-\phi_i\right)+\epsilon^2}{\left(\Delta_i^{-}\right)^2+\left(\phi_j-\phi_i\right)^2+\epsilon^2}\right]\]</span> <span class="math display">\[s_j=\max\left[0,\frac{2\Delta_j^{+}\left(\phi_j-\phi_i\right)+\epsilon^2}{\left(\Delta_j^{+}\right)^2+\left(\phi_j-\phi_i\right)^2+\epsilon^2}\right]\]</span> <span class="math display">\[\epsilon=k_1\frac{1}{2}\left(\phi_j+\phi_i\right)+k_2\]</span> <span class="math display">\[k_1=0.001\:k_2=1.0e^{-8}\]</span></p>
+<h2 id="time-step">Time Step</h2>
+<h4 id="local-time-step">Local time step</h4>
+<p>The local time step is computed for each cell in accordance with <span class="math display">\[\Delta t = \min\left[ CFL\frac{\Omega}{\lambda}, CFLVIS\frac{\Omega}{\lambda_v} \right]\]</span> where <span class="math inline">\(\lambda\)</span> is the integrated convective spectral radius, <span class="math inline">\(\lambda_v\)</span> is the corresponding viscous spectral radius and the parameters CFL and CFLVIS are user input and chosen according to the stability region of the Runge Kutta scheme used.</p>
+<p>The time step for the turbulence equations is determined as follows <span class="math display">\[\Delta t_t = \Delta t - \min\left(0,\min\left(k_{source},\omega_{source}\right)\right)\]</span></p>
+<p>Convective spectral radius <span class="math display">\[\lambda = | V \cdot n| \pm c\]</span></p>
+<p>Viscous spectral radius <span class="math display">\[\lambda_v = \pm \frac{|S|}{r}\left[\max\left(\frac{4}{3\rho},\frac{\gamma}{\rho}\right)\left(\frac{\mu}{\Pr}+\frac{\mu_t}{Pr_t}\right) \right]\]</span></p>
+<h2 id="boundary-conditions">Boundary Conditions</h2>
+<h3 id="open-boundary-conditions">Open boundary conditions</h3>
+<p>The Riemann invariants for the Euler equations are: <span class="math display">\[W=\begin{pmatrix}
+\rho-\frac{p}{\overline{c}^2}\\
+u_t\\
+u_n+\frac{p}{\overline{pc}}\\
+-u_n+\frac{p}{\overline{pc}}
+\end{pmatrix}\]</span> Where <span class="math inline">\(u_n\)</span> is the normal velocity and <span class="math inline">\(u_t\)</span> is the tangential velocity given an inwards normal at the boundary points. The Riemann invariants are defined only locally in time for systems in general. The idea relies on restricting the variation of the Riemann invariant to zero on a subsonic out flow for the invariants associated with an ingoing waves. In this case, only the third Riemann invariant needs to be imposed. All other values are taken as predicted states computed by the scheme inside the volume.Predicted states are noted with a star and bar states are averages between predicted states and last time step values. This may be written: <span class="math display">\[\begin{pmatrix} \rho-\frac{p^*}{\overline{c}^2}\\ u_t\\ u_n+\frac{p}{\overline{pc}}\\ -u_n+\frac{p}{\overline{pc}}\end{pmatrix}=\begin{pmatrix}
+\rho^*-\frac{p^*}{\overline{c}^2}\\
+u_t^*\\
+u_n^n+\frac{p^n}{\overline{pc}}\\
+-u_n^*+\frac{p^n}{\overline{pc}}
+\end{pmatrix}\]</span> After some algebraic manipulations the method consists in setting: <span class="math display">\[u_t=u_t^*\]</span> <span class="math display">\[p=\frac{1}{2}(p^n+p^*+\overline{\rho c}(u_n^n-u_n^*)\]</span> <span class="math display">\[\rho=\rho^*+\frac{(p-p^*)}{\overline{c}^2}\]</span> <span class="math display">\[u_n=u_n^n+\frac{p^n-p}{\overline{\rho c}}\]</span> As these conditions are rather crude, the order of the scheme is locally lowered to simulate a sponge layernear the open boundary by adding more diffusion. In an unstructured context, structured layers may besimulated by marching from the boundary and marking the edges that touch the boundary points, andmarking the points neighbors of boundary points. At each pass, a new layer of edges is added to the markededges. For more information see <span class="citation" data-cites="AIAA2010-691"></span>.</p>
+<h3 id="euler-wall-and-symmetry-plane-weak-euler">Euler Wall and Symmetry Plane (Weak euler)</h3>
+<p>At an Euler wall the normal component of the velocity is zero <span class="math display">\[V\cdot n=0\]</span> and hence the inviscid wall flux becomes <span class="math display">\[f=\begin{pmatrix}
+0\\ 
+pn_xA\\
+pn_yA\\
+pn_zA\\
+0
+\end{pmatrix}\]</span></p>
+<h3 id="viscous-wall-weak-adiabatic-weak-isothermal">Viscous Wall (Weak Adiabatic, Weak Isothermal)</h3>
+<p>On a viscous wall the velocity is imposed strongly through a no-slip boundary condition <span class="math display">\[V=0\]</span> see section 5.3 for more details of gradient boundary conditions at the wall.</p>
+<h3 id="mass-flow-outlet">Mass flow outlet</h3>
+<p>This boundary condition can be prescribed at a outflow boundary which requires a given value of mass flow. This boundary condition is in principal identical to the static pressure inflow boundary condition where the value of static pressure is a function of mass. The most useful description is the specification of a non-dimensional mass flow function which is defined as <span class="math display">\[W^* =\frac{\dot{m}\sqrt{C_pT_0}}{p_0}\]</span> then rearrange to find <span class="math inline">\(\dot{m}\)</span>, the mass flow rate. Then solve the following implicit equation for velocity <span class="math inline">\(u\)</span> <span class="math display">\[\dot{m}=\rho_0 u \left( 1-\frac{\gamma-1}{2c^2}u^2\right)^{\frac{1}{\gamma-1}}A\]</span> then use this to calculate the value of the Laval number <span class="math display">\[\lambda_{lav}=\frac{u}{c\sqrt{\frac{2}{\gamma+1}}}\]</span> the value of <span class="math inline">\(\lambda_{lav}\)</span> is then used to determine the required value of static pressure on the outflow boundary <span class="math display">\[p_{static}=p_0\left( 1-\frac{\gamma-1}{\gamma+1}\lambda_{lav}^2\right)^{\frac{\gamma}{\gamma-1}}\]</span></p>
+<h3 id="farfield">Farfield</h3>
+<p>Characteristic boundary conditions are used at the farfield. These boundary conditions can be used for both subsonic and supersonic in and outflow where the characteristics are either set from free stream quantities for ingoing characteristics or extrapolated from the interior for outgoing characteristics. Conserved variables are used and stored in the program since they lead to sparse and computationally less expensive expressions, using a similar procedure to the Open boundary conditions section on page 32.</p>
+<h3 id="total-states-inlet">Total States Inlet</h3>
+<p>This condition concerns the inflow into the domain of interest. Assuming that at the boundary <span class="math display">\[p_s=p_f\]</span> where <span class="math inline">\(p_f\)</span> is the static pressure at the boundary. Then given the reference static temperature <span class="math inline">\(T_{s_{\infty}}\)</span> and the total to static ratios <span class="math inline">\(\frac{T_o}{T_{s_{\infty}}}\)</span>, <span class="math inline">\(\frac{p_o}{p_{s_{\infty}}}\)</span>, the total temperature <span class="math inline">\(T_o\)</span> can then be calculated using <span class="math display">\[\frac{T_o}{T_s}=\frac{T_o}{T_{s_{\infty}}}\frac{T_{s_{\infty}}}{T_s}\]</span> then local boundary face static temperature <span class="math inline">\(T_s\)</span> is calculated using the isentropic relationship <span class="math display">\[\frac{T_0}{T_s}=1+\frac{\gamma-1}{2} M^2\]</span></p>
+<h3 id="outflow-pressure">Outflow pressure</h3>
+<p>This boundary condition concerns the outflow from a arbitrary cell, with the ratio <span class="math inline">\(p_s / p_{s_{\infty}}\)</span> known. Extrapolation of the conserved variables in vector <span class="math inline">\(W\)</span> is then possible, under the assumption that for all conserved quantities with the exception of <span class="math inline">\(\rho E\)</span> are the same at the boundary as in the cell. Then using these <span class="math inline">\(\rho E\)</span> can be recalculated using material from chapter 3.</p>
+
+<h3 id="actuator-disc">Actuator Disc</h3>
+<p>Actuator discs are commonly used in aerospace as a pragmatic surrogate for a fully rotating propellor. The gross effect of the propellor is communicated to the solver via a prescribed discontinuity in the conserved variables - usually the momentum terms - across the disc. This method is also becoming popular in wind turbine modelling, especially where large arrays are to be simulated. zCFD allows a high level of customisation of this functionality, and users can define axial and radial variation of the forcing function - which can itself be a function of the flow variables.</p>
+
+
+<p>Note that the disc elements are not present in the original mesh. These are created automatically by the zCFD solver using parameters that can be set by the user in the input file. It should be noted that the mesh spacing used in the original mesh must be sufficient to resolve the actuator. Parameters governing the actuator disc model are: the disc centre, the disc radius, the disc normal vector <span class="math inline">\(n^D\)</span> , the number of angular sectors <span class="math inline">\(N_{\theta}^{D}\)</span> and the number of radial segments <span class="math inline">\(N_{R}^{D}\)</span>. Assuming that the disc model is supplied with thrust <span class="math inline">\(T(r,\theta)\)</span> and torque <span class="math inline">\(Q(r, \theta)\)</span> functions, the convolution function applies a Gaussian distribution in 3D so that the value of thrust per unit volume at a cell centre <span class="math inline">\(x_i\)</span> is given as follows:</p>
+<p><span class="math display">\[T(x_i) = \sum_{j=0}^{N_R^D} \sum_{k=0}^{N_{\theta}^D} dT_{jk}\, dA_{jk}^D\, n^D\, \eta(\| x_i - x_{jk}\|) / W_{jk}\]</span></p>
+<p>where <span class="math inline">\(dT_{jk}\)</span> is the thrust per unit area and <span class="math inline">\(dA_{jk}^D\)</span> is the area of disc element <span class="math inline">\((j,k)\)</span> respectively. The 3D convolution kernel <span class="math inline">\(\eta\)</span> is defined by</p>
+<p><span class="math display">\[\eta(d) = 1/(\pi^{3/2}\,\epsilon^2 \,\exp(-(d/\epsilon)^2))\]</span></p>
+<p>The scaling parameter <span class="math inline">\(\epsilon\)</span> governs the degree of spreading of the convolution, and can be easily customised. It does not have to have a constant value and can have a different value for each segment on the disc. The default value is <span class="math inline">\(\epsilon = \epsilon_{jk} = 2\,dr_j\)</span>, where <span class="math inline">\(dr_j\)</span> is the change in radius over radial segment <span class="math inline">\(j\)</span>. The weighted sum <span class="math inline">\(W_{jk}\)</span> is determined as a discrete summation, to ensure exact correspondence between the actuator disc forces and the convolved forces:</p>
+<p><span class="math display">\[W_{jk} = \sum_{i=0}^{N_{CELLS}} \max(\delta, \eta(\| x_i - x_{jk}\|)) V_{i}\]</span></p>
+<p>where <span class="math inline">\(\delta\)</span> is a small number (10<span class="math inline">\(^{-16}\)</span>) to prevent numerical underflow and <span class="math inline">\(V_i\)</span> is the volume of cell <span class="math inline">\(i\)</span>. This summation includes all cells in the fluid zone corresponding to the actuator disk.</p>
+
+<p>The same procedure is used to distribute the torque <span class="math inline">\(Q(x_i)\)</span> but in this case the per unit area torque is converted to to a per unit volume force in order to modify the momentum terms:</p>
+<p><span class="math display">\[Q(x_i) = \sum_{j=0}^{N_R^D} \sum_{k=0}^{N_{\theta}^D} \, \underbrace{\frac{dQ_{jk}^D\, dA_{jk}^D}{\| v^D\|}\, v_Q}_{\text{Equivalent force}} \, \eta(\| x_i - x_{jk}^D\|) / W_{jk}\]</span></p>
+<p>where the disc vector <span class="math inline">\(v^D\)</span> is given by</p>
+<p><span class="math display">\[v^D = x_{jk}^D-x_C^D\]</span></p>
+<p>where <span class="math inline">\(x_{jk}^D\)</span> is the centre point of the disc segment <span class="math inline">\((j,k)\)</span> and <span class="math inline">\(x_C^D\)</span> is the disc centre. The torque vector <span class="math inline">\(v_Q\)</span> is given by</p>
+<p><span class="math display">\[v_Q = \frac{v^D}{\| v^D \|} \, \times \, n^D\]</span></p>
+<h4 id="turbine-blade-modelling">Turbine Blade Modelling</h4>
+<p>When a wind turbine is modelled by an actuator disk, certain assumptions are made about the distribution of elements on the disc. The user can specify the inner radius <span class="math inline">\(r_I^D\)</span>, the outer radius <span class="math inline">\(r_O^D\)</span> and the number of angular segments <span class="math inline">\(N_{\theta}^D\)</span> into which to divide the disc. For convenience, and to maintain a uniform aspect ratio for elements on the disc, zCFD determines the radial extent <span class="math inline">\(dr\)</span> for each element on the disc to match the (approximate) length scale determined by the angle <span class="math inline">\(d\theta\)</span> at the midpoint of the element <span class="math inline">\(r+dr\)</span>. Ideally we want <span class="math inline">\(dr\simeq(r+dr)\, d\theta\)</span>, so rearranging gives</p>
+<p><span class="math display">\[dr = \frac{r\, d\theta}{1 - d\theta/2}\]</span></p>
+<p>The axial induction factor <span class="math inline">\(a = (u_{\infty} - u^D)/u^D\)</span> from 1D momentum theory can be related <span class="citation" data-cites="Ivanell2009"></span> to the thrust coefficient <span class="math inline">\(C_T\)</span> on any element on the disk by the relation</p>
+<p><span class="math display">\[C_T = 4 a (1 - a)
+\label{eqn:C_T}\]</span></p>
+<p>Note that for more complex models (multiple turbines, wake interactions or complex terrain), the free-stream velocity <span class="math inline">\(u_{\infty}\)</span> for any given turbine may not be straightforward to define, and is an input to the model for each turbine. The velocity <span class="math inline">\(u^D\)</span> at the disc does not need to be defined at this stage, because it is the thrust coefficient <span class="math inline">\(C_T\)</span> that is usually supplied (as a function of windspeed) for turbines. Thus we solve for the (mininum) root of the quadratic (Equation <a href="#eqn:C_T" data-reference-type="ref" data-reference="eqn:C_T">[eqn:C_T]</a>) to obtain</p>
+<p><span class="math display">\[a = \frac{1-\sqrt{1-C_T}}{2}\]</span></p>
+<p>The thrust per unit area on the disc <span class="math inline">\(dT\)</span> is given as</p>
+<p><span class="math display">\[dT = 2\, \rho\, u_{\infty}^2\, a\, (1 - a)\]</span></p>
+<p>The angular induction factor <span class="math inline">\(a_{\theta}\)</span> may be determined <span class="citation" data-cites="Ivanell2009"></span> to be</p>
+<p><span class="math display">\[a_{\theta} = -\frac{1}{2} \sqrt{\frac{1}{4} + (a(1-a))/\lambda_r^2}\]</span></p>
+<p>where the local speed ratio <span class="math inline">\(\lambda_r = (r+dr/2)\,\omega/u_{\infty}\)</span> and <span class="math inline">\(\omega\)</span> is the angular velocity of the turbine.</p>
+<p>The torque per unit area on the disc <span class="math inline">\(dQ\)</span> is then</p>
+<p><span class="math display">\[dQ = 2\,a_\theta\, (1-a)\, \rho\, u_{\infty}\, \omega\, (r+dr/2)^2\]</span></p>
+<h4 id="specifying-actuator-profiles">Specifying Actuator Profiles</h4>
+<p>zCFD can apply user-defined radial and azimuthal distribution functions of thrust and torque on the disc. By default the distributions are uniform, i.e. <span class="math inline">\(dT_{ij}^D = dT^D\)</span> and <span class="math inline">\(dQ_{ij}^D = dQ^D\)</span>.</p>
+<h3 id="actuator-line">Actuator Line</h3>
+<h3 id="profile">Profile</h3>
+<h1 id="piso">PISO</h1>
+<p>PISO (Pressure-Implicit with Splitting Operators) algorithm.<br />
+</p>
+<h2 id="predictor-step">Predictor Step</h2>
+<p>Continuity for incompressible flows</p>
+<p><span class="math display">\[\nabla \cdot \rho V = 0\]</span></p>
+<p>Momentum equation</p>
+<p><span class="math display">\[\frac{\partial}{\partial t} (\rho V)+\nabla \cdot \left(\rho V \cdot V \right) = -\nabla p +  \nabla \cdot \mu \nabla V\]</span></p>
+<p>Discretise and approximate implicit non linear flux term</p>
+<p><span class="math display">\[\frac{\Omega}{\Delta t} \rho V^{n}_{i} - \frac{\Omega}{\Delta t} \rho V^{m}_{i} + \sum_{f}^{nb} \rho V_{f}^{n}.V_f^m.S_f - \sum_{f}^{nb} \mu \nabla V_f^n \cdot S_f= - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \Omega S_{i}^{m}\]</span></p>
+<p>Let <span class="math inline">\(\rho V_f = f_i \rho V_i + f_j \rho V_j\)</span></p>
+<p>Define</p>
+<p><span class="math display">\[\nabla V_f^n \cdot S_f = \Delta . (\nabla V)_f + k .(\nabla V)_f\]</span></p>
+<p>Where <span class="math inline">\(\Delta\)</span> is the orthogonal contribution and <span class="math inline">\(k\)</span> is the non-orthogonal correction</p>
+<p><span class="math display">\[\nabla V_f^n \cdot S_f = |\Delta| \frac{V_i^n - V_j^n}{|d_{ij}|} + k (\nabla V^m)_f\]</span></p>
+<p>With the two vectors <span class="math inline">\(\Delta\)</span> and <span class="math inline">\(k\)</span> satisfying</p>
+<p><span class="math display">\[S = \Delta + k\]</span></p>
+<p>Choose <span class="math inline">\(\Delta = \frac{d_{ij}}{|d_{ij}|} |S|\)</span> known as the Orthogonal correction approach (See http://powerlab.fsb.hr/ped/kturbo/OpenFOAM/docs/HrvojeJasakPhD.pdf) for further information</p>
+<p><span class="math display">\[\nabla V_f^n \cdot S_f = |\Delta| \frac{V_i^n - V_j^n}{|d_{ij}|} + k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m)\]</span></p>
+<p>Expanding</p>
+<p><span class="math display">\[\begin{split}
+&amp;\frac{\Omega}{\Delta t} \rho V^{n}_{i} - \frac{\Omega}{\Delta t} \rho V^{m}_{i} + \sum_{f}^{nb} ( f_i \rho V_{i}^{n} + f_j \rho V_{j}^{n} ) V_f^m . S_f  \\
+&amp; - \sum_{f}^{nb} \mu (|\Delta| \frac{V_i^n - V_j^n}{|d_{ij}|} + k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m))  = \\
+&amp; - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \Omega S_{i}^{m}
+\end{split}\]</span></p>
+<p>Re-arranging</p>
+<p><span class="math display">\[\begin{split}
+&amp; \left[ \frac{\Omega}{\Delta t} + \sum_{f}^{nb} f_i V_f^m . S_f - \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta|}{|d_{ij}|}  \right] \rho V_{i}^{n}  + \\
+&amp; \left[ \sum_{f}^{nb} f_j V_f^m . S_f + \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta|}{|d_{ij}|} \right] \rho V_{j}^{n}  =  \\ 
+&amp; \frac{\Omega}{\Delta t} \rho V^{m}_{i} - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \Omega S_{i}^{m} + \sum_{f}^{nb} \frac{\mu}{\rho}  k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m) 
+\end{split}\]</span></p>
+<p><span class="math display">\[A \rho V^{n}_{i} + H^{&#39;} \rho V_{j}^{n} = R - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f\]</span></p>
+<p><span class="math display">\[A \rho V^{*} + H^{&#39;} \rho V^{*} = R - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f\]</span></p>
+<p>Add implicit under-relaxation term.</p>
+<p><span class="math display">\[\frac{A}{\alpha_u} \rho V^{*} + H^{&#39;} \rho V^{*} = R - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \frac{1-\alpha_u}{\alpha_u} A \rho V^m\]</span></p>
+<p>Solve for <span class="math inline">\(\rho V^{*}\)</span> using a linear solver. The final predicted velocity <span class="math inline">\(V^*\)</span> is a relaxed combination of <span class="math inline">\(V\)</span> and computed <span class="math inline">\(V^*\)</span></p>
+<h2 id="corrector-step">Corrector Step</h2>
+<p>Define explicit equation for corrected velocity <span class="math inline">\(V^{**}\)</span> using predicted velocity <span class="math inline">\(V^*\)</span></p>
+<p><span class="math display">\[A \rho V^{**} + H^{&#39;} \rho V^{*} = R - \nabla p^{*}\]</span></p>
+<p>With vector <span class="math inline">\(H = R - H^{&#39;} \rho V^{*}\)</span></p>
+<p><span class="math display">\[\rho V^{**} = A^{-1}H - A^{-1} \nabla p^{*}\]</span></p>
+<p>Taking the divergence and recalling that the continuity equation defines <span class="math inline">\(\nabla \rho V = 0\)</span></p>
+<p><span class="math display">\[\nabla^{2}(A^{-1} p^{*}) = \nabla . (A^{-1} H)\]</span></p>
+<p>Integrate over a cell applying divergence theorem</p>
+<p><span class="math display">\[\sum_{f}^{nb} (A^{-1} \nabla p^{*})|_f . S_f = \sum_{f}^{nb} (A^{-1} H)|_f . S_f\]</span></p>
+<p>Define <span class="math inline">\(\nabla p^{*}|_f\cdot S_f = \frac{p_i - p_j}{|d_{ij}|}|S_f|\)</span></p>
+<p><span class="math display">\[\sum_{f}^{nb} A^{-1}|_f . \frac{S_f}{|S_f|} \frac{p_i^* - p_j^*}{|d_{ij}|} |S_f| = \sum_{f}^{nb} (A^{-1} H)|_f . S_f\]</span></p>
+<p><span class="math display">\[\left[ \sum_{f}^{nb} \frac{A^{-1}}{|d_{ij}|}. S_f \right] p_i^*  - \left[ \sum_{f}^{nb} \frac{A^{-1}}{|d_{ij}|}. S_f \right] p_j^*  = \sum_{f}^{nb} (A^{-1} H)|_f . S_f + \phi_c\]</span></p>
+<p>Note the RHS needs and additional correction term to account for the mass flux through a face. (See https://github.com/OpenFOAM/OpenFOAM-2.2.x/blob/master/applications/solvers/incompressible/pisoFoam/pisoFoam.C line 90)</p>
+<p><span class="math display">\[\phi^d = (\rho V_f.S_f - (\rho V^{old}.S_f))\]</span></p>
+<p>Note this is set to zero at the boundary. (See https://github.com/OpenFOAM/OpenFOAM-2.2.x/blob/master/src/finiteVolume/finiteVolume/ddtSchemes/EulerDdtScheme/EulerDdtScheme.C line 392 https://github.com/OpenFOAM/OpenFOAM-2.2.x/blob/master/src/finiteVolume/finiteVolume/ddtSchemes/ddtScheme/ddtScheme.C for Kc</p>
+<p><span class="math display">\[K_c = 1 - min\left[ \frac{|\phi^d|}{| \rho V_f.S_f |+\epsilon},1\right]\]</span></p>
+<p><span class="math display">\[\phi^c = \phi^d K_c \frac{A^{-1}}{\Delta t}\]</span></p>
+<p>The boundary value of the RHS term also need to be scaled to so that the total mass flow if zero. (See https://github.com/OpenFOAM/OpenFOAM-2.2.x/blob/master/src/finiteVolume/cfdTools/general/adjustPhi/adjustPhi.C)</p>
+<p>Solve for corrected pressure <span class="math inline">\(p^{*}\)</span> then compute corrected velocity <span class="math inline">\(u^{**}\)</span>. Note the corrected pressure is not relaxed.</p>
+<p><span class="math display">\[\rho V^{**} = A^{-1}H - A^{-1} \frac{1}{\Omega}\sum_f^{nb} p_f^* . S_f\]</span></p>
+<p>Update mass flow through face to be used in the correction of the RHS of the pressure equation.</p>
+<p>Compute the face mass flux using Rhie-Chow interpolation</p>
+<p><span class="math display">\[\rho V_f = \overline{\rho V_f} + (A^{-1})|_f ( \overline{\nabla p_f} - \nabla p_f )\]</span></p>
+<p>Further correction steps can be applied using same <span class="math inline">\(A\)</span> and <span class="math inline">\(H\)</span> hence the name Split Operators.</p>
+<h1 id="simple">SIMPLE</h1>
+<p>SIMPLE algorithm for steady state incompressible flows.<br />
+</p>
+<h2 id="predictor-step-1">Predictor Step</h2>
+<p>Continuity for incompressible flows</p>
+<p><span class="math display">\[\nabla . \rho V = 0\]</span></p>
+<p>Momentum equation with implicit flux terms</p>
+<p><span class="math display">\[\nabla \cdot \left(\rho V \cdot V \right) = -\nabla p +  \nabla \cdot \mu \nabla V\]</span></p>
+<p>Discretise and approximate non linear flux term assuming interpolation to the face</p>
+<p><span class="math display">\[\sum_{f}^{nb} \rho V_{f}^{n}.V_f^m.S_f - \sum_{f}^{nb} \mu \nabla V_f^n \cdot S_f = - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \Omega S_{i}^{m}\]</span></p>
+<p>Let <span class="math inline">\(\rho V_f = f_i \rho V_i + f_j \rho V_j\)</span></p>
+<p>Define</p>
+<p><span class="math display">\[\nabla V_f^n \cdot S_f = \Delta . (\nabla V)_f + k .(\nabla V)_f\]</span></p>
+<p>Where <span class="math inline">\(\Delta\)</span> is the orthogonal contribution and <span class="math inline">\(k\)</span> is the non-orthogonal correction</p>
+<p><span class="math display">\[\nabla V_f^n \cdot S_f = |\Delta| \frac{V_i^n - V_j^n}{|d_{ij}|} + k (\nabla V^m)_f\]</span></p>
+<p>With the two vectors <span class="math inline">\(\Delta\)</span> and <span class="math inline">\(k\)</span> satisfying</p>
+<p><span class="math display">\[S = \Delta + k\]</span></p>
+<p>Choose <span class="math inline">\(\Delta = \frac{d_{ij}}{|d_{ij}|} |S|\)</span> known as the Orthogonal correction approach (See http://powerlab.fsb.hr/ped/kturbo/OpenFOAM/docs/HrvojeJasakPhD.pdf) for further information</p>
+<p><span class="math display">\[\nabla V_f^n \cdot S_f = |\Delta| \frac{V_i^n - V_j^n}{|d_{ij}|} + k (g_f \nabla V_i^m + (1-g_F) \nabla V_j^m)\]</span></p>
+<p>Inserting</p>
+<p><span class="math display">\[\sum_{f}^{nb} ( f_i \rho V_{i}^{n} + f_j \rho V_{j}^{n} ) V_f^m . S_f  - \sum_{f}^{nb} \mu (|\Delta| \frac{V_i^n - V_j^n}{|d_{ij}|} + k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m)) =  - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \Omega S_{i}^{m}\]</span></p>
+<p>Re-arranging</p>
+<p><span class="math display">\[\begin{split}
+&amp; \left[  \sum_{f}^{nb} f_i V_f^m . S_f - \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta|}{|d_{ij}|}  \right] \rho V_{i}^{n} 
+ + \left[ \sum_{f}^{nb} f_j V_f^m . S_f + \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta|}{|d_{ij}|} \right] \rho V_{j}^{n}  = \\
+&amp;  - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \Omega S_{i}^{m} + \sum_{f}^{nb} \frac{\mu}{\rho}  k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m) 
+\end{split}\]</span></p>
+<p><span class="math display">\[A \rho V^{n}_{i} + H^{&#39;} \rho V_{j}^{n} = R - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f\]</span></p>
+<p><span class="math display">\[A \rho V^{*} + H^{&#39;} \rho V^{*} = R - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f\]</span></p>
+<p>Add implicit relaxation term</p>
+<p><span class="math display">\[\frac{A}{\alpha_u} \rho V^{*} + H^{&#39;} \rho V^{*} = R - \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{m} S_f + \frac{1-\alpha_u}{\alpha_u} A \rho V^m\]</span></p>
+<p>Solve for <span class="math inline">\(V^{*}\)</span> using a linear solver</p>
+<h2 id="corrector-step-1">Corrector Step</h2>
+<p>Define explicit equation for corrected velocity <span class="math inline">\(V^{**}\)</span> using predicted velocity <span class="math inline">\(V^*\)</span></p>
+<p><span class="math display">\[A \rho V^{**} + H^{&#39;} \rho V^{*} = R - \nabla p^{*}\]</span></p>
+<p>With vector <span class="math inline">\(H = R - H^{&#39;} \rho V^{*}\)</span></p>
+<p><span class="math display">\[\rho V^{**} = A^{-1}H - A^{-1} \nabla p^{*}\]</span></p>
+<p>Taking the divergence and recalling that the continuity equation defines <span class="math inline">\(\nabla \cdot \rho V = 0\)</span></p>
+<p><span class="math display">\[\nabla^{2}(A^{-1} p^{*}) = \nabla . (A^{-1} H)\]</span></p>
+<p>Integrate over a cell applying divergence theorem</p>
+<p><span class="math display">\[\sum_{f}^{nb} (A^{-1} \nabla p^{*})|_f . S_f = \sum_{f}^{nb} (A^{-1} H)|_f . S_f\]</span></p>
+<p>Define <span class="math inline">\(\nabla p^{*}|_f = \frac{p_i - p_j}{|d_{ij}|}\)</span></p>
+<p><span class="math display">\[\sum_{f}^{nb} A^{-1}.n_f \frac{p_i^* - p_j^*}{|d_{ij}|} . S_f = \sum_{f}^{nb} (A^{-1} H)|_f . S_f\]</span></p>
+<p><span class="math display">\[\left[ \sum_{f}^{nb} \frac{A^{-1}}{|d_{ij}|}. S_f \right] p_i^*  - \left[ \sum_{f}^{nb} \frac{A^{-1}}{|d_{ij}|}. S_f \right] p_j^* = \sum_{f}^{nb} (A^{-1} H)|_f . S_f\]</span></p>
+<p>The <span class="math inline">\(A^{-1} H\)</span> term on the RHS needs to be interpolated to faces</p>
+<p>Note boundary values of RHS need to be scaled so that total mass flow is zero</p>
+<p>Solve for corrected pressure <span class="math inline">\(p^{*}\)</span> then compute corrected velocity <span class="math inline">\(V^{**}\)</span></p>
+<p><span class="math display">\[\rho V^{**} = A^{-1}H - A^{-1} \frac{1}{\Omega}\sum_f^{nb} p_f^* . S_f\]</span></p>
+<p>Compute the face mass flux using Rhie-Chow interpolation</p>
+<p><span class="math display">\[\rho V_f = \overline{\rho V_f} + (A^{-1})|_f ( \overline{\nabla p_f} - \nabla p_f )\]</span></p>
+<p>Repeat starting from predictor step using <span class="math inline">\(\rho V^{**}\)</span>, <span class="math inline">\(p^*\)</span> and <span class="math inline">\(\rho V_f^{**} . S_f\)</span></p>
+<h1 id="rhie-chow-interpolation">Rhie-Chow Interpolation</h1>
+<p>The development of the Rhie-Chow interpolation procedure for the calculation of the velocity components at a control-volume face enabled the formulation of the SIMPLE algorithm on collocated grids. In this procedure the interface velocity vector is obtained by constructing a pseudo-momentum equation at the control-volume face from the momentum equations of cells i and j straddling the interface. These equations are given by</p>
+<p><span class="math display">\[\rho V_i = A^{-1}H - A^{-1} \nabla p_i\]</span></p>
+<p>The pseudo-momentum equation for <span class="math inline">\(V_f\)</span> should be similar and can be written as</p>
+<p><span class="math display">\[\rho V_f = (A^{-1}H)|_f - (A^{-1})|_f \nabla p_f\]</span></p>
+<p>Assuming linear interpolation to the face let</p>
+<p><span class="math display">\[(A^{-1})|_f = g_f (A^{-1})_i + (1-g_f) (A^{-1})_j\]</span></p>
+<p>and</p>
+<p><span class="math display">\[(A^{-1}H)|_f = g_f (A^{-1}H)_i + (1-g_f) (A^{-1}H)_j\]</span></p>
+<p>Expanding the <span class="math inline">\(A^{-1}H\)</span> term</p>
+<p><span class="math display">\[(A^{-1}H)|_f = g_f (\rho V_i + A^{-1} \nabla p_i) + (1-g_f) (\rho V_j + A^{-1} \nabla p_j)\]</span></p>
+<p><span class="math display">\[(A^{-1}H)|_f = \overline{\rho V_f} + (A^{-1})|_f \overline{\nabla p_f}\]</span></p>
+<p>where <span class="math inline">\(\overline{\rho V_f}\)</span> is the face interpolated velocity and <span class="math inline">\(\overline{\nabla p_f}\)</span> is the face interpolated cell pressure gradient</p>
+<p>Substituting <span class="math inline">\((A^{-1}H)|_f\)</span> in the equation for <span class="math inline">\(\rho V_f\)</span></p>
+<p><span class="math display">\[\rho V_f = \overline{\rho V_f} + (A^{-1})|_f \overline{\nabla p_f} - (A^{-1})|_f \nabla p_f\]</span></p>
+<p><span class="math display">\[\rho V_f = \overline{\rho V_f} + (A^{-1})|_f ( \overline{\nabla p_f} - \nabla p_f )\]</span></p>
+<h1 id="coupled-incompressible">Coupled Incompressible</h1>
+<p>Coupled algorithm for steady state incompressible flows.<br />
+Continuity for incompressible flows</p>
+<p><span class="math display">\[\nabla . \rho V = 0\]</span></p>
+<p>Momemtum equation with implicit flux terms</p>
+<p><span class="math display">\[\nabla \cdot \left(\rho V \cdot V \right) = -\nabla p +  \nabla \cdot \mu \nabla V + \rho F_{ext}\]</span></p>
+<p>Discretise and approximate non linear flux term assuming interpolation to the face</p>
+<p><span class="math display">\[\sum_{f}^{nb} \rho V_{f}^{n}.V_f^m.S_f - \sum_{f}^{nb} \mu \nabla V_f^n \cdot S_f + \frac{1}{\Omega} \sum_{f}^{nb} p_{f}^{n} S_f =   \Omega S_{i}^{m}\]</span></p>
+<p>Let <span class="math inline">\(\rho V_f = f_i \rho V_i + f_j \rho V_j\)</span></p>
+<p>Let <span class="math inline">\(p_f = g_f p_i + (1-g_f) p_j\)</span></p>
+<p>The discretised continuity equation at a face is</p>
+<p><span class="math display">\[\sum \rho V_f . S_f = 0\]</span></p>
+<p>Using Rhie-Chow interpolation</p>
+<p><span class="math display">\[\sum  (\overline{\rho V_f} + (A^{-1})|_f ( \overline{\nabla p_f} - \nabla p_f ) ) . S_f = 0\]</span></p>
+<p>Expanding</p>
+<p><span class="math display">\[\sum \overline{\rho V_f} . S_f - \sum (A^{-1})|_f \nabla p_f . S_f = - \sum (A^{-1})|_f  \overline{\nabla p_f} . S_f\]</span></p>
+<p>Recall that</p>
+<p><span class="math display">\[\overline{\rho V_f} = g_f \rho V_i + (1-g_f)\rho V_j\]</span></p>
+<p><span class="math display">\[\overline{\nabla p_f} = g_f \nabla p_i + (1-g_f)\nabla p_j\]</span></p>
+<p>Incompressible internal energy equation</p>
+<p><span class="math display">\[\nabla \cdot ( \rho e \cdot V) =  - \nabla \cdot k \nabla T  + \nabla \cdot (V \cdot \mu \nabla V)\]</span></p>
+<p>Discretise</p>
+<p><span class="math display">\[\sum_{f}^{nb} \rho e_{f}^{n}.V_f^m.S_f - \sum_{f}^{nb} \mu V_f^m \nabla V_f^n \cdot S_f  + \sum_{f}^{nb} k \nabla T^n .S_f  = 0\]</span></p>
+<p><span class="math display">\[\sum_{f}^{nb} \rho e_{f}^{n}.V_f^m.S_f - \sum_{f}^{nb} \mu V_f^m \nabla V_f^n \cdot S_f  + \sum_{f}^{nb} \frac{k}{\rho C_p} k \nabla \rho e^n .S_f  = 0\]</span></p>
+<p>Diagonal terms</p>
+<p><span class="math display">\[\begin{bmatrix} 
+\sum f_i V_f^m . S_f - \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta_x|}{|d_{ij}|}  &amp; 0 &amp; 0 &amp; \frac{1}{\Omega}\sum g_f S_f^x &amp; 0\\ 
+0               &amp;  \sum f_i V_f^m  . S_f- \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta_y|}{|d_{ij}|} &amp; 0 &amp;  \frac{1}{\Omega}\sum g_f S_f^y &amp; 0\\
+0               &amp; 0 &amp; \sum f_i V_f^m . S_f - \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta_z|}{|d_{ij}|} &amp;  \frac{1}{\Omega}\sum g_f S_f^z &amp; 0\\
+\sum g_f . S_f^x &amp; \sum g_f . S_f^y &amp; \sum g_f . S_f^z &amp;  - \sum \frac{(A^{-1})|_f}{|d_{ij}|} . S_f &amp; 0\\
+ - \sum_{f}^{nb} \frac{\mu}{\rho} V_f^m.n_f^x \frac{|\Delta_x|}{|d_{ij}|} &amp; - \sum_{f}^{nb} \frac{\mu}{\rho} V_f^m.n_f^x \frac{|\Delta_y|}{|d_{ij}|} &amp;  - \sum_{f}^{nb} \frac{\mu}{\rho} V_f^m.n_f^x \frac{|\Delta_z|}{|d_{ij}|} &amp; 0 &amp; \sum f_i V_f^m . S_f + \sum_{f}^{nb} \frac{k}{\rho C_p} \frac{|\Delta|}{|d_{ij}|} \\
+\end{bmatrix} 
+\begin{bmatrix} 
+\rho u_i \\
+\rho v_i \\
+\rho w_i \\
+p_i \\
+\rho e_i \\
+\end{bmatrix}\]</span></p>
+<p>Off diagonal terms</p>
+<p><span class="math display">\[\begin{bmatrix} 
+\sum f_j V_f^m . S_f + \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta_x|}{|d_{ij}|}  &amp; 0 &amp; 0 &amp; \frac{1}{\Omega}\sum (1-g_f) S_f^x &amp; 0\\ 
+0               &amp;  \sum f_j V_f^m . S_f+ \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta_y|}{|d_{ij}|} &amp; 0 &amp;  \frac{1}{\Omega}\sum (1-g_f) S_f^y &amp; 0\\
+0               &amp; 0 &amp; \sum f_j V_f^m . S_f - \sum_{f}^{nb} \frac{\mu}{\rho} \frac{|\Delta_z|}{|d_{ij}|} &amp;  \frac{1}{\Omega}\sum (1-g_f) S_f^z &amp; 0\\
+\sum (1-g_f) . S_f^x &amp; \sum (1-g_f) . S_f^y &amp; \sum (1-g_f) . S_f^z &amp;   \sum \frac{(A^{-1})|_f}{|d_{ij}|} . S_f &amp; 0\\
+ \sum_{f}^{nb} \frac{\mu}{\rho} V_f^m.n_f^x \frac{|\Delta_x|}{|d_{ij}|} &amp;  \sum_{f}^{nb} \frac{\mu}{\rho} V_f^m.n_f^x \frac{|\Delta_y|}{|d_{ij}|} &amp;  \sum_{f}^{nb} \frac{\mu}{\rho} V_f^m.n_f^s \frac{|\Delta_z|}{|d_{ij}|} &amp; 0 &amp; \sum f_j V_f^m . S_f - + \sum_{f}^{nb} \frac{k}{\rho C_p} \frac{|\Delta|}{|d_{ij}|}\\
+\end{bmatrix} 
+\begin{bmatrix} 
+\rho u_j \\
+\rho v_j \\
+\rho w_j \\
+p_j \\
+\rho e_j \\
+\end{bmatrix}\]</span></p>
+<p>Right hand side</p>
+<p><span class="math display">\[\begin{bmatrix}
+\Omega S_i^m + \sum_{f}^{nb} \frac{\mu}{\rho}  k_x (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m) \\
+\Omega S_i^m + \sum_{f}^{nb} \frac{\mu}{\rho} k_y (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m) \\
+\Omega S_i^m + \sum_{f}^{nb} \frac{\mu}{\rho}  k_y (g_f \nabla V_i^m + (1-g_f d) \nabla V_j^m)  \\
+- \sum (A^{-1})|_f  (g_f \nabla p_i^m + (1-g_f)\nabla p_j^m) . S_f \\
+\sum_{f}^{nb} \frac{\mu}{\rho}  V_f^m.S_f k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m) - \sum_{f}^{nb} \frac{k}{\rho C_p}  k (g_f \nabla V_i^m + (1-g_f) \nabla V_j^m) \\
+\end{bmatrix}\]</span></p>
+<p>Solve using a linear solver.</p>
+<p>Update <span class="math inline">\(\rho V_f\)</span> using Rhie-Chow interpolation.</p>
+<p>Solve other scalar equations then repeat until convergence</p>
+<h1 id="turbulence-modelling">Turbulence Modelling</h1>
+<p>The Favre-averaged or Reynolds Averaged Navier Stokes (RANS) equations result in four terms that need to be modelled. These are a Reynolds stress term in the momentum equation and turbulent heat flux, molecular diffusion and turbulent transport in the energy equation.<br />
+The Reynolds Stress term is usually represented by the Boussinesq approximation <span class="math display">\[\tau_{ij}^t=2\mu_t\left(S_{ij}-\frac{1}{3}\frac{\partial u_k}{\partial x_k}\delta_{ij}\right)-\frac{2}{3}\rho k \delta_{ij}\]</span> with <span class="math inline">\(\tau_{ij}^t\)</span> representing Turbulent stress and the strain rate tensor <span class="math inline">\(S_{ij}\)</span> defined as before. The turbulent heat flux is modelled using the Reynolds analogy and Fourier’s law <span class="math display">\[C_p\overline{\rho u_j^{&#39;&#39;}T^{&#39;&#39;}}\approx -\frac{C_p\mu_t}{Pr_t}\frac{\partial T}{\partial x_j}\]</span> where <span class="math inline">\(Pr_t\)</span> is a turbulent Prandtl number (e.g. 0.9 for air).<br />
+The terms associated with molecular diffusion and turbulent transport in the energy equation are lumped together. <span class="math display">\[\overline{\sigma_{ij}u_i^{&#39;&#39;}}-\frac{1}{2}\overline{\rho u_i^{&#39;&#39;}u_j^{&#39;&#39;}u_k^{&#39;&#39;}} \approx \left(\mu + \sigma_k\mu_t\right)\frac{\partial k}{\partial x_j}\]</span> where <span class="math inline">\(\sigma_k\)</span> is coefficient associated with the modelling equation for <span class="math inline">\(k\)</span>.<br />
+These terms are added to the equations previously described and the turbulence model is then used to calculate the eddy viscosity <span class="math inline">\(\mu_t\)</span> and the turbulent kinetic energy <span class="math inline">\(k\)</span>.</p>
+<h2 id="menter-sst-2003vsust-two-equation-model">Menter SST-2003Vsust Two Equation Model</h2>
+<p>A detailed description of the Standard Menter Shear Stress Transport (SST) two equation turbulence model can be found in <span class="citation" data-cites="1994AIAAJ..32.1598M"></span>. A variation of this model that was published in 2003 (SST-2003) has several minor variations of the original SST version. See <span class="citation" data-cites="MenKunLan03"></span>. The Menter SST Model with Vorticity Source Term (SST-V) makes use of the vorticity magnitude in the production term (see <span class="citation" data-cites="nla.cat-vn4081690"></span>) and the SST Model with Controlled Decay (SST-sust) eliminates the non-physical decay of turbulence in the freestream for external aerodynamic problems through addition of sustaining terms to the equations. See <span class="citation" data-cites="Spalart2007a"></span>. The current implementation combines all three updates to the Standard model.<br />
+Turbulent kinetic energy equation <span class="math display">\[\begin{split}
+\frac{\partial (\rho k)}{\partial \tau} + \frac{\partial (u \,\rho k)}{\partial x} + \frac{\partial (v \,\rho k)}{\partial y} + \frac{\partial (w \,\rho k)}{\partial z} = &amp; P_m - \beta^{*}\rho \omega k \\ 
+&amp; +\frac{\partial }{\partial x}\left[\left(\mu + \sigma_k \mu_t\right)\frac{\partial k}{\partial x} \right] \\
+&amp; + \frac{\partial}{\partial y}\left[\left(\mu + \sigma_k \mu_t\right)\frac{\partial k}{\partial y} \right] \\ 
+&amp; + \frac{\partial}{\partial z} \left[\left(\mu + \sigma_k \mu_t\right)\frac{\partial k}{\partial z} \right]  \\ 
+&amp;  + \beta^{*}\rho\omega_{amb}k_{amb} \\
+&amp; + P_{kb}
+\end{split}\]</span> <span class="math display">\[\frac{\partial (\rho k)}{\partial \tau} + \nabla \cdot (V \cdot \rho k) = P_m - \beta^{*}\rho \omega k + \nabla \cdot \left[\left(\mu + \sigma_k \mu_t \right) \nabla k \right] 
++ \beta^{*}\rho\omega_{amb}k_{amb} + P_{kb}\]</span><br />
+Equation that defines the turn over time of turbulent eddies <span class="math inline">\(\omega\)</span> <span class="math display">\[\begin{split}
+\frac{\partial (\rho \omega)}{\partial \tau} + \frac{\partial (u \,\rho \omega)}{\partial x} + \frac{\partial (v \,\rho \omega)}{\partial y} + \frac{\partial (w \,\rho \omega)}{\partial z} = &amp; \frac{\gamma_m}{\nu_t}P_m - \beta\rho \omega^2 \\ 
+&amp; +\frac{\partial }{\partial x}\left[\left(\mu + \sigma_{\omega} \mu_t\right)\frac{\partial \omega}{\partial x} \right] \\
+&amp; + \frac{\partial}{\partial y}\left[\left(\mu + \sigma_{\omega} \mu_t\right)\frac{\partial \omega}{\partial y} \right] \\ 
+&amp; + \frac{\partial}{\partial z} \left[\left(\mu + \sigma_{\omega} \mu_t\right)\frac{\partial \omega}{\partial z} \right]  \\ 
+&amp; + 2\left(1-F_1\right)\frac{\rho\sigma_{\omega 2}}{\omega}\left(\frac{\partial k}{\partial x}\frac{\partial \omega}{\partial x} + \frac{\partial k}{\partial y}\frac{\partial \omega}{\partial y} + \frac{\partial k}{\partial z}\frac{\partial \omega}{\partial z}\right) \\
+&amp;  + \beta\rho\omega_{amb}^2 \\
+&amp; + \frac{\gamma_m}{\nu_t} P_{\omega b}
+\end{split}\]</span> <span class="math display">\[\begin{split}
+\frac{\partial (\rho \omega)}{\partial \tau} +  \nabla \cdot (V \cdot \rho k) = &amp;  \frac{\gamma_m}{\nu_t}P_m - \beta\rho \omega^2 + \nabla \cdot \left[\left(\mu + \sigma_{\omega} \mu_t \right) \nabla \omega \right] \\ + &amp; 2\left(1-F_1\right)\frac{\rho\sigma_{\omega 2}}{\omega}\left( \nabla k \cdot \nabla \omega\right)
++ \beta\rho\omega_{amb}^2 + \frac{\gamma_m}{\nu_t} P_{\omega b}
+\end{split}\]</span></p>
+<p>Turbulent production term <span class="math display">\[P_m=\mu_t\Omega_v^2-\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}\]</span></p>
+<p>Buoyancy production terms <span class="math display">\[P_{kb}=-\frac{\mu_t}{\rho \sigma_\rho}g_i\left[\frac{\partial \rho}{\partial x_i} - \frac{\rho \Gamma}{(\gamma-1)T}\right]\]</span> Turbulence Schmidt Number <span class="math inline">\(\sigma_\rho=1.0\)</span></p>
+<p><span class="math display">\[P_{\omega b}= C_3 \max\left(0,P_{kp}\right)\]</span> Dissipation coefficient <span class="math inline">\(C_3=1\)</span></p>
+<p>Turbulent viscosity <span class="math display">\[\mu_t=\rho kT\]</span> <span class="math display">\[T=\min\left[\frac{a_1}{\max\left(a_1\omega,\Omega_v F_2\right)},\frac{0.6}{\sqrt{3}\Omega_v}\right]\]</span> Vorticity magnitude <span class="math display">\[\Omega_v=\sqrt{2W_{ij}W_{ij}}\]</span> <span class="math display">\[W_{ij}=\frac{1}{2}\left(\frac{\partial u_i}{\partial x_j}-\frac{\partial u_j}{\partial x_i}\right)\]</span> RANS length scale <span class="math display">\[L_{RANS}=\frac{\sqrt{k}}{\beta^{*\frac{1}{4}}\omega}\]</span></p>
+<p>The turbulent kinetic energy dissipation term can be expressed as a function of the length scale</p>
+<p><span class="math display">\[\beta^{*}\omega\rho k = \rho k \frac{\sqrt{k}\beta^{*\frac{3}{4}}}{L_{RANS}}\]</span> For eddy resolving techniques like DES, DDES and LES the lengthscale can be set according to the appropriate filter function Blending function <span class="math display">\[\phi=F_1\phi_1+\left(1-F_1\right)\phi_2\]</span> <span class="math display">\[\gamma_m=F_1\gamma_1+\left(1-F_1\right)\gamma_2\]</span><span class="math display">\[\beta_m=F_1\beta_1+\left(1-F_1\right)\beta_2\]</span> <span class="math display">\[F_1=\max\left(F_3,\tanh \left(arg_1^4\right)\right)\]</span> <span class="math display">\[arg_1=\min\left[\max\left(\frac{\sqrt{k}}{\beta^{*}\omega d},\frac{500\nu}{d^2\omega}\right),\frac{4\rho\sigma_{\omega 2}k}{CD_{k\omega}d^2}\right]\]</span> <span class="math display">\[CD_{k\omega}=\max\left(2\rho\sigma_{\omega 2}\frac{1}{\omega}\frac{\partial k}{\partial x_j}\frac{\partial \omega}{\partial x_j},10^{-20}\right)\]</span> <span class="math display">\[F_2=\tanh\left(arg_2^2\right)\]</span> <span class="math display">\[arg_2=\max\left(2\frac{\sqrt{k}}{\beta^{*}\omega d},\frac{500\nu}{d^2\omega}\right)\]</span> <span class="math display">\[F_3=\exp\left(-\left(\frac{R_y}{120}\right)^8\right)\]</span> <span class="math display">\[R_y=\frac{\rho d k^{1/2}}{\mu}\]</span> Production limiter <span class="math display">\[P_{m_{lim}}=\min\left(P_m,10\beta^*\rho\omega k\right)\]</span> Boundary conditions <span class="math display">\[\omega_{wall}=10\frac{6\nu}{\beta_1\Delta d^2}\]</span> <span class="math display">\[k_{wall}=0\]</span> <span class="math display">\[\omega_{farfield}=\omega_{amb}=\frac{5U_{\infty}}{L}\]</span> <span class="math display">\[\omega_{farfield}=\omega_{amb}=\frac{k}{\nu}\frac{\mu}{\mu_t}\]</span> Note <span class="math display">\[\frac{\mu_t}{\mu}=\frac{\sqrt{k}}{\nu}\beta^{*\frac{1}{4}}L_{RANS}\]</span> With <span class="math inline">\(U_{\infty}\)</span> the speed at infinity. <span class="math display">\[k_{farfield}=k_{amb}=10^{-6}U_{\infty}^2\]</span> <span class="math display">\[k_{farfield}=k_{amb}=\frac{3}{2}\left(U_{\infty}I\right)^2\]</span> Where <span class="math inline">\(I\)</span> is the turbulence intensity</p>
+<p>Constants <span class="math display">\[\gamma_1=\frac{\beta_1}{\beta^{*}}-\frac{\sigma_{\omega 1}\kappa^2}{\sqrt{\beta^{*}}}\]</span> <span class="math display">\[\gamma_2=\frac{\beta_2}{\beta^{*}}-\frac{\sigma_{\omega 2}\kappa^2}{\sqrt{\beta^{*}}}\]</span> <span class="math display">\[\sigma_{k1}=0.85 \: \sigma_{k2}=1.0\]</span> <span class="math display">\[\sigma_{\omega 1}=0.5 \: \sigma_{\omega 2}=0.856\]</span> <span class="math display">\[\beta_1=0.075 \: \beta_2=0.0828\]</span> <span class="math display">\[\beta^{*}=0.09\]</span> <span class="math display">\[\kappa=0.41\]</span> <span class="math display">\[a_1=0.31\]</span></p>
+<p>The RANS conserved variables are <span class="math display">\[W=\left[\rho,\rho u,\rho v,\rho w, \rho E, \rho k, \rho \omega, \rho \phi\right]^{T}\]</span> corresponding to primitive variables <span class="math display">\[Q=\left[p,u,v,w,T,k,\omega,\phi\right]^{T}.\]</span> The advective flux terms are given by <span class="math display">\[F^{RANS}=\begin{pmatrix} 
+0 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 0\\
+\rho u k&amp; \rho v k&amp; \rho w k \\
+\rho u \omega&amp; \rho v \omega&amp; \rho w \omega \\
+0 &amp; 0 &amp; 0
+\end{pmatrix}\]</span> The diffusive flux terms are given by <span class="math display">\[G^{RANS}=\begin{pmatrix} 
+0 &amp; 0 &amp; 0 \\ 
+\tau_{xx}^t &amp; \tau_{xy}^t &amp; \tau_{xz}^t \\
+\tau_{xy}^t &amp; \tau_{yy}^t &amp; \tau_{yz}^t \\
+\tau_{xz}^t &amp; \tau_{yz}^t &amp; \tau_{zz}^t \\
+\tau_{xx}^t u + \tau_{xy}^t v + \tau_{xz}^t w + k^t\frac{\partial T}{\partial x} &amp; \tau_{xy}^t u + \tau_{yy}^t v + \tau_{yz}^t w + k^t\frac{\partial T}{\partial y} &amp; \tau_{xz}^t u + \tau_{yz}^t v + \tau_{zz}^t w + k^t\frac{\partial T}{\partial z} \\
+(\mu+\sigma_k\mu_t)\frac{\partial k}{\partial x} &amp; (\mu+\sigma_k\mu_t)\frac{\partial k}{\partial y} &amp; (\mu+\sigma_k\mu_t)\frac{\partial k}{\partial z} \\
+(\mu+\sigma_\omega\mu_t)\frac{\partial \omega}{\partial x} &amp; (\mu+\sigma_\omega\mu_t)\frac{\partial \omega}{\partial y} &amp; (\mu+\sigma_\omega\mu_t)\frac{\partial \omega}{\partial z} \\
+0 &amp; 0 &amp; 0 
+\end{pmatrix}\]</span> The source flux terms are given by <span class="math display">\[S^{RANS}=\begin{pmatrix}
+0\\
+0\\
+0\\
+0\\
+0\\
+P_m - \beta^{*}\rho \omega k + \beta^{*}\rho\omega_{amb}k_{amb}\\
+\frac{\gamma_m}{\nu_t}P_m - \beta\rho \omega^2  +  2\left(1-F_1\right)\frac{\rho\sigma_{\omega 2}}{\omega}\left( \nabla k \cdot \nabla \omega\right)
++ \beta\rho\omega_{amb}^2\\
+0
+\end{pmatrix}\]</span></p>
+<h2 id="diffusive-jacobian">Diffusive Jacobian</h2>
+<p>To reduce the stencil size we make use of a thin shear layer (TSL) [TODO - reference] gradient approximation at the face, therefore the combined viscous and reynolds stress terms can be represented as <span class="math display">\[\begin{aligned}
+\tau_{xx}&amp;=2(\mu+\mu_t)\left(\frac{\partial u}{\partial x} - \frac{1}{3}\left(\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}+\frac{\partial w}{\partial z}\right)\right)-\frac{2}{3}\rho k\\
+&amp;=(\mu+\mu_t)\left(\frac{4}{3}\frac{u_j-u_i}{d_{ij}}\Delta x_x-\frac{2}{3}\frac{v_j-v_i}{d_{ij}}\Delta x_y - \frac{2}{3}\frac{w_j-w_i}{d_{ij}}\Delta x_z\right)-\frac{2}{3}\rho k\end{aligned}\]</span> <span class="math display">\[\begin{aligned}
+\tau_{yy}&amp;=2(\mu+\mu_t)\left(\frac{\partial v}{\partial y} - \frac{1}{3}\left(\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}+\frac{\partial w}{\partial z}\right)\right)-\frac{2}{3}\rho k\\
+&amp;=(\mu+\mu_t)\left(-\frac{2}{3}\frac{u_j-u_i}{d_{ij}}\Delta x_x+\frac{4}{3}\frac{v_j-v_i}{d_{ij}}\Delta x_y - \frac{2}{3}\frac{w_j-w_i}{d_{ij}}\Delta x_z\right)-\frac{2}{3}\rho k\end{aligned}\]</span> <span class="math display">\[\begin{aligned}
+\tau_{zz}&amp;=2(\mu+\mu_t)\left(\frac{\partial w}{\partial z} - \frac{1}{3}\left(\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}+\frac{\partial w}{\partial z}\right)\right)-\frac{2}{3}\rho k\\
+&amp;=(\mu+\mu_t)\left(-\frac{2}{3}\frac{u_j-u_i}{d_{ij}}\Delta x_x-\frac{2}{3}\frac{v_j-v_i}{d_{ij}}\Delta x_y + \frac{4}{3}\frac{w_j-w_i}{d_{ij}}\Delta x_z\right)-\frac{2}{3}\rho k\end{aligned}\]</span> <span class="math display">\[\tau_{xy}=2(\mu+\mu_t)\left(\frac{1}{2}\left(\frac{\partial u}{\partial y} + \frac{\partial v}{\partial x}\right) \right)=(\mu+\mu_t)\left(\frac{u_j-u_i}{d_{ij}}\Delta x_y+\frac{v_j-v_i}{d_{ij}}\Delta x_x \right)\]</span> <span class="math display">\[\tau_{xz}=2(\mu+\mu_t)\left(\frac{1}{2}\left(\frac{\partial u}{\partial z} + \frac{\partial w}{\partial x}\right) \right)=(\mu+\mu_t)\left(\frac{u_j-u_i}{d_{ij}}\Delta x_z+\frac{w_j-w_i}{d_{ij}}\Delta x_x \right)\]</span> <span class="math display">\[\tau_{yz}=2(\mu+\mu_t)\left(\frac{1}{2}\left(\frac{\partial v}{\partial z} + \frac{\partial w}{\partial y}\right) \right)=(\mu+\mu_t)\left(\frac{v_j-v_i}{d_{ij}}\Delta x_z+\frac{w_j-w_i}{d_{ij}}\Delta x_y \right)\]</span> Assuming <span class="math display">\[T=\frac{e}{C_v}\]</span> The total heat flux can be expressed by using equations from Chapter 3 in a form more suitable for subsequent manipulation <span class="math display">\[\begin{split}
+(k+k^t)\frac{\partial T}{\partial x}&amp;=C_p\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{e}{C_v}\right)\\
+&amp;=\frac{C_p}{C_v}\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{\rho E}{\rho}-\frac{V^2}{2}\right)\\
+&amp;=\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{\rho E}{\rho}-\frac{\rho^2V^2}{\rho^2 2}\right)
+\end{split}\]</span> The jacobian of the combined diffusive flux matrix is <span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho)}=\begin{pmatrix}
+0 \\
+\begin{aligned}
+-(\mu+\mu_t)&amp;\left[\left(\frac{4}{3}\frac{\partial u/\rho}{\partial x}-\frac{2}{3}\frac{\partial v/\rho}{\partial y}-\frac{2}{3}\frac{\partial w/\rho}{\partial z}\right)n_x \right.\\
+&amp;\left. + \left(\frac{\partial u/\rho}{\partial y}+\frac{\partial v/\rho}{\partial x}\right)n_y \right.\\
+&amp;\left.+ \left(\frac{\partial u/\rho}{\partial z}+\frac{\partial w/\rho}{\partial x} \right)n_z\right] 
+\end{aligned}
+\\
+\begin{aligned}
+-(\mu+\mu_t)&amp;\left[\left( \frac{\partial u/\rho}{\partial y} + \frac{\partial v/\rho}{\partial x} \right)n_x\right.\\
+&amp;\left.+\left(\frac{4}{3}\frac{\partial v/\rho}{\partial y}-\frac{2}{3}\frac{\partial u/\rho}{\partial x}-\frac{2}{3}\frac{\partial w/\rho}{\partial z}\right)n_y\right.\\
+&amp;\left. + \left( \frac{\partial v/\rho}{\partial z} + \frac{\partial w/\rho}{\partial y} \right)n_z\right]  
+\end{aligned}
+\\
+\begin{aligned}
+-(\mu+\mu_t)&amp;\left[\left( \frac{\partial u/\rho}{\partial z} + \frac{\partial w/\rho}{\partial x} \right)n_x\right.\\
+&amp;\left.+\left( \frac{\partial v/\rho}{\partial z} + \frac{\partial w/\rho}{\partial y} \right)n_y\right.\\
+&amp;\left.+\left(\frac{4}{3}\frac{\partial w/\rho}{\partial z}-\frac{2}{3}\frac{\partial u/\rho}{\partial x}-\frac{2}{3}\frac{\partial v/\rho}{\partial y}\right)n_z \right]  
+\end{aligned}
+\\
+m_{15} \\
+-(\mu + \sigma_k \mu_t)\left[\frac{\partial k/\rho}{\partial x}n_x + \frac{\partial k/\rho}{\partial y}n_y + \frac{\partial k/\rho}{\partial z}n_z\right] \\
+-(\mu + \sigma_\omega \mu_t)\left[\frac{\partial \omega/\rho}{\partial x}n_x + \frac{\partial \omega/\rho}{\partial y}n_y + \frac{\partial \omega/\rho}{\partial z}n_z\right] \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\begin{split}
+m_{15}=-(\mu+\mu_t)&amp;\left[ u\left(\frac{4}{3}\frac{\partial u/\rho}{\partial x}-\frac{2}{3}\frac{\partial v/\rho}{\partial y}-\frac{2}{3}\frac{\partial w/\rho}{\partial z}\right)\right.\\
+ &amp;\left. + v\left(\frac{\partial u/\rho}{\partial y}+\frac{\partial v/\rho}{\partial x}\right)\right.\\
+ &amp;\left. + w\left(\frac{\partial u/\rho}{\partial z}+\frac{\partial w/\rho}{\partial x} \right)\right]n_x \\
+&amp;- \frac{1}{\rho}(u\tau_{xx}+v\tau_{xy}+w\tau_{xz})n_x -\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{E}{\rho}-\frac{V^2}{\rho}\right)n_x\\
+-(\mu+\mu_t)&amp;\left[u\left(\frac{\partial u/\rho}{\partial y} + \frac{\partial v/\rho}{\partial x}\right)\right.\\
+&amp;\left.+v\left(\frac{4}{3}\frac{\partial v/\rho}{\partial y}-\frac{2}{3}\frac{\partial u/\rho}{\partial x}-\frac{2}{3}\frac{\partial w/\rho}{\partial z}\right)\right.\\
+&amp;\left. + w\left( \frac{\partial v/\rho}{\partial z} + \frac{\partial w/\rho}{\partial y} \right)\right]n_y \\
+&amp;- \frac{1}{\rho}(u\tau_{xy}+v\tau_{yy}+w\tau_{yz})n_y -\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial y}\left(\frac{E}{\rho}-\frac{V^2}{\rho}\right)n_y\\
+-(\mu+\mu_t)&amp;\left[u\left( \frac{\partial u/\rho}{\partial z} + \frac{\partial w/\rho}{\partial x} \right)\right.\\
+&amp;\left.+v\left( \frac{\partial v/\rho}{\partial z} + \frac{\partial w/\rho}{\partial y} \right)\right.\\
+&amp;\left.+w\left(\frac{4}{3}\frac{\partial w/\rho}{\partial z}-\frac{2}{3}\frac{\partial u/\rho}{\partial x}-\frac{2}{3}\frac{\partial v/\rho}{\partial y}\right)\right]n_z \\
+&amp;- \frac{1}{\rho}(u\tau_{xz}+v\tau_{yz}+w\tau_{zz})n_z-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial z}\left(\frac{E}{\rho}-\frac{V^2}{\rho}\right)n_z
+\end{split}\]</span></p>
+<p><span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho u)}=\begin{pmatrix}
+0 \\
+(\mu+\mu_t)\left[\frac{4}{3}\frac{\partial 1/\rho}{\partial x}n_x + \frac{\partial 1/\rho}{\partial y}n_y + \frac{\partial 1/\rho}{\partial z}n_z\right] \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial y}n_x-\frac{2}{3}\frac{\partial 1/\rho}{\partial x}n_y\right] \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial z}n_x-\frac{2}{3}\frac{\partial 1/\rho}{\partial x}n_z \right] \\
+m_{25} \\
+0 \\
+0 \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\begin{aligned}
+m_{25}=(\mu+\mu_t)&amp;\left[u\left(\frac{4}{3}\frac{\partial 1/\rho}{\partial x}n_x + \frac{\partial 1/\rho}{\partial y}n_y + \frac{\partial 1/\rho}{\partial z}n_z\right)\right.\\
+&amp;\left.+v\left(\frac{\partial 1/\rho}{\partial y}n_x-\frac{2}{3}\frac{\partial 1/\rho}{\partial x}n_y\right)\right.\\
+&amp;\left.+w\left(\frac{\partial 1/\rho}{\partial z}n_x-\frac{2}{3}\frac{\partial 1/\rho}{\partial x}n_z \right)\right]\\&amp;+\frac{1}{\rho}(\tau_{xx}n_x+\tau_{xy}n_y+\tau_{xz}n_z)\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{u}{\rho}\right)n_x\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial y}\left(\frac{u}{\rho}\right)n_y\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial z}\left(\frac{u}{\rho}\right)n_z\end{aligned}\]</span></p>
+<p><span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho v)}=\begin{pmatrix}
+0 \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial x}n_y-\frac{2}{3}\frac{\partial 1/\rho}{\partial y}n_x \right] \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial x}n_x + \frac{4}{3}\frac{\partial 1/\rho}{\partial y}n_y + \frac{\partial 1/\rho}{\partial z}n_z\right] \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial z}n_y-\frac{2}{3}\frac{\partial 1/\rho}{\partial y}n_z\right] \\
+m_{35} \\
+0 \\
+0 \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\begin{aligned}
+m_{35}=(\mu+\mu_t)&amp;\left[u\left(\frac{\partial 1/\rho}{\partial x}n_y-\frac{2}{3}\frac{\partial 1/\rho}{\partial y}n_x\right)\right.\\
+&amp;\left.+v\left(\frac{\partial 1/\rho}{\partial x}n_x + \frac{4}{3}\frac{\partial 1/\rho}{\partial y}n_y + \frac{\partial 1/\rho}{\partial z}n_z\right)\right.\\
+&amp;\left.+w\left(\frac{\partial 1/\rho}{\partial z}n_y-\frac{2}{3}\frac{\partial 1/\rho}{\partial y}n_z\right)\right]\\
+&amp;+\frac{1}{\rho}(\tau_{xy}n_x+\tau_{yy}n_y+\tau_{yz}n_z)\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{v}{\rho}\right)n_x\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial y}\left(\frac{v}{\rho}\right)n_y\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial z}\left(\frac{v}{\rho}\right)n_z\end{aligned}\]</span></p>
+<p><span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho w)}=\begin{pmatrix}
+0 \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial x}n_z-\frac{2}{3}\frac{\partial 1/\rho}{\partial z}n_x\right] \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial y}n_z-\frac{2}{3}\frac{\partial 1/\rho}{\partial z}n_y\right] \\
+(\mu+\mu_t)\left[\frac{\partial 1/\rho}{\partial x}n_x + \frac{\partial 1/\rho}{\partial y}n_y + \frac{4}{3}\frac{\partial 1/\rho}{\partial z}n_z\right] \\
+m_{45} \\
+0 \\
+0 \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\begin{aligned}
+m_{45}=(\mu+\mu_t)&amp;\left[u\left(\frac{\partial 1/\rho}{\partial x}n_z-\frac{2}{3}\frac{\partial 1/\rho}{\partial z}n_x\right)\right.\\
+&amp;\left.+v\left(\frac{\partial 1/\rho}{\partial y}n_z-\frac{2}{3}\frac{\partial 1/\rho}{\partial z}n_y\right)\right.\\
+&amp;\left.+w\left(\frac{\partial 1/\rho}{\partial x}n_x + \frac{\partial 1/\rho}{\partial y}n_y + \frac{4}{3}\frac{\partial 1/\rho}{\partial z}n_z\right)\right]\\
+&amp;+\frac{1}{\rho}\left(\tau_{xz}n_x+\tau_{yz}n_y+\tau_{zz}n_z\right)\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial x}\left(\frac{w}{\rho}\right)n_x\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial y}\left(\frac{w}{\rho}\right)n_y\\
+&amp;-\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\frac{\partial}{\partial z}\left(\frac{w}{\rho}\right)n_z\end{aligned}\]</span> <span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho E)}=\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+0 \\
+\gamma\left(\frac{\mu}{Pr}+\frac{\mu_t}{Pr_t}\right)\left(\frac{\partial 1/\rho}{\partial x}n_x
++\frac{\partial 1/\rho}{\partial y}n_y
++\frac{\partial 1/\rho}{\partial z}n_z\right) \\
+0 \\
+0 \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho k)}=\begin{pmatrix}
+0 \\
+-\frac{2}{3}n_x \\
+-\frac{2}{3}n_y \\
+-\frac{2}{3}n_z \\
+0 \\
+(\mu + \sigma_k \mu_t)\left[\frac{\partial 1/\rho}{\partial x}n_x + \frac{\partial 1/\rho}{\partial y}n_y + \frac{\partial 1/\rho}{\partial z}n_z\right]\\
+0 \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho \omega)}=\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+(\mu + \sigma_\omega \mu_t)\left[\frac{\partial 1/\rho}{\partial x}n_x + \frac{\partial 1/\rho}{\partial y}n_y + \frac{\partial 1/\rho}{\partial z}n_z\right] \\
+0 
+\end{pmatrix}\]</span> <span class="math display">\[\frac{\partial G\cdot n}{\partial (\rho \phi)}=\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 
+\end{pmatrix}\]</span></p>
+<h2 id="source-term-jacobian">Source Term Jacobian</h2>
+<p>It is common practice in turbulence modelling to ensure that the source term Jacobian is positive thereby avoiding the use of a limiter (Spalart Allmaras, 1992). Since the source term is subtracted from the residual, only negative terms are kept. <span class="math display">\[\frac{\partial S^{RANS}}{\partial \left(\rho k\right)}=\begin{pmatrix}
+0\\
+0\\
+0\\
+0\\
+0\\
+ - \beta^{*}\omega\\
+0\\
+0
+\end{pmatrix}\]</span></p>
+<p><span class="math display">\[\frac{\partial S^{RANS}}{\partial \left(\rho \omega \right)} =\begin{pmatrix}
+0\\
+0\\
+0\\
+0\\
+0\\
+- \beta^{*}k\\
+- 2\beta\omega + \min\left(-2\left(1-F_1\right)\frac{\sigma_{\omega 2}}{\omega^2}\left( \nabla k \cdot \nabla \omega\right),0\right)\\
+0
+\end{pmatrix}\]</span></p>
+<p>This treatment has a serious deficiency, it may be the case that the production and destruction Jacobians are both very large, but almost cancel each other out. But from (5.52) a large contribution will be made to the Jacobian, which may be interpreted as a reduction of the time step. In such a situation very poor convergence will occur. However in this case stability considerations outweigh efficiency considerations.</p>
+<h2 id="wall-function">Wall Function</h2>
+
+<p>a quasi-equilibrium boundary layer, the region between the wall and the outer edge of the logarithmic layer is universal. Near the wall derivatives in the streamwise direction can be neglected and the flow and turbulence variables depend only on the y direction, normal to the wall. <span class="math display">\[u_{\tau}=\sqrt{\frac{\tau_w}{\rho}},\: u^{+}=\frac{U}{u_{\tau}},\:y^{+}=\frac{yu_{\tau}}{\nu},\:\nu_{\tau}^{+}=\frac{\nu_{\tau}}{\nu},\:p^{+}=\frac{\nu}{\rho u_{\tau}^3}\frac{dp}{dx},\:k^{+}=\frac{k}{u_{\tau}^2},\:\omega^{+}=\frac{\omega\nu}{u_{\tau}^2}\]</span></p>
+<p>For reference <span class="math display">\[u^{*}=u^{+} C_{\mu}^{1/4}\sqrt{k}/u_{\tau}\]</span> <span class="math display">\[y^{*}=y^{+} C_{\mu}^{1/4}\sqrt{k}/u_{\tau}\]</span></p>
+<p>Over a flat plate at zero pressure gradient the RANS equations simplify in the region near the wall to the equilibrium stress balance model leading to universal near-wall solutions <span class="math display">\[\frac{d}{dy}\left(\left(\mu+\mu_t\right)\frac{dU}{dy}\right)=f\]</span> where <span class="math inline">\(f=0\)</span> for equilibrium stress balance model and <span class="math inline">\(f=1/\rho\,dp/dx\)</span> otherwise. Integration along the wall normal coordinate for <span class="math inline">\(f=0\)</span>. <span class="math display">\[\left(\mu+\mu_t\right)\frac{dU}{dy}=\rho u_{\tau}^2=\tau_w\]</span> Non-dimensionalise <span class="math display">\[\left(1+\nu_t^{+}\right)\frac{du^{+}}{dy^{+}}=1\]</span> <span class="math display">\[\nu_t^{+}=\frac{dy^{+}}{du^{+}}-1\]</span> Reynolds number obtained from the first cell <span class="math display">\[\mathit{Re}_y=\frac{y_1 u_1}{\nu}=y_1^{+}u_1^{+}\]</span> Incompressible adiabatic law of the wall valid for logarithmic region valid for <span class="math inline">\(0&lt;y^+&lt;1000\)</span> <span class="math display">\[U=u_{\tau}\left[\frac{1}{\kappa}\log\left(\frac{u_{\tau}y}{\nu}\right)+B\right]\]</span> Non-dimensionalise <span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(y^{+}\right)+B\]</span> where <span class="math inline">\(B=5.3271\)</span> for hydraulically smooth walls<br />
+The velocity in the sublayer <span class="math inline">\(0&lt;y^+&lt;10\)</span> is given by <span class="math display">\[u^+=y^+\]</span></p>
+<h3 id="boundary-layer-profile">Boundary Layer Profile</h3>
+<p>The boundary layer profile equation proposed by Spalding <span class="math display">\[y^{+}=u^{+}+e^{-\kappa B}\left(e^{\kappa u^{+}}-1-\kappa u^{+}-\frac{\left(\kappa u^{+}\right)^2}{2}-\frac{\left(\kappa u^{+}\right)^3}{6}\right)\]</span> <span class="math display">\[\frac{dy^{+}}{du^{+}}=1-\kappa e^{-\kappa B}\left(e^{\kappa u^{+}}-1-\kappa u^{+}-\frac{\left(\kappa u^{+}\right)^2}{2}\right)\]</span> Compressibility and heat transfer effects can be included by replacing the incompressible adiabatic law of the wall term <span class="math inline">\(e^{-\kappa B}e^{\kappa u^+}\)</span> in Spalding’s equations with the outer velocity form the White and Christoph. <span class="math display">\[u^+=\frac{1}{2\Gamma}\left[\beta+Q\sin\left(\phi+\frac{\sqrt{\Gamma}}{\kappa}ln\left(\frac{y^+}{y_o^+}\right)\right)\right]\]</span> where <span class="math display">\[\Gamma=\frac{r u_{\tau}^2}{2c_pT_w}\]</span> <span class="math display">\[\beta=\frac{q_w\mu_w}{\rho_wT_wk_wu_{\tau}}\]</span> <span class="math display">\[\varphi=\sin^{-1}\left(\frac{-\beta}{Q}\right)\]</span> <span class="math display">\[Q=\left(\beta^2+4\Gamma\right)^{1/2}\]</span> <span class="math display">\[y_o^+=e^{=\kappa B}\]</span> <span class="math display">\[r={Pr}^{1/3}\]</span> The nondimensional parameter <span class="math inline">\(\Gamma\)</span> models the compressibility effects and parameter <span class="math inline">\(\beta\)</span> models the heat transfer effects. The outer velocity form of the White and Christoph reduces to the standard law of the wall for incompressible adiabatic flow can be then be written as <span class="math display">\[y^{+}=u^{+}+y_{white}^{+}-e^{-\kappa B}\left(1+\kappa u^{+}+\frac{\left(\kappa u^{+}\right)^2}{2}+\frac{\left(\kappa u^{+}\right)^3}{6}\right)\]</span> where <span class="math display">\[y_{white}^+=e^{\frac{\kappa}{\sqrt{\Gamma}}\left[\sin^{-1}\left(\frac{2\Gamma u^{+}-\beta}{Q}\right)-\varphi \right]}e^{-\kappa B}\]</span> The temperature distribution within the boundary layer is given by the Crocco-Busemann equation <span class="math display">\[T=T_w\left(1+\beta u^+ - \Gamma\left(u^+\right)^2\right)\]</span> For adiabatic wall cases <span class="math inline">\(\beta=0\)</span> and the Crocco-Busemann equation reduces to <span class="math display">\[T=T_w\left(1+\frac{\left(\gamma-1\right)r}{2}u^2\right)\]</span></p>
+<h4 id="boundary-conditions-1">Boundary Conditions</h4>
+<p>Omega at the wall <span class="math display">\[\omega_{vis}^{+}=\frac{6}{\beta_1\left(y^{+}\right)^2}\]</span> <span class="math display">\[\omega_{log}^{+}=\frac{1}{\kappa\sqrt{\beta^*}y^{+}}\]</span> <span class="math display">\[\omega^{+}=\sqrt{\left(\omega_{vis}^{+}\right)^2+\left(\omega_{log}^{+}\right)^2}\]</span> Turbulent kinetic energy <span class="math inline">\(k\)</span> at the wall <span class="math display">\[k^{+}=\nu_t^{+}\omega^{+}=\left(\frac{dy^{+}}{du^{+}}-1\right)\omega^{+}\]</span> See <span class="citation" data-cites="Kalitzin:2005:NBR:1066577.1066590"></span> for more details</p>
+<h4 id="gradient-boundary-conditions">Gradient Boundary Conditions</h4>
+<p>The gradient at the wall calculated using the material in section 4.7 will return the incorrect shear stress for wall functions due to <span class="math inline">\(V=0\)</span> at the surface. Therefore the gradient in the interior and halo cell adjacent to the wall are modified to return the correct shear stress.<br />
+Construct <span class="math inline">\(\frac{dU}{dy}\)</span> in the halo cell to return the correct wall stress assuming constant shear <span class="math display">\[\frac{dU}{dy}=\frac{\rho u_{\tau}^2}{\left(\mu+\mu_t\right)}=\frac{\tau_w}{\left(\mu+\mu_t\right)}\]</span> <span class="math display">\[\left(\frac{dU}{dy}\right)_{halo}=2\left(\frac{dU}{dy}\right)_{wall}-\left(\frac{dU}{dy}\right)_{interior}\]</span> Assuming <span class="math inline">\(V=0\)</span> at the surface <span class="math display">\[\left(\frac{dU}{dy}\right)_{local}=\left(\nabla V\cdot n\right)\cdot V_{tangent}\]</span> The gradients are reflected therefore <span class="math display">\[\left(\frac{dU}{dy}\right)_{halolocal}=-\left(\frac{dU}{dy}\right)_{local}\]</span> <span class="math display">\[\nabla V_{halo}=-\nabla V_{interior}+\left(n\left(\left(\frac{dU}{dy}\right)_{halo}-\left(\frac{dU}{dy}\right)_{halolocal}\right)\right)V_{tangent}\]</span> <span class="math display">\[\nabla V_{interior}=\nabla V_{interior}+\left(n\left(\left(\frac{dU}{dy}\right)_{interior}-\left(\frac{dU}{dy}\right)_{local}\right)\right)V_{tangent}\]</span></p>
+<h3 id="roughness">Roughness</h3>
+<p>Roughness <span class="math inline">\(k_r\)</span> is the equivalent sand grain roughness height and <span class="math inline">\(\mu_r\)</span> is the associated dynamic viscosity. <span class="math display">\[k_r^{+}=\frac{k_r u_{\tau}}{\nu}\]</span> Law of the wall recast in roughness variables <span class="math display">\[u^{+}=\left[\frac{1}{\kappa}\log\left(y^{+}\right) + B_r\left(k_r^{+}\right)\right]\]</span> <span class="math display">\[u^{+}=\left[\frac{1}{\kappa}\log\left(\frac{y}{k_r}\frac{k_r u_\tau}{\nu}\right) + B_r\left(k_r^{+}\right)\right]\]</span> <span class="math display">\[u^{+}=\left[\frac{1}{\kappa}\log\left(\frac{y}{k_r}\right)+\frac{1}{\kappa}\log k_r^{+} + B_r\left(k_r^{+}\right)\right]\]</span> See <span class="citation" data-cites="Knopp2010"></span> for details<br />
+The Richard and Hoxey Law assumes that the <span class="math inline">\(y=0\)</span> is at the top of the roughness objects at roughness length <span class="math inline">\(d_0\)</span>. This enables the specification of a roughness value that is greater than the first cell height with the assumption of fully rough conditions <span class="math inline">\(k_r^{+} &gt; 90.0\)</span> <span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(\frac{y+d_0}{d_0}\right)\]</span> Recast into the same form as the equation above</p>
+<p><span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(y+d_0\right) - \frac{1}{\kappa}\log\left(d_0\right)\]</span></p>
+<p>Roughness length <span class="math inline">\(d_0=k_re^{-B\kappa}\)</span> with <span class="math inline">\(B=8.5\)</span> for fully rough conditions.</p>
+<p><span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(y+d_0\right) - \frac{1}{\kappa}\log\left(k_re^{-B\kappa}\right)\]</span></p>
+<p><span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(y+k_re^{-B\kappa}\right) - \frac{1}{\kappa}\log\left(k_r\right) + B\]</span></p>
+<p><span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(y/k_r + e^{-B\kappa}\right) + B\]</span></p>
+<p>Comparing to the law of the wall recast in roughness variables above</p>
+<p><span class="math display">\[B = B_r + \frac{1}{\kappa}\log\left(k_r^{+}\right)\]</span></p>
+<p>This is the height where the velocity according to the log law falls to zero. This is approximately equal to 0.1 times the height of the roughness elements.<br />
+If the height of the first cell is much greater than the roughness value then <span class="math inline">\(d_0\)</span> can be replaced with the displacement height <span class="math inline">\(d_1\)</span> that represents the offset to allow for the upward displacement of the flow by the surface objects. For atmospheric flows the displacement height is around two-thirds of the canopy height.</p>
+<p><span class="math display">\[u^{+}=\frac{1}{\kappa}\log\left(y-d_1\right) - \frac{1}{\kappa}\log\left(k_r\right) + B\]</span></p>
+<p>Boundary conditions from <span class="citation" data-cites="Knopp2010"></span> <span class="math display">\[k_w=\frac{u_{\tau}^2}{\sqrt{C_{\mu}}}\min\left(1,\frac{k_r^{+}}{90}\right)\]</span> <span class="math display">\[\omega_w=\frac{u_{\tau}}{\sqrt{C_{\mu}}\kappa d_0\phi_{r2}}\]</span> <span class="math display">\[\phi_{r2}= \min\left[ \min\left[1,\left(\frac{k_r^{+}}{20}\right)^{\frac{2}{3}}\right]\min\left[1,\left(\frac{k_r^{+}}{45}\right)^{\frac{1}{4}}\right]\min\left[1,\left(\frac{k_r^{+}}{60}\right)^{\frac{1}{4}}\right]\right]\]</span> From <span class="citation" data-cites="Durbin:1873-7005-41-1-012203"></span> <span class="math display">\[\begin{aligned}
+&amp;B_r=B &amp; &amp; k_r^{+} &lt; 2.25 \\
+&amp;B_r=\xi\left(8.5-\frac{1}{\kappa}\log k_r^{+} - B\right) + B &amp;  2.25 \leq &amp; k_r^{+} \leq 90 \\
+&amp;B_r=8.5-\frac{1}{\kappa}\log k_r^{+} &amp; &amp; k_r^{+} &gt; 90.0\end{aligned}\]</span> where <span class="math inline">\(\xi=\sin\left(\frac{\frac{\pi}{2}\log\left(\frac{k_r^{+}}{2.225}\right)}{\log\left(\frac{90}{2.25}\right)}\right)\)</span></p>
+<h3 id="temperature-wall-function">Temperature Wall Function</h3>
+<p><span class="math display">\[T^{+}=\frac{\left(T_w - T\right)\rho C_p u_{\tau}}{\dot{q}}\]</span></p>
+<p><span class="math display">\[T^{*}=\frac{\left(T_w - T\right)\rho C_p C_{\mu}^{1/4}\sqrt{k}}{\dot{q}}\]</span></p>
+<p>Assuming Fourier’s Law <span class="math display">\[\dot{q}=-\frac{C_p \mu}{\mathit{Pr}}\frac{\partial T}{\partial x}\]</span></p>
+<p>For <span class="math inline">\(y^{+} &lt; 11.639\)</span></p>
+<p><span class="math display">\[T^{+}=\mathit{Pr}\, y^{+} + \frac{1}{2}\rho \frac{u_{\tau}}{\dot{q}}\mathit{Pr} \, U^2\]</span></p>
+<p>For <span class="math inline">\(y^{+} &gt; 11.639\)</span></p>
+<p><span class="math display">\[T^{+}=\mathit{Pr}_t\left[\frac{1}{\kappa}\log\left(y^{+}\right)+B+P\right] + \frac{1}{2}\rho \frac{u_{\tau}}{\dot{q}}\left[\mathit{Pr} \, U^2 + \left(\mathit{Pr} - \mathit{Pr}_t\right)U_c^2\right]\]</span></p>
+<p>where <span class="math inline">\(U_c\)</span> is the velocity at <span class="math inline">\(y^{+}=11.639\)</span></p>
+<p>The additional terms on the right are due to heating by viscous dissipation for compressible flows. See J. R. Viegas, M. W. Rubesin, and C. C. Horstman. On the Use of Wall Functions as Boundary Conditions for Two-Dimensional Separated Compressible Flows. Technical Report AIAA-85-0180, AIAA 23rd Aerospace Sciences Meeting, Reno, Nevada, 1985.</p>
+<p><span class="math inline">\(P\approx -1.12\)</span> is function of the ratio of the molecular to turbulent Prandtl number and for smooth wall it is as follows. See C. Jayatilleke. The Influence of Prandtl Number and Surface Roughness on the Resistance of the Laminar Sublayer to Momentum and Heat Transfer. Prog. Heat Mass Transfer, 1:193-321, 1969.</p>
+<p><span class="math display">\[P=9.24\left[\left(\frac{\mathit{Pr}}{\mathit{Pr}_t}\right)^{3/4}-1\right]\left[1+0.28e^{-0.007Pr/Pr_t}\right]\]</span></p>
+<p>For rough walls <span class="math inline">\(P_{rough}\)</span> is defined as follows</p>
+<p><span class="math display">\[P_{rough} = 3.15\mathit{Pr}^{0.695}\left(\frac{1}{B_r}-\frac{1}{B}\right)^{0.359} + \left(\frac{B_r}{B}\right)^{0.6}P\]</span></p>
+<h3 id="species-wall-function">Species Wall Function</h3>
+<h3 id="abl-stability">ABL Stability</h3>
+<p>For Atmospheric Boundary Layer wall functions we include the ability to model boundary layer stability. This assumes that the boundary layer is fully turbulent <span class="math inline">\(y^{+} &gt; 30\)</span> in the first cell adjacent to the wall. <span class="math inline">\(L\)</span> is the Obukhov Length</p>
+<p><span class="math display">\[u^{+}=\left[\frac{1}{\kappa}\log\left(y^{+}\right) + B_r\left(k_r^{+}\right) - \psi_m\left(\frac{y}{L}\right)\right]\]</span></p>
+<p>For stable conditions <span class="math inline">\(y/L&gt;0 \,; 0&lt;R_i&lt;0.2\)</span> <span class="math display">\[\frac{y^{+}}{L}=\frac{u_{\tau}}{\nu}\frac{R_i}{1-5R_i}\]</span> <span class="math display">\[\psi_m\left(\frac{y}{L}\right)=-5\frac{y}{L}\]</span></p>
+<p><span class="math display">\[\frac{du^{+}}{dy^{+}}=\frac{1}{\kappa y^{+}} + \frac{5}{L} \frac{\nu}{u_{\tau}}\]</span></p>
+<p>For unstable conditions <span class="math inline">\(y/L&lt;0 \,; R_i&lt;0\)</span> <span class="math display">\[\frac{y^{+}}{L}=\frac{u_{\tau}}{\nu}R_i\]</span> <span class="math display">\[\psi_m\left(\frac{y}{L}\right)=2\log\left(\frac{1+X}{2}\right) + \log\left(\frac{1+X^2}{2}\right)-2\arctan\left(X\right) + \frac{\pi}{2}\]</span> where <span class="math display">\[X=\left(1-16\frac{y}{L}\right)^{1/4}\]</span></p>
+<p><span class="math display">\[\frac{du^{+}}{dy^{+}}=\frac{1}{\kappa y^{+}} - \left[ -\frac{8}{L\left(\sqrt{A}+1\right)\sqrt{A}}  + \frac{8}{L\left(\sqrt{A}+1\right)A^{3/4}} - \frac{8}{L\left(A^{1/4} + 1\right) A^{3/4}}\right]\]</span> where <span class="math display">\[A=1-16\frac{y^{+}}{L}\frac{\nu}{u_{\tau}}\]</span></p>
+<p>Temperature</p>
+<p><span class="math display">\[T^{+}=\mathit{Pr}_t\left[\frac{1}{\kappa}\log\left(y^{+}\right)+B+P_r - \psi_h\left(\frac{y}{L}\right)\right]\]</span></p>
+<h2 id="synthetic-turbulent-inlet">Synthetic Turbulent Inlet</h2>
+<h2 id="menter-sst-sas">Menter SST SAS</h2>
+<p>The SAS approach developed by Menter and co-workers resulted from revisiting the K-KL model of Rotta where K is the turbulent kinetic energy and L the traditional notation for the macro-length of turbulence.</p>
+<p>The model can be expressed as a modification of the SST model b the inclusion of an additional source term to the <span class="math inline">\(\omega\)</span> equation.</p>
+<p><span class="math display">\[Q_{SAS} = \max\left\{\rho\zeta_2\kappa S^2\left(\frac{L_{RANS}}{L_{vk}}\right)^2 - C\frac{2\rho k}{\sigma_{\phi}}\max\left[\frac{1}{\omega^2}\frac{\partial\omega}{\partial x_j}\frac{\partial\omega}{\partial x_j},\frac{1}{k^2}\frac{\partial k}{\partial x_j}\frac{\partial k}{\partial x_j}\right],0\right\}\]</span> <span class="math display">\[\begin{aligned}
+&amp;L_{vk} = \kappa \frac{|U^{&#39;}|}{|U^{&#39;&#39;}|} &amp; |U^{&#39;}|=\sqrt{\frac{\partial U_i}{\partial x_j}\frac{\partial U_i}{\partial x_j}} &amp; &amp; |U^{&#39;&#39;}|= \sqrt{\frac{\partial^2 U_i}{\partial x_j\partial x_j}\frac{\partial^2 U_i}{\partial x_j\partial x_j}} \\
+&amp;S=\sqrt{2S_{ij}S_{ij}} &amp; S_{ij}=\frac{1}{2}\left(\frac{\partial U_i}{\partial x_j}+\frac{\partial U_j}{\partial x_i}\right) &amp; &amp;\end{aligned}\]</span></p>
+<p>where <span class="math inline">\(\zeta_2=3.52\)</span>, <span class="math inline">\(C=2\)</span> and <span class="math inline">\(\sigma_{\phi}=2/3\)</span></p>
+<p>In certain situations <span class="math inline">\(L_{RANS}\)</span> can become very large if <span class="math inline">\(\omega\)</span> is small and therefore <span class="math inline">\(Q_{SAS}\)</span> will be too large. Physically <span class="math inline">\(L_{RANS}\approx L_{vk}\)</span>.</p>
+<p><span class="math display">\[L_{RANS}=\begin{cases}
+L_{RANS} &amp; L_{RANS} \leq 10^5 L_{vk} \\
+ L_{vk} &amp; L_{RANS} &gt; 10^5 L_{vk} 
+\end{cases}\]</span></p>
+<p>High frequency limiting is handled via the WALE model.</p>
+<ol>
+<li><p>The model contains two length scales, the classical one related to the first derivative of the resolved velocity, and a second one related to higher derivatives of the resolved velocity.</p></li>
+<li><ol>
+<li><p>The model provides RANS performance in stable flow regions (without explicit grid or time-step dependency).</p></li>
+<li><p>The model allows the break-up of large unsteady structures into a turbulent spectrum (without explicit grid or time-step dependency).</p></li>
+<li><p>The model provides proper damping of resolved turbulence at the resolution limit of the grid. This requires some information about the step size of the grid, either explicitly or implicitly.</p></li>
+</ol></li>
+</ol>
+<h3 id="wale-model">WALE Model</h3>
+<p>For high frequency analysis, the SAS model can suffer from giving too little damping without proper high wavenumber treatment. To eliminate any possible criticism of the SAS behavior in the infinite grid limit, Egorov and Menter prefer to limit the predicted eddy viscosity by the eddy viscosity of an LES model. The LES model suggested by Menter and Egorov, is the Wall-Adapting Local Eddy-viscosity (WALE) model of Nicoud and Ducros. The WALE eddy viscosity is computed in a similar fashion as the Smagorinsky method, yet the WALE model is able to respond to near-wall effects and correctly lower the eddy viscosity in laminar regions. The WALE eddy viscosity can be expressed as the following</p>
+<p><span class="math display">\[\mu_t=\rho C_w^2 \Delta^2 \frac{\left(G_{ij}^d G_{ij}^d\right)^{3/2}}{\left(S_{ij}S_{ij}\right)^{5/2} + \left(G_{ij}^d G_{ij}^d\right)^{5/4}}\]</span></p>
+<p><span class="math inline">\(G_{ij}^d\)</span> is the traceless symmetric part of the square of the velocity gradient tensor</p>
+<p><span class="math display">\[G_{ij}^d=\frac{1}{2}\left(g_{ij}^2+g_{ji}^2\right) - \frac{1}{3}\delta_{ij}g_{kk}^2\]</span></p>
+<p>where <span class="math inline">\(g_{ij}^2=\partial u_i/\partial x_k \partial u_k/\partial x_j\)</span> and <span class="math inline">\(C_w=0.5\)</span> and <span class="math inline">\(\Delta=\sqrt[3]{V}\)</span></p>
+<p><span class="math display">\[G_{ij}^d=\sum_{k}\frac{1}{2}\left(\frac{\partial u_i}{\partial x_k}\frac{\partial u_k}{\partial x_j} + \frac{\partial u_j}{\partial x_k}\frac{\partial u_k}{\partial x_i}\right) - \delta_{ij} \frac{1}{3}\sum_{i}\sum_{j}\frac{\partial u_i}{\partial x_j}\frac{\partial u_j}{\partial x_i}\]</span></p>
+<h1 id="gravity">Gravity</h1>
+<h2 id="force-potential">Force Potential</h2>
+<p>Gravity is treated as a force potential <span class="math display">\[F=-\nabla \varphi = -\rho g\]</span></p>
+<p>By integration and introducing <span class="math inline">\(z\)</span> the height in the direction of the gravity vector <span class="math display">\[\varphi = g \int \rho \, dz\]</span></p>
+<h2 id="pressure-gradient">Pressure Gradient</h2>
+<p>For a fluid in hydrostatic equilibrium</p>
+<p><span class="math display">\[\frac{\partial p}{\partial z}=-\rho g\]</span></p>
+<p>For an ideal gas</p>
+<p><span class="math display">\[\label{eq:gravitypresgrad}
+\frac{\partial p}{\partial z}=-\frac{p}{RT} g\]</span></p>
+<h2 id="lapse-rates">Lapse Rates</h2>
+<p>For an isentropic process</p>
+<p><span class="math display">\[\frac{p}{\rho^\gamma}=constant\]</span></p>
+<h3 id="temperature">Temperature</h3>
+<p>Substituting the ideal gas equation of state</p>
+<p><span class="math display">\[p^{1-\gamma}T^{\gamma} = constant\]</span></p>
+<p>Differentiating by parts with respect to altitude</p>
+<p><span class="math display">\[T^\gamma \left(1-\gamma\right)p^{-\gamma}\frac{\partial p}{\partial z} + p^{1-\gamma}\gamma T^{\gamma-1}\frac{\partial T}{\partial z} = 0\]</span></p>
+<p><span class="math display">\[\frac{\left(1-\gamma\right)}{\gamma p}\frac{\partial p}{\partial z} + \frac{1}{T}\frac{\partial T}{\partial z}=0\]</span></p>
+<p>Substitute the pressure gradient definition <a href="#eq:gravitypresgrad" data-reference-type="eqref" data-reference="eq:gravitypresgrad">[eq:gravitypresgrad]</a></p>
+<p><span class="math display">\[\frac{\partial T}{\partial z} = - \frac{g\left(\gamma-1\right)}{\gamma R} = -\frac{g}{C_p} = -\Gamma \approx 9.8^{\circ} K/km\]</span></p>
+<p>This temperature gradient is known as the dry adiabatic lapse rate.</p>
+<p>Integrate</p>
+<p><span class="math display">\[\label{eq:gravitytemp}
+T=T_0 - \frac{g\left(\gamma-1\right)}{\gamma R}z=T_0 - \Gamma z\]</span></p>
+<p>Also,</p>
+<p><span class="math display">\[\frac{\partial T}{T} = \frac{\left(\gamma-1\right)}{\gamma}\frac{\partial p}{p}\]</span></p>
+<p>Integrate</p>
+<p><span class="math display">\[\ln\left(\frac{T}{T_0}\right) = \frac{\left(\gamma-1\right)}{\gamma} \ln\left(\frac{p}{p_0}\right)\]</span></p>
+<p>Take exponent</p>
+<p><span class="math display">\[\label{eq:gravitytemppress}
+\frac{T}{T_0} = \left(\frac{p}{p_0}\right)^{\frac{\left(\gamma-1\right)}{\gamma}}\]</span></p>
+<h3 id="density">Density</h3>
+<p>Recall entropy equation</p>
+<p><span class="math display">\[\frac{p}{\rho^\gamma}=constant\]</span></p>
+<p>or</p>
+<p><span class="math display">\[p \rho^{-\gamma} = constant\]</span></p>
+<p>Differentiating by parts with respect to altitude</p>
+<p><span class="math display">\[\rho^{-\gamma}\frac{\partial p}{\partial z} - \gamma \rho^{-\gamma-1}p\frac{\partial \rho}{\partial z} = 0\]</span></p>
+<p><span class="math display">\[\frac{1}{p}\frac{\partial p}{\partial z} - \frac{\gamma}{\rho}\frac{\partial \rho}{\partial z} = 0\]</span></p>
+<p>Substitute the pressure gradient definition <a href="#eq:gravitypresgrad" data-reference-type="eqref" data-reference="eq:gravitypresgrad">[eq:gravitypresgrad]</a></p>
+<p><span class="math display">\[\frac{\partial \rho}{\partial z} = -\frac{\rho g}{\gamma R T} = -\frac{\rho g}{(\gamma-1)C_p T}=\frac{\rho \Gamma}{(\gamma-1)T}\]</span></p>
+<p>Also,</p>
+<p><span class="math display">\[\frac{\partial p}{p} = \gamma\frac{\partial \rho}{\rho}\]</span></p>
+<p>Integrate</p>
+<p><span class="math display">\[\ln\left(\frac{p}{p_0}\right) = \gamma \ln\left(\frac{\rho}{\rho_0}\right)\]</span></p>
+<p>Take exponent</p>
+<p><span class="math display">\[\frac{p}{p_0} = \left(\frac{\rho}{\rho_0}\right)^{\gamma}\]</span></p>
+<h3 id="pressure">Pressure</h3>
+<p>Substitute the definition of <span class="math inline">\(T\)</span> <a href="#eq:gravitytemp" data-reference-type="eqref" data-reference="eq:gravitytemp">[eq:gravitytemp]</a> in <a href="#eq:gravitytemppress" data-reference-type="eqref" data-reference="eq:gravitytemppress">[eq:gravitytemppress]</a></p>
+<p><span class="math display">\[p=p_0\left[1-\frac{g\left(\gamma-1\right)}{\gamma RT_0}z\right]^{\gamma/\left(\gamma-1\right)} = p_0\left(1-\frac{\Gamma}{T_0}z\right)^{\gamma/\left(\gamma-1\right)}\]</span></p>
+<h3 id="summary">Summary</h3>
+<p><span class="math display">\[T=T_0 - \Gamma z\]</span></p>
+<p><span class="math display">\[p = p_0\left[1-\frac{\Gamma}{T_0}z\right]^{\gamma/\left(\gamma-1\right)}\]</span></p>
+<p><span class="math display">\[\rho=\rho_0\left[1-\frac{\Gamma}{T_0}z\right]^{1/(\gamma-1)}\]</span></p>
+<h3 id="force-potential-1">Force Potential</h3>
+<p>Recall</p>
+<p><span class="math display">\[\varphi = g \int \rho \, dz = g \int \rho_0 \left[1-\frac{\Gamma}{T_0}z\right]^{1/(\gamma-1)} \, dz\]</span></p>
+<p>Integrating by substitution</p>
+<p><span class="math display">\[\varphi = g\rho_0 \int U^{1/(\gamma-1)} \frac{-T_0}{\Gamma} dU =  - g \rho_0 \frac{T_0}{\Gamma}\frac{\gamma-1}{\gamma}\left[1-\frac{\Gamma}{T_0}z\right]^{\gamma/(\gamma-1)}\]</span></p>
+<p><span class="math display">\[\varphi=p_0\left[1-\frac{\Gamma}{T_0}z\right]^{\gamma/(\gamma-1)}\]</span></p>
+<h1 id="atmospheric-physics">Atmospheric Physics</h1>
+<h3 id="richardson-number">Richardson Number</h3>
+<p>The Richardson Number defines the ratio of buoyancy to shear within a boundary layer. Non turbulent flow becomes turbulent when <span class="math inline">\(R_i&lt;0.25\)</span>. Turbulent flow becomes non turbulent when <span class="math inline">\(R_i&gt;1\)</span>. Note there is hysteresis in the transition to and from a turbulent state.</p>
+<p><span class="math display">\[R_i=\frac{1}{\rho}\frac{g_i \frac{\partial \rho}{\partial x_i}}{\left(\frac{g_i}{|g|}\frac{\partial u_i}{\partial x_i}\right)^2}\]</span></p>
+<h3 id="potential-temperature">Potential temperature</h3>
+<p>The potential temperature <span class="math inline">\(\theta\)</span> is defined as the temperature that an air parcel at pressure <span class="math inline">\(P\)</span> and temperature <span class="math inline">\(T\)</span> would acquire if adiabatically brought to the reference pressure <span class="math inline">\(P_0\)</span></p>
+<p><span class="math display">\[\theta=T\left(\frac{P_0}{P}\right)^{\frac{R}{C_p}}\]</span></p>
+<h3 id="virtual-temperature">Virtual Temperature</h3>
+<h3 id="obukhov-length">Obukhov Length</h3>
+<p><span class="math display">\[L=\frac{u_{\tau}^2 T_0}{\kappa g \theta_{\tau}}\]</span> where the scaling temperature <span class="math inline">\(\theta_\tau\)</span> is defined as <span class="math display">\[\theta_{\tau} = \frac{-\dot{q}_0}{\rho C_p u_{\tau}}\]</span></p>
+<h3 id="coriolis-force">Coriolis Force</h3>
+<p>The Coriolis acceleration vector can de defined as follows</p>
+<p>In the Northern hemisphere - acceleration to the right of the velocity vector <span class="math display">\[f_c= -\left(V \times \frac{g}{|g|}\right)2\Omega_E\sin\phi\]</span> In the Southern hemisphere - acceleration to the left of the velocity vector <span class="math display">\[f_c= \left(V \times \frac{g}{|g|}\right)2\Omega_E\sin\phi\]</span></p>
+<p>where <span class="math inline">\(\Omega_E=7.2722 \times 10^{-5} \, rad/s\)</span> is the earth’s rotation rate and <span class="math inline">\(\phi\)</span> is the latitude (<span class="math inline">\(0^{\circ}\)</span> at equator and <span class="math inline">\(90^{\circ}\)</span> at the poles) and <span class="math inline">\(g\)</span> is the gravity vector.</p>
+<p>Only the component of the Coriolis force that acts perpendicular to the direction of the wind is considered, when viewed from a rotating reference frame. The Coriolis force in the vertical direction is neglected in atmospheric flows as this component is small compared to the gravitational acceleration.</p>
+<h3 id="turbulence-profile">Turbulence Profile</h3>
+<p><span class="math display">\[k=\frac{u_{\tau}^2}{\sqrt{\beta^*}}\left[1-\frac{z}{z_h}\right]^2\]</span></p>
+<p><span class="math display">\[\epsilon=\frac{1}{\kappa}\frac{u_{\tau}^3}{z}\]</span></p>
+<h1 id="radial-basis-functions-rbf">Radial Basis Functions (RBF)</h1>
+<p>Radial Basis Functions (RBF) are useful in rapidly and consistently deforming a mesh according to a prescribed motion of some or all of the boundary nodes. ZCFD allows users to specify a deformation function, which may be selectively applied to different zones on the boundary. The motion of these nodes is then automatically blended throughout the volume mesh in order to maintain mesh quality. The motion is formally based on a subset of the (potentially very large number) of boundary nodes specified, for numerical (conditioning) reasons. ZCFD will automatically select the subset according to user-specified tolerances and the number of nodes initially selected.</p>
+<h3 id="rbf-interpolation-method">RBF interpolation method</h3>
+<p>The interpolation space consists of all functions <span class="math inline">\(s(x)\)</span> of the form <span class="math display">\[s(x)=\sum_{i\in\gamma_{b}}(\gamma_i)\Phi(\Vert x-x_i\Vert)+h(x)\]</span> Where <span class="math inline">\(\Phi\)</span> is a radial basis function, with compact support over the domain <span class="math inline">\([-\alpha, \alpha]\)</span>, where <span class="math inline">\(\alpha\)</span> is a user-specified parameter. <span class="math inline">\(h(x)\)</span> is a first degree polynomial and <span class="math inline">\(\gamma_b\)</span> is a subset of the <span class="math inline">\(N\)</span> vertices of the CFD grid covering the deformable domain. Given the known discrete displacement of boundary vertices <span class="math inline">\(V_b=\lbrace x_i \rbrace_{i\in\gamma_b}\)</span> <span class="math display">\[u_i=g_i \;\;\;\;\;\; i\in\gamma_b\]</span> Then, the respective coefficients <span class="math inline">\(\gamma_i\)</span> and the polynomial <span class="math inline">\(h(x)\)</span> are determined by imposing the interpolation conditions <span class="math display">\[s(x_i)=g_i \;\;\;\;\;\; i\in\gamma_b\]</span> <span class="math display">\[\sum_{i\in\gamma_{b}}(\gamma_i)q(x_i)=0\]</span> For all polynomials <span class="math inline">\(q\)</span> with degree less or equal than that of polynomial <span class="math inline">\(h\)</span> (i.e. first degree). Hence leading to the following linear system of equations <span class="math display">\[\begin{pmatrix} M &amp; P \\P^T &amp; 0 \end{pmatrix} \begin{pmatrix} \gamma \\ \beta \end{pmatrix}=\begin{pmatrix} g \\ 0 \end{pmatrix}\]</span> With the vector <span class="math inline">\(\gamma=(\gamma_1\ldots\gamma_N)\)</span>, <span class="math inline">\(M\)</span> is the interpolation matrix with elements <span class="math inline">\(M_{ij}=\Phi(\Vert x_i - x_j\Vert)\)</span>, <span class="math inline">\(i\)</span>,<span class="math inline">\(j\in \gamma_b\)</span>, matrix <span class="math inline">\(P\)</span> has elements <span class="math inline">\(P_{i4}\)</span> with row <span class="math inline">\(i\)</span> given by <span class="math inline">\((1\;x_i\; y_i\;z_1)\)</span> <span class="math inline">\(i\in \gamma_b\)</span>. Vector <span class="math inline">\(g=\lbrace g_i \rbrace_{i\in\gamma_b}\)</span> contains the known boundary displacements and <span class="math inline">\(\beta\)</span>, the vector of coefficients for the polynomial <span class="math inline">\(h\)</span>. Subsequently defined as <span class="math display">\[h(x)=\beta_1+\beta_{2} x +\beta_{3} y +\beta_{4} z\]</span></p>
+<p>For more information see <span class="citation" data-cites="0045-7930"></span></p>
+<h1 id="wall-distance">Wall Distance</h1>
+<p>The discrete wall distance <span class="math inline">\(d_i\)</span> is calculated automatically at the start of each simulation for every cell centre <span class="math inline">\((x_i, y_i, z_i)\)</span> in the mesh. The distance function <span class="math inline">\(d\)</span> is mesh-based and discrete, meaning that <span class="math display">\[d_i = \min_{j=0..(N_s -1)} \sqrt{(x_i-x_j)^2 + (y_i-y_j)^2 + (z_i-z_j)^2}\]</span> where <span class="math inline">\((x_j, y_j, z_j), j = 0,..,(N_s-1)\)</span> are the face centres for the wall surface elements bounding the domain.</p>
+<h1 id="flux-reconstruction">Flux Reconstruction</h1>
+<p>Recalling the tensor form and grouping the derivatives in advective <span class="math inline">\(F\)</span>, diffusive <span class="math inline">\(G\)</span> and source terms <span class="math inline">\(S\)</span>. <span class="math display">\[\frac{\partial W}{\partial t}+ \nabla \cdot F - \nabla \cdot G = S\]</span> Re-arrange and define Residual function <span class="math inline">\(R(W)=\nabla \cdot F - \nabla \cdot G - S\)</span> <span class="math display">\[\frac{\partial W_{sp}}{\partial t} + R(W) = 0\]</span> Expand the pseudo time derivative using a <a href="http://en.wikipedia.org/wiki/Finite_difference">forward difference approximation</a>. <span class="math display">\[\frac{\left(W_{sp}^{k+1} - W_{sp}^{k}\right)}{\Delta t} = - R(W)\]</span> Considering the state <span class="math inline">\(W\)</span> at multiple solution points either side of an interface defined by a single flux point between two unit elements. The solution (degree P) at the interface is discontinuous but the reconstructed flux (degree P+1) is <span class="math inline">\(C_0\)</span> continuous.</p>
+
+<p>The extrapolated solution in element space at flux point <span class="math inline">\(fp\)</span> is given by <span class="math display">\[\tilde{W}_{fp}=\sum_{i=0}^{sp} \tilde{W}_{i}L_{i}(\tilde{x}_{fp})\]</span> The extrapolated flux in element space at <span class="math inline">\(fp\)</span> is given by <span class="math display">\[\tilde{F}_{fp}=\sum_{i=0}^{sp} F(\tilde{W}_{i})L_{i}(\tilde{x}_{fp})\]</span> where <span class="math inline">\(L_{i}\)</span> is a Lagrange polynomial of degree <span class="math inline">\(P\)</span> represented by <span class="math inline">\(P+1\)</span> solution points.<br />
+The numerical flux in real space at the interface is computed using an HLLC scheme <span class="math display">\[F^{*}=F^{*}(W_{fp}^l,W_{fp}^r)=F_{HLLC}(W_{fp}^l,W_{fp}^r)\]</span> The reconstructed flux in element space at solution point <span class="math inline">\(sp\)</span> due to flux point <span class="math inline">\(fp\)</span> is <span class="math display">\[\tilde{F}^{FR}_{sp}=F(\tilde{W}_{sp}) + \left(\tilde{F}^{*}-\tilde{F}_{fp} \right)C_{fp}(\tilde{x}_{sp})\]</span> The derivative of the reconstructed flux in element space at solution point <span class="math inline">\(sp\)</span> <span class="math display">\[\nabla \cdot \tilde{F}^{FR}_{sp}=\nabla \cdot F(\tilde{W}_{sp}) + \left(\tilde{F}^{*}-\tilde{F}_{fp} \right)\nabla \cdot C_{fp}(\tilde{x}_{sp})\]</span> where <span class="math inline">\(C_{fp}\)</span> is the FR correction function that provides the ability to represent a range of high order schemes. This is currently implemented to reproduce the equivalent of the Discontinous Galerkin finite element scheme.<br />
+The affine transformation to and from element space is given by <span class="math display">\[x = M_e (\tilde{x})\]</span> <span class="math display">\[\tilde{x} =  M^{-1}_e(x)\]</span> <span class="math display">\[\textbf{J}_e=\frac{\partial M_e}{\partial \tilde{x}}\]</span> <span class="math display">\[J_e=\det\textbf{J}_e\]</span> <span class="math display">\[\textbf{J}^{-1}_e=\frac{\partial M^{-1}_e}{\partial x}\]</span> <span class="math display">\[J^{-1}_e=\det\textbf{J}^{-1}_e=\frac{1}{J_e}\]</span> Using these transforms we can define transformation functions <span class="math display">\[\tilde{W}=J_e W\]</span> <span class="math display">\[\tilde{F}=J_e \textbf{J}^{-1}_e F\]</span> <span class="math display">\[\tilde{\nabla} W = \textbf{J}_e \nabla W\]</span></p>
+<p><span class="math display">\[\frac{\partial W}{\partial t}+ J_e^{-1}\tilde{\nabla} \cdot \tilde{F} - J_e^{-1}\tilde{\nabla} \cdot \tilde{G} = S\]</span></p>
+<h1 id="appendix-a" class="unnumbered">Appendix A</h1>
+<p>Not used <span class="math display">\[\frac{\partial W}{\partial Q^{&#39;}}=\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 &amp; \rho_p &amp; 0 \\
+u &amp; \rho &amp; 0 &amp; 0 &amp; u\rho_p &amp; 0 \\
+v &amp; 0 &amp; \rho &amp; 0 &amp; v\rho_p &amp; 0 \\
+w &amp; 0 &amp; 0 &amp; \rho &amp; w\rho_p &amp; 0 \\
+H+h_{\rho} &amp; \rho u &amp; \rho v &amp; \rho w &amp; \rho_p H - 1 + \rho h_p&amp; 0 \\
+\phi &amp; 0 &amp; 0 &amp; 0 &amp; \phi\rho_p &amp; 1
+\end{pmatrix}\]</span> where <span class="math inline">\(Q^{&#39;}=\left[\rho,u,v,w,p,\phi\right]^T\)</span></p>
+<p><span class="math display">\[\frac{\partial Q^{&#39;}}{\partial W}=\left(\begin{array}{rrrrrr}
+\frac{{\left(V^2 - H - h_{r}\right)} \rho_{p}}{d} + 1 &amp; -\frac{\rho_{p} u}{d} &amp; -\frac{\rho_{p} v}{d} &amp; -\frac{\rho_{p} w}{d} &amp; \frac{\rho_{p}}{d} &amp; 0 \\
+-\frac{u}{\rho} &amp; \frac{1}{\rho} &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+-\frac{v}{\rho} &amp; 0 &amp; \frac{1}{\rho} &amp; 0 &amp; 0 &amp; 0 \\
+-\frac{w}{\rho} &amp; 0 &amp; 0 &amp; \frac{1}{\rho} &amp; 0 &amp; 0 \\
+-\frac{V^2 - H - h_{r}}{d} &amp; \frac{u}{d} &amp; \frac{v}{d} &amp; \frac{w}{d} &amp; -\frac{1}{d} &amp; 0 \\
+-\phi &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1
+\end{array}\right)\]</span> where <span class="math inline">\(d={\left(H + h_{r}\right)} \rho_{p} - H \rho_{p} - h_{p} \rho + 1\)</span></p>
+<p><span class="math display">\[\frac{\partial F}{\partial Q^{&#39;}}=\begin{pmatrix}
+q &amp; \rho n_x &amp; \rho n_y &amp; \rho n_z &amp; \rho_p q &amp; 0\\
+u q + p_{\rho}n_x &amp; \rho (q + u n_x) &amp; \rho u n_y &amp; \rho u n_z &amp; \rho_p u q + n_x &amp; 0\\
+v q + p_{\rho}n_y &amp; \rho v n_x &amp; \rho (q + v n_y) &amp; \rho v n_z &amp; \rho_p v q + n_y &amp; 0 \\
+w q + p_{\rho}n_z &amp; \rho w n_x &amp; \rho w n_z &amp; \rho( q + w n_z) &amp; \rho_p w q + n_z &amp; 0 \\
+(H+\rho h_p) q &amp; \rho H n_x + q\rho u &amp; \rho H n_y + q\rho v &amp; \rho H n_z + q\rho w &amp; q ( \rho_p H + \rho h_p) &amp; 0\\
+\phi q &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \rho q 
+\end{pmatrix}\]</span></p>
+</body>
+</html>
