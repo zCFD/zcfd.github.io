@@ -55,6 +55,8 @@ Alternatively, :ref:`mycluster` is a powerful tool for setting up, running and m
 
     cluster_run -p $PROBLEM_NAME -c $CASE_NAME -j mycluster_job.job
 
+.. _`input-validation`:
+
 Input Validation
 ----------------
 

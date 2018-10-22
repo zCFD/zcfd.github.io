@@ -12,7 +12,7 @@ We provide a range of converters for popular mesh types via a special version of
 
 Once downloaded and installed, the version of OpenFOAM will convert a range of file formats to the zCFD format. Prior to running any of these, you will need to activate your OpenFOAM environment using
 
-.. code-block:: python
+.. code-block:: bash
 
     source $FOAM_INST_DIR/OpenFOAM-x.x.x/etc/bashrc
 

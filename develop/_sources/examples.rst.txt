@@ -12,4 +12,4 @@ Ahmed Body
 ----------
 
 
-.. include:: cube.rs
+.. include:: cube.rst
