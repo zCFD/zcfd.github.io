@@ -25,8 +25,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  <div class="document">
-    
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-zcfd">
+<h2>What is zCFD<a class="headerlink" href="#what-is-zcfd" title="Permalink to this headline">¶</a></h2>
+<p>zCFD is a computational fluid dynamics (CFD) solver designed to make highly effective use of modern computer architectures.  The code will run on unstructured meshes from a variety of sources, and will export data in many common formats.</p>
+<p>zCFD is a density-based finite volume solver, allowing steady-state or time-dependent, turbulent flow simulation.  The numerical scheme has been selected for accuracy and robustness. The code provides automatic scaling of turbulent wall functions; automatic determination of inflow / outflow conditions and automatic pre-conditioning to allow for low and high Mach number flow.</p>
+<p>zCFD makes use of the MPI protocol to manage execution over a set of compute nodes. The execution process is completely parallel from the start to finish including all the Input/Output (IO) functionality. To support this scalable implementation the mesh input is provided in hdf5 format which is portable and self describing. Filters are provided to convert the most frequently used formats to this internal format.</p>
+<p>zCFD uses a single control dictionary to specify all the parameters. This is a python file containing a python dictionary with certain mandatory keys. The use of python for the control dictionary enables the user to add custom functions that populate the dictionary at runtime.</p>
+<p>zCFD is a hybrid of an open-source (freely available without restriction) front-end (“ZCFD Driver”) and proprietary (closed-source) back-end (“ZCFD Core”). Anyone can develop “ZCFD Driver” for their own purposes including commercial exploitation.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
@@ -62,31 +86,8 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <div class="section" id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-zcfd">
-<h2>What is zCFD<a class="headerlink" href="#what-is-zcfd" title="Permalink to this headline">¶</a></h2>
-<p>zCFD is a computational fluid dynamics (CFD) solver designed to make highly effective use of modern computer architectures.  The code will run on unstructured meshes from a variety of sources, and will export data in many common formats.</p>
-<p>zCFD is a density-based finite volume solver, allowing steady-state or time-dependent, turbulent flow simulation.  The numerical scheme has been selected for accuracy and robustness. The code provides automatic scaling of turbulent wall functions; automatic determination of inflow / outflow conditions and automatic pre-conditioning to allow for low and high Mach number flow.</p>
-<p>zCFD makes use of the MPI protocol to manage execution over a set of compute nodes. The execution process is completely parallel from the start to finish including all the Input/Output (IO) functionality. To support this scalable implementation the mesh input is provided in hdf5 format which is portable and self describing. Filters are provided to convert the most frequently used formats to this internal format.</p>
-<p>zCFD uses a single control dictionary to specify all the parameters. This is a python file containing a python dictionary with certain mandatory keys. The use of python for the control dictionary enables the user to add custom functions that populate the dictionary at runtime.</p>
-<p>zCFD is a hybrid of an open-source (freely available without restriction) front-end (“ZCFD Driver”) and proprietary (closed-source) back-end (“ZCFD Core”). Anyone can develop “ZCFD Driver” for their own purposes including commercial exploitation.</p>
-</div>
-</div>
-
-
-          </div>
-          
-        </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
+      <div class="clearer"></div>
+    </div>
     <div class="footer">
       &copy;2016-18, Zenotech Ltd.
       

@@ -25,8 +25,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  <div class="document">
-    
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="formulation">
+<h1>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="numerical-scheme">
+<h2>Numerical Scheme<a class="headerlink" href="#numerical-scheme" title="Permalink to this headline">¶</a></h2>
+<p>zCFD is a many-core accelerated Computational Fluid Dynamics solver that solves the Steady or Unsteady Reynolds Averaged Navier Stokes (RANS) equations using the finite volume technique. This is based on a cell centred approach on arbitrary polyhedral meshes with the boundary conditions applied in a weak formulation. The scheme implemented is formally second order accurate in time and third order accurate in space.</p>
+<p>The spatial accuracy is achieved by using a slope limited MUSCL reconstruction at cell interfaces. The HLLC scheme is then used with the reconstructed values to calculate the interface flux.</p>
+<p>The primary solver is based on a multi-stage explicit solver using local time stepping and geometric multigrid to accelerate convergence.</p>
+<p>Turbulence modelling is provided by an implementation of Menter SST two equation model which is can be used in low Reynolds number mode (i.e. integration to the wall) or high Reynolds number mode (i.e. wall functions).</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
@@ -62,30 +85,8 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <div class="section" id="formulation">
-<h1>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="numerical-scheme">
-<h2>Numerical Scheme<a class="headerlink" href="#numerical-scheme" title="Permalink to this headline">¶</a></h2>
-<p>zCFD is a many-core accelerated Computational Fluid Dynamics solver that solves the Steady or Unsteady Reynolds Averaged Navier Stokes (RANS) equations using the finite volume technique. This is based on a cell centred approach on arbitrary polyhedral meshes with the boundary conditions applied in a weak formulation. The scheme implemented is formally second order accurate in time and third order accurate in space.</p>
-<p>The spatial accuracy is achieved by using a slope limited MUSCL reconstruction at cell interfaces. The HLLC scheme is then used with the reconstructed values to calculate the interface flux.</p>
-<p>The primary solver is based on a multi-stage explicit solver using local time stepping and geometric multigrid to accelerate convergence.</p>
-<p>Turbulence modelling is provided by an implementation of Menter SST two equation model which is can be used in low Reynolds number mode (i.e. integration to the wall) or high Reynolds number mode (i.e. wall functions).</p>
-</div>
-</div>
-
-
-          </div>
-          
-        </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
+      <div class="clearer"></div>
+    </div>
     <div class="footer">
       &copy;2016-18, Zenotech Ltd.
       
