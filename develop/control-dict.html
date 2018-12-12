@@ -13,6 +13,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="shortcut icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Mesh Conversion" href="meshutil.html" />
@@ -53,9 +54,22 @@
 </div>
 <div class="section" id="scale-mesh">
 <h3>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional (default [1.0,1.0,1.0]]):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional (default [1.0,1.0,1.0]):</span>
 <span class="c1"># Scale vector</span>
 <span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional</span>
+<span class="c1"># Scale function</span>
+<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="n">scale_func</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>Example scale function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale function</span>
+<span class="k">def</span> <span class="nf">scale_func</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+    <span class="c1"># Scale y coordinate by 100</span>
+    <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;coord&#39;</span> <span class="p">:</span> <span class="n">point</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
