@@ -119,6 +119,13 @@ To restart from a previous solution
     # Optional: Restart from and different case
     'restart casename' : 'my_case',
 
+It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key
+
+.. code-block:: python
+
+    # Generate approximate initial field for SA-neg
+    'approximate sa from sst results' : True,
+
 Low Mach number preconditioner settings (Optional)
 --------------------------------------------------
 
