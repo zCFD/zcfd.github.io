@@ -47,7 +47,7 @@ Example scale function
        # Scale y coordinate by 100
        point[2] = point[2] * 100.0
        return {'coord' : point}
-       
+
 
 Reference state
 ^^^^^^^^^^^^^^^

@@ -21,3 +21,4 @@ Version: |version|
    meshutil
    visualisation
    utilities
+   pdf
