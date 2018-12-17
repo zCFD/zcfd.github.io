@@ -26,13 +26,13 @@ The utility takes several arguments:
 
 .. code-block:: python
 
-    >>> import zutil.farm as farm
-    >>> farm.create_trbx_zcfd_input(case_name='windfarm_name', \
-                                    wind_direction=267.0, \
-                                    reference_wind_speed=10.0, \
-                                    num_processes=48, \
-                                    report_frequency=100, \
-                                    turbine_files=[['xy_file_1.txt','turbine_type_1.trbx'], \
+    import zutil.farm as farm
+    farm.create_trbx_zcfd_input(case_name='windfarm_name',
+                                    wind_direction=267.0,
+                                    reference_wind_speed=10.0,
+                                    num_processes=48,
+                                    report_frequency=100,
+                                    turbine_files=[['xy_file_1.txt','turbine_type_1.trbx'],
                                                    ['xy_file_2.txt','turbine_type_2.trbx']])
 
 The utility will read each *[<xy_file> , <trbx_file>]* pair provided.  The *<xy_file>* is a 3-column data file in ASCII format with *<turbine name>, <easting>* and *<northing>* data such as:
@@ -119,9 +119,9 @@ In order to export the data from a zCFD run in a format that can be read by Wind
 
 .. code-block:: python
 
-    >>> import zutil.farm as farm
-    >>> farm.write_windfarmer_data(case_name='windfarm_name', \
-                                   num_processes=48, \
+    import zutil.farm as farm
+    farm.write_windfarmer_data(case_name='windfarm_name',
+                                   num_processes=48,
                                    up = [0,0,1])
 
 The *up* vector is used to check that the orientation expected by WindFarmer is that same as the orientation used in the simulation.  In most cases this will be the *z*-axis.

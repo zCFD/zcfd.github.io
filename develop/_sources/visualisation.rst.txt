@@ -76,17 +76,6 @@ ParaView Server Source
 
 To download and install ParaView Server, you can either use the version on the main ParaView website and follow the instructions here (http://www.paraview.org/Wiki/Setting_up_a_ParaView_Server), or else use the Zenotech version (https://github.com/zenotech/ParaView.git).  We currently recommend the Zenotech version as it contains a number of fixes for parallel post-processing that have not yet been added to the main release.
 
-Offscreen Software Rendering
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-TODO
-
-Offscreen GPU rendering
-^^^^^^^^^^^^^^^^^^^^^^^
-
-TODO
-
-
 zPost: Post-Processing Suite
 ----------------------------
 
