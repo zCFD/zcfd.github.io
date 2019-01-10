@@ -16,13 +16,13 @@ Once zCFD has been installed the zCFD environment needs to be activated:
 
 .. code-block:: shell
 
-    $ source /path/to/zCFD/bin/activated
+    $ source /path/to/zCFD/bin/activate
     (zCFD)$
 
 .. raw:: html
 
     <embed>
-        <script id="asciicast-DzkpoHA6iFMsE40cOQnVyZLig" src="https://asciinema.org/a/DzkpoHA6iFMsE40cOQnVyZLig.js" async data-speed="8"></script>
+        <script id="asciicast-DzkpoHA6iFMsE40cOQnVyZLig" src="https://asciinema.org/a/DzkpoHA6iFMsE40cOQnVyZLig.js" async data-speed="12"></script>
     </embed>
 
 After these steps any of the following tutorials can be completed.

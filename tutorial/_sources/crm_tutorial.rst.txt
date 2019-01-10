@@ -27,3 +27,28 @@ Temperature: T = 310.928 Kelvin
 Reynolds Number: :math:`Re` = 5.0 x 10 :math:`^{6}`
 
 Mach Number: :math:`M` = 0.85
+
+Running the CRM
+^^^^^^^^^^^^^^^
+
+The steps required to run the CRM case are shown below:
+
+.. raw:: html
+
+    <embed>
+        <script id="asciicast-Il3wU1Nc8md7sy483uiDtpkRj" src="https://asciinema.org/a/Il3wU1Nc8md7sy483uiDtpkRj.js" async speed=12></script>
+    </embed>
+
+.. code-block:: shell
+
+    $ source /path/to/zcfd/bin/activate
+    (zCFD)$ mkdir dpw
+    (zCFD)$ cd dpw
+    (zCFD) dpw$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/nasa_crm/L1.T.rev01.p3d.hex.h5.gz
+    (zCFD) dpw$ gunzip L1.T.rev01.p3d.hex.h5.gz
+    (zCFD) dpw$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/dpw5_L1.py
+    (zCFD) dpw$ run_zcfd -n 1 -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+
+
+
+

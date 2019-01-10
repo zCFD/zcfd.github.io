@@ -50,6 +50,21 @@
 <p>Reynolds Number: <span class="math notranslate nohighlight">\(Re\)</span> = 5.0 x 10 <span class="math notranslate nohighlight">\(^{6}\)</span></p>
 <p>Mach Number: <span class="math notranslate nohighlight">\(M\)</span> = 0.85</p>
 </div>
+<div class="section" id="running-the-crm">
+<h2>Running the CRM<a class="headerlink" href="#running-the-crm" title="Permalink to this headline">¶</a></h2>
+<p>The steps required to run the CRM case are shown below:</p>
+<embed>
+    <script id="asciicast-Il3wU1Nc8md7sy483uiDtpkRj" src="https://asciinema.org/a/Il3wU1Nc8md7sy483uiDtpkRj.js" async speed=12></script>
+</embed><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">source</span> /path/to/zcfd/bin/activate
+<span class="o">(</span>zCFD<span class="o">)</span>$ mkdir dpw
+<span class="o">(</span>zCFD<span class="o">)</span>$ <span class="nb">cd</span> dpw
+<span class="o">(</span>zCFD<span class="o">)</span> dpw$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/nasa_crm/L1.T.rev01.p3d.hex.h5.gz
+<span class="o">(</span>zCFD<span class="o">)</span> dpw$ gunzip L1.T.rev01.p3d.hex.h5.gz
+<span class="o">(</span>zCFD<span class="o">)</span> dpw$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/dpw5_L1.py
+<span class="o">(</span>zCFD<span class="o">)</span> dpw$ run_zcfd -n <span class="m">1</span> -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+</pre></div>
+</div>
+</div>
 </div>
 
 
