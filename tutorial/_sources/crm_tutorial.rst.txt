@@ -1,0 +1,29 @@
+.. _`crm`:
+
+NASA CRM Tutorial
+-----------------
+
+Overview
+^^^^^^^^
+
+The NASA Common Research Model (CRM) is representative of a civil aircraft, and has been extensively tested in wind-tunnels and benchmarked for CFD with a series of international workshops. Accurate prediction of the drag components (pressure and friction) for a given configuration exercises the CFD turbulence model and transonic simulation capability.
+
+.. figure:: https://aiaa-dpw.larc.nasa.gov/Workshop5/DPW5_CRM_WindTunnelModel.png
+	:width: 90%
+	:align: center
+	:figclass: align-center
+
+Conditions
+^^^^^^^^^^
+
+The Drag Prediction Workshop 5 challenge to match a given lift coefficient :math:`C_L` of 0.5 is the basis for this test case. NASA provides a range of meshes with varying cell density, for a mesh refinement study and extrapolation.  We use the Level-3 mesh (L3) for this test case, corresponding to medium density with 5.11 million cells.  The case is run as a steady simulation, with a Menter SST (Vsust) fully-turbulent model. We iterate to find a value for the angle of attack :math:`\alpha` to match the lift coefficient, and then determine the drag coefficient components :math:`C_{D(PR)}` and :math:`C_{D(FR)}` for the pressure and friction components respectively.
+
+Lift Coefficient: :math:`C_L` = 0.5
+
+Pressure: P = 101325 Pascals
+
+Temperature: T = 310.928 Kelvin
+
+Reynolds Number: :math:`Re` = 5.0 x 10 :math:`^{6}`
+
+Mach Number: :math:`M` = 0.85

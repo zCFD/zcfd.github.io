@@ -1,0 +1,168 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Execution &#8212; zCFD User Guide v2019.01.68-7-g8aa64 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MyCluster" href="mycluster.html" />
+    <link rel="prev" title="License" href="license.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="execution">
+<h1>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h1>
+<p>zCFD is run from the command line using a customised environment that automatically sets up all of the paths and file locations correctly.  To make the execution of parallel jobs easier, we also provide the free tool <a class="reference internal" href="mycluster.html#mycluster"><span class="std std-ref">MyCluster</span></a> that simplifies the interaction with a range of job schedulers.</p>
+<div class="section" id="zcfd-command-line-environmen">
+<span id="zcfd-command"></span><h2>(zCFD) Command Line Environmen<a class="headerlink" href="#zcfd-command-line-environmen" title="Permalink to this headline">¶</a></h2>
+<p>To run zCFD, the <em>zCFD command line environment</em> must be active. The zCFD command line environment is initialised from a terminal window by sourcing the <em>activate</em> script in the zCFD installation directory.  It does not matter where this directory is - all of the executable paths and file locations will be set automatically:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> /INSTALL_LOCATION/zCFD-version/bin/activate
+</pre></div>
+</div>
+<p>This sets up the environment to enable execution of the specific version. When this environment is active, you should see a prefix to your command prompt, such as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span> &gt;
+</pre></div>
+</div>
+<p>To deactivate the command line environment, returning the environment to the previous state use</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span> &gt; zdeactivate
+</pre></div>
+</div>
+<p>Your command prompt should return to its normal appearance.</p>
+</div>
+<div class="section" id="smartlaunch">
+<h2>Smartlaunch<a class="headerlink" href="#smartlaunch" title="Permalink to this headline">¶</a></h2>
+<p>zCFD makes very effective use of a range of processor types and computer configurations.  We provide a <em>smartlaunch.bsh</em> script with zCFD to automatically detect the processor type and the presence of any accelerators (like Nvidia GPUs or Intel Xeon Phi’s).</p>
+<p>Smartlaunch uses this information to calculate the number of OpenMP threads to set per MPI task and to perform NUMA binding to specific cores and memory banks.</p>
+<p>The optimum number of execution tasks ($NTASKS below) should match the total number of sockets (usually two per node) <strong>not</strong> the number of cores.  This configuration will also work for systems with accelerators present.</p>
+<p>It is also recommended to always use any computational nodes in exclusive mode to achieve the best performance.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># PROBLEM_NAME is the name of the hdf5 file containing the mesh</span>
+<span class="c1"># CASE_NAME is the name of the python control</span>
+
+run_zcfd --ntask <span class="m">10</span> -p <span class="nv">$PROBLEM_NAME</span> -c <span class="nv">$CASE_NAME</span>
+</pre></div>
+</div>
+<p>Alternatively, <a class="reference internal" href="mycluster.html#mycluster"><span class="std std-ref">MyCluster</span></a> is a powerful tool for setting up, running and monitoring zCFD jobs on a range of schedulers.  We recommend this tool, and it is provided as part of the zCFD environment.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># PROBLEM_NAME is the name of the hdf5 file containing the mesh</span>
+<span class="c1"># CASE_NAME is the name of the python control</span>
+
+cluster_run -p <span class="nv">$PROBLEM_NAME</span> -c <span class="nv">$CASE_NAME</span> -j mycluster_job.job
+</pre></div>
+</div>
+</div>
+<div class="section" id="input-validation">
+<span id="id1"></span><h2>Input Validation<a class="headerlink" href="#input-validation" title="Permalink to this headline">¶</a></h2>
+<p>zCFD provides an input validation script which can be used to check the solver control dictionary before runtime reducing the likelihood of a job spending a long time queuing only to fail at start up. The script can be executed from the zCFD environment as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>validate_input input.py <span class="o">[</span>-m mesh.h5<span class="o">]</span>
+
+Validating parameters dictionary...
+Parameters dictionary is valid
+Checking BC_, FR_, FZ_, IC_ and TR_ numbering...
+IC_ numbering is correct
+FR_ numbering is correct
+BC_ numbering is correct
+zCFD input file input.py is valid
+</pre></div>
+</div>
+<p>If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formulation.html">Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Execution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#zcfd-command-line-environmen">(zCFD) Command Line Environmen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#smartlaunch">Smartlaunch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-validation">Input Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">zCFD Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-18, Zenotech Ltd.
+      
+      |
+      <a href="_sources/execution.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
