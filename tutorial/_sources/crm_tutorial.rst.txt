@@ -63,11 +63,13 @@ This tells zCFD to launch 4 MPI processes with 4 processes per node. If you are 
 zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.
 
 The asciicast below runs through the steps required to run the tutorial
+
 .. raw:: html
 
     <embed>
     <script id="asciicast-226692" src="https://asciinema.org/a/226692.js" async></script>
     </embed>
+
 
 Once the solver has finished the results can be post-processed in a python notebook. Included with the notebook are some data from other simulations, including a zCFD run on the finer L2 mesh, for comparison. The notebook and data can be downloaded from the `Github repository <https://github.com/zCFD/zCFD-tutorials/master/nasa_crm>`_.
 

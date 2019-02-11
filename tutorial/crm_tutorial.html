@@ -75,13 +75,10 @@ $ <span class="nb">source</span> /path/to/zcfd/bin/activate
 </pre></div>
 </div>
 <p>zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.</p>
-<p>The asciicast below runs through the steps required to run the tutorial
-.. raw:: html</p>
-<blockquote>
-<div>&lt;embed&gt;
-&lt;script id=”asciicast-226692” src=”<a class="reference external" href="https://asciinema.org/a/226692.js">https://asciinema.org/a/226692.js</a>” async&gt;&lt;/script&gt;
-&lt;/embed&gt;</div></blockquote>
-<p>Once the solver has finished the results can be post-processed in a python notebook. Included with the notebook are some data from other simulations, including a zCFD run on the finer L2 mesh, for comparison. The notebook and data can be downloaded from the <a class="reference external" href="https://github.com/zCFD/zCFD-tutorials/master/nasa_crm">Github repository</a>.</p>
+<p>The asciicast below runs through the steps required to run the tutorial</p>
+<embed>
+<script id="asciicast-226692" src="https://asciinema.org/a/226692.js" async></script>
+</embed><p>Once the solver has finished the results can be post-processed in a python notebook. Included with the notebook are some data from other simulations, including a zCFD run on the finer L2 mesh, for comparison. The notebook and data can be downloaded from the <a class="reference external" href="https://github.com/zCFD/zCFD-tutorials/master/nasa_crm">Github repository</a>.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the post-processing notebook</span>
 <span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/nasa-crm.ipynb
 <span class="c1"># Download the comparative data and move it to a data folder</span>
