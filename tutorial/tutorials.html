@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>zCFD Tutorials &#8212; zCFD User Guide v2019.01.68-7-g8aa64 documentation</title>
+    <title>zCFD Tutorials &#8212; zCFD User Guide v2019.01.68-277-g6cd5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -39,8 +39,15 @@
 <p>The following sections are step-by-step guides to running zCFD on different test cases. All are freely available to download.</p>
 <div class="section" id="getting-zcfd">
 <h2>Getting zCFD<a class="headerlink" href="#getting-zcfd" title="Permalink to this headline">¶</a></h2>
-<p>The first step for any of the cases is to download and install zCFD from the <a class="reference external" href="https://zcfd.zenotech.com/">zCFD website</a>. Once you have the tarball simply un-tar it:</p>
+<p>The first step for any of the cases is to download and install zCFD. This can be done in one of two ways, if you are running Linux/Unix zCFD is provided as a stand-alone tarball containing all the packages required to run this can be downloaded from the <a class="reference external" href="https://zcfd.zenotech.com/">zCFD website</a>. If you are running Windows or MacOS zCFD is provided in a Docker container which allows you to run the solver inside a CentOS container, this can be downloaded from <a class="reference external" href="https://hub.docker.com/r/zcfd/zcfd">Docker Hub</a>. Details of these two installation methods are given below:</p>
+</div>
+<div class="section" id="linux-install">
+<h2>Linux Install<a class="headerlink" href="#linux-install" title="Permalink to this headline">¶</a></h2>
+<p>Once the zCFD tarball has downloaded simply untar it and install the license file provided over email</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ tar -zxvf zCFD-icc-sse-impi-2019.01.68-Linux-64bit.tar.gz
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ cp zcfd.lic /path/to/zCFD/lic/.
 </pre></div>
 </div>
 <p>Once zCFD has been installed the zCFD environment needs to be activated:</p>
@@ -48,10 +55,37 @@
 <span class="o">(</span>zCFD<span class="o">)</span>$
 </pre></div>
 </div>
+<p>These steps are shown in the asciicast below</p>
 <embed>
-    <script id="asciicast-DzkpoHA6iFMsE40cOQnVyZLig" src="https://asciinema.org/a/DzkpoHA6iFMsE40cOQnVyZLig.js" async data-speed="12"></script>
-</embed><p>After these steps any of the following tutorials can be completed.</p>
-<p><a class="reference internal" href="crm_tutorial.html#crm"><span class="std std-ref">NASA CRM Tutorial</span></a></p>
+<script id="asciicast-226683" src="https://asciinema.org/a/226683.js" async></script>
+</embed></div>
+<div class="section" id="docker-container-install">
+<h2>Docker Container Install<a class="headerlink" href="#docker-container-install" title="Permalink to this headline">¶</a></h2>
+<p>First download and install <a class="reference external" href="https://www.docker.com/get-started">Docker</a> then pull the zcfd container</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ docker login registry.zenotech.com
+$ docker pull registry.zenotech.com/zcfd/zcfd/run/centos7/ompi
+</pre></div>
+</div>
+<p>Run the container mounting your home directory and starting a bash shell. Raised ptrace privileges are required for mpi to function correctly</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start a Docker container mounting you home directory as /home/zcfd/home</span>
+<span class="c1"># On windows replace $HOME with /c/Users/USERNAME</span>
+
+$ docker run -it --rm  --cap-add<span class="o">=</span>SYS_PTRACE --security-opt seccomp:unconfined -p <span class="m">8888</span>:8888 -v <span class="nv">$HOME</span>:/home/zcfd/home zcfd/run/centos7/ompi /bin/bash
+
+<span class="c1"># Use ^D or exit to exit the container</span>
+</pre></div>
+</div>
+<p>Once the image has been pulled from the repository the first two steps can be ignored and the docker run command issued directly.</p>
+<p>How to setup and run the docker container is shown in the asciicast below:</p>
+<embed>
+<script id="asciicast-226684" src="https://asciinema.org/a/226684.js" async></script>
+</embed></div>
+<div class="section" id="tutorial-cases">
+<h2>Tutorial Cases<a class="headerlink" href="#tutorial-cases" title="Permalink to this headline">¶</a></h2>
+<p>After zCFD has been successfully installed any of the following tutorials can be completed.</p>
+<p><a class="reference internal" href="plate_tutorial.html#plate-tutorial"><span class="std std-ref">Flat Plate Tutorial</span></a></p>
+<p><a class="reference internal" href="naca0012_tutorial.html#naca0012-tutorial"><span class="std std-ref">2D NACA0012 Tutorial</span></a></p>
+<p><a class="reference internal" href="crm_tutorial.html#crm-tutorial"><span class="std std-ref">NASA CRM Tutorial</span></a></p>
 </div>
 </div>
 
@@ -77,6 +111,9 @@
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">zCFD Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#getting-zcfd">Getting zCFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linux-install">Linux Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker-container-install">Docker Container Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorial-cases">Tutorial Cases</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>

@@ -1,0 +1,145 @@
+.. _`plate_tutorial`:
+
+Flat Plate Tutorial
+===================
+
+The zero pressure-gradient flat plate exercises the near-wall turbulence model by comparing the turbulent boundary layer profile directly with an exact analytic (theoretical) model. This test is applied to a series of meshes with varying mesh density (increasing the :math:`y^{+}`) to check the mesh convergence behaviour and to verify that the automatic scalable wall function is operating correctly. This case has been used for verification by NASA and there is detailed information on their `site <https://turbmodels.larc.nasa.gov/flatplate.html>`_.
+
+Conditions
+^^^^^^^^^^
+
+Turbulent flow near a flat solid boundary follows the `law of the wall <http://en.wikipedia.org/wiki/Law_of_the_wall>`_ such that in the viscous sublayer (:math:`y^{+} = y u_{\tau} / \nu < 5`) the dimensionless velocity :math:`u^{+} = u/u_{\tau}` is given by :math:`u^{+}=y^{+}`. The friction velocity :math:`u_{\tau}=\sqrt{\tau_{w}/\rho}` and :math:`\nu` is the kinematic viscosity. The wall shear stress :math:`\tau_{w}` must be determined as part of the solution.
+
+For :math:`y^{+}>30` the dimensionless velocity is given by :math:`u^{+}=\log (y^{+})/\kappa + C^{+}` where :math:`\kappa \simeq 0.41` is the von Karman constant and :math:`C^{+} \simeq 0.5` is an empirical constant. In the buffer region :math:`5 < y^{+} < 30` the dimensionless velocity :math:`u^{+}` is a blend between the two models.
+
+.. figure:: images/plateBCpic.jpg
+	:width: 100%
+	:align: center
+	:alt: Flat Plate Boundary Conditions
+	:figclass: align-center
+
+The computational domain for the turbulent flat plate flow case is shown above. When the *kind* of :ref:`wall` boundary condition for the lower boundary is set to *wallfunction*, zCFD will automatically calculate :math:`y^{+}` at each time step based on the local distance field value :math:`d` and determine the appropriate values of the turbulence quantities :math:`k` and :math:`\omega` to recover the law of the wall. Further details of this formulation are provided in the zCFD Reference Guide.
+
+There are 5 cases provided with this tutorial: A set of 4 successively refined meshes which demonstrate the mesh convergence of the SST turbulence model on the flat plate and one wall function mesh to provide a comparison between using wall functions and the :math:`y^{+} < 1` grids.
+
+Mesh
+^^^^
+
+The meshes for the flat plate test case are:
+
+- plate_coarse.h5 (34  x 24 cells) :math:`y^{+} \simeq 0.73`
+- plate_medium.h5 (68  x 48 cells) :math:`y^{+} \simeq 0.36`
+- plate_fine.h5   (132 x 96 cells) :math:`y^{+} \simeq 0.18`
+- plate_finer.h5  (272 x 192 cells) :math:`y^{+} \simeq 0.09`
+- plate_medium_f100.h5 (68 x 48 cells) :math:`y^{+} \simeq 36`
+
+Input Files
+^^^^^^^^^^^
+
+There is a corresponding input file for each mesh file as some of the solver settings differ. The plate_medium_f100 case uses *wallfunctions* whereas the others use *noslip* walls. Note the finer meshes will take longer to run.
+
+
+Running the Tutorial
+^^^^^^^^^^^^^^^^^^^^
+
+The steps required to run the tutorial are given below
+
+.. code-block:: shell
+
+    # Source the zCFD environment
+    $ source /path/to/zcfd/bin/activate
+    # Make a directory for the tutorial and cd into it
+    (zCFD)$ mkdir -p zCFD-tutorials/plate
+    (zCFD)$ cd zCFD-tutorials/plate
+    # Download and untar the plate meshes
+    (zCFD) plate$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/plate/plate_meshes.tar.gz
+    (zCFD) plate$ tar -zxvf plate_meshes.tar.gz
+    # Download and untar the zCFD input python files
+    (zCFD) plate$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/plate/plate_inputs.tar.gz
+    (zCFD) plate$ tar -zxvf plate_inputs.tar.gz
+    # Check the validity of the input parameters for the plate_coarse case
+    (zCFD) plate$ validate_input plate_coarse.py
+    # Run the plate_coarse case
+    (zCFD) plate$ run_zcfd -n 1 --tpn 1 -p plate_coarse.h5 -c plate_coarse.py
+    # Run the solver for the 4 remaining cases
+    (zCFD) plate$ run_zcfd -n 1 --tpn 1 -p plate_medium.h5 -c plate_medium.py
+    (zCFD) plate$ run_zcfd -n 1 --tpn 1 -p plate_fine.h5 -c plate_fine.py
+    (zCFD) plate$ run_zcfd -n 1 --tpn 1 -p plate_finer.h5 -c plate_finer.py
+    (zCFD) plate$ run_zcfd -n 1 --tpn 1 -p plate_medium_f100.h5 -c plate_medium_f100.py
+
+If you are running zCFD inside a Docker container it is best practice to run one MPI process per physical core, e.g. if you have a 4 core machine the command to run the plate_coarse cas becomes:
+
+.. code-block:: shell
+
+    (zCFD) plate$ run_zcfd -n 4 --tpn 4 -p plate_coarse.h5 -c plate_coarse.py
+
+This tells zCFD to launch 4 MPI processes with 4 processes per node. If you are running on Linux then it is best practice to run 1 MPI process per CPU socket, e.g. if you have a machine with 2 CPUs with 8 cores each the command to run the plate_coarse case becomes:
+
+.. code-block:: shell
+
+    (zCFD) plate$ run_zcfd -n 2 --tpn 2 -p plate_coarse.h5 -c plate_coarse.py
+
+zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.
+
+The steps to run this tutorial are also shown in the acsiicast below.
+
+.. raw:: html
+
+    <embed>
+    <script id="asciicast-226695" src="https://asciinema.org/a/226695.js" async></script>
+    </embed>
+
+Once the simulations have been run the results can be post-processed using a python notebook
+
+.. code-block:: shell
+
+    # Download the post-processing notebook
+    (zCFD) plate$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/plate/plate.ipynb
+    # Download and untar the comparison data
+    (zCFD) plate$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/plate/plate_data.tar.gz
+    (zCFD) plate$ tar -zxvf plate_data.tar.gz
+    (zCFD) plate$ start_notebook
+    # If running in a Docker container
+    (zCFD) $ start_notebook -p 8888
+
+Paste the notebook server address displayed into your web browser and open :code:`plate.ipynb` notebook.
+
+
+Results
+^^^^^^^
+
+.. figure:: images/plate_u+_y+.png
+	:width: 100%
+	:align: center
+	:figclass: align-center
+
+The boundary layer profiles (:math:`u^{+}` versus :math:`\log y^{+}`) at streamwise location :math:`x=0.97` are shown above. By varying the mesh resolution in the :math:`y` direction, we can verify that zCFD is recovering the law of the wall regardless of the first cell height. The :math:`y^{+}` value in the cell adjacent to the wall boundary shown on the graph legend is calculated by the solver. We provide a comparative CFD solution from `CFL3D <http://cfl3d.larc.nasa.gov/>`_.
+
+.. figure:: images/plate_vel_profile.png
+    :width: 100%
+    :align: center
+    :figclass: align-center
+
+We plot here the profile :math:`y` versus velocity in the streamwise direction to visualise the vertical extent of the boundary layer. The friction coefficient :math:`C_f=F_{x=0.97}/(0.5 \rho u^{2})` at streamwise location :math:`x=0.97` and the drag coefficient :math:`C_d=D_{\small PLATE}/(0.5 \rho u^{2})` should be independent of the first cell height (and hence :math:`y^{+}`). The friction and drag coefficient values are shown in the legend and should lie in the ranges :math:`0.00255<C_f<0.00275` and :math:`0.00270<C_d<0.00290` respectively.
+
+.. figure:: images/plate_eddy_profile.png
+	:width: 100%
+	:align: center
+	:figclass: align-center
+
+
+The figure above shows the turbulence eddy viscosity which should be zero in the inner, viscous sub-layer and non-zero in the outer turbulent region.
+
+.. figure:: images/plate_mesh_convergence.png
+	:width: 100%
+	:align: center
+	:figclass: align-center
+
+A code-to-code comparison of the convergence of the friction coefficient :math:`C_f` at :math:`x=0.97` with mesh refinement is shown above with zCFD compared to `FUN3D <http://fun3d.larc.nasa.gov/>`_ and `CFL3D <http://cfl3d.larc.nasa.gov/>`_
+
+References
+^^^^^^^^^^
+
+`<http://turbmodels.larc.nasa.gov/flatplate.html>`_
+
+`<http://turbmodels.larc.nasa.gov/flatplate_val.html>`_

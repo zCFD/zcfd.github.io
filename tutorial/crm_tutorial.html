@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>NASA CRM Tutorial &#8212; zCFD User Guide v2019.01.68-7-g8aa64 documentation</title>
+    <title>NASA CRM Tutorial &#8212; zCFD User Guide v2019.01.68-277-g6cd5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <div class="section" id="nasa-crm-tutorial">
-<span id="crm"></span><h1>NASA CRM Tutorial<a class="headerlink" href="#nasa-crm-tutorial" title="Permalink to this headline">¶</a></h1>
+<span id="crm-tutorial"></span><h1>NASA CRM Tutorial<a class="headerlink" href="#nasa-crm-tutorial" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The NASA Common Research Model (CRM) is representative of a civil aircraft, and has been extensively tested in wind-tunnels and benchmarked for CFD with a series of international workshops. Accurate prediction of the drag components (pressure and friction) for a given configuration exercises the CFD turbulence model and transonic simulation capability.</p>
@@ -43,26 +43,77 @@
 </div>
 <div class="section" id="conditions">
 <h2>Conditions<a class="headerlink" href="#conditions" title="Permalink to this headline">¶</a></h2>
-<p>The Drag Prediction Workshop 5 challenge to match a given lift coefficient <span class="math notranslate nohighlight">\(C_L\)</span> of 0.5 is the basis for this test case. NASA provides a range of meshes with varying cell density, for a mesh refinement study and extrapolation.  We use the Level-3 mesh (L3) for this test case, corresponding to medium density with 5.11 million cells.  The case is run as a steady simulation, with a Menter SST (Vsust) fully-turbulent model. We iterate to find a value for the angle of attack <span class="math notranslate nohighlight">\(\alpha\)</span> to match the lift coefficient, and then determine the drag coefficient components <span class="math notranslate nohighlight">\(C_{D(PR)}\)</span> and <span class="math notranslate nohighlight">\(C_{D(FR)}\)</span> for the pressure and friction components respectively.</p>
+<p>The Drag Prediction Workshop 5 challenge to match a given lift coefficient <span class="math notranslate nohighlight">\(C_L\)</span> of 0.5 is the basis for this test case. NASA provides a range of meshes with varying cell density, for a mesh refinement study and extrapolation.  We use the Level-1 mesh (L1) for this test case, corresponding to low density with 638976 cells.  The case is run as a steady simulation, with a Menter SST (Vsust) fully-turbulent model. We iterate to find a value for the angle of attack <span class="math notranslate nohighlight">\(\alpha\)</span> to match the lift coefficient, and then determine the drag coefficient components <span class="math notranslate nohighlight">\(C_{D(PR)}\)</span> and <span class="math notranslate nohighlight">\(C_{D(FR)}\)</span> for the pressure and friction components respectively.</p>
 <p>Lift Coefficient: <span class="math notranslate nohighlight">\(C_L\)</span> = 0.5</p>
 <p>Pressure: P = 101325 Pascals</p>
 <p>Temperature: T = 310.928 Kelvin</p>
 <p>Reynolds Number: <span class="math notranslate nohighlight">\(Re\)</span> = 5.0 x 10 <span class="math notranslate nohighlight">\(^{6}\)</span></p>
 <p>Mach Number: <span class="math notranslate nohighlight">\(M\)</span> = 0.85</p>
 </div>
-<div class="section" id="running-the-crm">
-<h2>Running the CRM<a class="headerlink" href="#running-the-crm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-the-crm-tutorial">
+<h2>Running the CRM Tutorial<a class="headerlink" href="#running-the-crm-tutorial" title="Permalink to this headline">¶</a></h2>
 <p>The steps required to run the CRM case are shown below:</p>
-<embed>
-    <script id="asciicast-Il3wU1Nc8md7sy483uiDtpkRj" src="https://asciinema.org/a/Il3wU1Nc8md7sy483uiDtpkRj.js" async data-speed="4"></script>
-</embed><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">source</span> /path/to/zcfd/bin/activate
-<span class="o">(</span>zCFD<span class="o">)</span>$ mkdir dpw
-<span class="o">(</span>zCFD<span class="o">)</span>$ <span class="nb">cd</span> dpw
-<span class="o">(</span>zCFD<span class="o">)</span> dpw$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/nasa_crm/L1.T.rev01.p3d.hex.h5.gz
-<span class="o">(</span>zCFD<span class="o">)</span> dpw$ gunzip L1.T.rev01.p3d.hex.h5.gz
-<span class="o">(</span>zCFD<span class="o">)</span> dpw$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/dpw5_L1.py
-<span class="o">(</span>zCFD<span class="o">)</span> dpw$ run_zcfd -n <span class="m">1</span> -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Source the zCFD environment</span>
+$ <span class="nb">source</span> /path/to/zcfd/bin/activate
+<span class="c1"># Make a directory for the tutorial and cd into it</span>
+<span class="o">(</span>zCFD<span class="o">)</span>$ mkdir -p zCFD-tutorials/nasa_crm
+<span class="o">(</span>zCFD<span class="o">)</span>$ <span class="nb">cd</span> zCFD-tutorials/nasa_crm
+<span class="c1"># Download the mesh and input file</span>
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/nasa_crm/L1.T.rev01.p3d.hex.h5.gz
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ gunzip L1.T.rev01.p3d.hex.h5.gz
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/dpw5_L1.py
+<span class="c1"># Run the solver</span>
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ run_zcfd -n <span class="m">1</span> --tpn <span class="m">1</span> -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
 </pre></div>
+</div>
+<p>If you are running zCFD inside a Docker container it is best practice to run one MPI process per physical core, e.g. if you have a 4 core machine the command to run the plate_coarse cas becomes:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>$ run_zcfd -n <span class="m">4</span> --tpn <span class="m">4</span> -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+</pre></div>
+</div>
+<p>This tells zCFD to launch 4 MPI processes with 4 processes per node. If you are running on Linux then it is best practice to run 1 MPI process per CPU socket, e.g. if you have a machine with 2 CPUs with 8 cores each the command to run the plate_coarse case becomes:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>$ run_zcfd -n <span class="m">2</span> --tpn <span class="m">2</span> -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+</pre></div>
+</div>
+<p>zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.</p>
+<p>The asciicast below runs through the steps required to run the tutorial
+.. raw:: html</p>
+<blockquote>
+<div>&lt;embed&gt;
+&lt;script id=”asciicast-226692” src=”<a class="reference external" href="https://asciinema.org/a/226692.js">https://asciinema.org/a/226692.js</a>” async&gt;&lt;/script&gt;
+&lt;/embed&gt;</div></blockquote>
+<p>Once the solver has finished the results can be post-processed in a python notebook. Included with the notebook are some data from other simulations, including a zCFD run on the finer L2 mesh, for comparison. The notebook and data can be downloaded from the <a class="reference external" href="https://github.com/zCFD/zCFD-tutorials/master/nasa_crm">Github repository</a>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the post-processing notebook</span>
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/nasa-crm.ipynb
+<span class="c1"># Download the comparative data and move it to a data folder</span>
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/DPW5_Comparative_Data.py
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ mkdir data <span class="o">&amp;&amp;</span> mv DPW5_Comparative_Data.py data/.
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ start_notebook
+<span class="c1"># If running in a Docker container</span>
+<span class="o">(</span>zCFD<span class="o">)</span> nasa_crm$ start_notebook -p <span class="m">8888</span>
+</pre></div>
+</div>
+<p>Paste the notebook server address displayed into your web browser and open <code class="code docutils literal notranslate"><span class="pre">nasa_crm.ipynb</span></code> notebook.</p>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>Shown below are <span class="math notranslate nohighlight">\(C_{p}\)</span> profiles at several spanwise stations along the wing. On the L2 mesh zCFD gives results which are very similar to the other codes shown. However on the coarser L1 mesh the shock is not as well resolved towards the wing tip.</p>
+<div class="figure">
+<img alt="_images/DPW5_cp_profile_S04.png" src="_images/DPW5_cp_profile_S04.png" />
+</div>
+<div class="figure">
+<img alt="_images/DPW5_cp_profile_S06.png" src="_images/DPW5_cp_profile_S06.png" />
+</div>
+<div class="figure">
+<img alt="_images/DPW5_cp_profile_S09.png" src="_images/DPW5_cp_profile_S09.png" />
+</div>
+<div class="figure">
+<img alt="_images/DPW5_cp_profile_S10.png" src="_images/DPW5_cp_profile_S10.png" />
+</div>
+<div class="figure">
+<img alt="_images/DPW5_cp_profile_S12.png" src="_images/DPW5_cp_profile_S12.png" />
+</div>
+<div class="figure">
+<img alt="_images/DPW5_cp_profile_S14.png" src="_images/DPW5_cp_profile_S14.png" />
 </div>
 </div>
 </div>

@@ -1,3 +1,4 @@
+
 zCFD Tutorials
 ==============
 
@@ -6,11 +7,20 @@ The following sections are step-by-step guides to running zCFD on different test
 Getting zCFD
 ------------
 
-The first step for any of the cases is to download and install zCFD from the `zCFD website <https://zcfd.zenotech.com/>`_. Once you have the tarball simply un-tar it:
+The first step for any of the cases is to download and install zCFD. This can be done in one of two ways, if you are running Linux/Unix zCFD is provided as a stand-alone tarball containing all the packages required to run this can be downloaded from the `zCFD website <https://zcfd.zenotech.com/>`_. If you are running Windows or MacOS zCFD is provided in a Docker container which allows you to run the solver inside a CentOS container, this can be downloaded from `Docker Hub <https://hub.docker.com/r/zcfd/zcfd>`_. Details of these two installation methods are given below:
+
+Linux Install
+-------------
+
+Once the zCFD tarball has downloaded simply untar it and install the license file provided over email
 
 .. code-block:: shell
 
     $ tar -zxvf zCFD-icc-sse-impi-2019.01.68-Linux-64bit.tar.gz
+
+.. code-block:: shell
+
+    $ cp zcfd.lic /path/to/zCFD/lic/.
 
 Once zCFD has been installed the zCFD environment needs to be activated:
 
@@ -19,13 +29,52 @@ Once zCFD has been installed the zCFD environment needs to be activated:
     $ source /path/to/zCFD/bin/activate
     (zCFD)$
 
+These steps are shown in the asciicast below
+
 .. raw:: html
 
     <embed>
-        <script id="asciicast-DzkpoHA6iFMsE40cOQnVyZLig" src="https://asciinema.org/a/DzkpoHA6iFMsE40cOQnVyZLig.js" async data-speed="12"></script>
+    <script id="asciicast-226683" src="https://asciinema.org/a/226683.js" async></script>
     </embed>
 
-After these steps any of the following tutorials can be completed.
+Docker Container Install
+------------------------
 
-:ref:`crm`
+First download and install `Docker <https://www.docker.com/get-started>`_ then pull the zcfd container
 
+.. code-block:: shell
+
+    $ docker login registry.zenotech.com
+    $ docker pull registry.zenotech.com/zcfd/zcfd/run/centos7/ompi
+
+Run the container mounting your home directory and starting a bash shell. Raised ptrace privileges are required for mpi to function correctly
+
+.. code-block:: shell
+
+    # Start a Docker container mounting you home directory as /home/zcfd/home
+    # On windows replace $HOME with /c/Users/USERNAME
+
+    $ docker run -it --rm  --cap-add=SYS_PTRACE --security-opt seccomp:unconfined -p 8888:8888 -v $HOME:/home/zcfd/home zcfd/run/centos7/ompi /bin/bash
+
+    # Use ^D or exit to exit the container
+
+Once the image has been pulled from the repository the first two steps can be ignored and the docker run command issued directly.
+
+How to setup and run the docker container is shown in the asciicast below:
+
+.. raw:: html
+
+    <embed>
+    <script id="asciicast-226684" src="https://asciinema.org/a/226684.js" async></script>
+    </embed>
+
+Tutorial Cases
+--------------
+
+After zCFD has been successfully installed any of the following tutorials can be completed.
+
+:ref:`plate_tutorial`
+
+:ref:`naca0012_tutorial`
+
+:ref:`crm_tutorial`

@@ -1,0 +1,219 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>2D NACA0012 Tutorial &#8212; zCFD User Guide v2019.01.68-277-g6cd5 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="d-naca0012-tutorial">
+<span id="naca0012-tutorial"></span><h1>2D NACA0012 Tutorial<a class="headerlink" href="#d-naca0012-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>The 2D NACA 0012 aerofoil case can be used as a validation case to compare the results obtained from zCFD with experimental data. A range of grids of varying resolution as well as experimental data are provided by <a class="reference external" href="https://turbmodels.larc.nasa.gov/naca0012_val.html">NASA</a>. In this tutorial we will run zCFD on the 449 x 129 grid provided at three different angles of attack and compare the results against experiment and results from other CFD codes. As an optional extra exercise a final example utilising the RBF mesh motion capability in zCFD to deform the mesh rather than setting the inflow angle to alter tha angle of attack is provided.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The domain and boundary conditions used for the simulation are shown below:</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="http://turbmodels.larc.nasa.gov/NACA0012_grids/grid_bcs.jpg"><img alt="http://turbmodels.larc.nasa.gov/NACA0012_grids/grid_bcs.jpg" src="http://turbmodels.larc.nasa.gov/NACA0012_grids/grid_bcs.jpg" style="width: 100%;" /></a>
+</div>
+</div>
+<div class="section" id="mesh">
+<h2>Mesh<a class="headerlink" href="#mesh" title="Permalink to this headline">¶</a></h2>
+<p>The mesh used in this tutorial is the 449 x 129 grid obtained from the <a class="reference external" href="https://turbmodels.larc.nasa.gov/naca0012_grids.html">NASA website</a>. A close up of the mesh around the aerofoil is shown below:</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="https://turbmodels.larc.nasa.gov/NACA0012_grids/grid_close.jpg"><img alt="https://turbmodels.larc.nasa.gov/NACA0012_grids/grid_close.jpg" src="https://turbmodels.larc.nasa.gov/NACA0012_grids/grid_close.jpg" style="width: 100%;" /></a>
+</div>
+</div>
+<div class="section" id="input-files">
+<h2>Input Files<a class="headerlink" href="#input-files" title="Permalink to this headline">¶</a></h2>
+<p>Four input files are provided for this tutorial, one for each of the angles of attack: 0, 10 and 15 degrees and one for the additional RBF case. Note the higher angle of attack cases will require longer to run.</p>
+</div>
+<div class="section" id="running-the-tutorial">
+<h2>Running the Tutorial<a class="headerlink" href="#running-the-tutorial" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Source the zCFD environment</span>
+$ <span class="nb">source</span> /path/to/zcfd/bin/activate
+<span class="c1"># Make a directory for the tutorial and cd into it</span>
+<span class="o">(</span>zCFD<span class="o">)</span>$ mkdir -p zCFD-tutorials/naca0012
+<span class="o">(</span>zCFD<span class="o">)</span>$ <span class="nb">cd</span> zCFD-tutorials/naca0012
+<span class="c1"># Download the mesh and input files</span>
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/naca0012/naca0012_0257.h5.gz
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ gunzip naca0012_0257.h5.gz
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/naca0012/naca0012_inputs.tar.gz
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ tar -zxvf naca0012_inputs.tar.gz
+<span class="c1"># Check the validity of the input parameters for the naca0012_a0p0 case</span>
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ validate_input n0012_257_a0p0.py
+<span class="c1"># Run the solver</span>
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ run_zcfd -n <span class="m">1</span> --tpn <span class="m">1</span> -p naca0012_0257.h5 -c n0012_257_a0p0.py
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ run_zcfd -n <span class="m">1</span> --tpn <span class="m">1</span> -p naca0012_0257.h5 -c n0012_257_a10p0.py
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ run_zcfd -n <span class="m">1</span> --tpn <span class="m">1</span> -p naca0012_0257.h5 -c n0012_257_a15p0.py
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ run_zcfd -n <span class="m">1</span> --tpn <span class="m">1</span> -p naca0012_0257.h5 -c n0012_257_a10p0_rbf.py
+</pre></div>
+</div>
+<p>If you are running zCFD inside a Docker container it is best practice to run one MPI process per physical core, e.g. if you have a 4 core machine the command to run the plate_coarse cas becomes:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>$ run_zcfd -n <span class="m">4</span> --tpn <span class="m">4</span> -p naca0012_0257.h5 -c n0012_257_a0p0.py
+</pre></div>
+</div>
+<p>This tells zCFD to launch 4 MPI processes with 4 processes per node. If you are running on Linux then it is best practice to run 1 MPI process per CPU socket, e.g. if you have a machine with 2 CPUs with 8 cores each the command to run the plate_coarse case becomes:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>$ run_zcfd -n <span class="m">2</span> --tpn <span class="m">2</span> -p naca0012_0257.h5 -c n0012_257_a0p0.py
+</pre></div>
+</div>
+<p>zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.</p>
+<p>The steps to run this tutorial are also shown in the acsiicast below.</p>
+<embed>
+<script id="asciicast-226698" src="https://asciinema.org/a/226698.js" async></script>
+</embed><p>Once the solver has finished the results can be post-processed in a python notebook. The notebook and data can be downloaded from the <a class="reference external" href="https://github.com/zCFD/zCFD-tutorials/master/naca0012">Github repository</a>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download post-processing notebook</span>
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/naca0012/naca0012.ipynb
+<span class="c1"># Download and untar data for comparison</span>
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/naca0012/comparison_data.tar.gz
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ tar -zxvf comparison_data.tar.gz
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ start_notebook
+<span class="c1"># If running in a Docker container</span>
+<span class="o">(</span>zCFD<span class="o">)</span> naca0012$ start_notebook -p <span class="m">8888</span>
+</pre></div>
+</div>
+<p>Paste the notebook server address displayed into your web browser and open <code class="code docutils literal notranslate"><span class="pre">nasa_crm.ipynb</span></code> notebook.</p>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>The values of <span class="math notranslate nohighlight">\(C_l\)</span> and <span class="math notranslate nohighlight">\(C_d\)</span> calculated from zCFD at each angle of attack are plotted against experimental data and results from CFL3D below. Note the CFL3D runs were carried out on the 897 x 257 resolution mesh which is the next resolution up from the mesh used for the zCFD runs in this tutorial.</p>
+<div class="figure">
+<img alt="_images/naca0012_cl_vs_alpha.png" src="_images/naca0012_cl_vs_alpha.png" />
+</div>
+<div class="figure">
+<img alt="_images/naca0012_cl_vs_cd.png" src="_images/naca0012_cl_vs_cd.png" />
+</div>
+<p>The raw values of the force coefficients are given in the table below:</p>
+<div class="figure">
+<img alt="_images/naca0012_cl_cd_table.png" src="_images/naca0012_cl_cd_table.png" />
+</div>
+<p>The <span class="math notranslate nohighlight">\(C_p\)</span> and <span class="math notranslate nohighlight">\(C_f\)</span> profiles calculated from zCFD are compared to experiment and to CFL3D at three angles of attack.</p>
+<div class="section" id="alpha-0">
+<h3><span class="math notranslate nohighlight">\(\alpha=0\)</span><a class="headerlink" href="#alpha-0" title="Permalink to this headline">¶</a></h3>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/naca0012_alpha0_cp.png"><img alt="_images/naca0012_alpha0_cp.png" src="_images/naca0012_alpha0_cp.png" style="width: 100%;" /></a>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/naca0012_alpha0_cf.png"><img alt="_images/naca0012_alpha0_cf.png" src="_images/naca0012_alpha0_cf.png" style="width: 100%;" /></a>
+</div>
+</div>
+<div class="section" id="alpha-10">
+<h3><span class="math notranslate nohighlight">\(\alpha=10\)</span><a class="headerlink" href="#alpha-10" title="Permalink to this headline">¶</a></h3>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/naca0012_alpha10_cp.png"><img alt="_images/naca0012_alpha10_cp.png" src="_images/naca0012_alpha10_cp.png" style="width: 100%;" /></a>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/naca0012_alpha10_cf.png"><img alt="_images/naca0012_alpha10_cf.png" src="_images/naca0012_alpha10_cf.png" style="width: 100%;" /></a>
+</div>
+</div>
+<div class="section" id="alpha-15">
+<h3><span class="math notranslate nohighlight">\(\alpha=15\)</span><a class="headerlink" href="#alpha-15" title="Permalink to this headline">¶</a></h3>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/naca0012_alpha15_cp.png"><img alt="_images/naca0012_alpha15_cp.png" src="_images/naca0012_alpha15_cp.png" style="width: 100%;" /></a>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/naca0012_alpha15_cf.png"><img alt="_images/naca0012_alpha15_cf.png" src="_images/naca0012_alpha15_cf.png" style="width: 100%;" /></a>
+</div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://turbmodels.larc.nasa.gov/naca0012_val.html">http://turbmodels.larc.nasa.gov/naca0012_val.html</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formulation.html">Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">zCFD Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-18, Zenotech Ltd.
+      
+      |
+      <a href="_sources/naca0012_tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

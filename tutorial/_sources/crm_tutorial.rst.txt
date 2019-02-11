@@ -1,7 +1,7 @@
-.. _`crm`:
+.. _`crm_tutorial`:
 
 NASA CRM Tutorial
------------------
+=================
 
 Overview
 ^^^^^^^^
@@ -16,7 +16,7 @@ The NASA Common Research Model (CRM) is representative of a civil aircraft, and 
 Conditions
 ^^^^^^^^^^
 
-The Drag Prediction Workshop 5 challenge to match a given lift coefficient :math:`C_L` of 0.5 is the basis for this test case. NASA provides a range of meshes with varying cell density, for a mesh refinement study and extrapolation.  We use the Level-3 mesh (L3) for this test case, corresponding to medium density with 5.11 million cells.  The case is run as a steady simulation, with a Menter SST (Vsust) fully-turbulent model. We iterate to find a value for the angle of attack :math:`\alpha` to match the lift coefficient, and then determine the drag coefficient components :math:`C_{D(PR)}` and :math:`C_{D(FR)}` for the pressure and friction components respectively.
+The Drag Prediction Workshop 5 challenge to match a given lift coefficient :math:`C_L` of 0.5 is the basis for this test case. NASA provides a range of meshes with varying cell density, for a mesh refinement study and extrapolation.  We use the Level-1 mesh (L1) for this test case, corresponding to low density with 638976 cells.  The case is run as a steady simulation, with a Menter SST (Vsust) fully-turbulent model. We iterate to find a value for the angle of attack :math:`\alpha` to match the lift coefficient, and then determine the drag coefficient components :math:`C_{D(PR)}` and :math:`C_{D(FR)}` for the pressure and friction components respectively.
 
 Lift Coefficient: :math:`C_L` = 0.5
 
@@ -28,27 +28,77 @@ Reynolds Number: :math:`Re` = 5.0 x 10 :math:`^{6}`
 
 Mach Number: :math:`M` = 0.85
 
-Running the CRM
-^^^^^^^^^^^^^^^
+
+Running the CRM Tutorial
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 The steps required to run the CRM case are shown below:
 
-.. raw:: html
+.. code-block:: shell
 
-    <embed>
-        <script id="asciicast-Il3wU1Nc8md7sy483uiDtpkRj" src="https://asciinema.org/a/Il3wU1Nc8md7sy483uiDtpkRj.js" async speed=12></script>
-    </embed>
+    # Source the zCFD environment
+    $ source /path/to/zcfd/bin/activate
+    # Make a directory for the tutorial and cd into it
+    (zCFD)$ mkdir -p zCFD-tutorials/nasa_crm
+    (zCFD)$ cd zCFD-tutorials/nasa_crm
+    # Download the mesh and input file
+    (zCFD) nasa_crm$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/nasa_crm/L1.T.rev01.p3d.hex.h5.gz
+    (zCFD) nasa_crm$ gunzip L1.T.rev01.p3d.hex.h5.gz
+    (zCFD) nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/dpw5_L1.py
+    # Run the solver
+    (zCFD) nasa_crm$ run_zcfd -n 1 --tpn 1 -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+
+If you are running zCFD inside a Docker container it is best practice to run one MPI process per physical core, e.g. if you have a 4 core machine the command to run the plate_coarse cas becomes:
 
 .. code-block:: shell
 
-    $ source /path/to/zcfd/bin/activate
-    (zCFD)$ mkdir dpw
-    (zCFD)$ cd dpw
-    (zCFD) dpw$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/nasa_crm/L1.T.rev01.p3d.hex.h5.gz
-    (zCFD) dpw$ gunzip L1.T.rev01.p3d.hex.h5.gz
-    (zCFD) dpw$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/dpw5_L1.py
-    (zCFD) dpw$ run_zcfd -n 1 -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+    (zCFD)$ run_zcfd -n 4 --tpn 4 -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+
+This tells zCFD to launch 4 MPI processes with 4 processes per node. If you are running on Linux then it is best practice to run 1 MPI process per CPU socket, e.g. if you have a machine with 2 CPUs with 8 cores each the command to run the plate_coarse case becomes:
+
+.. code-block:: shell
+
+    (zCFD)$ run_zcfd -n 2 --tpn 2 -p L1.T.rev01.p3d.hex.h5.gz -c dpw5_L1.py
+
+zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.
+
+The asciicast below runs through the steps required to run the tutorial
+.. raw:: html
+
+    <embed>
+    <script id="asciicast-226692" src="https://asciinema.org/a/226692.js" async></script>
+    </embed>
+
+Once the solver has finished the results can be post-processed in a python notebook. Included with the notebook are some data from other simulations, including a zCFD run on the finer L2 mesh, for comparison. The notebook and data can be downloaded from the `Github repository <https://github.com/zCFD/zCFD-tutorials/master/nasa_crm>`_.
+
+.. code-block:: shell
+
+    # Download the post-processing notebook
+    (zCFD) nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/nasa-crm.ipynb
+    # Download the comparative data and move it to a data folder
+    (zCFD) nasa_crm$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/nasa_crm/DPW5_Comparative_Data.py
+    (zCFD) nasa_crm$ mkdir data && mv DPW5_Comparative_Data.py data/.
+    (zCFD) nasa_crm$ start_notebook
+    # If running in a Docker container
+    (zCFD) nasa_crm$ start_notebook -p 8888
+
+Paste the notebook server address displayed into your web browser and open :code:`nasa_crm.ipynb` notebook.
+
+Results
+^^^^^^^
+
+Shown below are :math:`C_{p}` profiles at several spanwise stations along the wing. On the L2 mesh zCFD gives results which are very similar to the other codes shown. However on the coarser L1 mesh the shock is not as well resolved towards the wing tip.
 
 
+.. figure:: images/DPW5_cp_profile_S04.png
 
+.. figure:: images/DPW5_cp_profile_S06.png
+
+.. figure:: images/DPW5_cp_profile_S09.png
+
+.. figure:: images/DPW5_cp_profile_S10.png
+
+.. figure:: images/DPW5_cp_profile_S12.png
+
+.. figure:: images/DPW5_cp_profile_S14.png
 

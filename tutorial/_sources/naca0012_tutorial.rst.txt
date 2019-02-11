@@ -1,0 +1,140 @@
+.. _`naca0012_tutorial`:
+
+
+2D NACA0012 Tutorial
+====================
+
+The 2D NACA 0012 aerofoil case can be used as a validation case to compare the results obtained from zCFD with experimental data. A range of grids of varying resolution as well as experimental data are provided by `NASA <https://turbmodels.larc.nasa.gov/naca0012_val.html>`_. In this tutorial we will run zCFD on the 449 x 129 grid provided at three different angles of attack and compare the results against experiment and results from other CFD codes. As an optional extra exercise a final example utilising the RBF mesh motion capability in zCFD to deform the mesh rather than setting the inflow angle to alter tha angle of attack is provided.
+
+Overview
+^^^^^^^^
+
+The domain and boundary conditions used for the simulation are shown below:
+
+.. figure:: http://turbmodels.larc.nasa.gov/NACA0012_grids/grid_bcs.jpg
+	:width: 100%
+	:align: center
+	:figclass: align-center
+
+
+Mesh
+^^^^
+The mesh used in this tutorial is the 449 x 129 grid obtained from the `NASA website <https://turbmodels.larc.nasa.gov/naca0012_grids.html>`_. A close up of the mesh around the aerofoil is shown below:
+
+.. figure:: https://turbmodels.larc.nasa.gov/NACA0012_grids/grid_close.jpg
+	:width: 100%
+	:align: center
+	:figclass: align-center
+
+Input Files
+^^^^^^^^^^^
+
+Four input files are provided for this tutorial, one for each of the angles of attack: 0, 10 and 15 degrees and one for the additional RBF case. Note the higher angle of attack cases will require longer to run.
+
+Running the Tutorial
+^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: shell
+
+    # Source the zCFD environment
+    $ source /path/to/zcfd/bin/activate
+    # Make a directory for the tutorial and cd into it
+    (zCFD)$ mkdir -p zCFD-tutorials/naca0012
+    (zCFD)$ cd zCFD-tutorials/naca0012
+    # Download the mesh and input files
+    (zCFD) naca0012$ wget https://github.com/zCFD/zCFD-tutorials/raw/master/naca0012/naca0012_0257.h5.gz
+    (zCFD) naca0012$ gunzip naca0012_0257.h5.gz
+    (zCFD) naca0012$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/naca0012/naca0012_inputs.tar.gz
+    (zCFD) naca0012$ tar -zxvf naca0012_inputs.tar.gz
+    # Check the validity of the input parameters for the naca0012_a0p0 case
+    (zCFD) naca0012$ validate_input n0012_257_a0p0.py
+    # Run the solver
+    (zCFD) naca0012$ run_zcfd -n 1 --tpn 1 -p naca0012_0257.h5 -c n0012_257_a0p0.py
+    (zCFD) naca0012$ run_zcfd -n 1 --tpn 1 -p naca0012_0257.h5 -c n0012_257_a10p0.py
+    (zCFD) naca0012$ run_zcfd -n 1 --tpn 1 -p naca0012_0257.h5 -c n0012_257_a15p0.py
+    (zCFD) naca0012$ run_zcfd -n 1 --tpn 1 -p naca0012_0257.h5 -c n0012_257_a10p0_rbf.py
+
+If you are running zCFD inside a Docker container it is best practice to run one MPI process per physical core, e.g. if you have a 4 core machine the command to run the plate_coarse cas becomes:
+
+.. code-block:: shell
+
+    (zCFD)$ run_zcfd -n 4 --tpn 4 -p naca0012_0257.h5 -c n0012_257_a0p0.py
+
+This tells zCFD to launch 4 MPI processes with 4 processes per node. If you are running on Linux then it is best practice to run 1 MPI process per CPU socket, e.g. if you have a machine with 2 CPUs with 8 cores each the command to run the plate_coarse case becomes:
+
+.. code-block:: shell
+
+    (zCFD)$ run_zcfd -n 2 --tpn 2 -p naca0012_0257.h5 -c n0012_257_a0p0.py
+
+zCFD will launch 2 MPI processes and automatically set the number of OpenMP threads to occupy the remaining cores.
+
+The steps to run this tutorial are also shown in the acsiicast below.
+
+.. raw:: html
+
+    <embed>
+    <script id="asciicast-226698" src="https://asciinema.org/a/226698.js" async></script>
+    </embed>
+
+
+Once the solver has finished the results can be post-processed in a python notebook. The notebook and data can be downloaded from the `Github repository <https://github.com/zCFD/zCFD-tutorials/master/naca0012>`_.
+
+.. code-block:: shell
+
+    # Download post-processing notebook
+    (zCFD) naca0012$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/naca0012/naca0012.ipynb
+    # Download and untar data for comparison
+    (zCFD) naca0012$ wget https://raw.githubusercontent.com/zCFD/zCFD-tutorials/master/naca0012/comparison_data.tar.gz
+    (zCFD) naca0012$ tar -zxvf comparison_data.tar.gz
+    (zCFD) naca0012$ start_notebook
+    # If running in a Docker container
+    (zCFD) naca0012$ start_notebook -p 8888
+
+Paste the notebook server address displayed into your web browser and open :code:`nasa_crm.ipynb` notebook.
+
+Results
+^^^^^^^
+The values of :math:`C_l` and :math:`C_d` calculated from zCFD at each angle of attack are plotted against experimental data and results from CFL3D below. Note the CFL3D runs were carried out on the 897 x 257 resolution mesh which is the next resolution up from the mesh used for the zCFD runs in this tutorial.
+
+.. figure:: images/naca0012_cl_vs_alpha.png
+
+.. figure:: images/naca0012_cl_vs_cd.png
+
+The raw values of the force coefficients are given in the table below:
+
+.. figure:: images/naca0012_cl_cd_table.png
+
+The :math:`C_p` and :math:`C_f` profiles calculated from zCFD are compared to experiment and to CFL3D at three angles of attack.
+
+:math:`\alpha=0`
+----------------
+
+.. figure:: images/naca0012_alpha0_cp.png
+    :width: 100%
+
+.. figure:: images/naca0012_alpha0_cf.png
+    :width: 100%
+
+:math:`\alpha=10`
+-----------------
+
+.. figure:: images/naca0012_alpha10_cp.png
+    :width: 100%
+
+.. figure:: images/naca0012_alpha10_cf.png
+    :width: 100%
+
+:math:`\alpha=15`
+-----------------
+
+.. figure:: images/naca0012_alpha15_cp.png
+    :width: 100%
+
+.. figure:: images/naca0012_alpha15_cf.png
+    :width: 100%
+
+
+References
+^^^^^^^^^^
+
+`<http://turbmodels.larc.nasa.gov/naca0012_val.html>`_

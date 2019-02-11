@@ -5,7 +5,7 @@ zCFD is run from the command line using a customised environment that automatica
 
 .. _`zcfd-command`:
 
-(zCFD) Command Line Environmen
+(zCFD) Command Line Environment
 -------------------------------
 
 To run zCFD, the *zCFD command line environment* must be active. The zCFD command line environment is initialised from a terminal window by sourcing the *activate* script in the zCFD installation directory.  It does not matter where this directory is - all of the executable paths and file locations will be set automatically:
