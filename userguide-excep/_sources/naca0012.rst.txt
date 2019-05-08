@@ -1,0 +1,54 @@
+
+2D NACA0012
+-----------
+
+Overview
+^^^^^^^^
+
+.. figure:: http://turbmodels.larc.nasa.gov/NACA0012_grids/grid_bcs.jpg
+	:width: 75%
+	:align: center
+	:alt: alternate text
+	:figclass: align-center
+
+
+Conditions
+^^^^^^^^^^
+
+.. figure:: images/naca0012_bcs.png
+	:width: 75%
+	:align: center
+	:alt: alternate text
+	:figclass: align-center
+
+	NACA0012 boundary conditions
+
+Mesh
+^^^^
+The meshes used for this study were obtained from
+
+Results
+^^^^^^^
+The results are compared to experiment and to CFL3D at three angles of attack.
+
+.. figure:: images/naca0012_cp_profile.png
+	:width: 90%
+	:align: center
+	:alt: alternate text
+	:figclass: align-center
+
+	:math:`c_p` and :math:`c_f` comparisons
+
+.. figure:: images/naca0012_clcd.png
+	:width: 90%
+	:align: center
+	:alt: alternate text
+	:figclass: align-center
+
+	:math:`c_l` vs :math:`\alpha` comparisons with Ladson's experimental data
+
+
+References
+^^^^^^^^^^
+
+`<http://turbmodels.larc.nasa.gov/naca0012_val.html>`_
