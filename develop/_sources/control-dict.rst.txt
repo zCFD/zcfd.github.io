@@ -680,7 +680,7 @@ The user can also provide functions to specify a 'wall-function' - or the turbul
     'profile' : {
                  'field' : 'inflow_field.vtp',
                  # Localise field using wall distance rather that z coordinate
-                 'local profile' : True,
+                 'use wall distance' : True,
                 },
 
 .. note::

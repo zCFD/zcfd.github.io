@@ -36,13 +36,13 @@ To run the utility, use
 
 .. code-block:: python
 
-    (zCFD): python fluent_convert.py <filename>.msh <new_filename>.h5
+    (zCFD): fluent_convert <filename>.msh <new_filename>.h5
 
 or
 
 .. code-block:: python
 
-    (zCFD): python fluent_convert.py <filename>.cas <new_filename>.h5
+    (zCFD): fluent_convert <filename>.cas <new_filename>.h5
 
 The will produce 2 files: the zCFD HDF5 file and the *name_zone.py* python file which holds the fluid and boundary zone names.
 
