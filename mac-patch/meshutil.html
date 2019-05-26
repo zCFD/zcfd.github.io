@@ -1,0 +1,182 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Mesh Conversion &#8212; zCFD User Guide v2019.05.8-mac-patch documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Visualisation" href="visualisation.html" />
+    <link rel="prev" title="Control Dictionary" href="control-dict.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="mesh-conversion">
+<h1>Mesh Conversion<a class="headerlink" href="#mesh-conversion" title="Permalink to this headline">¶</a></h1>
+<p>zCFD uses unstructured meshes written in an <a class="reference external" href="http://www.hdfgroup.org/HDF5/">HDF5</a> file format. HDF5 provides a flexible, self describing specification supporting parallel I/O that can be tuned per filesystem type (e.g NFS, GPFS, Lustre etc).</p>
+<p>Meshes from a wide variety of sources can be easily converted into this format as follows:</p>
+<div class="section" id="openfoam-x-x-x">
+<h2>OpenFOAM-x.x.x<a class="headerlink" href="#openfoam-x-x-x" title="Permalink to this headline">¶</a></h2>
+<p>We provide a range of converters for popular mesh types via a special version of the open-source CFD code OpenFOAM, available freely for download <a class="reference external" href="https://github.com/zCFD/foamTozCFD.git">here</a></p>
+<p>Once downloaded and installed, the version of OpenFOAM will convert a range of file formats to the zCFD format. Prior to running any of these, you will need to activate your OpenFOAM environment using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> <span class="nv">$FOAM_INST_DIR</span>/OpenFOAM-x.x.x/etc/bashrc
+</pre></div>
+</div>
+</div>
+<div class="section" id="openfoam-mesh-converter">
+<h2>OpenFOAM Mesh Converter<a class="headerlink" href="#openfoam-mesh-converter" title="Permalink to this headline">¶</a></h2>
+<p>To convert from an OpenFOAM format mesh to zCFD, run the following command in the MESH directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">foamTozCFD</span>
+</pre></div>
+</div>
+<p>This will create a new folder called <em>zInterface/</em> containing the HDF5 file.</p>
+</div>
+<div class="section" id="fluent-mesh-converter">
+<h2>Fluent Mesh Converter<a class="headerlink" href="#fluent-mesh-converter" title="Permalink to this headline">¶</a></h2>
+<p>The converter for <a class="reference external" href="http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent">ANSYS Fluent</a> files is a utility called <em>fluent_convert</em>.  This is included in the path set by activating the zCFD command line environment.</p>
+<p>To run the utility, use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">fluent_convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">msh</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">fluent_convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">cas</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+</pre></div>
+</div>
+<p>The will produce 2 files: the zCFD HDF5 file and the <em>name_zone.py</em> python file which holds the fluid and boundary zone names.</p>
+</div>
+<div class="section" id="star-ccm-mesh-converter">
+<h2>Star CCM+ Mesh Converter<a class="headerlink" href="#star-ccm-mesh-converter" title="Permalink to this headline">¶</a></h2>
+<p>There are a number of different file formats for <a class="reference external" href="http://www.cd-adapco.com/products/star-ccm%C2%AE">CD-Adapco Star CCM+</a> meshes.  The <em>&lt;filename&gt;.sim</em> file is in a propietary format and at this stage cannot be converted.  The <em>&lt;filename&gt;.ccm</em> can be converted using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">ccmconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">ccm</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
+</pre></div>
+</div>
+<p>This produces the zCFD HDF5 file.</p>
+</div>
+<div class="section" id="cgns-mesh-converter">
+<h2>CGNS Mesh Converter<a class="headerlink" href="#cgns-mesh-converter" title="Permalink to this headline">¶</a></h2>
+<p>This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS (ref) format.  The converter will handle meshes with element types (HEXA_8):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">cgnsconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">cgns</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
+</pre></div>
+</div>
+<p>This produces the zCFD HDF5 file. If you require support for additional element types please contact us: <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com">mailto:zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a>.</p>
+</div>
+<div class="section" id="ugrid-mesh-converter">
+<span id="ugrid-converter"></span><h2>UGRID Mesh Converter<a class="headerlink" href="#ugrid-mesh-converter" title="Permalink to this headline">¶</a></h2>
+<p>UGRID is a NASA format for meshes (ref). You must follow the naming convention (ref) for UGRID files, which describes the format and <em>endian-ness</em> of the file data (“ascii8”, “b8”, “lb8”, or “r8”) depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">ugridconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="p">[</span><span class="n">ascii8</span><span class="p">,</span> <span class="n">b8</span><span class="p">,</span> <span class="n">lb8</span><span class="p">,</span> <span class="n">r8</span><span class="p">]</span><span class="o">.</span><span class="n">ugrid</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>  <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">mapbc</span>
+</pre></div>
+</div>
+<p>This produces the zCFD HDF5 file.</p>
+</div>
+<div class="section" id="dlr-tau-mesh-converter">
+<h2>DLR Tau Mesh Converter<a class="headerlink" href="#dlr-tau-mesh-converter" title="Permalink to this headline">¶</a></h2>
+<p>Tau is a CFD solver produced by the DLR (<a class="reference external" href="http://tau.dlr.de/startseite/">http://tau.dlr.de/startseite/</a>).  Note that Tau is a node-based solver so flow field variables are calculated for and stored at the mesh nodes (or vertices) rather than at cell centres (the approach used by Star CCM+, OpenFOAM, CFX and zCFD). Thus simply converting the file format will not guarantee a good result. In many cases, the conversion will not result in a valid cell-centred zCFD mesh.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">tauconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">XXX</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+</pre></div>
+</div>
+<p>This produces the zCFD HDF5 file.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formulation.html">Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Mesh Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#openfoam-x-x-x">OpenFOAM-x.x.x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#openfoam-mesh-converter">OpenFOAM Mesh Converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fluent-mesh-converter">Fluent Mesh Converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#star-ccm-mesh-converter">Star CCM+ Mesh Converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cgns-mesh-converter">CGNS Mesh Converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ugrid-mesh-converter">UGRID Mesh Converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dlr-tau-mesh-converter">DLR Tau Mesh Converter</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-18, Zenotech Ltd.
+      
+      |
+      <a href="_sources/meshutil.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
