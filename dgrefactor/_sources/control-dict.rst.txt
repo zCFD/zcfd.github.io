@@ -1,0 +1,1201 @@
+Control Dictionary
+==================
+
+The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.
+
+A python dictionary called 'parameters' provides the main interface to controlling zCFD
+
+.. code-block:: python
+
+    parameters = {....}
+
+zCFD will validate the parameters dictionary specified at run time against a set of expected values for each key. In general, values that should be integers and floats will be coerced to the correct type. Values which should be strings, booleans, lists or dictionaries will cause an error if they are the incorrect type. The time marching scheme and solver/equation set chosen defines which dictionary keys are valid. A simple script is provided to allow the user to check the validity of their input parameters before submitting their job. See :ref:`input-validation`.
+
+Reference Settings
+------------------
+
+Define units
+^^^^^^^^^^^^
+
+.. code-block:: python
+
+    # Optional (default 'SI'):
+    # units for dimensional quantities
+    'units' : 'SI',
+
+Scale mesh
+^^^^^^^^^^
+
+.. code-block:: python
+
+    # Optional (default [1.0,1.0,1.0]):
+    # Scale vector
+    'scale' : [1.0,1.0,1.0],
+
+.. code-block:: python
+
+    # Optional
+    # Scale function
+    'scale' : scale_func,
+
+Example scale function
+
+.. code-block:: python
+
+   # Scale function
+   def scale_func(point):
+       # Scale y coordinate by 100
+       point[2] = point[2] * 100.0
+       return {'coord' : point}
+
+
+Reference state
+^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    # reference state
+    'reference' : 'IC_1',
+
+See `Initial Conditions`_
+
+Partitioner
+^^^^^^^^^^^
+
+The 'metis' partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases
+
+.. code-block:: python
+
+    # Optional (default 'metis'):
+    # partitioner type
+    'partitioner' : 'metis',
+
+Safe Mode
+^^^^^^^^^
+
+Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues
+
+.. code-block:: python
+
+    # Optional (default False):
+    # Safe mode
+    'safe' : False,
+
+Initialisation
+--------------
+
+Initial conditions are used to set the flow variable values in all cells at the start of a simulation.  The initial conditions default to the reference state (above) if not specified
+
+.. code-block:: python
+
+    # Initial conditions
+    'initial' : 'IC_2',
+
+See `Initial Conditions`_. A function which defines the initial fields may be supplied
+
+.. code-block:: python
+
+    # Initial conditions
+    'initial' : {
+                  # Name of initial condition
+                  'name' : 'IC_1',
+                  # Optional: User defined function
+                  'func' : my_initialisation,
+                },
+
+
+Example User Defined Initialisation Function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    def my_initialisation(**kwargs):
+
+        # Dimensional primitive variables
+        pressure = kwargs['pressure']
+        temperature = kwargs['temperature']
+        velocity = kwargs['velocity']
+        wall_distance = kwargs['wall_distance']
+        location = kwargs['location']
+
+        if location[0] > 10.0:
+          velocity[0] *= 2.0
+
+        # Return a dictionary with user defined quantity.
+        # Same schema as above
+        return { 'velocity' : velocity }
+
+
+
+To restart from a previous solution
+
+.. code-block:: python
+
+    # Restart from previous solution
+    'restart' : True,
+    # Optional: Restart from and different case
+    'restart casename' : 'my_case',
+
+It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key
+
+.. code-block:: python
+
+    # Generate approximate initial field for SA-neg
+    'approximate sa from sst results' : True,
+
+Low Mach number preconditioner settings (Optional)
+--------------------------------------------------
+
+The preconditioner is a mathematical technique for improving the speed of the solver when the fluid flow is slow compared to the speed of sound.  Use of the preconditioner does not alter the final converged solution produced by the solver.  The preconditioner factor is used to improve the robustness of the solver in regions of very low speed. The preconditioner is controlled in the :code:`'equations'` dictionary (see `Equations`_) by setting the :code:`'precondition'` key, for example when using the euler solver
+
+.. code-block:: python
+
+    'euler' : {
+              # Optional (default False):
+              # Use low speed mach preconditioner
+              'precondition' : True,
+            },
+
+    # Optional, Advanced: Preconditoner factor
+    'preconditioner' : {
+                        'minimum mach number' : 0.5,
+                       },
+
+Time Marcher
+------------
+
+zCFD is capable of performing both steady-state and time accurate simulations. In the first case the solution is marched in pseudo time using the dual time-stepping algorithm towards the steady-state solution. For time accurate simulations the solution can be either globally time-stepped or use dual time-stepping. The :code:`'time marching'` dictionary controls the selection of these schemes.
+
+.. code-block:: python
+
+    'time marching' : {....},
+
+Time accurate (unsteady) simulation control
+
+.. code-block:: python
+
+    'time marching' : {
+                       'unsteady' : {
+                                     # Total time in seconds
+                                     'total time' : 1.0,
+                                     # Time step in seconds
+                                     'time step' : 1.0,
+                                     # Required only when dual time-stepping:
+                                     # Dual time step time accuracy (options: 'first' or 'second' order)
+                                     'order' : 'second',
+                                     # Required only when dual time-stepping:
+                                     # Number of pseudo time (steady) cycles to run before starting dual timestep time accurate simulation
+                                     'start' : 3000,
+                                     },
+                       },
+
+
+Solver scheme
+^^^^^^^^^^^^^
+There are three different time marching schemes available in zCFD: Euler, various orders of Runge Kutta (like Euler...) and the implicit LU-SGS scheme. These can be run with dual time-stepping for both steady and unsteady simulations or with global time-stepping for unsteady simulations. The choice of scheme and time stepping algorithm affects with dictionary keys are valid.
+
+Runge Kutta
+"""""""""""
+
+.. code-block:: python
+
+   'time marching' : {
+                     'scheme' : {
+                                 # Either 'euler' or 'runge kutta' or 'lu-sgs'
+                                 'name' : 'runge kutta',
+                                 # Number of RK stages 'euler' or 1, 4, 5, 'rk third order tvd'
+                                 'stage': 5,
+                                 # Time-stepping scheme: 'local timestepping' for steady state or dual time step time accurate
+                                 # 'global timestepping' for time accurate
+                                 'kind' : 'local timestepping'
+                                 },
+                      },
+
+LU-SGS
+""""""
+
+.. code-block:: python
+
+    'time marching' : {
+                       'scheme' : {
+                                  'name' : 'lu-sgs',
+                                  },
+                       'lu-sgs' : {
+                                  # Optional (default 8)
+                                  'Number Of SGS Cycles' : 8,
+                                  # Optional (default 1)
+                                  'Jacobian Update Frequency' : 1,
+                                  # Optional (default True)
+                                  'Include Backward Sweep' : True,
+                                  # Optional (default True)
+                                  'Include Relaxation' : True,
+                                  # Optional (default 1.0e-8)
+                                  'Jacobian Epsilon' : 1.0e-08,
+                                  # Optional (default True)
+                                  'Use Rusanov Flux For Jacobian' : True,
+                                  # Optional (default False)
+                                  'Finite Difference Jacobian' : True,
+                      },
+
+When global time-stepping is specified the keys :code:`['unsteady']['order']` and :code:`['unsteady']['start']` are not valid. The CFL keys in in the `CFL`_ section below are also not valid as the time step is explicitly specified.
+When the :code:`['unsteady']['total time']` and :code:`['unsteady']['time step']` keys are set to be equal values and :code:`['time marching']['scheme']['kind']` is set to :code:`'local timestepping'` the solver marches in pseudo time towards a steady state solution. If LU-SGS is selected then the :code:`'lu-sgs'` sub-dictionary must be provided.
+
+
+CFL
+^^^
+
+The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step that the solver uses to reach a converged solution. The larger the CFL number, the faster the solver will run but the less stable it will be.  The default values should be appropriate for most cases, but for lower-quality meshes or very complex geometries it may be necessary to use lower values (e.g. CFL of 1.0).  In such cases it may also be helpful to turn off Multigrid (above) by setting the maximum number of meshes to 0. The CFL dictionary keys are only valid when using dual time-stepping.
+
+.. code-block:: python
+
+    'time marching' : {
+                      # Default max CFL number for all equations
+                      'cfl': 2.5
+                      # Optional (default 'cfl' value):
+                      # Override max CFL number for transported quantities
+                      'cfl transport' : 1.5,
+                      # Optional (default 'cfl' value):
+                      # Override max CFL number for coarse meshes
+                      'cfl coarse' : 2.0,
+                      # Control of CFL for polynomial multigrid (from highest to lowest order)
+                      'multipolycfl' : [2.0,2.0,2.0],
+                      # Optional: Ramp cfl
+                      'cfl ramp factor': {
+                                         # cfl = cfl_ini * growth ^ cycle
+                                         'growth': 1.05,
+                                         # min cfl
+                                         'initial': 0.1,
+                                         },
+                      },
+
+Cycles
+^^^^^^
+
+For steady-state simulations, the number of pseudo time cycles is the same as the number of steps that the solver should use to reach a converged solution.  Note that the solver uses local pseudo time-stepping (the time-step varies according to local conditions) so any intermediate solution is not necessarily time-accurate.
+
+For unsteady (time-accurate) simulations using 'dual time-stepping' to advance the solution in time the number of pseudo time cycles determines the number of inner iterations that the solver uses to converge each real time step. When global time-stepping is specified the cycles key is not valid.
+
+.. code-block:: python
+
+    'time marching' : {
+                      # Required only for daul time-stepping:
+                      # Number of pseudo time cyles
+                      'cycles' : 5000,
+    },
+
+Multigrid
+^^^^^^^^^
+
+The mesh is automatically coarsened by merging cells on successive layers in order to accelerate solver convergence.  This does not alter the accuracy of the solution on the finest (original) mesh.  Advanced users can control the number of geometric multigrid levels and the 'prolongation' of quantities from coarse to fine meshes.
+
+.. code-block:: python
+
+    'time marching' : {
+                    # Maximum number of meshes (including fine mesh)
+                    'multigrid' : 10,
+                    # Optional:
+                    # Number of multigrid cycles before solving on fine mesh only
+                    'multigrid cycles' : 5000,
+                    # Optional (default 0.75), Advanced:
+                    # Prologation factor
+                    'prolong factor' : 0.75,
+                    # Optional (default 0.3), Advanced:
+                    # Prolongation factor for transported quantities
+                    'prolong transport factor' : 0.3,
+                    },
+
+
+Polynomial Multigrid
+^^^^^^^^^^^^^^^^^^^^
+
+The polynomial basis on which the solution is computed can be successively coarsened, thus allowing the solution to be evolved quicker due to weakened stability restrictions at lower polynomial orders. This does not alter the accuracy of the solution on the highest polynomial order.
+
+.. code-block:: python
+
+    'time marching' : {
+                       # Optional (default False):
+                       # Switch on polynomial multigrid
+                       'multipoly' : True,
+                       },
+
+Equations
+---------
+
+The equations key selects the equation set to be solved as well as the finite volume solver or the high order strong form Discontinuous Galerkin/Flux Reconstruction solver. For each equation type the valid keys are listed below.
+
+.. code-block:: python
+
+    # Governing equations to be used
+    # one of: RANS, euler, viscous, LES, DGRANS, DGeuler, DGviscous, DGLES
+    'equations' : 'RANS',
+
+Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The compressible Euler equations are appropriate when modelling flows where momentum significantly dominates viscosity - for example at very high speed. The computational mesh used for Euler flow does not need to resolve the flow detail in the boundary layer and hence will generally have far fewer cells than the corresponding viscous mesh would have.
+
+.. code-block:: python
+
+  'euler' : {
+              # Spatial accuracy (options: first, second)
+              'order' : 'second',
+              # Optional (default 'vanalbada'):
+              # MUSCL limiter (options: vanalbada)
+              'limiter' : 'vanalbada',
+              # Optional (default False):
+              # Use low speed mach preconditioner
+              'precondition' : True,
+              # Optional (default False):
+              # Use linear gradients
+              'linear gradients' : False,
+              # Optional (default 'HLLC'):
+              # Scheme for inviscid flux: HLLC or Rusanov
+              'Inviscid Flux Scheme': 'HLLC',
+            },
+
+The viscous (laminar) equations model flow that is viscous but not turbulent.  The `Reynolds number <http://en.wikipedia.org/wiki/Reynolds_number>`_ of a flow regime determines whether or not the flow will be turbulent. The computational mesh for a viscous flow does have to resolve the boundary layer, but the solver will run faster as fewer equations are being included.
+
+.. code-block:: python
+
+    'viscous' : {
+                  # Spatial accuracy (options: first, second)
+                  'order' : 'second',
+                  # Optional (default 'vanalbada'):
+                  # MUSCL limiter (options: vanalbada)
+                  'limiter' : 'vanalbada',
+                  # Optional (default False):
+                  # Use low speed mach preconditioner
+                  'precondition' : True,
+                  # Optional (default False):
+                  # Use linear gradients
+                  'linear gradients' : False,
+                  # Optional (default 'HLLC'):
+                  # Scheme for inviscid flux: HLLC or Rusanov
+                  'Inviscid Flux Scheme': 'HLLC',
+                },
+
+The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
+
+.. code-block:: python
+
+    'RANS' : {
+                # Spatial accuracy (options: first, second)
+                'order' : 'second',
+                # Optional (default 'vanalbada'):
+                # MUSCL limiter (options: vanalbada)
+                'limiter' : 'vanalbada',
+                # Optional (default False):
+                # Use low speed mach preconditioner
+                'precondition' : True,
+                # Optional (default False):
+                # Use linear gradients
+                'linear gradients' : False,
+                # Optional (default 'HLLC'):
+                # Scheme for inviscid flux: HLLC or Rusanov
+                'Inviscid Flux Scheme': 'HLLC',
+                # Turbulence
+                'turbulence' : {
+                                  # turbulence model (options: 'sst', 'sa-neg')
+                                  'model' : 'sst',
+                                  # Optional (default 'none'):
+                                  # LES model (options 'none', 'DES', 'DDES', 'SAS')
+                                  'les' : 'none',
+                                  # Optional (default 0.09):
+                                  # betastar turbulence closure constant
+                                  'betastar' : 0.09,
+                                  # Optional (default True):
+                                  # turn off mu_t limiter
+                                  'limit mut' : False,
+                                  # Optional (default CDES=0.65, CDES_kw=0.78, CDES_keps=0.61):
+                                  # DES constants
+                                  'CDES': 0.65
+                                  'CDES_kw': 0.78,
+                                  'CDES_keps': 0.61,
+                                  # Optional when using 'sst' (default 0):
+                                  # Menter SST production term: 0=SST-V, 1=incompressible, 2=SST
+                                  'production': 0,
+                                  # Optional when using 'sa-neg' (default False):
+                                  # Use sa-neg rotation correction
+                                  'rotation correction': True,
+                                },
+               },
+
+The filtered Large Eddy Simulation (LES) equations
+
+.. code-block:: python
+
+    'LES' : {
+                  # Spatial accuracy (options: first, second)
+                  'order' : 'second',
+                  # Optional (default 'vanalbada'):
+                  # MUSCL limiter (options: vanalbada)
+                  'limiter' : 'vanalbada',
+                  # Optional (default False):
+                  # Use low speed mach preconditioner
+                  'precondition' : True,
+                  # Optional (default False):
+                  # Use linear gradients
+                  'linear gradients' : False,
+                  'turbulence' : {
+                                  # LES model (options 'none', 'WALE')
+                                  'les' : 'none',
+                                },
+
+                },
+
+When using the high order strong form Discontinuous Galerkin/Flux Reconstruction solver the keys in the equations dictionary are the same for each equation set except that the :code:`'linear gradients'` and :code:`'limiter'` keys are not valid and additional keys are available in the equations dictionary. These additional keys are given below
+
+.. code-block:: python
+
+    'DG...' : {
+                   # Spatial polynomial order 0,1,2,3
+                   'order' : 2,
+                   # Optional (default False)
+                   'Approximate curved boundaries': True,
+                   # Optional (default 0.0)
+                   'c11 stability parameter': 0.0,
+                   # Optional (default 0.0)
+                   # c11 stability parameter for transported variables
+                   'c11 stability parameter transport': 0.0,
+                   # Optional (default 0.5)
+                   'LDG upwind parameter': 0.5,
+                   'LDG upwind parameter aux': 0.5,
+                   # Optional (default False):
+                   # Use MUSCL reconstruction at P=0
+                   'Use MUSCL Reconstruction': False,
+                   # Optional (default False)
+                   'BR2 Diffusive Flux Scheme' : False,
+                   # Optional (default False)
+                   'Use Rusanov for turbulence equations' : False,
+                   # Optional (default False)
+                   'Shock Sensing': False,
+                   'Shock Sensing k': 1.0,
+                   'Shock Sensing Viscosity Scale': 1.0,
+                   # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
+                   'Shock Sensing Variable': 'density',
+                },
+
+Hence all the available keys for :code:`'DGeuler'` are a combination of the :code:`'euler'` keys and the :code:`'DG...'` keys. The same logic applies to the :code:`'DGRANS'`, :code:`'DGviscous'` and :code:`'DGLES'` equation sets.
+
+.. code-block:: python
+
+    'DGeuler' : {
+                   # Spatial polynomial order 0,1,2,3
+                   'order' : 2,
+                   # Optional (default False)
+                   # Use low speed mach preconditioner
+                   'precondition' : True,
+                   # Optional (default 'HLLC')
+                   # scheme for inviscid flux: HLLC or Rusanov
+                   'Inviscid Flux Scheme': 'HLLC',
+                   # Optional (default False)
+                   'Approximate curved boundaries': False,
+                   # Optional (default 0.0)
+                   'c11 stability parameter': 0.0,
+                   # Optional (default 0.0):
+                   # c11 stability parameter for transported variables - default 0.0
+                   'c11 stability parameter transport': 0.0,
+                   # Optional (default 0.5)
+                   'LDG upwind parameter': 0.5,
+                   'LDG upwind parameter aux': 0.5,
+                   # Optional (default False):
+                   # Use MUSCL reconstruction at P=0
+                   'Use MUSCL Reconstruction': False,
+                   # Optional (default False)
+                   'BR2 Diffusive Flux Scheme' : False,
+                   # Optional (default False)
+                   'Use Rusanov for turbulence equations' : False,
+                   # Optional (default False)
+                   'Shock Sensing': False,
+                   'Shock Sensing k': 1.0,
+                   'Shock Sensing Viscosity Scale': 1.0,
+                   # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
+                   'Shock Sensing Variable': 'density',
+                },
+
+
+DG Order Specification
+----------------------
+
+Regions of the mesh may be specified be be a certain order in the DG solver. This can be done by supplying a list of dictionaries containing any number of entries of the following types
+
+.. code-block:: python
+
+    'cell order' : [{'type' : 'wall distance',
+                     'order' : 0,
+                     'distance' : 1000.0},
+                   {'type' : 'wall distance',
+                    'order' : 1,
+                    'distance' : 2.0},
+                    {'type' : 'sphere',
+                     'order' : 0,
+                     'radius' : 1.0,
+                     'centre' : [0.0, 0.0, 0.0]},
+                    {'type' : 'cartesian',
+                     'order' : 0,
+                     # xmin, xmax, ymin, ymax, zmin, zmax
+                     'box' : [0.0, 1.0, 0.0, 1.0, 0.0, 1.0]}
+                    ],
+
+
+DG Nodal locations
+------------------
+
+The location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary
+
+.. code-block:: python
+
+    from zcfd.solvers.utils.DGNodalLocations import *
+
+To use the default values
+
+.. code-block:: python
+
+    'Nodal Locations' : nodal_locations_default['Nodal Locations']
+
+Or select from the available types
+
+.. code-block:: python
+
+    'Nodal Locations' : {
+                          # Options line_evenly_spaced, line_gauss_lobatto or line_gauss_legendre_lobatto
+                          'Line':  line_gauss_legendre_lobatto,
+                          # Options tet_evenly_spaced, tet_shunn_ham
+                          'Tetrahedron': tet_evenly_spaced,
+                          # Options tri_evenly_spaced, tri_shunn_ham
+                          'Tri' : tri_evenly_spaced,
+                        },
+
+
+Material Specification
+----------------------
+
+The user can specify any fluid material properties by following the (default) scheme for 'air':
+
+.. code-block:: python
+
+    'material' : 'air',
+
+Options
+
+.. code-block:: python
+
+    'air' : {
+              'gamma' : 1.4,
+              'gas constant' : 287.0,
+              'Sutherlands const': 110.4,
+              'Prandtl No' : 0.72,
+              'Turbulent Prandtl No' : 0.9,
+            },
+
+Initial Conditions
+------------------
+
+The intial condition properties are defined using consecutively numbered blocks
+
+.. code-block:: python
+
+    'IC_1' : {....},
+    'IC_2' : {....},
+    'IC_3' : {....},
+
+Each block can contain the following options
+
+.. code-block:: python
+
+    # Required: Static temperature in Kelvin
+    'temperature': 293.0,
+    # Required: Static pressure in Pascals
+    'pressure':101325.0,
+
+.. code-block:: python
+
+    # Fluid velocity
+    'V': {
+            # Velocity vector
+            'vector' : [1.0,0.0,0.0],
+            # Optional: specifies velocity magnitude
+            'Mach' : 0.20,
+          },
+
+Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified.  This can be specified either as a dimensional quantity or by a Reynolds number and reference length
+
+.. code-block:: python
+
+    # Dynamic viscosity in dimensional units
+    'viscosity' : 1.83e-5,
+
+or
+
+.. code-block:: python
+
+    # Reynolds number
+    'Reynolds No' : 5.0e6,
+    # Reference length
+    'Reference Length' : 1.0,
+
+Turbulence intensity is defined as the ratio of velocity fluctuations :math:`u^{'}` to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high.
+
+.. code-block:: python
+
+    # Turbulence intensity %
+    'turbulence intensity': 0.01,
+    # Turbulence intensity for sustainment %
+    'ambient turbulence intensity': 0.01,
+
+The eddy viscosity ratio :math:`(\mu_t/\mu)` varies depending type of flow.
+For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)
+
+For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
+by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:
+
+======= ======= ====== ======== ======== ======== ===========
+  Re      3000   5000   10,000   15,000   20,000   > 100,000
+  eddy    11.6   16.5   26.7     34.0     50.1      100
+======= ======= ====== ======== ======== ======== ===========
+
+.. code-block:: python
+
+    # Eddy viscosity ratio
+    'eddy viscosity ratio': 0.1,
+    # Eddy viscosity ratio for sustainment
+    'ambient eddy viscosity ratio': 0.1,
+
+The user can also provide functions to specify a 'wall-function' - or the turbulence viscosity profile near a boundary.  For example an atmospheric boundary layer (ABL) could be specified like this:
+
+.. code-block:: python
+
+    'profile' : {
+                 'ABL' : {
+                           'roughness length' : 0.0003,
+                           'friction velocity' : 0.4,
+                           'surface layer height' : -1.0,
+                           'Monin-Obukhov length' : -1.0,
+                           # Non dimensional TKE/friction velocity**2
+                           'TKE' : 0.928,
+                           # ground level (optional if not set wall distance is used)
+                           'z0'  : -0.75,
+                          },
+                },
+
+.. code-block:: python
+
+    'profile' : {
+                 'field' : 'inflow_field.vtp',
+                 # Localise field using wall distance rather that z coordinate
+                 'use wall distance' : True,
+                },
+
+.. note::
+
+    The conditions in the VTK file are specified by node based arrays with names 'Pressure', 'Temperature', 'Velocity', 'TI' and 'EddyViscosity'. Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.
+
+
+Certain conditions are specified relative to a reference set of conditions
+
+.. code-block:: python
+
+    'reference' : 'IC_1',
+    # total pressure/reference static pressure
+    'total pressure ratio' : 1.0,
+    # total temperature/reference static temperature
+    'total temperature ratio' : 1.0,
+    # Mach number
+    'mach' : 0.5,
+    # Direction vector
+    'vector' : [1.0,0.0,0.0],
+
+.. code-block:: python
+
+    'reference' : 'IC_1',
+    # static pressure/reference static pressure
+    'static pressure ratio' : 1.0,
+
+.. code-block:: python
+
+    'reference' : 'IC_1',
+    # Mass flow ratio
+    'mass flow ratio' : 1.0,
+
+.. note::
+
+    :math:`W^* =\frac{\dot{m}}{\rho V}`
+
+Boundary Conditions
+-------------------
+
+Boundary condition properties are defined using consecutively numbered blocks
+
+.. code-block:: python
+
+    'BC_1' : {....},
+    'BC_2' : {....},
+
+zCFD will automatically detect zone types and numbers in a number of mesh formats, and assign appropriate boundary conditions. The type tags follow the Fluent convention (wall = 3, etc), and if present no further information is required.  Alternatively, the mesh format may contain explicitly numbered zones (which can be determined by inspecting the mesh).  In this case, the user can specify the list of zone numbers for each boundary condition 'type' and 'kind' (see below).
+
+.. _wall:
+
+Wall
+^^^^
+
+Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e :math:`(y^{+} \leq 1)`) otherwise automatic wall functions should be used. This behaviour is chosen by setting :code:`'kind'` in the wall specification below. Optionally it is possible to set wall velocity, roughness and temperature.
+
+.. code-block:: python
+
+    'BC_1' : {
+              # Zone type tag
+              'ref' : 3,
+              # Optional: Specific zone boundary condition overide
+              'zone' : [0,1,2,3],
+              # Required: Boundary condition type
+              'type' : 'wall',
+              # Type of wall, one of 'slip', 'noslip', 'wallfunction'
+              'kind' : 'slip',
+              # Optional: Roughness specification
+              'roughness' : {
+                            # Type of roughness specification (option: height or length)
+                            'type' : 'height',
+                            # Constant roughness
+                            'scalar' : 0.001,
+                            # Roughness field specified as a VTK file
+                            'field' : 'roughness.vtp',
+                            },
+              # Optional: Wall velocity specification either 'linear' or 'rotating' dictionary supplied
+              'V' : {
+                    'linear' : {
+                               # Velocity vector
+                               'vector' : [1.0,0.0,0.0],
+                               # Optional: specifies velocity magnitude
+                               'Mach' : 0.20,
+                               },
+                    'rotating' : {
+                                 # Rotational velocity in rad/s
+                                 'omega' : 2.0,
+                                 # Rotation axis
+                                 'axis' : [1.0,0.0,0.0],
+                                 # Rotation origin
+                                 'origin' : [0.0,0.0,0.0],
+                                 },
+                    },
+              # Optional: Wall temperature specification either a constant 'saclar' value or a 'profile' from file
+              'temperature' : {
+                              # Temperature in Kelvin
+                              'scalar' : 280.0,
+                              # Temperature field specified as a VTK file
+                              'field' : 'temperate.vtp',
+                              },
+              },
+
+.. note::
+
+    The roughness at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the roughness
+    value looked up in a node based scalar array called 'Roughness'
+
+.. note::
+
+    The temperature at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the temperature
+    value looked up in a node based scalar array called 'Temperature'
+
+Farfield
+^^^^^^^^
+
+The farfield boundary condition can automatically determine whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by refering to an :code:`'IC_'` block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.
+
+.. code-block:: python
+
+    'BC_2' : {
+             # Zone type tag
+             'ref' : 9,
+             # Optional: Specific zone boundary condition overide
+             'zone' : [0,1,2,3],
+             # Required: Boundary condition type
+             'type' : 'farfield',
+             # Required: Kind of farfield options (riemann, pressure or supersonic)
+             'kind' : 'riemann',
+             # Required: Farfield conditions
+             'condition' : 'IC_1',
+             # Optional: Atmospheric Boundary Layer
+             'profile' : {
+                         'ABL' : {
+                                 # Roughness length
+                                 'roughness length' : 0.05,
+                                 # Fiction velocity
+                                 'friction velocity' : 2.0,
+                                 # Surface Layer Heigh
+                                 'surface layer height' : 1000,
+                                 'Monin-Obukhov length' : 2.0,
+                                 # Turbulent kinetic energy
+                                 'TKE' : 1.0,
+                                 # Ground Level
+                                 'z0' : 0.0,
+                                  },
+                          },
+             # Optional: Specify a turbulence profile
+             'turbulence' : {
+                            'length scale' : 'filename.vtp',
+                            'reynolds tensor' : 'filename.vtp',
+                            },
+             },
+
+
+Inflow
+^^^^^^
+
+zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and massflow ratio is required.
+
+.. code-block:: python
+
+    'BC_3' : {
+             # Zone type tag
+             'ref' : 4,
+             # Optional: Specific zone boundary condition overide
+             'zone' : [0,1,2,3],
+             # Required: Boundary condition type
+             'type' : 'inflow',
+             # Required: Kind of inflow, either 'default' for presure or 'massflow'
+             'kind' : 'default',
+             # Required: Reference inflow conditions
+             'condition' : 'IC_2',
+             },
+
+Example Pressure Inflow
+"""""""""""""""""""""""
+
+An example setup for a pressure inflow is given below:
+
+.. code-block:: python
+
+    'IC_1' : {
+             'temperature' : 293.0,
+             'pressure' : 101325.0,
+             'V': {
+                  'vector' : [1.0,0.0,0.0],
+                  'Mach' : 0.20,
+                  },
+             'Reynolds No' : 1.0e6,
+             'Reference Length' : 1.0,
+             'turbulence instensity' : 0.1,
+             'eddy viscosity ratio' : 1.0,
+             },
+    'IC_2' : {
+             'reference' : 'IC_1',
+             'total temperature ratio' : 1.0,
+             'total pressure ratio; : 1.0,
+             },
+    'BC_3' : {
+             'ref' : 4,
+             'zone' : [0,1,2,3],
+             'type' : 'inflow',
+             'kind' : 'default',
+             'condition' : 'IC_2',
+             },
+
+
+Outflow
+^^^^^^^
+
+Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperaure ratio, when :code:`'massflow'` is specified a massflow ratio must be set.
+
+.. code-block:: python
+
+    'BC_4' : {
+             # Zone type tag
+             'ref' : 5,
+             # Optional: Specific zone boundary condition overide
+             'zone' : [0,1,2,3],
+             # Boundary condition type
+             'type' : 'outflow',
+             # Kind of outflow 'pressure, 'massflow' or 'radial pressure gradient'
+             'kind' : 'pressure',
+             # Required only when using 'radial pressure gradient'
+             # Radius at which the static pressure ratio is defined
+             'reference radius' : 1.0,
+             # Outflow conditions
+             'condition' : 'IC_2',
+             },
+
+Symmetry
+^^^^^^^^
+
+.. code-block:: python
+
+    'BC_5' : {
+             # Zone type tag
+             'ref' : 7,
+             # Optional: Specific zone boundary condition overide
+             'zone' : [0,1,2,3],
+             # Required: Boundary condition type
+             'type' : 'symmetry',
+             },
+
+Periodic
+^^^^^^^^
+
+This boundary condition needs to be specified in pairs with opposing transformations.
+The transforms specified should map each zone onto each other.
+
+.. code-block:: python
+
+    'BC_6' : {
+             # Required: Specific zone index
+             'zone' : [1],
+             # Required: Type of boundary condition
+             'type' : 'periodic',
+             # Required: Either 'rotated' or 'linear' periodicity
+             'kind' : {
+                      # Rotated periodic settings
+                      'rotated' : {
+                                  'theta' : math.radians(120.0),
+                                  'axis' : [1.0,0.0,0.0],
+                                  'origin' : [-1.0,0.0,0.0],
+                                  },
+                      # Linear periodic settings
+                      'linear' : {
+                                 'vector' : [1.0,0.0,0.0],
+                                 },
+                    },
+
+
+Fluid Zones
+-----------
+
+The fluidic zone properties are defined using consecutively numbered blocks like
+
+.. code-block:: python
+
+    'FZ_1' : {....},
+    'FZ_2' : {....},
+    'FZ_3' : {....},
+
+
+For actuator disk zones
+
+.. code-block:: python
+
+    'FZ_1':{
+            'type':'disc',
+            'def':'T38-248.75.vtp',
+            'thrust coefficient':0.84,
+            'tip speed ratio':6.0,
+            'centre':[-159.34009325,-2161.73165187,70.0],
+            'up':[0.0,0.0,1.0],
+            'normal':[-1.0,0.0,0.0],
+            'inner radius':2.0,
+            'outer radius':40.0,
+            # Location of reference conditions used to calculate thrust from C
+            'reference point': [1.0,1.0,1.0],
+    },
+
+Mesh Transformations
+--------------------
+Radial Basis Functions (RBFs) can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.
+
+.. code-block:: python
+
+   'TR_1' : {...},
+   'TR_2' : {...},
+
+.. code-block:: python
+
+   'TR_1' : {
+            # Required: list of surface zones to deform
+            'zone' : [4],
+            # Required: function describing surface deformation
+            'func' : transWing,
+            # Required: support radius of RBFs
+            'alpha' : 200.0,
+            # Required: type of RBF, one of c0, c2, gaussian, tps
+            'basis' : 'c2',
+            # Required: maximum error tolerance for greedy algorithm
+            'tol' : 0.005,
+            # Optional: Surface zones that remain fixed
+            'fixed' : {
+                      'zone' : [1],
+                      },
+            },
+
+An example of a function to deform a surface is given below
+
+.. code-block:: python
+
+   def transWing(x,y,z):
+        ymax = 1.0
+        ymin = 0.1
+        yNorm =(y-ymin)/(ymax-ymin)
+        x2 = x
+        y2 = y
+        z2 = z
+        if y > 0.1 and y < 1.1 and x < 1.1 and x > -0.1 and z > -0.1 and z < 0.1:
+            z2 = z - 0.5*(20.0*yNorm**3 + yNorm**2 + 10.0*yNorm)/31.0
+
+        return {'v1' : x2, 'v2' : y2, 'v3' : z2}
+
+
+Reporting
+---------
+
+In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be spcified.
+
+.. code-block:: python
+
+    'report' : {
+                # Report frequency
+                'frequency' : 1,
+                # Extract specified variable at fixed locations
+                'monitor' : {
+                            # Consecutively numbered blocks
+                            'MR_1' : {
+                                     # Required: Output name
+                                     'name' : 'monitor_1',
+                                     # Required: Location
+                                     'point' : [1.0, 1.0, 1.0],
+                                     # Required: Variables to be extracted
+                                     'variables' : ['V','ti'],
+                                     },
+                            },
+
+                # Report force coefficient in grid axis as well as using user defined transform
+                'forces' : {
+                           # Consecutively numbered blocks
+                           'FR_1' : {
+                                    # Required: Output name
+                                    'name' : 'force_1',
+                                    # Required: Zones to be included
+                                    'zone' : [1, 2, 3],
+                                    # Transformation function
+                                    'transform' : my_transform,
+                                    # Optional (default 1.0):
+                                    'reference area' : 0.112032,
+                                    # Optional (default 1.0):
+                                    'reference length' : 1.0,
+                                    # Optional (default [0.0, 0.0, 0.0]):
+                                    'reference point' : [0.0, 0.0, 0.0],
+                                    },
+                           },
+
+                # Report massflow ratio
+                'massflow' : {
+                             # Consecutively numbered blocks
+                             'MF_1' : {
+                                      # Required: Output name
+                                      'name' : 'massflow_1',
+                                      # Required: Zones to be included
+                                      'zone' : [1, 2 ,3],
+                                      },
+                             },
+            },
+
+Example Transformation Function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A transformation function my be supplied to the force report block to transform the force into a different coordinate system, this a particularly useful for reporting lift and drag which are often rotated from the solver coordinate system.
+
+.. code-block:: python
+
+    # Angle of attack
+    alpha = 10.0
+    # Transform into wind axis
+    def my_transform(x,y,z):
+        v = [x,y,z]
+        v =  zutil.rotate_vector(v,alpha,0.0)
+        return {'v1' : v[0], 'v2' : v[1], 'v3' : v[2]}
+
+Output
+------
+
+For solver efficiency, zCFD outputs the raw flow field data (plus any user-defined variables) to each parallel partition without re-combining the output files. The :code:`'write output'` dictionary controls solver output.
+
+.. code-block:: python
+
+    'write output' : {
+                      # Required: Output format: 'vtk', 'ensight', 'native'
+                      'format' : 'vtk',
+                      # Required: Variables to output on each boundary type
+                      'surface variables': ['V','p'],
+                      # Required: Field variables to be output
+                      'volume variables' : ['V','p'],
+                      # Optional: Volume interpolation - interpolates cell values to points in supplied meshes
+                      'volume interpolate' : ['mesh.vtp', 'mesh.vtu'],
+                      # Optional: Paraview catalyst scripts
+                      'scripts' : ['paraview_catalyst1.py','paraview_catalyst2.py'],
+                      # Optional: If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied
+                      'variable_name_alias' : { "V" : "VELOCITY", },
+                      # Required: Output frequency
+                      'frequency' : 100,
+                      # Optional for DG: Output high order surface data on zones
+                      'high order surface list' : [1],
+                      # Only for time accirate simulations:
+                      # Start output after real time cycle
+                      'start output real time cycle' : 100,
+                      # Unsteady restart file output frequency
+                      'unsteady restart file output frequency' : 1000,
+                      # Output real time cycle frequency
+                      'output real time cycle frequency' : 10,
+                      # Optional (default False):
+                      # Don't output vtk volume data
+                      'no volume vtk' : False
+                    },
+
+
+
+Output Variables
+^^^^^^^^^^^^^^^^
+
+   ========================= ===================== ==================================
+    Variable Name             Alias                 Definition
+   ========================= ===================== ==================================
+    temperature               T, t                  Temperature in (:math:`K`)
+    temperaturegrad                                 Temperature gradient vector
+    potentialtemperature                            Potential temperature in (:math:`K`)
+    pressure                  p                     Pressure (:math:`Pa`)
+    gauge_pressure                                  Pressure relative to the reference value (:math:`Pa`)
+    density                   rho                   Density (:math:`kg/m^3`)
+    velocity                  V, v                  Velocity vector (:math:`m/s`)
+    velocitygradient                                Velocity gradient tensor
+    cp                                              `Pressure coefficient <https://en.wikipedia.org/wiki/Pressure_coefficient>`_
+    totalcp                                         Total presure coefficient
+    mach                      m                     `Mach number <https://en.wikipedia.org/wiki/Mach_number>`_
+    viscosity                 mu                    Dynamic viscosity (:math:`Pa/s`)
+    kinematicviscosity        nu                    Kinematic viscosity (:math:`m^2/s`)
+    vorticity                                       `Vorticity vector <https://en.wikipedia.org/wiki/Vorticity>`_ (:math:`1/s`)
+    Qcriterion                                      Q criterion
+    reynoldstress                                   `Reynolds stress tensor <https://en.wikipedia.org/wiki/Reynolds_stress>`_
+    helicity                                        `Helicity <https://en.wikipedia.org/wiki/Hydrodynamical_helicity>`_
+    enstrophy
+    ek
+    lesregion                                       Different depending on turbulence model??
+    turbulenceintensity       ti                    Turbulence intensity
+    turbulencekineticenergy                         `Turbulence kinetic energy <https://en.wikipedia.org/wiki/Turbulence_kinetic_energy>`_ (:math:`J/kg`)
+    turbulenceeddyfrequency                         `Turbulence eddy frequency <https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure>`_ (:math:`1/s`)
+    eddy                                            Eddy viscosity (:math:`Pa/s`)
+    cell_velocity
+    cellzone
+    cellorder
+    centre                                          Cell centre location
+    viscouslengthscale                              Defined?? Minium distance between cell and its neighbours
+    walldistance                                    Wall distance (:math:`m`)
+    sponge                                          Sponge layer damping coefficient
+   ========================= ===================== ==================================
+
+
+Surface Only Quantities
+"""""""""""""""""""""""
+
+
+   ========================= ===================== ==================================
+    Variable Name             Alias                 Definition
+   ========================= ===================== ==================================
+    pressureforce                                   Pressure component of force on a face
+    pressuremoment                                  Pressure component of moment on a face
+    pressuremomentx                                 Component of pressure moment around x axis
+    pressuremomenty                                 Component of pressure moment around y axis
+    pressuremomentz                                 Component of pressure moment around z axis
+    frictionforce                                   Skin friction component of force on a face
+    frictionmoment                                  Skin friction component of moment on a face
+    frictionmomentx                                 Component of skin friction moment around x axis
+    frictionmomenty                                 Component of skin friction moment around y axis
+    frictionmomentz                                 Component of skin friction moment around z axis
+    roughness                                       Wall roughness height
+    yplus                                           Non-dinemsional wall distance
+    zone                                            Boundary zone number
+    cf                                              Skin friction coefficient
+    facecentre                                      Face centre location
+    frictionvelocity         ut                     Friction velocity at the wall
+   ========================= ===================== ==================================
