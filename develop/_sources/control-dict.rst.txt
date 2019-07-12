@@ -1028,6 +1028,58 @@ An example of a function to deform a surface is given below
         return {'v1' : x2, 'v2' : y2, 'v3' : z2}
 
 
+Mesh Transformations
+--------------------
+Radial Basis Functions (RBFs) can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.
+
+.. code-block:: python
+
+   'TR_1' : {...},
+   'TR_2' : {...},
+
+Two kinds of RBF transformation are available: the "greedy" method and the "multiscale" method. For the "greedy" method
+
+.. code-block:: python
+
+   'TR_1' : {
+		'multiscale' : False,
+		'zone' : [4], # list of surface zones to be deformed
+		'func' : transformFunc, # function describing surface deformation
+		'alpha' : 200.0, # support radius of RBFs
+		'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
+		'tol' : 0.005, # maximum error tolerance for greedy
+	    },
+
+For the "multiscale" method
+
+.. code-block:: python
+
+   'TR_1' : {
+	       'multiscale' : True,
+               'base point fraction' : 0.1, # faction of surface points to be solved in the base set
+               'zone' : [4], # list of surface zones to be deformed
+               'func' : transformFunc, # function describing surface deformation
+               'alpha' : 200.0, # support radius of RBFs in the base set
+               'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
+            },
+
+An example of a function to deform a surface is given below
+
+.. code-block:: python
+
+   def transWing(x,y,z):
+    ymax = 1.0
+    ymin = 0.1
+    yNorm =(y-ymin)/(ymax-ymin)
+    x2 = x
+    y2 = y
+    z2 = z
+    if y > 0.1 and y < 1.1 and x < 1.1 and x > -0.1 and z > -0.1 and z < 0.1:
+        z2 = z - 0.5*(20.0*yNorm**3 + yNorm**2 + 10.0*yNorm)/31.0
+
+    return {'v1' : x2, 'v2' : y2, 'v3' : z2}
+
+
 Reporting
 ---------
 
