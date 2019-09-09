@@ -1,0 +1,211 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Windfarm Modelling &#8212; zCFD User Guide v2019.06.138-dgrefactor documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="windfarm-modelling">
+<h1>Windfarm Modelling<a class="headerlink" href="#windfarm-modelling" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Windfarms consist of a set of specific turbine types at geographic locations.  zCFD allows users to specify the turbine characteristics and locations, and will automatically create turbine models within an existing mesh and update the local flow conditions to match the thrust coefficient and tip speed ratio for each turbine.</p>
+</div>
+<div class="section" id="the-locations-and-trbx-turbine-definition">
+<h2>The locations and TRBX turbine definition<a class="headerlink" href="#the-locations-and-trbx-turbine-definition" title="Permalink to this headline">¶</a></h2>
+<p>zCFD provides a utility function <em>create_trbx_zcfd_data</em> that can be called from within the zCFD environment and Python interactive shell. To start the zCFD command line environment, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> /INSTALL_LOCATION/zCFD-version/bin/activate
+</pre></div>
+</div>
+<p>The command prompt will now appear with a (zCFD) prefix.  To run the <em>create_trbx_zcfd_data</em> utility, start the interactive Python shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="o">(</span>zCFD<span class="o">)</span> &gt; python
+</pre></div>
+</div>
+<p>The utility takes several arguments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil.farm</span> <span class="kn">as</span> <span class="nn">farm</span>
+<span class="n">farm</span><span class="o">.</span><span class="n">create_trbx_zcfd_input</span><span class="p">(</span><span class="n">case_name</span><span class="o">=</span><span class="s1">&#39;windfarm_name&#39;</span><span class="p">,</span>
+                            <span class="n">wind_direction</span><span class="o">=</span><span class="mf">267.0</span><span class="p">,</span>
+                            <span class="n">reference_wind_speed</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+                            <span class="n">terrain_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                            <span class="n">report_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                            <span class="n">update_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">reference_point_offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                            <span class="n">turbine_zone_length_factor</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+                            <span class="n">model</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                            <span class="n">turbine_files</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;xy_file_1.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turbine_type_1.trbx&#39;</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;xy_file_2.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turbine_type_2.trbx&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>The utility will read each <em>[&lt;xy_file&gt; , &lt;trbx_file&gt;]</em> pair provided.  The terrain file is any file format that can be read by ParaView (STL, VTK) to use as the basis for the ground level at any given location.  The default ‘None’ sets ground level to 0.  The model uses a reference velocity at a point upstream of the turbine.  The point is offset upstream by a factor applied to the rotor diameter.  The fluid zone associated with the turbine is a cylinder with diameter equal to the rotor diameter and length given by the turbine zone length factor.  The model is either a an <em>induction</em> model where the induction factor is automatically calculated from the thrust coefficient and 1D momentum theory, or the <em>simple</em> model where the reference velocity is equal to the velocity at the rotor. The <em>&lt;xy_file&gt;</em> is a 3-column data file in ASCII format with <em>&lt;turbine name&gt;, &lt;easting&gt;</em> and <em>&lt;northing&gt;</em> data such as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>T001 <span class="m">251865</span>.0 <span class="m">646486</span>.0
+T002 <span class="m">252240</span>.0 <span class="m">646200</span>.0
+...
+T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
+</pre></div>
+</div>
+<p>The TRBX file is a data file with turbine information provided by manufacturers including a description of the turbine geometry and aerodynamic performance characteristics.</p>
+<p>The utility extracts key information from the TRBX file to automatically create a turbine definition (<em>&lt;case_name&gt;_zones.py</em>) with an entry for each turbine in the array:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">turb_zone</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="s1">&#39;FZ_1&#39;</span>:<span class="o">{</span>
+    <span class="s1">&#39;type&#39;</span>:<span class="s1">&#39;disc&#39;</span>,
+    <span class="s1">&#39;def&#39;</span>:<span class="s1">&#39;./turbine_vtp/T001-267.0.vtp&#39;</span>,
+    <span class="s1">&#39;thrust coefficient&#39;</span>:0.821,
+    <span class="s1">&#39;thrust coefficient curve&#39;</span>:<span class="o">[[</span><span class="m">0</span>.0,0.0<span class="o">]</span>,<span class="o">[</span><span class="m">1</span>.0,0.0<span class="o">]</span>,...,<span class="o">[</span><span class="m">51</span>.0,0.0<span class="o">]</span>,<span class="o">]</span>,
+    <span class="s1">&#39;tip speed ratio&#39;</span>:8.79645943005,
+    <span class="s1">&#39;tip speed ratio curve&#39;</span>:<span class="o">[[</span><span class="m">0</span>.0,0.0<span class="o">]</span>,<span class="o">[</span><span class="m">1</span>.0,0.0<span class="o">]</span>,...,<span class="o">[</span><span class="m">51</span>.0,0.0<span class="o">]</span>,<span class="o">]</span>,
+    <span class="s1">&#39;centre&#39;</span>:<span class="o">[</span><span class="m">251865</span>.0,646486.0,338.5<span class="o">]</span>,
+    <span class="s1">&#39;up&#39;</span>:<span class="o">[</span><span class="m">0</span>.0,0.0,1.0<span class="o">]</span>,
+    <span class="s1">&#39;normal&#39;</span>:<span class="o">[</span>-0.998629534755,-0.0523359562429,-0.0<span class="o">]</span>,
+    <span class="s1">&#39;inner radius&#39;</span>:1.95500004292,
+    <span class="s1">&#39;outer radius&#39;</span>:60.0,
+    <span class="s1">&#39;reference point&#39;</span>:<span class="o">[</span><span class="m">251745</span>.164456,646479.719685,338.5<span class="o">]</span>,
+    <span class="o">}</span>,
+    ...
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <em>turbine_vtk/&lt;turbine&gt;.vtp</em> file defining the fluid zone for each turbine is also automatically created. The <em>‘thrust coefficient’</em> is defined as a single value, and if a data point curve is present in the TRBX file this data is also supplied as the tuple array <em>‘thrust coefficient curve’</em>, where the wind speed in metres per second is the index.  If this curve is provided, the utility will interpolate the curve at the reference speed to create the single value otherwise a default value (10 m/s) is used.</p>
+<p>The same approach is taken for the <em>‘tip speed ratio’</em> single value and curve - which is automatically calculated from the rotor speed array (revolutions per minute) in the TRBX file.</p>
+<p>The <em>‘centre’</em> is the centre of the disc, which is automatically determined from the nominal hub height in the TRBX file as an offset to the ground height at the specified location.  The local ground height is automatically determined from the VTK output files from a previous solver run.  Note that the VTK ground data can be created with a single cycle of the solver, and does not need to include any turbines.</p>
+<p>The vertical orientation is defined by the <em>‘up’</em> vector - normally this will be the unit vector in the <em>z</em>-direction. The <em>‘normal’</em> defines the vector perpendicular to the disc.  The inner and outer radii are based on the TRBX definition of the size of the disc. No account is made of the hub or tower geometry.</p>
+<p>The <em>‘reference point’</em> defines the location in the flow domain that is used as the reference value of wind velocity for this turbine.  This velocity is used in combination with the thrust coefficient and the tip speed ratio for zCFD to calculate the momentum sources associated with the turbine.  By default the reference point is automatically located 1.0 turbine diameters upstream of the disc centre, assuming that the reference wind direction is also the local wind direction. This is easy to modify.</p>
+<p>The utility also automatically creates a set of monitor points for each turbine, all in a single file (<em>&lt;case_name&gt;_probes.py</em>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">turb_probe</span> <span class="o">=</span> <span class="p">{</span>
+              <span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                           <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                           <span class="s1">&#39;monitor&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                                         <span class="s1">&#39;MR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                                         <span class="s1">&#39;name&#39;</span> <span class="p">:</span><span class="s1">&#39;probe1@MHH@87&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">251865.0</span><span class="p">,</span><span class="mf">646486.0</span><span class="p">,</span><span class="mf">338.5</span><span class="p">],</span>
+                                         <span class="s1">&#39;variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;ti&#39;</span><span class="p">],</span>
+                                                  <span class="p">},</span>
+                                         <span class="o">...</span>
+                                       <span class="p">}</span>
+                         <span class="p">}</span>
+             <span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>‘frequency’</em> is the number of solver cycles between outputs, and the <em>‘monitor’</em> defines the name of the probe using the WindFarmer standard notation.</p>
+<p>Because the zone and probe files are automatically created, the following lines must be added to the end of the standard zCFD parameter definition file <em>&lt;case_name&gt;.py</em> to insert the data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">get_zone_info</span><span class="p">(</span><span class="s1">&#39;&lt;case_name&gt;_zones&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">z</span><span class="o">.</span><span class="n">turb_zone</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">get_zone_info</span><span class="p">(</span><span class="s1">&#39;&lt;case_name&gt;_probes&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">turb_probe</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+</pre></div>
+</div>
+<p>When run, zCFD will include the probe data in the <em>&lt;case_name&gt;_report.csv</em> file. Note that this utility make take a few seconds to run, especially if there are large numbers of turbines, or points on the mesh boundary.</p>
+</div>
+<div class="section" id="writing-windfarmer-data-files">
+<h2>Writing WindFarmer Data Files<a class="headerlink" href="#writing-windfarmer-data-files" title="Permalink to this headline">¶</a></h2>
+<p>In order to export the data from a zCFD run in a format that can be read by WindFarmer, we provide the utility <em>write_windfarmer_data</em>, with usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil.farm</span> <span class="kn">as</span> <span class="nn">farm</span>
+<span class="n">farm</span><span class="o">.</span><span class="n">write_windfarmer_data</span><span class="p">(</span><span class="n">case_name</span><span class="o">=</span><span class="s1">&#39;windfarm_name&#39;</span><span class="p">,</span>
+                               <span class="n">num_processes</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span>
+                               <span class="n">up</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <em>up</em> vector is used to check that the orientation expected by WindFarmer is that same as the orientation used in the simulation.  In most cases this will be the <em>z</em>-axis.</p>
+<p>The utility will output the probe information plus additional fields, calculated automatically.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formulation.html">Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-18, Zenotech Ltd.
+      
+      |
+      <a href="_sources/windfarm.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

@@ -6,15 +6,6 @@ zCFD by default will output data in VTK (http://www.vtk.org/) format.  This form
 Output in other formats is also possible, including TECPLOT (http://www.tecplot.com/) and EnSight (https://www.ceisoftware.com/) as follows:
 
 
-Tecplot Output
---------------
-
-To output in TECPLOT format, use the following option in the *'write output'* part of the control dictionary:
-
-.. code-block:: python
-
-    TODO
-
 EnSight Output
 --------------
 
