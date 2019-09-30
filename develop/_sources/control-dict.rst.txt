@@ -964,7 +964,6 @@ The fluidic zone properties are defined using consecutively numbered blocks like
     'FZ_2' : {....},
     'FZ_3' : {....},
 
-
 For actuator disk zones
 
 .. code-block:: python
@@ -982,6 +981,51 @@ For actuator disk zones
             # Location of reference conditions used to calculate thrust from C
             'reference point': [1.0,1.0,1.0],
     },
+
+For tree canopies in terrain wind models
+
+.. code-block:: python
+
+    'FZ_1':{
+            'type':'canopy',
+	    # Use def when the vtp file specifies a closed volumetric region defining the canopy
+            'def':'canopy_dacosta.vtp',
+	    # Use field when the vtp specifies a set of points on the surface (see below for details)
+	    'field':'canopy_field.vtp',
+            'func':lad_function,
+            'cd':0.25,
+            'beta_p':0.17,
+            'beta_d':3.37,
+            'Ceps_4':0.9,
+            'Ceps_5':0.9,
+    },
+
+where the parameters cd, beta_p,beta_d, Ceps_4 and Ceps_5 are defined in the literature (for example Desmond, 2014) and the leaf area density (LAD) is typically specified using a function
+
+.. code-block:: python
+
+    def lad_function(cell_centre_list):
+            lai = 5.0  # for example following Da Costa 2007
+            h_can = 20.0
+            lad_list = []
+            for cell in cell_centre_list:
+                 wall_distance = cell[3]
+                 lad = (np.interp(wall_distance, a_z[0] * h_can, a_z[1]) * lai / h_can,)
+                 lad_list.append(lad)
+            return lad_list
+
+and the variation in leaf area density is a function of height
+
+.. code-block:: python
+
+      a_z = (
+              np.asarray([0.0,0.43,0.1,0.45,0.2,0.56,0.3,0.74,0.4,1.10,
+                        0.5,1.35,0.6,1.48,0.7,1.47,0.8,1.35,0.9,1.01,1.0,0.00]).reshape(11, 2).T
+            )
+
+.. note::
+
+    When using the field specification the height of the canopy at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the height value looked up in a node based scalar array called 'Height'
 
 Mesh Transformations
 --------------------
