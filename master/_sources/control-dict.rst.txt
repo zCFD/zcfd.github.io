@@ -887,6 +887,38 @@ An example setup for a pressure inflow is given below:
              'condition' : 'IC_2',
              },
 
+Example Massflow Inflow
+"""""""""""""""""""""""
+
+An example setup for a massflow inflow is given below:
+
+.. code-block:: python
+
+    'IC_1' : {
+             'temperature' : 293.0,
+             'pressure' : 101325.0,
+             'V': {
+                  'vector' : [1.0,0.0,0.0],
+                  'Mach' : 0.20,
+                  },
+             'Reynolds No' : 1.0e6,
+             'Reference Length' : 1.0,
+             'turbulence instensity' : 0.1,
+             'eddy viscosity ratio' : 1.0,
+             },
+    'IC_2' : {
+             'reference' : 'IC_1',
+             'total temperature ratio' : 1.0,
+             'total pressure ratio' : 1.0,
+	     'massflow ratio' : 1.1,
+             },
+    'BC_3' : {
+             'ref' : 4,
+             'zone' : [0,1,2,3],
+             'type' : 'inflow',
+             'kind' : 'massflow',
+             'condition' : 'IC_2',
+             },
 
 Outflow
 ^^^^^^^
@@ -964,7 +996,6 @@ The fluidic zone properties are defined using consecutively numbered blocks like
     'FZ_2' : {....},
     'FZ_3' : {....},
 
-
 For actuator disk zones
 
 .. code-block:: python
@@ -982,6 +1013,51 @@ For actuator disk zones
             # Location of reference conditions used to calculate thrust from C
             'reference point': [1.0,1.0,1.0],
     },
+
+For tree canopies in terrain wind models
+
+.. code-block:: python
+
+    'FZ_1':{
+            'type':'canopy',
+	    # Use def when the vtp file specifies a closed volumetric region defining the canopy
+            'def':'canopy_dacosta.vtp',
+	    # Use field when the vtp specifies a set of points on the surface (see below for details)
+	    'field':'canopy_field.vtp',
+            'func':lad_function,
+            'cd':0.25,
+            'beta_p':0.17,
+            'beta_d':3.37,
+            'Ceps_4':0.9,
+            'Ceps_5':0.9,
+    },
+
+where the parameters cd, beta_p,beta_d, Ceps_4 and Ceps_5 are defined in the literature (for example Desmond, 2014) and the leaf area density (LAD) is typically specified using a function
+
+.. code-block:: python
+
+    def lad_function(cell_centre_list):
+            lai = 5.0  # for example following Da Costa 2007
+            h_can = 20.0
+            lad_list = []
+            for cell in cell_centre_list:
+                 wall_distance = cell[3]
+                 lad = (np.interp(wall_distance, a_z[0] * h_can, a_z[1]) * lai / h_can,)
+                 lad_list.append(lad)
+            return lad_list
+
+and the variation in leaf area density is a function of height
+
+.. code-block:: python
+
+      a_z = (
+              np.asarray([0.0,0.43,0.1,0.45,0.2,0.56,0.3,0.74,0.4,1.10,
+                        0.5,1.35,0.6,1.48,0.7,1.47,0.8,1.35,0.9,1.01,1.0,0.00]).reshape(11, 2).T
+            )
+
+.. note::
+
+    When using the field specification the height of the canopy at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the height value looked up in a node based scalar array called 'Height'
 
 Mesh Transformations
 --------------------
@@ -1026,6 +1102,58 @@ An example of a function to deform a surface is given below
             z2 = z - 0.5*(20.0*yNorm**3 + yNorm**2 + 10.0*yNorm)/31.0
 
         return {'v1' : x2, 'v2' : y2, 'v3' : z2}
+
+
+Mesh Transformations
+--------------------
+Radial Basis Functions (RBFs) can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.
+
+.. code-block:: python
+
+   'TR_1' : {...},
+   'TR_2' : {...},
+
+Two kinds of RBF transformation are available: the "greedy" method and the "multiscale" method. For the "greedy" method
+
+.. code-block:: python
+
+   'TR_1' : {
+		'multiscale' : False,
+		'zone' : [4], # list of surface zones to be deformed
+		'func' : transformFunc, # function describing surface deformation
+		'alpha' : 200.0, # support radius of RBFs
+		'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
+		'tol' : 0.005, # maximum error tolerance for greedy
+	    },
+
+For the "multiscale" method
+
+.. code-block:: python
+
+   'TR_1' : {
+	       'multiscale' : True,
+               'base point fraction' : 0.1, # faction of surface points to be solved in the base set
+               'zone' : [4], # list of surface zones to be deformed
+               'func' : transformFunc, # function describing surface deformation
+               'alpha' : 200.0, # support radius of RBFs in the base set
+               'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
+            },
+
+An example of a function to deform a surface is given below
+
+.. code-block:: python
+
+   def transWing(x,y,z):
+    ymax = 1.0
+    ymin = 0.1
+    yNorm =(y-ymin)/(ymax-ymin)
+    x2 = x
+    y2 = y
+    z2 = z
+    if y > 0.1 and y < 1.1 and x < 1.1 and x > -0.1 and z > -0.1 and z < 0.1:
+        z2 = z - 0.5*(20.0*yNorm**3 + yNorm**2 + 10.0*yNorm)/31.0
+
+    return {'v1' : x2, 'v2' : y2, 'v3' : z2}
 
 
 Reporting
