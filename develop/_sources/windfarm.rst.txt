@@ -22,7 +22,7 @@ The command prompt will now appear with a (zCFD) prefix.  To run the *create_trb
 
     > (zCFD) > python
 
-The utility takes several arguments:
+The utility takes several arguments, depending on the turbine model to be used.  For *simple* and *induction* models (where a reference velocity point is used to set the power, thrust and torque for the turbine) the function is used to look up data in a *TRBX* file format:
 
 .. code-block:: python
 
@@ -39,7 +39,7 @@ The utility takes several arguments:
                                 turbine_files=[['xy_file_1.txt','turbine_type_1.trbx'],
                                                ['xy_file_2.txt','turbine_type_2.trbx']])
 
-The utility will read each *[<xy_file> , <trbx_file>]* pair provided.  The terrain file is any file format that can be read by ParaView (STL, VTK) to use as the basis for the ground level at any given location.  The default 'None' sets ground level to 0.  The model uses a reference velocity at a point upstream of the turbine.  The point is offset upstream by a factor applied to the rotor diameter.  The fluid zone associated with the turbine is a cylinder with diameter equal to the rotor diameter and length given by the turbine zone length factor.  The model is either a an *induction* model where the induction factor is automatically calculated from the thrust coefficient and 1D momentum theory, or the *simple* model where the reference velocity is equal to the velocity at the rotor. The *<xy_file>* is a 3-column data file in ASCII format with *<turbine name>, <easting>* and *<northing>* data such as:
+The utility will read each *[<xy_file> , <trbx_file>]* pair provided.  The terrain file is any file format that can be read by ParaView (STL, VTK) to use as the basis for the ground level at any given location.  The default 'None' sets ground level to 0.  The model uses a reference velocity at a point upstream of the turbine.  The point is offset upstream by a factor applied to the rotor diameter.  The fluid zone associated with the turbine is a cylinder with diameter equal to the rotor diameter and length given by the turbine zone length factor.  The model is either an *induction* model where the induction factor is automatically calculated from the thrust coefficient and 1D momentum theory, or the *simple* model where the reference velocity is equal to the velocity at the rotor. The *<xy_file>* is a 3-column data file in ASCII format with *<turbine name>, <easting>* and *<northing>* data such as:
 
 .. code-block:: bash
 
@@ -72,15 +72,103 @@ The utility extracts key information from the TRBX file to automatically create 
         ...
     }
 
-The *turbine_vtk/<turbine>.vtp* file defining the fluid zone for each turbine is also automatically created. The *'thrust coefficient'* is defined as a single value, and if a data point curve is present in the TRBX file this data is also supplied as the tuple array *'thrust coefficient curve'*, where the wind speed in metres per second is the index.  If this curve is provided, the utility will interpolate the curve at the reference speed to create the single value otherwise a default value (10 m/s) is used.
+The *'thrust coefficient'* may be defined as a single value, and if a data point curve is present in the TRBX file this data is also supplied as the tuple array *'thrust coefficient curve'*, where the wind speed in metres per second is the index.  If this curve is provided, the utility will interpolate the curve at the reference speed to create the single value otherwise a default value (10 m/s) is used.
 
 The same approach is taken for the *'tip speed ratio'* single value and curve - which is automatically calculated from the rotor speed array (revolutions per minute) in the TRBX file.
 
-The *'centre'* is the centre of the disc, which is automatically determined from the nominal hub height in the TRBX file as an offset to the ground height at the specified location.  The local ground height is automatically determined from the VTK output files from a previous solver run.  Note that the VTK ground data can be created with a single cycle of the solver, and does not need to include any turbines.
+The *'reference point'* defines the location in the flow domain that is used as the reference value of wind velocity for this turbine.  This velocity is used in combination with the thrust coefficient and the tip speed ratio for zCFD to calculate the momentum sources associated with the turbine.  By default the reference point is automatically located 1.0 turbine diameters upstream of the disc centre, assuming that the reference wind direction is also the local wind direction. This is easy to modify.
+
+The *'centre'* is the centre of the disc, which is automatically determined from the nominal hub height in the TRBX file as an offset to the ground height at the specified location.  The local ground height is automatically determined from a supplied VTK files, or from a previous solver run.  Note that the VTK ground data can be created with a single cycle of the solver, and does not need to include any turbines.
 
 The vertical orientation is defined by the *'up'* vector - normally this will be the unit vector in the *z*-direction. The *'normal'* defines the vector perpendicular to the disc.  The inner and outer radii are based on the TRBX definition of the size of the disc. No account is made of the hub or tower geometry.
 
-The *'reference point'* defines the location in the flow domain that is used as the reference value of wind velocity for this turbine.  This velocity is used in combination with the thrust coefficient and the tip speed ratio for zCFD to calculate the momentum sources associated with the turbine.  By default the reference point is automatically located 1.0 turbine diameters upstream of the disc centre, assuming that the reference wind direction is also the local wind direction. This is easy to modify.
+For the *blade element model* the TRBX file is replaced with a dictionary that contains information about the blades and aerofoil sections used on the rotor, plus information that can be specified to inform the controller how to adjust the rotation rate and blade pitch each cycle:
+
+.. code-block:: python
+
+    farm.create_trbx_zcfd_input(
+        case_name='windfarm_name',
+        wind_direction=280.0,
+        reference_wind_speed=8.0,
+        terrain_file=None,
+        report_frequency=100,
+        update_frequency=1,
+        turbine_zone_length_factor=2.5,
+        model='blade element theory',
+        turbine_files=[['data/xy_file_1.txt', bet_dict_1],
+                       ['data/xy_file_2.txt', bet_dict_2]],
+    )
+
+The *xy_file* is as above and the *bet_dict* is a Python dictionary with details of the rotor and blade, including sectional aerodynamic characteristics and dimensions:
+
+.. code-block:: python
+
+    bet_dict = {
+        'status': 'on',
+        'number of blades': 3,
+        'rotation direction': 'clockwise',
+        'hub height': 70.0,
+        'inner radius': 4.0,
+        'outer radius': 40.0,
+        'rated power': 2000000.0,
+        'tip speed limit': 80.0,
+        'verbose': False,
+        'tilt': 6.0,
+        'yaw': 0.0,
+        'auto yaw': True,
+        'cut in speed': 4.0,
+        'cut out speed': 25.0,
+        'number of segments': 12,
+        'up': [0.0, 0.0, 1.0],
+        'aerofoil profile':
+            {'source': 'http://airfoiltools.com/airfoil/details?airfoil=n63415-il',
+             'upper surface': [[0.0, 0.0], [0.003, 0.01287], ..., [0.95028, 0.00931], [1.0, 0.0]],
+             'lower surface': [[0.0, 0.0], [0.007, -0.01087], ..., [0.94972, 0.00333], [1.0, 0.0]]},
+        'aerofoil cl': [[-90.0, -0.0],[-49.869, -0.202], ..., [49.907, 1.823], [90.0, 0.0]],
+        'aerofoil cd': [[-90.0, 2.0], [-70.099, 1.796], ..., [60.11, 1.645], [90.087, 1.996]],
+        'blade chord': [[0.0, 0.1], [0.1, 0.1], ..., [0.7, 0.034], [1.0, 0.018]],
+        'blade twist': [[0.0, 21.924], [0.1, 21.924], ..., [0.7, 2.461], [1.0, 0.023]],
+        'blade pitch range': [-10.0, 10.0],
+        'mean blade material density': 200.0,
+        'blade pitch tol': 0.01,
+        'dt': 0.2,
+        'inertia': True,
+        'damage ti': 0.15,
+        'damage speed': 10.0,
+        'friction loss': 0.01,
+    }
+
+The *'status'* key indicates whether the turbine should be active or not.  This makes it straightforward to turn a turbine off without regenerating the model.  The *'number of blades'* is typically 3 (which is also the default value) but some turbines have 2 blades.  The *'rotation direction'* is typically clockwise (when viewed from the front) for modern turbines, but the keyword values allow *'clockwise'* or *'anticlockwise'*.  This alters the rotation of the wake.
+
+The *'hub height'*, *'inner radius'* and *'outer radius'* define the vertical offset from the ground in metres, and the rotor dimensions respectively as above.  The *'rated power'* (Watts) of the turbine defines an operating limit of power production that will not be exceeded.
+
+The *'tip speed limit'* is an environmental limit on the rate or rotor rotation, and is typically set to 80m/s.  Note that the tip speed is based on the absolute rotation rate of the rotor, and the actual tip speed relative to the air may be increased by angular induction.
+
+The model can produce various diagnostics.  Setting *'verbose'* to *True* will output these.
+
+The rotor *'tilt'* is an upward rotation of the entire rotor, to allow for tower clearance under blade deflection.  The value is typically a few degrees.  The *'yaw'* is a rotation angle in degrees from the prescribed wind direction, with the option to specify *'auto yaw'* which will automatically over-ride the *'yaw'* value with a rotation into the local (disc average) wind direction. A warning is issued if *'auto yaw'* requests a *'yaw'* value exceeding 10 degrees in either direction.
+
+The manufacturer typically specifies a *'cut in speed'* and *'cut out speed'* range for the local reference wind speed (for blade elements this is the average windspeed on the rotor disc).  The rotor is automatically stowed outside these limits.
+
+The *'number of segments'* defines the resolution of the actuator disc discretisation (not the computational domain mesh) with a default value of 12.
+
+The *'aerofoil profile'* is used to integrate the blade unit sectional area between the *'upper surface'* and *'lower surface'* over the range *[0,1]*. Once integrated, the value is stored in the turbine zone dictionary.  The optional *'source'* can be provided as a reference for the data. The sectional area multiplied by local radius is integrated over the length of each blade and multiplied by the *'mean blade material density'* (kilograms per cubic metre, typically 200.0) to provide a value for the *'rotor moment'*.
+
+The turbine controller assumes that the physical time between iterations is *'dt'*.  This does not have to be equal to the CFD timestep.  If *'inertia'* is *True* then the available torque is divided by the *'rotor moment'* to determine the rotor acceleration.  Otherwise the rotor is accelerated with a 10% increase in rotational rate capped per iteration. When the rotor is positively accelerated, half of the available torque is used to accelerate the rotor and half is supplied to the generator (unless doing so would exceed the rated power). This is an arbitrary value and it is expected that users will modify this behaviour when modelling more sophisticated control laws.
+
+The aerodynamic characteristics of the aerofoil section are critical to the blade element theory model and are not calculated automatically.  These should be specified as points on the *'aerofoil cl'* (local lift coefficient) and *'aerofoil cd'* (local drag coefficient) curves over a range of angles of attack in degrees covering at least (-30,30). Values beyond this range will be extrapolated as needed.
+
+The *'blade chord'* is the local chord length in metres used to scale the aerofoil along the normalised blade length [0,1].  The *'blade twist'* is the twist angle in degrees of the blade over the normalised blade length [0,1].
+
+The turbine controller will automatically optimise the power production (up to the limit) by pitching the blades over the range *'blade pitch range'* in degrees using a Golden Section Search to a tolerance of *'blade pitch tol'* degrees. All blades are pitched equally and the optimum pitch value accounts for the contribution of all blades averaged over the disc.  Typically the blades are pitched to their maximum setting on startup and then the pitch value is reduced as the rotor accelerates.  A negative value of '*blade pitch*' may be achieved at high rates of rotation as the local angle of attack of the blade will still be positive.  A warning is issued if the aerofoil angle of attack is less than zero anywhere on the rotor.
+
+The turbine controller will determine whether (anywhere on the disc) the *'damage ti'* (turbulence intensity) and *'damage speed'* are simultaneously exceeded.  If so, a warning is issued and the rotor is stowed.  It is intended that this function may be modified by users to provide more sophisticated controller rules and wind farm behaviour.
+
+To account for frictional losses in the system, 1% (or other value of *'friction loss'*) is applied to the rate of rotor rotation each iteration.
+
+The *'blade element theory'* fluid zones follow the *'simple*' and *'induction'* model example above, with inclusion of the *'blade element theory'* parameters.
+
+For all models, the *turbine_vtk/<turbine>.vtp* file defining the fluid zone for each turbine is also automatically created.
 
 The utility also automatically creates a set of monitor points for each turbine, all in a single file (*<case_name>_probes.py*):
 
@@ -114,7 +202,7 @@ Because the zone and probe files are automatically created, the following lines 
     for key,value in p.turb_probe.items():
     parameters[key]=value
 
-When run, zCFD will include the probe data in the *<case_name>_report.csv* file. Note that this utility make take a few seconds to run, especially if there are large numbers of turbines, or points on the mesh boundary.
+When run, zCFD will include the probe data in the *<case_name>_report.csv* file. Note that this utility may take a few seconds to run, especially if there are large numbers of turbines, or points on the mesh boundary.
 
 Writing WindFarmer Data Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
