@@ -1,0 +1,279 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Windfarm Modelling &#8212; zCFD User Guide v2020.02.1-nastran-reader documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="windfarm-modelling">
+<h1>Windfarm Modelling<a class="headerlink" href="#windfarm-modelling" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Windfarms consist of a set of specific turbine types at geographic locations.  zCFD allows users to specify the turbine characteristics and locations, and will automatically create turbine models within an existing mesh and update the local flow conditions to match the thrust coefficient and tip speed ratio for each turbine.</p>
+</div>
+<div class="section" id="the-locations-and-trbx-turbine-definition">
+<h2>The locations and TRBX turbine definition<a class="headerlink" href="#the-locations-and-trbx-turbine-definition" title="Permalink to this headline">¶</a></h2>
+<p>zCFD provides a utility function <em>create_trbx_zcfd_data</em> that can be called from within the zCFD environment and Python interactive shell. To start the zCFD command line environment, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> /INSTALL_LOCATION/zCFD-version/bin/activate
+</pre></div>
+</div>
+<p>The command prompt will now appear with a (zCFD) prefix.  To run the <em>create_trbx_zcfd_data</em> utility, start the interactive Python shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="o">(</span>zCFD<span class="o">)</span> &gt; python
+</pre></div>
+</div>
+<p>The utility takes several arguments, depending on the turbine model to be used.  For <em>simple</em> and <em>induction</em> models (where a reference velocity point is used to set the power, thrust and torque for the turbine) the function is used to look up data in a <em>TRBX</em> file format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil.farm</span> <span class="kn">as</span> <span class="nn">farm</span>
+<span class="n">farm</span><span class="o">.</span><span class="n">create_trbx_zcfd_input</span><span class="p">(</span><span class="n">case_name</span><span class="o">=</span><span class="s1">&#39;windfarm_name&#39;</span><span class="p">,</span>
+                            <span class="n">wind_direction</span><span class="o">=</span><span class="mf">267.0</span><span class="p">,</span>
+                            <span class="n">reference_wind_speed</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+                            <span class="n">terrain_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                            <span class="n">report_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                            <span class="n">update_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">reference_point_offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                            <span class="n">turbine_zone_length_factor</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+                            <span class="n">model</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                            <span class="n">turbine_files</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;xy_file_1.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turbine_type_1.trbx&#39;</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;xy_file_2.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turbine_type_2.trbx&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>The utility will read each <em>[&lt;xy_file&gt; , &lt;trbx_file&gt;]</em> pair provided.  The terrain file is any file format that can be read by ParaView (STL, VTK) to use as the basis for the ground level at any given location.  The default ‘None’ sets ground level to 0.  The model uses a reference velocity at a point upstream of the turbine.  The point is offset upstream by a factor applied to the rotor diameter.  The fluid zone associated with the turbine is a cylinder with diameter equal to the rotor diameter and length given by the turbine zone length factor.  The model is either an <em>induction</em> model where the induction factor is automatically calculated from the thrust coefficient and 1D momentum theory, or the <em>simple</em> model where the reference velocity is equal to the velocity at the rotor. The <em>&lt;xy_file&gt;</em> is a 3-column data file in ASCII format with <em>&lt;turbine name&gt;, &lt;easting&gt;</em> and <em>&lt;northing&gt;</em> data such as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>T001 <span class="m">251865</span>.0 <span class="m">646486</span>.0
+T002 <span class="m">252240</span>.0 <span class="m">646200</span>.0
+...
+T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
+</pre></div>
+</div>
+<p>The TRBX file is a data file with turbine information provided by manufacturers including a description of the turbine geometry and aerodynamic performance characteristics.</p>
+<p>The utility extracts key information from the TRBX file to automatically create a turbine definition (<em>&lt;case_name&gt;_zones.py</em>) with an entry for each turbine in the array:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">turb_zone</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="s1">&#39;FZ_1&#39;</span>:<span class="o">{</span>
+    <span class="s1">&#39;type&#39;</span>:<span class="s1">&#39;disc&#39;</span>,
+    <span class="s1">&#39;def&#39;</span>:<span class="s1">&#39;./turbine_vtp/T001-267.0.vtp&#39;</span>,
+    <span class="s1">&#39;thrust coefficient&#39;</span>:0.821,
+    <span class="s1">&#39;thrust coefficient curve&#39;</span>:<span class="o">[[</span><span class="m">0</span>.0,0.0<span class="o">]</span>,<span class="o">[</span><span class="m">1</span>.0,0.0<span class="o">]</span>,...,<span class="o">[</span><span class="m">51</span>.0,0.0<span class="o">]</span>,<span class="o">]</span>,
+    <span class="s1">&#39;tip speed ratio&#39;</span>:8.79645943005,
+    <span class="s1">&#39;tip speed ratio curve&#39;</span>:<span class="o">[[</span><span class="m">0</span>.0,0.0<span class="o">]</span>,<span class="o">[</span><span class="m">1</span>.0,0.0<span class="o">]</span>,...,<span class="o">[</span><span class="m">51</span>.0,0.0<span class="o">]</span>,<span class="o">]</span>,
+    <span class="s1">&#39;centre&#39;</span>:<span class="o">[</span><span class="m">251865</span>.0,646486.0,338.5<span class="o">]</span>,
+    <span class="s1">&#39;up&#39;</span>:<span class="o">[</span><span class="m">0</span>.0,0.0,1.0<span class="o">]</span>,
+    <span class="s1">&#39;normal&#39;</span>:<span class="o">[</span>-0.998629534755,-0.0523359562429,-0.0<span class="o">]</span>,
+    <span class="s1">&#39;inner radius&#39;</span>:1.95500004292,
+    <span class="s1">&#39;outer radius&#39;</span>:60.0,
+    <span class="s1">&#39;reference point&#39;</span>:<span class="o">[</span><span class="m">251745</span>.164456,646479.719685,338.5<span class="o">]</span>,
+    <span class="o">}</span>,
+    ...
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <em>‘thrust coefficient’</em> may be defined as a single value, and if a data point curve is present in the TRBX file this data is also supplied as the tuple array <em>‘thrust coefficient curve’</em>, where the wind speed in metres per second is the index.  If this curve is provided, the utility will interpolate the curve at the reference speed to create the single value otherwise a default value (10 m/s) is used.</p>
+<p>The same approach is taken for the <em>‘tip speed ratio’</em> single value and curve - which is automatically calculated from the rotor speed array (revolutions per minute) in the TRBX file.</p>
+<p>The <em>‘reference point’</em> defines the location in the flow domain that is used as the reference value of wind velocity for this turbine.  This velocity is used in combination with the thrust coefficient and the tip speed ratio for zCFD to calculate the momentum sources associated with the turbine.  By default the reference point is automatically located 1.0 turbine diameters upstream of the disc centre, assuming that the reference wind direction is also the local wind direction. This is easy to modify.</p>
+<p>The <em>‘centre’</em> is the centre of the disc, which is automatically determined from the nominal hub height in the TRBX file as an offset to the ground height at the specified location.  The local ground height is automatically determined from a supplied VTK files, or from a previous solver run.  Note that the VTK ground data can be created with a single cycle of the solver, and does not need to include any turbines.</p>
+<p>The vertical orientation is defined by the <em>‘up’</em> vector - normally this will be the unit vector in the <em>z</em>-direction. The <em>‘normal’</em> defines the vector perpendicular to the disc.  The inner and outer radii are based on the TRBX definition of the size of the disc. No account is made of the hub or tower geometry.</p>
+<p>For the <em>blade element model</em> the TRBX file is replaced with a dictionary that contains information about the blades and aerofoil sections used on the rotor, plus information that can be specified to inform the controller how to adjust the rotation rate and blade pitch each cycle:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">farm</span><span class="o">.</span><span class="n">create_trbx_zcfd_input</span><span class="p">(</span>
+    <span class="n">case_name</span><span class="o">=</span><span class="s1">&#39;windfarm_name&#39;</span><span class="p">,</span>
+    <span class="n">wind_direction</span><span class="o">=</span><span class="mf">280.0</span><span class="p">,</span>
+    <span class="n">reference_wind_speed</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span>
+    <span class="n">terrain_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">report_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">update_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">turbine_zone_length_factor</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;blade element theory&#39;</span><span class="p">,</span>
+    <span class="n">turbine_files</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;data/xy_file_1.txt&#39;</span><span class="p">,</span> <span class="n">bet_dict_1</span><span class="p">],</span>
+                   <span class="p">[</span><span class="s1">&#39;data/xy_file_2.txt&#39;</span><span class="p">,</span> <span class="n">bet_dict_2</span><span class="p">]],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <em>xy_file</em> is as above and the <em>bet_dict</em> is a Python dictionary with details of the rotor and blade, including sectional aerodynamic characteristics and dimensions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bet_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;number of blades&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;rotation direction&#39;</span><span class="p">:</span> <span class="s1">&#39;clockwise&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;hub height&#39;</span><span class="p">:</span> <span class="mf">70.0</span><span class="p">,</span>
+    <span class="s1">&#39;inner radius&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+    <span class="s1">&#39;outer radius&#39;</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">,</span>
+    <span class="s1">&#39;rated power&#39;</span><span class="p">:</span> <span class="mf">2000000.0</span><span class="p">,</span>
+    <span class="s1">&#39;tip speed limit&#39;</span><span class="p">:</span> <span class="mf">80.0</span><span class="p">,</span>
+    <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="s1">&#39;tilt&#39;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span>
+    <span class="s1">&#39;yaw&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s1">&#39;auto yaw&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="s1">&#39;cut in speed&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+    <span class="s1">&#39;cut out speed&#39;</span><span class="p">:</span> <span class="mf">25.0</span><span class="p">,</span>
+    <span class="s1">&#39;number of segments&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="s1">&#39;up&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s1">&#39;aerofoil profile&#39;</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;http://airfoiltools.com/airfoil/details?airfoil=n63415-il&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;upper surface&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.003</span><span class="p">,</span> <span class="mf">0.01287</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.95028</span><span class="p">,</span> <span class="mf">0.00931</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]],</span>
+         <span class="s1">&#39;lower surface&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.007</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01087</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.94972</span><span class="p">,</span> <span class="mf">0.00333</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]},</span>
+    <span class="s1">&#39;aerofoil cl&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0</span><span class="p">],[</span><span class="o">-</span><span class="mf">49.869</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.202</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">49.907</span><span class="p">,</span> <span class="mf">1.823</span><span class="p">],</span> <span class="p">[</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]],</span>
+    <span class="s1">&#39;aerofoil cd&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">70.099</span><span class="p">,</span> <span class="mf">1.796</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">60.11</span><span class="p">,</span> <span class="mf">1.645</span><span class="p">],</span> <span class="p">[</span><span class="mf">90.087</span><span class="p">,</span> <span class="mf">1.996</span><span class="p">]],</span>
+    <span class="s1">&#39;blade chord&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.034</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.018</span><span class="p">]],</span>
+    <span class="s1">&#39;blade twist&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">21.924</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">21.924</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">2.461</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.023</span><span class="p">]],</span>
+    <span class="s1">&#39;blade pitch range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
+    <span class="s1">&#39;mean blade material density&#39;</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
+    <span class="s1">&#39;blade pitch tol&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="s1">&#39;inertia&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="s1">&#39;damage ti&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+    <span class="s1">&#39;damage speed&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="s1">&#39;friction loss&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>‘status’</em> key indicates whether the turbine should be active or not.  This makes it straightforward to turn a turbine off without regenerating the model.  The <em>‘number of blades’</em> is typically 3 (which is also the default value) but some turbines have 2 blades.  The <em>‘rotation direction’</em> is typically clockwise (when viewed from the front) for modern turbines, but the keyword values allow <em>‘clockwise’</em> or <em>‘anticlockwise’</em>.  This alters the rotation of the wake.</p>
+<p>The <em>‘hub height’</em>, <em>‘inner radius’</em> and <em>‘outer radius’</em> define the vertical offset from the ground in metres, and the rotor dimensions respectively as above.  The <em>‘rated power’</em> (Watts) of the turbine defines an operating limit of power production that will not be exceeded.</p>
+<p>The <em>‘tip speed limit’</em> is an environmental limit on the rate or rotor rotation, and is typically set to 80m/s.  Note that the tip speed is based on the absolute rotation rate of the rotor, and the actual tip speed relative to the air may be increased by angular induction.</p>
+<p>The model can produce various diagnostics.  Setting <em>‘verbose’</em> to <em>True</em> will output these.</p>
+<p>The rotor <em>‘tilt’</em> is an upward rotation of the entire rotor, to allow for tower clearance under blade deflection.  The value is typically a few degrees.  The <em>‘yaw’</em> is a rotation angle in degrees from the prescribed wind direction, with the option to specify <em>‘auto yaw’</em> which will automatically over-ride the <em>‘yaw’</em> value with a rotation into the local (disc average) wind direction. A warning is issued if <em>‘auto yaw’</em> requests a <em>‘yaw’</em> value exceeding 10 degrees in either direction.</p>
+<p>The manufacturer typically specifies a <em>‘cut in speed’</em> and <em>‘cut out speed’</em> range for the local reference wind speed (for blade elements this is the average windspeed on the rotor disc).  The rotor is automatically stowed outside these limits.</p>
+<p>The <em>‘number of segments’</em> defines the resolution of the actuator disc discretisation (not the computational domain mesh) with a default value of 12.</p>
+<p>The <em>‘aerofoil profile’</em> is used to integrate the blade unit sectional area between the <em>‘upper surface’</em> and <em>‘lower surface’</em> over the range <em>[0,1]</em>. Once integrated, the value is stored in the turbine zone dictionary.  The optional <em>‘source’</em> can be provided as a reference for the data. The sectional area multiplied by local radius is integrated over the length of each blade and multiplied by the <em>‘mean blade material density’</em> (kilograms per cubic metre, typically 200.0) to provide a value for the <em>‘rotor moment’</em>.</p>
+<p>The turbine controller assumes that the physical time between iterations is <em>‘dt’</em>.  This does not have to be equal to the CFD timestep.  If <em>‘inertia’</em> is <em>True</em> then the available torque is divided by the <em>‘rotor moment’</em> to determine the rotor acceleration.  Otherwise the rotor is accelerated with a 10% increase in rotational rate capped per iteration. When the rotor is positively accelerated, half of the available torque is used to accelerate the rotor and half is supplied to the generator (unless doing so would exceed the rated power). This is an arbitrary value and it is expected that users will modify this behaviour when modelling more sophisticated control laws.</p>
+<p>The aerodynamic characteristics of the aerofoil section are critical to the blade element theory model and are not calculated automatically.  These should be specified as points on the <em>‘aerofoil cl’</em> (local lift coefficient) and <em>‘aerofoil cd’</em> (local drag coefficient) curves over a range of angles of attack in degrees covering at least (-30,30). Values beyond this range will be extrapolated as needed.</p>
+<p>The <em>‘blade chord’</em> is the local chord length in metres used to scale the aerofoil along the normalised blade length [0,1].  The <em>‘blade twist’</em> is the twist angle in degrees of the blade over the normalised blade length [0,1].</p>
+<p>The turbine controller will automatically optimise the power production (up to the limit) by pitching the blades over the range <em>‘blade pitch range’</em> in degrees using a Golden Section Search to a tolerance of <em>‘blade pitch tol’</em> degrees. All blades are pitched equally and the optimum pitch value accounts for the contribution of all blades averaged over the disc.  Typically the blades are pitched to their maximum setting on startup and then the pitch value is reduced as the rotor accelerates.  A negative value of ‘<em>blade pitch</em>’ may be achieved at high rates of rotation as the local angle of attack of the blade will still be positive.  A warning is issued if the aerofoil angle of attack is less than zero anywhere on the rotor.</p>
+<p>The turbine controller will determine whether (anywhere on the disc) the <em>‘damage ti’</em> (turbulence intensity) and <em>‘damage speed’</em> are simultaneously exceeded.  If so, a warning is issued and the rotor is stowed.  It is intended that this function may be modified by users to provide more sophisticated controller rules and wind farm behaviour.</p>
+<p>To account for frictional losses in the system, 1% (or other value of <em>‘friction loss’</em>) is applied to the rate of rotor rotation each iteration.</p>
+<p>The <em>‘blade element theory’</em> fluid zones follow the <em>‘simple</em>’ and <em>‘induction’</em> model example above, with inclusion of the <em>‘blade element theory’</em> parameters.</p>
+<p>For all models, the <em>turbine_vtk/&lt;turbine&gt;.vtp</em> file defining the fluid zone for each turbine is also automatically created.</p>
+<p>The utility also automatically creates a set of monitor points for each turbine, all in a single file (<em>&lt;case_name&gt;_probes.py</em>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">turb_probe</span> <span class="o">=</span> <span class="p">{</span>
+              <span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                           <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                           <span class="s1">&#39;monitor&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                                         <span class="s1">&#39;MR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                                         <span class="s1">&#39;name&#39;</span> <span class="p">:</span><span class="s1">&#39;probe1@MHH@87&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">251865.0</span><span class="p">,</span><span class="mf">646486.0</span><span class="p">,</span><span class="mf">338.5</span><span class="p">],</span>
+                                         <span class="s1">&#39;variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;ti&#39;</span><span class="p">],</span>
+                                                  <span class="p">},</span>
+                                         <span class="o">...</span>
+                                       <span class="p">}</span>
+                         <span class="p">}</span>
+             <span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>‘frequency’</em> is the number of solver cycles between outputs, and the <em>‘monitor’</em> defines the name of the probe using the WindFarmer standard notation.</p>
+<p>Because the zone and probe files are automatically created, the following lines must be added to the end of the standard zCFD parameter definition file <em>&lt;case_name&gt;.py</em> to insert the data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">get_zone_info</span><span class="p">(</span><span class="s1">&#39;&lt;case_name&gt;_zones&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">z</span><span class="o">.</span><span class="n">turb_zone</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">get_zone_info</span><span class="p">(</span><span class="s1">&#39;&lt;case_name&gt;_probes&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">turb_probe</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+</pre></div>
+</div>
+<p>When run, zCFD will include the probe data in the <em>&lt;case_name&gt;_report.csv</em> file. Note that this utility may take a few seconds to run, especially if there are large numbers of turbines, or points on the mesh boundary.</p>
+</div>
+<div class="section" id="writing-windfarmer-data-files">
+<h2>Writing WindFarmer Data Files<a class="headerlink" href="#writing-windfarmer-data-files" title="Permalink to this headline">¶</a></h2>
+<p>In order to export the data from a zCFD run in a format that can be read by WindFarmer, we provide the utility <em>write_windfarmer_data</em>, with usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil.farm</span> <span class="kn">as</span> <span class="nn">farm</span>
+<span class="n">farm</span><span class="o">.</span><span class="n">write_windfarmer_data</span><span class="p">(</span><span class="n">case_name</span><span class="o">=</span><span class="s1">&#39;windfarm_name&#39;</span><span class="p">,</span>
+                               <span class="n">num_processes</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span>
+                               <span class="n">up</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <em>up</em> vector is used to check that the orientation expected by WindFarmer is that same as the orientation used in the simulation.  In most cases this will be the <em>z</em>-axis.</p>
+<p>The utility will output the probe information plus additional fields, calculated automatically.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formulation.html">Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-18, Zenotech Ltd.
+      
+      |
+      <a href="_sources/windfarm.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
