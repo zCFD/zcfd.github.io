@@ -104,6 +104,7 @@ The *xy_file* is as above and the *bet_dict* is a Python dictionary with details
 .. code-block:: python
 
     bet_dict = {
+        'name':'T001',
         'status': 'on',
         'number of blades': 3,
         'rotation direction': 'clockwise',
@@ -129,6 +130,9 @@ The *xy_file* is as above and the *bet_dict* is a Python dictionary with details
         'blade chord': [[0.0, 0.1], [0.1, 0.1], ..., [0.7, 0.034], [1.0, 0.018]],
         'blade twist': [[0.0, 21.924], [0.1, 21.924], ..., [0.7, 2.461], [1.0, 0.023]],
         'blade pitch range': [-10.0, 10.0],
+        'blade pitch': 1.0,
+        'blade pitch tol': 0.01,
+        'blade pitch step': 0.1,
         'mean blade material density': 200.0,
         'blade pitch tol': 0.01,
         'dt': 0.2,
@@ -136,7 +140,12 @@ The *xy_file* is as above and the *bet_dict* is a Python dictionary with details
         'damage ti': 0.15,
         'damage speed': 10.0,
         'friction loss': 0.01,
+        'thrust factor': 1.10,
+        'tip loss correction': 'acos-fit',
+        'rpm ramp':[[4.0,6.0],[13.0,16.0]],
     }
+
+The *'name'* key is used to tag results associated with the turbine.
 
 The *'status'* key indicates whether the turbine should be active or not.  This makes it straightforward to turn a turbine off without regenerating the model.  The *'number of blades'* is typically 3 (which is also the default value) but some turbines have 2 blades.  The *'rotation direction'* is typically clockwise (when viewed from the front) for modern turbines, but the keyword values allow *'clockwise'* or *'anticlockwise'*.  This alters the rotation of the wake.
 
@@ -160,13 +169,19 @@ The aerodynamic characteristics of the aerofoil section are critical to the blad
 
 The *'blade chord'* is the local chord length in metres used to scale the aerofoil along the normalised blade length [0,1].  The *'blade twist'* is the twist angle in degrees of the blade over the normalised blade length [0,1].
 
-The turbine controller will automatically optimise the power production (up to the limit) by pitching the blades over the range *'blade pitch range'* in degrees using a Golden Section Search to a tolerance of *'blade pitch tol'* degrees. All blades are pitched equally and the optimum pitch value accounts for the contribution of all blades averaged over the disc.  Typically the blades are pitched to their maximum setting on startup and then the pitch value is reduced as the rotor accelerates.  A negative value of '*blade pitch*' may be achieved at high rates of rotation as the local angle of attack of the blade will still be positive.  A warning is issued if the aerofoil angle of attack is less than zero anywhere on the rotor.
+The turbine controller will automatically optimise the power production (up to the limit) by pitching the blades over the range *'blade pitch range'* in degrees using a Golden Section Search to a tolerance of *'blade pitch tol'* degrees. All blades are pitched equally and the optimum pitch value accounts for the contribution of all blades averaged over the disc. The *'blade pitch'* can be set intially and a step size limit *'blade pitch step'* can be set to the range over which the blade pitch is optimised to within *'blade pitch tol'* on each iteration. Typically the blades are pitched to their maximum setting on startup and then the pitch value is reduced as the rotor accelerates.  A negative value of '*blade pitch*' may be achieved at high rates of rotation as the local angle of attack of the blade will still be positive.  A warning is issued if the aerofoil angle of attack is less than zero anywhere on the rotor.
 
 The turbine controller will determine whether (anywhere on the disc) the *'damage ti'* (turbulence intensity) and *'damage speed'* are simultaneously exceeded.  If so, a warning is issued and the rotor is stowed.  It is intended that this function may be modified by users to provide more sophisticated controller rules and wind farm behaviour.
 
 To account for frictional losses in the system, 1% (or other value of *'friction loss'*) is applied to the rate of rotor rotation each iteration.
 
 The *'blade element theory'* fluid zones follow the *'simple*' and *'induction'* model example above, with inclusion of the *'blade element theory'* parameters.
+
+A *'thrust factor'* can be applied to the rotor to include an approximation for the effect of the tower and the hub on the obstruction to airflow past the turbine.
+
+The blade element theory model assumed 2D flow over each aerofoil section, and a 3D correction can be applied at the rotor tips.  Options for the *'tip loss correction'* keyword are *'elliptic'* (which is not recommened for most modern turbines), *'acos-fit'*, *'acos shift-fit'* and *'f-fit'*.  Definitions for these functions are provided in the Reference Guide.
+
+In addition to the tip speed limit inposed by environemntal considerations, some manufacturers also apply a calibrated ramp factor to the revolutions per minute that the rotor can achieve for any given freestream hub-height wind speed.  This is to avoid overspeeds at low wind speeds.  The *'rpm ramp'* keyword takes a pair of points [[cut in speed, lowest rpm],[full speed, rpm at full speed]] defining the ends of the linear limit curve applied.
 
 For all models, the *turbine_vtk/<turbine>.vtp* file defining the fluid zone for each turbine is also automatically created.
 

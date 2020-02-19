@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Utilities &#8212; zCFD User Guide v2020.02.1811-develop documentation</title>
+    <title>Utilities &#8212; zCFD User Guide v2020.02.1817-develop documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -119,6 +119,7 @@ T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
 </div>
 <p>The <em>xy_file</em> is as above and the <em>bet_dict</em> is a Python dictionary with details of the rotor and blade, including sectional aerodynamic characteristics and dimensions:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bet_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;T001&#39;</span><span class="p">,</span>
     <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span>
     <span class="s1">&#39;number of blades&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
     <span class="s1">&#39;rotation direction&#39;</span><span class="p">:</span> <span class="s1">&#39;clockwise&#39;</span><span class="p">,</span>
@@ -144,6 +145,9 @@ T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
     <span class="s1">&#39;blade chord&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.034</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.018</span><span class="p">]],</span>
     <span class="s1">&#39;blade twist&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">21.924</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">21.924</span><span class="p">],</span> <span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">2.461</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.023</span><span class="p">]],</span>
     <span class="s1">&#39;blade pitch range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
+    <span class="s1">&#39;blade pitch&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;blade pitch tol&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s1">&#39;blade pitch step&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
     <span class="s1">&#39;mean blade material density&#39;</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
     <span class="s1">&#39;blade pitch tol&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
     <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
@@ -151,9 +155,13 @@ T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
     <span class="s1">&#39;damage ti&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
     <span class="s1">&#39;damage speed&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="s1">&#39;friction loss&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s1">&#39;thrust factor&#39;</span><span class="p">:</span> <span class="mf">1.10</span><span class="p">,</span>
+    <span class="s1">&#39;tip loss correction&#39;</span><span class="p">:</span> <span class="s1">&#39;acos-fit&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;rpm ramp&#39;</span><span class="p">:[[</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">6.0</span><span class="p">],[</span><span class="mf">13.0</span><span class="p">,</span><span class="mf">16.0</span><span class="p">]],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>The <em>‘name’</em> key is used to tag results associated with the turbine.</p>
 <p>The <em>‘status’</em> key indicates whether the turbine should be active or not.  This makes it straightforward to turn a turbine off without regenerating the model.  The <em>‘number of blades’</em> is typically 3 (which is also the default value) but some turbines have 2 blades.  The <em>‘rotation direction’</em> is typically clockwise (when viewed from the front) for modern turbines, but the keyword values allow <em>‘clockwise’</em> or <em>‘anticlockwise’</em>.  This alters the rotation of the wake.</p>
 <p>The <em>‘hub height’</em>, <em>‘inner radius’</em> and <em>‘outer radius’</em> define the vertical offset from the ground in metres, and the rotor dimensions respectively as above.  The <em>‘rated power’</em> (Watts) of the turbine defines an operating limit of power production that will not be exceeded.</p>
 <p>The <em>‘tip speed limit’</em> is an environmental limit on the rate or rotor rotation, and is typically set to 80m/s.  Note that the tip speed is based on the absolute rotation rate of the rotor, and the actual tip speed relative to the air may be increased by angular induction.</p>
@@ -165,10 +173,13 @@ T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
 <p>The turbine controller assumes that the physical time between iterations is <em>‘dt’</em>.  This does not have to be equal to the CFD timestep.  If <em>‘inertia’</em> is <em>True</em> then the available torque is divided by the <em>‘rotor moment’</em> to determine the rotor acceleration.  Otherwise the rotor is accelerated with a 10% increase in rotational rate capped per iteration. When the rotor is positively accelerated, half of the available torque is used to accelerate the rotor and half is supplied to the generator (unless doing so would exceed the rated power). This is an arbitrary value and it is expected that users will modify this behaviour when modelling more sophisticated control laws.</p>
 <p>The aerodynamic characteristics of the aerofoil section are critical to the blade element theory model and are not calculated automatically.  These should be specified as points on the <em>‘aerofoil cl’</em> (local lift coefficient) and <em>‘aerofoil cd’</em> (local drag coefficient) curves over a range of angles of attack in degrees covering at least (-30,30). Values beyond this range will be extrapolated as needed.</p>
 <p>The <em>‘blade chord’</em> is the local chord length in metres used to scale the aerofoil along the normalised blade length [0,1].  The <em>‘blade twist’</em> is the twist angle in degrees of the blade over the normalised blade length [0,1].</p>
-<p>The turbine controller will automatically optimise the power production (up to the limit) by pitching the blades over the range <em>‘blade pitch range’</em> in degrees using a Golden Section Search to a tolerance of <em>‘blade pitch tol’</em> degrees. All blades are pitched equally and the optimum pitch value accounts for the contribution of all blades averaged over the disc.  Typically the blades are pitched to their maximum setting on startup and then the pitch value is reduced as the rotor accelerates.  A negative value of ‘<em>blade pitch</em>’ may be achieved at high rates of rotation as the local angle of attack of the blade will still be positive.  A warning is issued if the aerofoil angle of attack is less than zero anywhere on the rotor.</p>
+<p>The turbine controller will automatically optimise the power production (up to the limit) by pitching the blades over the range <em>‘blade pitch range’</em> in degrees using a Golden Section Search to a tolerance of <em>‘blade pitch tol’</em> degrees. All blades are pitched equally and the optimum pitch value accounts for the contribution of all blades averaged over the disc. The <em>‘blade pitch’</em> can be set intially and a step size limit <em>‘blade pitch step’</em> can be set to the range over which the blade pitch is optimised to within <em>‘blade pitch tol’</em> on each iteration. Typically the blades are pitched to their maximum setting on startup and then the pitch value is reduced as the rotor accelerates.  A negative value of ‘<em>blade pitch</em>’ may be achieved at high rates of rotation as the local angle of attack of the blade will still be positive.  A warning is issued if the aerofoil angle of attack is less than zero anywhere on the rotor.</p>
 <p>The turbine controller will determine whether (anywhere on the disc) the <em>‘damage ti’</em> (turbulence intensity) and <em>‘damage speed’</em> are simultaneously exceeded.  If so, a warning is issued and the rotor is stowed.  It is intended that this function may be modified by users to provide more sophisticated controller rules and wind farm behaviour.</p>
 <p>To account for frictional losses in the system, 1% (or other value of <em>‘friction loss’</em>) is applied to the rate of rotor rotation each iteration.</p>
 <p>The <em>‘blade element theory’</em> fluid zones follow the <em>‘simple</em>’ and <em>‘induction’</em> model example above, with inclusion of the <em>‘blade element theory’</em> parameters.</p>
+<p>A <em>‘thrust factor’</em> can be applied to the rotor to include an approximation for the effect of the tower and the hub on the obstruction to airflow past the turbine.</p>
+<p>The blade element theory model assumed 2D flow over each aerofoil section, and a 3D correction can be applied at the rotor tips.  Options for the <em>‘tip loss correction’</em> keyword are <em>‘elliptic’</em> (which is not recommened for most modern turbines), <em>‘acos-fit’</em>, <em>‘acos shift-fit’</em> and <em>‘f-fit’</em>.  Definitions for these functions are provided in the Reference Guide.</p>
+<p>In addition to the tip speed limit inposed by environemntal considerations, some manufacturers also apply a calibrated ramp factor to the revolutions per minute that the rotor can achieve for any given freestream hub-height wind speed.  This is to avoid overspeeds at low wind speeds.  The <em>‘rpm ramp’</em> keyword takes a pair of points [[cut in speed, lowest rpm],[full speed, rpm at full speed]] defining the ends of the linear limit curve applied.</p>
 <p>For all models, the <em>turbine_vtk/&lt;turbine&gt;.vtp</em> file defining the fluid zone for each turbine is also automatically created.</p>
 <p>The utility also automatically creates a set of monitor points for each turbine, all in a single file (<em>&lt;case_name&gt;_probes.py</em>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">turb_probe</span> <span class="o">=</span> <span class="p">{</span>
@@ -212,6 +223,101 @@ T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
 <p>The utility will output the probe information plus additional fields, calculated automatically.</p>
 </div>
 </div>
+<div class="section" id="propellor-modelling">
+<h2>Propellor Modelling<a class="headerlink" href="#propellor-modelling" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>Overview<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Propellors are similar to wind turbines except that they are desgined to produce thrust rather than torque from lift.  zCFD includes a blade element fluid zone model based on an actuator disc, for propellors:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">propellor_zones</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="s1">&#39;FZ_1&#39;</span>: <span class="o">{</span>
+        <span class="s1">&#39;name&#39;</span>: <span class="s1">&#39;R01&#39;</span>,
+        <span class="s1">&#39;type&#39;</span>: <span class="s1">&#39;disc&#39;</span>,
+        <span class="s1">&#39;model&#39;</span>: <span class="s1">&#39;blade element propellor&#39;</span>,
+        <span class="s1">&#39;number of blades&#39;</span>: <span class="m">2</span>,
+        <span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;on&#39;</span>,
+        <span class="s1">&#39;outer radius&#39;</span>: <span class="m">0</span>.175,
+        <span class="s1">&#39;inner radius&#39;</span>: <span class="m">0</span>.039025,
+        <span class="s1">&#39;def&#39;</span>: <span class="s1">&#39;./propellor_vtp/R01.vtp&#39;</span>
+        <span class="s1">&#39;rotation direction&#39;</span>: <span class="s1">&#39;clockwise&#39;</span>,
+        <span class="s1">&#39;verbose&#39;</span>: True,
+        <span class="s1">&#39;update frequency&#39;</span>: <span class="m">1</span>,
+        <span class="s1">&#39;centre&#39;</span>: <span class="o">[</span><span class="m">0</span>.0, <span class="m">0</span>.0, <span class="m">0</span>.0<span class="o">]</span>,
+        <span class="s1">&#39;reference plane&#39;</span>: True,
+        <span class="s1">&#39;normal&#39;</span>: <span class="o">[</span><span class="m">0</span>.0, <span class="m">0</span>.0, <span class="m">1</span>.0<span class="o">]</span>,
+        <span class="s1">&#39;up&#39;</span>: <span class="o">[</span><span class="m">1</span>.0, <span class="m">0</span>.0, <span class="m">0</span>.0<span class="o">]</span>,
+        <span class="s1">&#39;blade chord&#39;</span>: <span class="o">[[</span><span class="m">0</span>.2333, <span class="m">0</span>.1468<span class="o">]</span>, <span class="o">[</span><span class="m">0</span>.2667, <span class="m">0</span>.1681<span class="o">]</span>, ... , <span class="o">[</span><span class="m">1</span>.0, <span class="m">0</span>.0581<span class="o">]]</span>,
+        <span class="s1">&#39;blade twist&#39;</span>: <span class="o">[[</span><span class="m">0</span>.2333, <span class="m">28</span>.6202<span class="o">]</span>, <span class="o">[</span><span class="m">0</span>.2667, <span class="m">25</span>.5228<span class="o">]</span>, ... , <span class="o">[</span><span class="m">1</span>.0, <span class="m">0</span>.0<span class="o">]]</span>,
+        <span class="s1">&#39;aerofoil cd&#39;</span>: <span class="o">[[</span>-60.0, <span class="m">1</span>.4552<span class="o">]</span>, <span class="o">[</span>-50.0, <span class="m">1</span>.0992<span class="o">]</span>, ... , <span class="o">[</span><span class="m">60</span>.0, <span class="m">2</span>.3542<span class="o">]]</span>,
+        <span class="s1">&#39;aerofoil cl&#39;</span>: <span class="o">[[</span>-60.0, -0.7978<span class="o">]</span>, <span class="o">[</span>-50.0, -0.8195<span class="o">]</span>, ... , <span class="o">[</span><span class="m">60</span>.0, <span class="m">1</span>.3818<span class="o">]]</span>,
+        <span class="s1">&#39;number of segments&#39;</span>: <span class="m">24</span>,
+        <span class="s1">&#39;tip loss correction&#39;</span>: <span class="s1">&#39;elliptic&#39;</span>,
+        <span class="s1">&#39;tip loss correction radius&#39;</span>: <span class="m">0</span>.8,
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+</div>
+<p>The <em>‘name’</em> key is used to tag results associated with the propellor.</p>
+<p>The <em>‘type’</em> defines the fluid zone type for propellors.</p>
+<p>The <em>‘model’</em> should be set to ‘blade element propellor’.</p>
+<p>The <em>‘number of blades’</em> can be any positive integer - typically 2, 3 or 4.</p>
+<p>The <em>‘status’</em> can be set to on or off, as a quick way to disable a propellor without re-generating the model.</p>
+<p>The <em>‘inner radius’</em> and <em>‘outer radius’</em> refer to the rotor disc.</p>
+<p>The <em>‘def’</em> is a path to a file containing the VTP file defining the disc fluid zone geometry.  This can easily be created interactively in ParaView or else using the <em>ParaView Simple</em> library in Python:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">line</span> <span class="o">=</span> Line<span class="o">()</span>
+line.Resolution <span class="o">=</span> <span class="m">10</span>
+line.Point1 <span class="o">=</span> <span class="o">(</span><span class="m">0</span>.0, <span class="m">0</span>.0, -0.5 * <span class="m">0</span>.175<span class="o">)</span>
+line.Point2 <span class="o">=</span> <span class="o">(</span><span class="m">0</span>.0, <span class="m">0</span>.0,  <span class="m">0</span>.5 * <span class="m">0</span>.175<span class="o">)</span>
+<span class="nv">tube</span> <span class="o">=</span> Tube<span class="o">(</span><span class="nv">Input</span><span class="o">=</span>line<span class="o">)</span>
+tube.NumberofSides <span class="o">=</span> <span class="m">128</span>
+tube.Radius <span class="o">=</span> <span class="m">0</span>.175
+<span class="nv">transform</span> <span class="o">=</span> Transform<span class="o">(</span><span class="nv">Input</span><span class="o">=</span>tube<span class="o">)</span>
+transform.Transform <span class="o">=</span> <span class="s2">&quot;Transform&quot;</span>
+transform.Transform.Rotate <span class="o">=</span> <span class="o">[</span><span class="m">0</span>.0, <span class="m">0</span>.0, <span class="m">0</span>.0<span class="o">]</span>
+transform.Transform.Translate <span class="o">=</span> <span class="o">[</span><span class="m">0</span>.0, <span class="m">0</span>.0, <span class="m">0</span>.0<span class="o">]</span>
+<span class="nv">writer</span> <span class="o">=</span> CreateWriter<span class="o">(</span><span class="s1">&#39;./propellor_vtp/R01.vtp&#39;</span><span class="o">)</span>
+writer.Input <span class="o">=</span> transform
+writer.UpdatePipeline<span class="o">()</span>
+</pre></div>
+</div>
+<p>where the above code block would produce a fluid zone for a propellor with normal [0.0,0.0,1.0].  Note that general use of the ParaView rotate command should follow the (default) ZXY convention, for which the following is a reasonable estimate:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>def rotation_matrix<span class="o">(</span>axis, theta<span class="o">)</span>:
+    <span class="c1"># Rotation matrix for counterclockwise rotation about axis by theta (radians)</span>
+    <span class="nv">axis</span> <span class="o">=</span> np.asarray<span class="o">(</span>axis<span class="o">)</span>
+    <span class="nv">axis</span> <span class="o">=</span> axis / math.sqrt<span class="o">(</span>np.dot<span class="o">(</span>axis, axis<span class="o">))</span>
+    <span class="nv">a</span> <span class="o">=</span> math.cos<span class="o">(</span>theta / <span class="m">2</span>.0<span class="o">)</span>
+    b, c, <span class="nv">d</span> <span class="o">=</span> -axis * math.sin<span class="o">(</span>theta / <span class="m">2</span>.0<span class="o">)</span>
+    aa, bb, cc, <span class="nv">dd</span> <span class="o">=</span> a * a, b * b, c * c, d * d
+    bc, ad, ac, ab, bd, <span class="nb">cd</span> <span class="o">=</span> b * c, a * d, a * c, a * b, b * d, c * d
+    <span class="k">return</span> np.array<span class="o">([[</span>aa + bb - cc - dd, <span class="m">2</span> * <span class="o">(</span>bc + ad<span class="o">)</span>, <span class="m">2</span> * <span class="o">(</span>bd - ac<span class="o">)]</span>,
+                     <span class="o">[</span><span class="m">2</span> * <span class="o">(</span>bc - ad<span class="o">)</span>, aa + cc - bb - dd, <span class="m">2</span> * <span class="o">(</span><span class="nb">cd</span> + ab<span class="o">)]</span>,
+                     <span class="o">[</span><span class="m">2</span> * <span class="o">(</span>bd + ac<span class="o">)</span>, <span class="m">2</span> * <span class="o">(</span><span class="nb">cd</span> - ab<span class="o">)</span>, aa + dd - bb - cc<span class="o">]])</span>
+
+def trans_rot<span class="o">(</span>v, vec, ang<span class="o">)</span>:
+    <span class="nv">v2</span> <span class="o">=</span> np.dot<span class="o">(</span>rotation_matrix<span class="o">(</span>vec, ang<span class="o">)</span>, v<span class="o">)</span>
+    <span class="k">return</span> <span class="o">[</span>v2<span class="o">[</span><span class="m">0</span><span class="o">]</span>, v2<span class="o">[</span><span class="m">1</span><span class="o">]</span>, v2<span class="o">[</span><span class="m">2</span><span class="o">]]</span>
+
+<span class="c1"># ParaView rotation emulator - note that ParaView (i.e. VTK) uses the order ZXY for rotation.</span>
+def pv_rotate<span class="o">(</span>pt,args<span class="o">)</span>:
+    <span class="nv">pt1</span> <span class="o">=</span> trans_rot<span class="o">(</span>pt,<span class="o">[</span><span class="m">0</span>.0,0.0,1.0<span class="o">]</span>,math.radians<span class="o">(</span>args<span class="o">[</span><span class="m">2</span><span class="o">]))</span>
+    <span class="nv">x1</span> <span class="o">=</span> trans_rot<span class="o">([</span><span class="m">1</span>.0,0.0,0.0<span class="o">]</span>,<span class="o">[</span><span class="m">0</span>.0,0.0,1.0<span class="o">]</span>,math.radians<span class="o">(</span>args<span class="o">[</span><span class="m">2</span><span class="o">]))</span>
+    <span class="nv">y1</span> <span class="o">=</span> trans_rot<span class="o">([</span><span class="m">0</span>.0,1.0,0.0<span class="o">]</span>,<span class="o">[</span><span class="m">0</span>.0,0.0,1.0<span class="o">]</span>,math.radians<span class="o">(</span>args<span class="o">[</span><span class="m">2</span><span class="o">]))</span>
+    <span class="nv">pt2</span> <span class="o">=</span> trans_rot<span class="o">(</span>pt1,x1,math.radians<span class="o">(</span>args<span class="o">[</span><span class="m">0</span><span class="o">]))</span>
+    <span class="nv">y2</span> <span class="o">=</span> trans_rot<span class="o">(</span>y1,x1,math.radians<span class="o">(</span>args<span class="o">[</span><span class="m">0</span><span class="o">]))</span>
+    <span class="nv">pt3</span> <span class="o">=</span> trans_rot<span class="o">(</span>pt2,y2,math.radians<span class="o">(</span>args<span class="o">[</span><span class="m">1</span><span class="o">]))</span>
+    <span class="k">return</span> pt3
+</pre></div>
+</div>
+<p>The <em>‘rotation direction’</em> can be clockwise or anticlockwise.  zCFD will apply the necessary orientations to the forces and wake rotation.</p>
+<p>The <em>‘verbose’</em> keyword (True or False) specifies the level of output from the model.</p>
+<p>The <em>‘update frequency’</em> for propellors should be 1 - meaning that the model is evaluated on every solver cycle.</p>
+<p>The <em>‘centre’</em> is the centre of the disc rotor in 3D, and the <em>‘normal’</em> defines the orientation.</p>
+<p>The <em>‘up’</em> vector is used to define $theta_0$ on the rotor: the radial vector from the centre to the rotor tip at $theta_0$ is defined by the cross product of the up vector and disc normal. All forces on the disc are evaluated by incrementing $theta$ over the range $[0,2pi]$.</p>
+<p>The <em>‘blade chord’</em> and <em>‘blade twist’</em> are each defined as a list of points over the domain [0,1].  Note that the twist is measured in degrees and the chord is scaled by the outer radius in zCFD, so the input has to be scaled for a radius of 1.</p>
+<p>The <em>‘aerofoil cl’</em> and <em>‘aerofoil cd’</em> curves are lists of points defining the aerofoil characteristics.  zCFD interpolates values between these points and will extrapolate if necessary.</p>
+<p>The <em>‘number of segments’</em> used in the model should be chosen to match the mesh spacing in the CFD mesh around the propellor.  zCFD does not generate a new mesh in order to apply the propellor model.</p>
+<p>A <em>‘tip loss correction’</em> can be applied to the blade element model, and the only option is <em>‘elliptic’</em>. The <em>‘tip loss correction radius’</em> is the radius from which the tip correction is applied and has a default value of 0.8.</p>
+</div>
+</div>
 </div>
 
 
@@ -235,6 +341,7 @@ T015 <span class="m">253308</span>.0 <span class="m">647985</span>.0
 <li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#windfarm-modelling">Windfarm Modelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#propellor-modelling">Propellor Modelling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
