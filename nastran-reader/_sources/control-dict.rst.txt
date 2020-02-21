@@ -156,7 +156,7 @@ The preconditioner is a mathematical technique for improving the speed of the so
               'precondition' : True,
             },
 
-    # Optional, Advanced: Preconditoner factor
+    # Optional, Advanced: Preconditioner factor
     'preconditioner' : {
                         'minimum mach number' : 0.5,
                        },
@@ -278,8 +278,8 @@ For unsteady (time-accurate) simulations using 'dual time-stepping' to advance t
 .. code-block:: python
 
     'time marching' : {
-                      # Required only for daul time-stepping:
-                      # Number of pseudo time cyles
+                      # Required only for dual time-stepping:
+                      # Number of pseudo time cycles
                       'cycles' : 5000,
     },
 
@@ -297,7 +297,7 @@ The mesh is automatically coarsened by merging cells on successive layers in ord
                     # Number of multigrid cycles before solving on fine mesh only
                     'multigrid cycles' : 5000,
                     # Optional (default 0.75), Advanced:
-                    # Prologation factor
+                    # Prolongation factor
                     'prolong factor' : 0.75,
                     # Optional (default 0.3), Advanced:
                     # Prolongation factor for transported quantities
@@ -588,7 +588,7 @@ Options
 Initial Conditions
 ------------------
 
-The intial condition properties are defined using consecutively numbered blocks
+The initial condition properties are defined using consecutively numbered blocks
 
 .. code-block:: python
 
@@ -742,7 +742,7 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
     'BC_1' : {
               # Zone type tag
               'ref' : 3,
-              # Optional: Specific zone boundary condition overide
+              # Optional: Specific zone boundary condition override
               'zone' : [0,1,2,3],
               # Required: Boundary condition type
               'type' : 'wall',
@@ -774,7 +774,7 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
                                  'origin' : [0.0,0.0,0.0],
                                  },
                     },
-              # Optional: Wall temperature specification either a constant 'saclar' value or a 'profile' from file
+              # Optional: Wall temperature specification either a constant 'scalar' value or a 'profile' from file
               'temperature' : {
                               # Temperature in Kelvin
                               'scalar' : 280.0,
@@ -796,14 +796,14 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
 Farfield
 ^^^^^^^^
 
-The farfield boundary condition can automatically determine whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by refering to an :code:`'IC_'` block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.
+The farfield boundary condition can automatically determine whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by referring to an :code:`'IC_'` block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.
 
 .. code-block:: python
 
     'BC_2' : {
              # Zone type tag
              'ref' : 9,
-             # Optional: Specific zone boundary condition overide
+             # Optional: Specific zone boundary condition override
              'zone' : [0,1,2,3],
              # Required: Boundary condition type
              'type' : 'farfield',
@@ -845,11 +845,11 @@ zCFD can specify two kinds of inflow boundary condition: pressure or massflow, s
     'BC_3' : {
              # Zone type tag
              'ref' : 4,
-             # Optional: Specific zone boundary condition overide
+             # Optional: Specific zone boundary condition override
              'zone' : [0,1,2,3],
              # Required: Boundary condition type
              'type' : 'inflow',
-             # Required: Kind of inflow, either 'default' for presure or 'massflow'
+             # Required: Kind of inflow, either 'default' for pressure or 'massflow'
              'kind' : 'default',
              # Required: Reference inflow conditions
              'condition' : 'IC_2',
@@ -871,7 +871,7 @@ An example setup for a pressure inflow is given below:
                   },
              'Reynolds No' : 1.0e6,
              'Reference Length' : 1.0,
-             'turbulence instensity' : 0.1,
+             'turbulence intensity' : 0.1,
              'eddy viscosity ratio' : 1.0,
              },
     'IC_2' : {
@@ -903,14 +903,14 @@ An example setup for a massflow inflow is given below:
                   },
              'Reynolds No' : 1.0e6,
              'Reference Length' : 1.0,
-             'turbulence instensity' : 0.1,
+             'turbulence intensity' : 0.1,
              'eddy viscosity ratio' : 1.0,
              },
     'IC_2' : {
              'reference' : 'IC_1',
              'total temperature ratio' : 1.0,
              'total pressure ratio' : 1.0,
-	     'massflow ratio' : 1.1,
+         'massflow ratio' : 1.1,
              },
     'BC_3' : {
              'ref' : 4,
@@ -923,14 +923,14 @@ An example setup for a massflow inflow is given below:
 Outflow
 ^^^^^^^
 
-Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperaure ratio, when :code:`'massflow'` is specified a massflow ratio must be set.
+Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a massflow ratio must be set.
 
 .. code-block:: python
 
     'BC_4' : {
              # Zone type tag
              'ref' : 5,
-             # Optional: Specific zone boundary condition overide
+             # Optional: Specific zone boundary condition override
              'zone' : [0,1,2,3],
              # Boundary condition type
              'type' : 'outflow',
@@ -951,7 +951,7 @@ Symmetry
     'BC_5' : {
              # Zone type tag
              'ref' : 7,
-             # Optional: Specific zone boundary condition overide
+             # Optional: Specific zone boundary condition override
              'zone' : [0,1,2,3],
              # Required: Boundary condition type
              'type' : 'symmetry',
@@ -983,6 +983,43 @@ The transforms specified should map each zone onto each other.
                                  'vector' : [1.0,0.0,0.0],
                                  },
                     },
+
+
+Fluid Structure Interaction
+---------------------------
+
+Fluid structure interaction (FSI) can be simulated in zCFD using a modal representation of the structure, which must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF capability detailed in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
+
+.. code-block:: python
+
+     'modal model': {
+        'MM_1': {
+            # Required: File format of the structural modes. Currently only Nastran .op2 and .bdf files are supported
+            'file format': 'nastran',
+            # Required: Name of the Nastran .op2 and .bdf files
+            'nastran casename': 'panel_nm_0.04m',
+            # Required: The wall zones in the mesh which correspond to the wetted surface of the structural model
+            'zone': [1, 2, 3],
+            # Required: Type of RBF to use: 'multiscale' or 'allen'
+            'rbf type': 'multiscale',
+            # Support radius of the RBFs
+            'alpha': 0.02,
+            # Fraction of surface points in the RBF base set (for multiscale only)
+            'base point fraction': 1.0,
+            # Optional: Excite the structure with a sinusoidal point force
+            'forcing' : { 'frequency' : 1000.0, 'location' : [0.0, 0.0, 0.0], 'force' : [0, 0, 10.0] },
+            # Optional: Apply a scaling to the structural model
+            'scale' : [1.0, 1.0, 1.0],
+            # Optional: The maximum search distance when mapping the structural model to the CFD mesh
+            'mode mapping max distance' : 0.001,
+            # Optional: apply a scaling to the force applied at the wetted surface
+            'fluid force scaling' : 0.08 / 0.000166667,
+            # Optional: Select the modes to include in the analysis
+            'mode list' : [0,4,10,13]
+            # Optional: Specify the modal damping for each mode
+            'modal damping' : [0.0, 0.0, 0.0, 0.0],
+        },
+    }
 
 
 Fluid Zones
@@ -1020,10 +1057,10 @@ For tree canopies in terrain wind models
 
     'FZ_1':{
             'type':'canopy',
-	    # Use def when the vtp file specifies a closed volumetric region defining the canopy
+            # Use def when the vtp file specifies a closed volumetric region defining the canopy
             'def':'canopy_dacosta.vtp',
-	    # Use field when the vtp specifies a set of points on the surface (see below for details)
-	    'field':'canopy_field.vtp',
+            # Use field when the vtp specifies a set of points on the surface (see below for details)
+            'field':'canopy_field.vtp',
             'func':lad_function,
             'cd':0.25,
             'beta_p':0.17,
@@ -1037,14 +1074,15 @@ where the parameters cd, beta_p,beta_d, Ceps_4 and Ceps_5 are defined in the lit
 .. code-block:: python
 
     def lad_function(cell_centre_list):
-            lai = 5.0  # for example following Da Costa 2007
-            h_can = 20.0
-            lad_list = []
-            for cell in cell_centre_list:
-                 wall_distance = cell[3]
-                 lad = (np.interp(wall_distance, a_z[0] * h_can, a_z[1]) * lai / h_can,)
-                 lad_list.append(lad)
-            return lad_list
+        lai = 5.0  # for example following Da Costa 2007
+        h_can = 20.0
+        lad_list = []
+        for cell in cell_centre_list:
+            wall_distance = cell[3]
+            lad = (np.interp(wall_distance, a_z[0] * h_can, a_z[1]) * lai / h_can,)
+            lad_list.append(lad)
+
+        return lad_list
 
 and the variation in leaf area density is a function of height
 
@@ -1059,50 +1097,6 @@ and the variation in leaf area density is a function of height
 
     When using the field specification the height of the canopy at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the height value looked up in a node based scalar array called 'Height'
 
-Mesh Transformations
---------------------
-Radial Basis Functions (RBFs) can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.
-
-.. code-block:: python
-
-   'TR_1' : {...},
-   'TR_2' : {...},
-
-.. code-block:: python
-
-   'TR_1' : {
-            # Required: list of surface zones to deform
-            'zone' : [4],
-            # Required: function describing surface deformation
-            'func' : transWing,
-            # Required: support radius of RBFs
-            'alpha' : 200.0,
-            # Required: type of RBF, one of c0, c2, gaussian, tps
-            'basis' : 'c2',
-            # Required: maximum error tolerance for greedy algorithm
-            'tol' : 0.005,
-            # Optional: Surface zones that remain fixed
-            'fixed' : {
-                      'zone' : [1],
-                      },
-            },
-
-An example of a function to deform a surface is given below
-
-.. code-block:: python
-
-   def transWing(x,y,z):
-        ymax = 1.0
-        ymin = 0.1
-        yNorm =(y-ymin)/(ymax-ymin)
-        x2 = x
-        y2 = y
-        z2 = z
-        if y > 0.1 and y < 1.1 and x < 1.1 and x > -0.1 and z > -0.1 and z < 0.1:
-            z2 = z - 0.5*(20.0*yNorm**3 + yNorm**2 + 10.0*yNorm)/31.0
-
-        return {'v1' : x2, 'v2' : y2, 'v3' : z2}
-
 
 Mesh Transformations
 --------------------
@@ -1113,30 +1107,42 @@ Radial Basis Functions (RBFs) can be used to deform the volume mesh according to
    'TR_1' : {...},
    'TR_2' : {...},
 
-Two kinds of RBF transformation are available: the "greedy" method and the "multiscale" method. For the "greedy" method
+Two kinds of RBF transformation are available: the "Allen et al. greedy" method and the "multiscale" method. For the "greedy" method
 
 .. code-block:: python
 
    'TR_1' : {
-		'multiscale' : False,
-		'zone' : [4], # list of surface zones to be deformed
-		'func' : transformFunc, # function describing surface deformation
-		'alpha' : 200.0, # support radius of RBFs
-		'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
-		'tol' : 0.005, # maximum error tolerance for greedy
-	    },
+        # Required: 'multiscale' or 'greedy'
+        'multiscale' : False,
+        # Required: list of surface zones to be deformed
+        'zone' : [4],
+        # Required: function describing surface deformation
+        'func' : transformFunc,
+        # Required: support radius of RBFs
+        'alpha' : 200.0,
+        # Optional: type of RBF - one of c0, c2, gaussian, tps (default: c2)
+        'basis' : 'c2',
+        # Required: maximum error tolerance for greedy
+        'tol' : 0.005,
+        },
 
 For the "multiscale" method
 
 .. code-block:: python
 
    'TR_1' : {
-	       'multiscale' : True,
-               'base point fraction' : 0.1, # faction of surface points to be solved in the base set
-               'zone' : [4], # list of surface zones to be deformed
-               'func' : transformFunc, # function describing surface deformation
-               'alpha' : 200.0, # support radius of RBFs in the base set
-               'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
+            # Required: 'multiscale'or 'greedy'
+            'multiscale' : True,
+            # Required: faction of surface points to be solved in the base set
+            'base point fraction' : 0.1,
+            # Required: list of surface zones to be deformed
+            'zone' : [4],
+            # Required: function describing surface deformation
+            'func' : transformFunc,
+            # Required: support radius of RBFs in the base set
+            'alpha' : 200.0,
+            # Optional: type of RBF - one of c0, c2, gaussian, tps (default: c2)
+            'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
             },
 
 An example of a function to deform a surface is given below
