@@ -988,7 +988,7 @@ The transforms specified should map each zone onto each other.
 Fluid Structure Interaction
 ---------------------------
 
-Fluid structure interaction (FSI) can be simulated in zCFD using a modal representation of the structure, which must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF capability detailed in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
+Fluid structure interaction (FSI) can be simulated in zCFD using a modal representation of the structure, which must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
 
 .. code-block:: python
 
@@ -1002,8 +1002,8 @@ Fluid structure interaction (FSI) can be simulated in zCFD using a modal represe
             'zone': [1, 2, 3],
             # Optional: Zones in the mesh which remain stationary
             'fixed zones': [4, 5, 6],
-            # Required: Type of RBF to use: 'multiscale' or 'allen'
-            'rbf type': 'multiscale',
+            # Required: Type of mesh transform to use: 'rbf multiscale', 'rbf' or 'idw'
+            'transform type': 'rbf multiscale',
             # Support radius of the RBFs
             'alpha': 0.02,
             # Fraction of surface points in the RBF base set (for multiscale only)
@@ -1022,6 +1022,14 @@ Fluid structure interaction (FSI) can be simulated in zCFD using a modal represe
             'modal damping' : [0.0, 0.0, 0.0, 0.0],
             # Optional: Recalculate the RBF coefficients when the maximum deformation reaches a fraction of alpha
             'recalculate rbfs alpha fraction': 0.1,
+            # Required (IDW only): number of nearest neighbours to
+            'n nearest' : 250,
+            # Required (IDW only): power of the interpolation weight in the far field, at the boundary and the blending function between them
+            'power' : [3.0, 5.0, 8.0],
+            # Required (IDW only): distance over which to decay the deformation
+            'deformation distance': 100.0,
+            # Required (IDW only): Stiffness of the blending function used to decay the deformation (0.0-1.0)
+            'blending stiffness': 0.5
         },
     }
 
@@ -1104,7 +1112,7 @@ and the variation in leaf area density is a function of height
 
 Mesh Transformations
 --------------------
-Radial Basis Functions (RBFs) can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.
+Radial Basis Functions (RBFs) or Inverse Distance Weighted (IDW) interpolation can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.
 
 .. code-block:: python
 
@@ -1116,8 +1124,8 @@ Two kinds of RBF transformation are available: the "Allen et al. greedy" method 
 .. code-block:: python
 
    'TR_1' : {
-        # Required: 'multiscale' or 'greedy'
-        'multiscale' : False,
+        # Required: 'rbf multiscale', 'rbf' or 'idw'
+        'type' : 'rbf',
         # Required: list of surface zones to be deformed
         'zone' : [4],
         # Required: function describing surface deformation
@@ -1135,8 +1143,8 @@ For the "multiscale" method
 .. code-block:: python
 
    'TR_1' : {
-            # Required: 'multiscale'or 'greedy'
-            'multiscale' : True,
+            # Required: 'rbf multiscale', 'rbf' or 'idw'
+            'type' : 'rbf multiscale',
             # Required: faction of surface points to be solved in the base set
             'base point fraction' : 0.1,
             # Required: list of surface zones to be deformed
@@ -1147,6 +1155,27 @@ For the "multiscale" method
             'alpha' : 200.0,
             # Optional: type of RBF - one of c0, c2, gaussian, tps (default: c2)
             'basis' : 'c2', # type of RBF - one of c0, c2, gaussian, tps
+            },
+
+For the IDW transform
+
+.. code-block:: python
+
+   'TR_1' : {
+            # Required: 'rbf multiscale', 'rbf' or 'idw'
+            'type' : 'idw',
+            # Required: number of nearest neighbours to
+            'n nearest' : 250,
+            # Required: list of surface zones to be deformed
+            'zone' : [4],
+            # Required: function describing surface deformation
+            'func' : transformFunc,
+            # Required: power of the interpolation weight in the far field, at the boundary and the blending function between them
+            'power' : [3.0, 5.0, 8.0],
+            # Required: distance over which to decay the deformation
+            'deformation distance': 100.0,
+            # Required: Stiffness of the blending function used to decay the deformation (0.0-1.0)
+            'blending stiffness': 0.5
             },
 
 An example of a function to deform a surface is given below
