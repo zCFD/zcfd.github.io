@@ -376,7 +376,7 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
 .. code-block:: python
 
     'RANS' : {
-                # Spatial accuracy (options: first, second)
+                # Spatial accuracy (options: first, second, euler_second)
                 'order' : 'second',
                 # Optional (default 'vanalbada'):
                 # MUSCL limiter (options: vanalbada)
@@ -387,6 +387,9 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                 # Optional (default False):
                 # Use linear gradients
                 'linear gradients' : False,
+                # Optional (default False):
+                # Use least squares gradients
+                'leastsq gradients' : False,
                 # Optional (default 'HLLC'):
                 # Scheme for inviscid flux: HLLC or Rusanov
                 'Inviscid Flux Scheme': 'HLLC',
@@ -414,6 +417,10 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                                   # Optional when using 'sa-neg' (default False):
                                   # Use sa-neg rotation correction
                                   'rotation correction': True,
+                                  # Optional when using sa-neg (default 0.0):
+                                  # Limit the sa-neg gradient based on the maximum value between neighbouring cells.
+                                  # k = 0.0 corresponds to no limiting, k = 1.0 maximum limiting.
+                                  'limit gradient k': 0.5
                                 },
                },
 
