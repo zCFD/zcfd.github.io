@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Control Dictionary &#8212; zCFD User Guide v2020.06.110 documentation</title>
+    <title>Control Dictionary &#8212; zCFD User Guide v2020.10.111 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -353,7 +353,7 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
 </div>
 <p>The fully turbulent (Reynolds Averaged Navier-Stokes Equations)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;RANS&#39;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="c1"># Spatial accuracy (options: first, second)</span>
+            <span class="c1"># Spatial accuracy (options: first, second, euler_second)</span>
             <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
             <span class="c1"># Optional (default &#39;vanalbada&#39;):</span>
             <span class="c1"># MUSCL limiter (options: vanalbada)</span>
@@ -364,6 +364,9 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
             <span class="c1"># Optional (default False):</span>
             <span class="c1"># Use linear gradients</span>
             <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+            <span class="c1"># Optional (default False):</span>
+            <span class="c1"># Use least squares gradients</span>
+            <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
             <span class="c1"># Optional (default &#39;HLLC&#39;):</span>
             <span class="c1"># Scheme for inviscid flux: HLLC or Rusanov</span>
             <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
@@ -391,6 +394,10 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                               <span class="c1"># Optional when using &#39;sa-neg&#39; (default False):</span>
                               <span class="c1"># Use sa-neg rotation correction</span>
                               <span class="s1">&#39;rotation correction&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                              <span class="c1"># Optional when using sa-neg (default 0.0):</span>
+                              <span class="c1"># Limit the sa-neg gradient based on the maximum value between neighbouring cells.</span>
+                              <span class="c1"># k = 0.0 corresponds to no limiting, k = 1.0 maximum limiting.</span>
+                              <span class="s1">&#39;limit gradient k&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
                             <span class="p">},</span>
            <span class="p">},</span>
 </pre></div>
@@ -925,7 +932,7 @@ The transforms specified should map each zone onto each other.</p>
 </div>
 <div class="section" id="fluid-structure-interaction">
 <h2>Fluid Structure Interaction<a class="headerlink" href="#fluid-structure-interaction" title="Permalink to this headline">¶</a></h2>
-<p>Fluid structure interaction (FSI) can be simulated in zCFD using a modal representation of the structure, which must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF capability detailed in <a class="reference internal" href="#mesh-transformations">Mesh Transformations</a> . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one <code class="code docutils literal notranslate"><span class="pre">MM_*</span></code> key per modal model:</p>
+<p>Fluid structure interaction (FSI) can be simulated in zCFD using a modal representation of the structure, which must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in <a class="reference internal" href="#mesh-transformations">Mesh Transformations</a> . The dictionary keys related to the different mesh deformation algorithms are the same as described in <a class="reference internal" href="#mesh-transformations">Mesh Transformations</a> . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one <code class="code docutils literal notranslate"><span class="pre">MM_*</span></code> key per modal model:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="s1">&#39;modal model&#39;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s1">&#39;MM_1&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># Required: File format of the structural modes. Currently only Nastran .op2 and .bdf files are supported</span>
@@ -936,8 +943,8 @@ The transforms specified should map each zone onto each other.</p>
         <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
         <span class="c1"># Optional: Zones in the mesh which remain stationary</span>
         <span class="s1">&#39;fixed zones&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
-        <span class="c1"># Required: Type of RBF to use: &#39;multiscale&#39; or &#39;allen&#39;</span>
-        <span class="s1">&#39;rbf type&#39;</span><span class="p">:</span> <span class="s1">&#39;multiscale&#39;</span><span class="p">,</span>
+        <span class="c1"># Required: Type of mesh transform to use: &#39;rbf multiscale&#39;, &#39;rbf&#39; or &#39;idw&#39;</span>
+        <span class="s1">&#39;transform type&#39;</span><span class="p">:</span> <span class="s1">&#39;rbf multiscale&#39;</span><span class="p">,</span>
         <span class="c1"># Support radius of the RBFs</span>
         <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
         <span class="c1"># Fraction of surface points in the RBF base set (for multiscale only)</span>
@@ -956,6 +963,14 @@ The transforms specified should map each zone onto each other.</p>
         <span class="s1">&#39;modal damping&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="c1"># Optional: Recalculate the RBF coefficients when the maximum deformation reaches a fraction of alpha</span>
         <span class="s1">&#39;recalculate rbfs alpha fraction&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="c1"># Required (IDW only): number of nearest neighbours to</span>
+        <span class="s1">&#39;n nearest&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
+        <span class="c1"># Required (IDW only): power of the interpolation weight in the far field, at the boundary and the blending function between them</span>
+        <span class="s1">&#39;power&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">],</span>
+        <span class="c1"># Required (IDW only): distance over which to decay the deformation</span>
+        <span class="s1">&#39;deformation distance&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="c1"># Required (IDW only): Stiffness of the blending function used to decay the deformation (0.0-1.0)</span>
+        <span class="s1">&#39;blending stiffness&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
@@ -1028,15 +1043,15 @@ The transforms specified should map each zone onto each other.</p>
 </div>
 <div class="section" id="mesh-transformations">
 <h2>Mesh Transformations<a class="headerlink" href="#mesh-transformations" title="Permalink to this headline">¶</a></h2>
-<p>Radial Basis Functions (RBFs) can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.</p>
+<p>Radial Basis Functions (RBFs) or Inverse Distance Weighted (IDW) interpolation can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;TR_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
 <span class="s1">&#39;TR_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
 </pre></div>
 </div>
 <p>Two kinds of RBF transformation are available: the “Allen et al. greedy” method and the “multiscale” method. For the “greedy” method</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;TR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-     <span class="c1"># Required: &#39;multiscale&#39; or &#39;greedy&#39;</span>
-     <span class="s1">&#39;multiscale&#39;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+     <span class="c1"># Required: &#39;rbf multiscale&#39;, &#39;rbf&#39; or &#39;idw&#39;</span>
+     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span>
      <span class="c1"># Required: list of surface zones to be deformed</span>
      <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
      <span class="c1"># Required: function describing surface deformation</span>
@@ -1052,8 +1067,8 @@ The transforms specified should map each zone onto each other.</p>
 </div>
 <p>For the “multiscale” method</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;TR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="c1"># Required: &#39;multiscale&#39;or &#39;greedy&#39;</span>
-         <span class="s1">&#39;multiscale&#39;</span> <span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+         <span class="c1"># Required: &#39;rbf multiscale&#39;, &#39;rbf&#39; or &#39;idw&#39;</span>
+         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;rbf multiscale&#39;</span><span class="p">,</span>
          <span class="c1"># Required: faction of surface points to be solved in the base set</span>
          <span class="s1">&#39;base point fraction&#39;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
          <span class="c1"># Required: list of surface zones to be deformed</span>
@@ -1064,6 +1079,25 @@ The transforms specified should map each zone onto each other.</p>
          <span class="s1">&#39;alpha&#39;</span> <span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
          <span class="c1"># Optional: type of RBF - one of c0, c2, gaussian, tps (default: c2)</span>
          <span class="s1">&#39;basis&#39;</span> <span class="p">:</span> <span class="s1">&#39;c2&#39;</span><span class="p">,</span> <span class="c1"># type of RBF - one of c0, c2, gaussian, tps</span>
+         <span class="p">},</span>
+</pre></div>
+</div>
+<p>For the IDW transform</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;TR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="c1"># Required: &#39;rbf multiscale&#39;, &#39;rbf&#39; or &#39;idw&#39;</span>
+         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;idw&#39;</span><span class="p">,</span>
+         <span class="c1"># Required: number of nearest neighbours to</span>
+         <span class="s1">&#39;n nearest&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
+         <span class="c1"># Required: list of surface zones to be deformed</span>
+         <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+         <span class="c1"># Required: function describing surface deformation</span>
+         <span class="s1">&#39;func&#39;</span> <span class="p">:</span> <span class="n">transformFunc</span><span class="p">,</span>
+         <span class="c1"># Required: power of the interpolation weight in the far field, at the boundary and the blending function between them</span>
+         <span class="s1">&#39;power&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">],</span>
+         <span class="c1"># Required: distance over which to decay the deformation</span>
+         <span class="s1">&#39;deformation distance&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
+         <span class="c1"># Required: Stiffness of the blending function used to decay the deformation (0.0-1.0)</span>
+         <span class="s1">&#39;blending stiffness&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
          <span class="p">},</span>
 </pre></div>
 </div>
@@ -1117,6 +1151,8 @@ The transforms specified should map each zone onto each other.</p>
                                 <span class="s1">&#39;reference length&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
                                 <span class="c1"># Optional (default [0.0, 0.0, 0.0]):</span>
                                 <span class="s1">&#39;reference point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                                <span class="c1"># Optional (default 0.0): Calculate forces using a specified reference pressure rather than absolute</span>
+                                <span class="s1">&#39;reference pressure&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
                                 <span class="p">},</span>
                        <span class="p">},</span>
 
