@@ -845,7 +845,7 @@ The farfield boundary condition can automatically determine whether the flow is 
 Inflow
 ^^^^^^
 
-zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and massflow ratio is required.
+zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and massflow ratio is required. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
 
 .. code-block:: python
 
@@ -900,6 +900,18 @@ Example Massflow Inflow
 An example setup for a massflow inflow is given below:
 
 .. code-block:: python
+    def inflow_direction(x, y, z):
+        # x, y, and z are the coordinates of the face centre
+        cen = [1.0, 0.0, 0.0]
+        y1 = y - cen[1]
+        z1 = z - cen[2]
+        rad = math.sqrt(z1*z1 + y1*y1)
+        phi = math.atan2(y1,z1)
+        angle = -0.24
+        x2 = math.cos(angle)
+        y2 = math.sin(phi) * math.sin(angle)
+        z2 = math.cos(phi) * math.sin(angle)
+        return {'v1': x2, 'v2': y2, 'v3': z2}
 
     'IC_1' : {
              'temperature' : 293.0,
@@ -917,7 +929,8 @@ An example setup for a massflow inflow is given below:
              'reference' : 'IC_1',
              'total temperature ratio' : 1.0,
              'total pressure ratio' : 1.0,
-         'massflow ratio' : 1.1,
+             'massflow ratio' : 1.1,
+             'vector' : inflow_direction
              },
     'BC_3' : {
              'ref' : 4,
