@@ -701,18 +701,21 @@ Certain conditions are specified relative to a reference set of conditions
 
     'reference' : 'IC_1',
     # total pressure/reference static pressure
+    # This can be a single value or VTK field file name with array name 'TotalPressureRatio' or function
     'total pressure ratio' : 1.0,
     # total temperature/reference static temperature
+    # This can be a single value or VTK field file name with array name 'TotalTemperatureRatio' or function
     'total temperature ratio' : 1.0,
     # Mach number
     'mach' : 0.5,
-    # Direction vector
+    # Direction vector or function 
     'vector' : [1.0,0.0,0.0],
 
 .. code-block:: python
 
     'reference' : 'IC_1',
     # static pressure/reference static pressure
+    # This can be a single value or VTK field file name with array name 'StaticPressureRatio' or function
     'static pressure ratio' : 1.0,
 
 .. code-block:: python
@@ -720,6 +723,17 @@ Certain conditions are specified relative to a reference set of conditions
     'reference' : 'IC_1',
     # Mass flow ratio
     'mass flow ratio' : 1.0,
+
+.. code-block:: python
+
+    # Example pressure ratio function
+    def total_pressure_ratio(x, y, z):
+
+        ratio = 1.0
+        if x < 10.0:
+            ratio = 0.9
+
+        return ratio
 
 .. note::
 
