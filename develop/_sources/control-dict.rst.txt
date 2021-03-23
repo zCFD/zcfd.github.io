@@ -1250,6 +1250,17 @@ A transformation function my be supplied to the force report block to transform 
         v =  zutil.rotate_vector(v,alpha,0.0)
         return {'v1' : v[0], 'v2' : v[1], 'v3' : v[2]}
 
+Overset meshes
+--------------------------------------------------
+Within zCFD in finite volume mode it is possible to run with an arbitrary number of meshes overlapping one another.  It is also possible to run a single high order DG mesh (simulation) overlapping a single finite volume background mesh.  To activate the overset mesh capability, the user simply strings mesh and case names after the -p and -c options respectively.  There should be a python dictionary for each mesh with the appropriate boundary conditions for that mesh defined in it.  It should be noted that the ordering of the mesh and case names indicates superiority where the second mesh overlaps the first, and the third overlaps the second and first, and so on.  Any mesh which overlaps another must have the boundaries defined where solution information is to be from a lower mesh.  This is specified as follows.
+
+.. code-block:: python
+
+   'BC_1': {
+             'zone': [5], 
+             'type': 'overset'}
+           }
+
 Aero-acoustics
 --------------------------------------------------
 
