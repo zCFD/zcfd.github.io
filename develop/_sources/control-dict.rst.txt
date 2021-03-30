@@ -658,7 +658,7 @@ Certain conditions are specified relative to a reference set of conditions
     'total temperature ratio' : 1.0,
     # Mach number
     'mach' : 0.5,
-    # Direction vector or function 
+    # Direction vector or function
     'vector' : [1.0,0.0,0.0],
 
 .. code-block:: python
@@ -1014,6 +1014,10 @@ Fluid structure interaction (FSI) can be simulated in zCFD using a modal represe
             'deformation distance': 100.0,
             # Required (IDW only): Stiffness of the blending function used to decay the deformation (0.0-1.0)
             'blending stiffness': 0.5
+            # Optional: Update the modal model every n cycles
+            'update frequency' : 10,
+            # Optional: Use only the surface nodes that influence the deformation on each partition
+            'use local rbf nodes': False
         },
     }
 
@@ -1324,7 +1328,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # Constant of proportionality for turbulence integral length scale
                 # computation from RANS.  Defaults to 1.0. (Optional)
                 'FRPM turbulence integral length scale parameter': 1.0,
-                
+
                 # The user can inspect the RANS solution and choose a turbulence integral
                 # length scale best suited to match the RANS simulation.  A uniform
                 # integral length scale allows much faster source computations.  Defaults
@@ -1359,7 +1363,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # [min-X, max-X, min-Y, max-Y, min-Z, max-Z] cartesian boundaries
                 # Values of 0.0 indicate no blending of sources
                 'FRPM Blend Sources From Side' : [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                
+
                 # The FRPM method can reconstruct turbulence fields from many turbulence
                 # spectrum models.  Typically Gauss (default) is used. It is also possible to
                 # specify Liepmann.  Liepmann is associated with greater computational cost.
@@ -1399,7 +1403,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # Defaults to 0.  (Optional)
 	            'FRPM Mapped TKE Smoothing iterations' : 5,
 
-                # Relaxation for turbulence kinetic energy smoothing.  Defaults to 0.2. 
+                # Relaxation for turbulence kinetic energy smoothing.  Defaults to 0.2.
                 # (Optional)
                 'FRPM Mapped TKE Smoothing relaxation' : 0.2,
 
@@ -1409,7 +1413,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # in inverse distance weighted mapping based on sources in the neighbourhood
                 # of the acoustic solver solution points.  Defaults to True (Recommended).
                 # (Optional)
-                'FRPM inverse distance source mapping' : True, 
+                'FRPM inverse distance source mapping' : True,
 
                 # Used in conjunction with inverse distance weighted source mapping.
                 # Distance to specify neighbourhood to take sources from. Recommend
