@@ -673,6 +673,8 @@ Certain conditions are specified relative to a reference set of conditions
     'reference' : 'IC_1',
     # Mass flow ratio
     'mass flow ratio' : 1.0,
+    # Or mass flow rate
+    'mass flow rate' : 10.0
 
 .. code-block:: python
 
@@ -809,7 +811,7 @@ The farfield boundary condition can automatically determine whether the flow is 
 Inflow
 ^^^^^^
 
-zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and massflow ratio is required. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
+zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
 
 .. code-block:: python
 
@@ -892,8 +894,7 @@ An example setup for a massflow inflow is given below:
     'IC_2' : {
              'reference' : 'IC_1',
              'total temperature ratio' : 1.0,
-             'total pressure ratio' : 1.0,
-             'massflow ratio' : 1.1,
+             'mass flow rate' : 10.0,
              'vector' : inflow_direction
              },
     'BC_3' : {
@@ -907,7 +908,7 @@ An example setup for a massflow inflow is given below:
 Outflow
 ^^^^^^^
 
-Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a massflow ratio must be set.
+Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a mass flow ratio or mass flow rate must be set. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
 
 .. code-block:: python
 
