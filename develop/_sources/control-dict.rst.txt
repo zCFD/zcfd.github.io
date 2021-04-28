@@ -1445,16 +1445,20 @@ For solver efficiency, zCFD outputs the raw flow field data (plus any user-defin
                       # Optional: If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied
                       'variable_name_alias' : { "V" : "VELOCITY", },
                       # Required: Output frequency
-                      'frequency' : 100,
+                      "frequency": {
+                          # Output visualisation files every 3 cycles (default = 1000000)
+                          "volume data": 3,
+                          "surface data": 3,
+                          "volume interpolate": 3,
+                          "checkpoint": 3,
+                          # Start output every 3 cycles after 1 cycle (default = 1)
+                          "volume data start": 1
+                          "surface data start": 1,
+                          "volume interpolate start": 1,
+                          "checkpoint start": 1,
+                      },
                       # Optional for DG: Output high order surface data on zones
                       'high order surface list' : [1],
-                      # Only for time accirate simulations:
-                      # Start output after real time cycle
-                      'start output real time cycle' : 100,
-                      # Unsteady restart file output frequency
-                      'unsteady restart file output frequency' : 1000,
-                      # Output real time cycle frequency
-                      'output real time cycle frequency' : 10,
                       # Optional (default False):
                       # Don't output vtk volume data
                       'no volume vtk' : False
