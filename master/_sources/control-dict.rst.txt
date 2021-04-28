@@ -454,23 +454,10 @@ When using the high order strong form Discontinuous Galerkin/Flux Reconstruction
     'DG...' : {
                    # Spatial polynomial order 0,1,2,3
                    'order' : 2,
-                   # Optional (default False)
-                   'Approximate curved boundaries': True,
                    # Optional (default 0.0)
                    'c11 stability parameter': 0.0,
-                   # Optional (default 0.0)
-                   # c11 stability parameter for transported variables
-                   'c11 stability parameter transport': 0.0,
                    # Optional (default 0.5)
                    'LDG upwind parameter': 0.5,
-                   'LDG upwind parameter aux': 0.5,
-                   # Optional (default False):
-                   # Use MUSCL reconstruction at P=0
-                   'Use MUSCL Reconstruction': False,
-                   # Optional (default False)
-                   'BR2 Diffusive Flux Scheme' : False,
-                   # Optional (default False)
-                   'Use Rusanov for turbulence equations' : False,
                    # Optional (default False)
                    'Shock Sensing': False,
                    'Shock Sensing k': 1.0,
@@ -492,23 +479,10 @@ Hence all the available keys for :code:`'DGeuler'` are a combination of the :cod
                    # Optional (default 'HLLC')
                    # scheme for inviscid flux: HLLC or Rusanov
                    'Inviscid Flux Scheme': 'HLLC',
-                   # Optional (default False)
-                   'Approximate curved boundaries': False,
                    # Optional (default 0.0)
                    'c11 stability parameter': 0.0,
-                   # Optional (default 0.0):
-                   # c11 stability parameter for transported variables - default 0.0
-                   'c11 stability parameter transport': 0.0,
                    # Optional (default 0.5)
                    'LDG upwind parameter': 0.5,
-                   'LDG upwind parameter aux': 0.5,
-                   # Optional (default False):
-                   # Use MUSCL reconstruction at P=0
-                   'Use MUSCL Reconstruction': False,
-                   # Optional (default False)
-                   'BR2 Diffusive Flux Scheme' : False,
-                   # Optional (default False)
-                   'Use Rusanov for turbulence equations' : False,
                    # Optional (default False)
                    'Shock Sensing': False,
                    'Shock Sensing k': 1.0,
@@ -516,30 +490,6 @@ Hence all the available keys for :code:`'DGeuler'` are a combination of the :cod
                    # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
                    'Shock Sensing Variable': 'density',
                 },
-
-
-DG Order Specification
-----------------------
-
-Regions of the mesh may be specified be be a certain order in the DG solver. This can be done by supplying a list of dictionaries containing any number of entries of the following types
-
-.. code-block:: python
-
-    'cell order' : [{'type' : 'wall distance',
-                     'order' : 0,
-                     'distance' : 1000.0},
-                   {'type' : 'wall distance',
-                    'order' : 1,
-                    'distance' : 2.0},
-                    {'type' : 'sphere',
-                     'order' : 0,
-                     'radius' : 1.0,
-                     'centre' : [0.0, 0.0, 0.0]},
-                    {'type' : 'cartesian',
-                     'order' : 0,
-                     # xmin, xmax, ymin, ymax, zmin, zmax
-                     'box' : [0.0, 1.0, 0.0, 1.0, 0.0, 1.0]}
-                    ],
 
 
 DG Nodal locations
@@ -708,7 +658,7 @@ Certain conditions are specified relative to a reference set of conditions
     'total temperature ratio' : 1.0,
     # Mach number
     'mach' : 0.5,
-    # Direction vector or function 
+    # Direction vector or function
     'vector' : [1.0,0.0,0.0],
 
 .. code-block:: python
@@ -723,6 +673,8 @@ Certain conditions are specified relative to a reference set of conditions
     'reference' : 'IC_1',
     # Mass flow ratio
     'mass flow ratio' : 1.0,
+    # Or mass flow rate
+    'mass flow rate' : 10.0
 
 .. code-block:: python
 
@@ -859,7 +811,7 @@ The farfield boundary condition can automatically determine whether the flow is 
 Inflow
 ^^^^^^
 
-zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and massflow ratio is required. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
+zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
 
 .. code-block:: python
 
@@ -942,8 +894,7 @@ An example setup for a massflow inflow is given below:
     'IC_2' : {
              'reference' : 'IC_1',
              'total temperature ratio' : 1.0,
-             'total pressure ratio' : 1.0,
-             'massflow ratio' : 1.1,
+             'mass flow rate' : 10.0,
              'vector' : inflow_direction
              },
     'BC_3' : {
@@ -957,7 +908,7 @@ An example setup for a massflow inflow is given below:
 Outflow
 ^^^^^^^
 
-Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a massflow ratio must be set.
+Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a mass flow ratio or mass flow rate must be set. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
 
 .. code-block:: python
 
@@ -1064,6 +1015,10 @@ Fluid structure interaction (FSI) can be simulated in zCFD using a modal represe
             'deformation distance': 100.0,
             # Required (IDW only): Stiffness of the blending function used to decay the deformation (0.0-1.0)
             'blending stiffness': 0.5
+            # Optional: Update the modal model every n cycles
+            'update frequency' : 10,
+            # Optional: Use only the surface nodes that influence the deformation on each partition
+            'use local rbf nodes': False
         },
     }
 
@@ -1300,10 +1255,21 @@ A transformation function my be supplied to the force report block to transform 
         v =  zutil.rotate_vector(v,alpha,0.0)
         return {'v1' : v[0], 'v2' : v[1], 'v3' : v[2]}
 
-Aero-acoustics (Optional)
+Overset meshes
+--------------------------------------------------
+Within zCFD in finite volume mode it is possible to run with an arbitrary number of meshes overlapping one another.  It is also possible to run a single high order DG mesh (simulation) overlapping a single finite volume background mesh.  To activate the overset mesh capability, the user simply strings mesh and case names after the -p and -c options respectively.  There should be a python dictionary for each mesh with the appropriate boundary conditions for that mesh defined in it.  It should be noted that the ordering of the mesh and case names indicates superiority where the second mesh overlaps the first, and the third overlaps the second and first, and so on.  Any mesh which overlaps another must have the boundaries defined where solution information is to be from a lower mesh.  This is specified as follows.
+
+.. code-block:: python
+
+   'BC_1': {
+             'zone': [5], 
+             'type': 'overset'}
+           }
+
+Aero-acoustics
 --------------------------------------------------
 
-Broadband aero-acoustic simulations can be performed by selecting the DGCAA solver.  Aero-acoustic sources are currently limited to stochastic noise sources generated by the FRPM method.  These sources are typically driven by a steady state RANS simulation.
+Broadband aero-acoustic simulations can be performed by selecting the DGCAA solver.  Aero-acoustic sources are currently limited to stochastic noise sources generated by the FRPM method.  These sources are typically driven by a steady state RANS simulation.  Several FRPM domains can be defined within the aero-acoustic simulation by adding additional :code:`'FRPM_2'`, :code:`'FRPM_3'`, etc., dictionaries.  With a single FRPM domain, the dictionary must be labelled :code:`'FRPM_1'`.
 
 .. code-block:: python
 
@@ -1346,7 +1312,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
 
 .. code-block:: python
 
-   'FRPM' : {
+   'FRPM_1' : {
                 # The FRPM solver can run on a subset of MPI processes
                 # Choose number of MPI processes to run FRPM (Optional)
                 'number of frpm mpi processes' : 1,
@@ -1363,7 +1329,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # Constant of proportionality for turbulence integral length scale
                 # computation from RANS.  Defaults to 1.0. (Optional)
                 'FRPM turbulence integral length scale parameter': 1.0,
-                
+
                 # The user can inspect the RANS solution and choose a turbulence integral
                 # length scale best suited to match the RANS simulation.  A uniform
                 # integral length scale allows much faster source computations.  Defaults
@@ -1398,7 +1364,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # [min-X, max-X, min-Y, max-Y, min-Z, max-Z] cartesian boundaries
                 # Values of 0.0 indicate no blending of sources
                 'FRPM Blend Sources From Side' : [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                
+
                 # The FRPM method can reconstruct turbulence fields from many turbulence
                 # spectrum models.  Typically Gauss (default) is used. It is also possible to
                 # specify Liepmann.  Liepmann is associated with greater computational cost.
@@ -1438,7 +1404,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # Defaults to 0.  (Optional)
 	            'FRPM Mapped TKE Smoothing iterations' : 5,
 
-                # Relaxation for turbulence kinetic energy smoothing.  Defaults to 0.2. 
+                # Relaxation for turbulence kinetic energy smoothing.  Defaults to 0.2.
                 # (Optional)
                 'FRPM Mapped TKE Smoothing relaxation' : 0.2,
 
@@ -1448,7 +1414,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # in inverse distance weighted mapping based on sources in the neighbourhood
                 # of the acoustic solver solution points.  Defaults to True (Recommended).
                 # (Optional)
-                'FRPM inverse distance source mapping' : True, 
+                'FRPM inverse distance source mapping' : True,
 
                 # Used in conjunction with inverse distance weighted source mapping.
                 # Distance to specify neighbourhood to take sources from. Recommend
@@ -1472,7 +1438,8 @@ For solver efficiency, zCFD outputs the raw flow field data (plus any user-defin
                       # Required: Field variables to be output
                       'volume variables' : ['V','p'],
                       # Optional: Volume interpolation - interpolates cell values to points in supplied meshes
-                      'volume interpolate' : ['mesh.vtp', 'mesh.vtu'],
+                      #           File types can be vtp, vtu or binary stl
+                      'volume interpolate' : ['mesh.vtp', 'mesh.vtu', 'mesh.stl'],
                       # Optional: Paraview catalyst scripts
                       'scripts' : ['paraview_catalyst1.py','paraview_catalyst2.py'],
                       # Optional: If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied

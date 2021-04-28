@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Control Dictionary &#8212; zCFD User Guide v2021.02.120 documentation</title>
+    <title>Control Dictionary &#8212; zCFD User Guide v2021.04.122 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -427,23 +427,10 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;DG...&#39;</span> <span class="p">:</span> <span class="p">{</span>
                <span class="c1"># Spatial polynomial order 0,1,2,3</span>
                <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-               <span class="c1"># Optional (default False)</span>
-               <span class="s1">&#39;Approximate curved boundaries&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                <span class="c1"># Optional (default 0.0)</span>
                <span class="s1">&#39;c11 stability parameter&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-               <span class="c1"># Optional (default 0.0)</span>
-               <span class="c1"># c11 stability parameter for transported variables</span>
-               <span class="s1">&#39;c11 stability parameter transport&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
                <span class="c1"># Optional (default 0.5)</span>
                <span class="s1">&#39;LDG upwind parameter&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-               <span class="s1">&#39;LDG upwind parameter aux&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-               <span class="c1"># Optional (default False):</span>
-               <span class="c1"># Use MUSCL reconstruction at P=0</span>
-               <span class="s1">&#39;Use MUSCL Reconstruction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-               <span class="c1"># Optional (default False)</span>
-               <span class="s1">&#39;BR2 Diffusive Flux Scheme&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-               <span class="c1"># Optional (default False)</span>
-               <span class="s1">&#39;Use Rusanov for turbulence equations&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="c1"># Optional (default False)</span>
                <span class="s1">&#39;Shock Sensing&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="s1">&#39;Shock Sensing k&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -463,23 +450,10 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                <span class="c1"># Optional (default &#39;HLLC&#39;)</span>
                <span class="c1"># scheme for inviscid flux: HLLC or Rusanov</span>
                <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
-               <span class="c1"># Optional (default False)</span>
-               <span class="s1">&#39;Approximate curved boundaries&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="c1"># Optional (default 0.0)</span>
                <span class="s1">&#39;c11 stability parameter&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-               <span class="c1"># Optional (default 0.0):</span>
-               <span class="c1"># c11 stability parameter for transported variables - default 0.0</span>
-               <span class="s1">&#39;c11 stability parameter transport&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
                <span class="c1"># Optional (default 0.5)</span>
                <span class="s1">&#39;LDG upwind parameter&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-               <span class="s1">&#39;LDG upwind parameter aux&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-               <span class="c1"># Optional (default False):</span>
-               <span class="c1"># Use MUSCL reconstruction at P=0</span>
-               <span class="s1">&#39;Use MUSCL Reconstruction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-               <span class="c1"># Optional (default False)</span>
-               <span class="s1">&#39;BR2 Diffusive Flux Scheme&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-               <span class="c1"># Optional (default False)</span>
-               <span class="s1">&#39;Use Rusanov for turbulence equations&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="c1"># Optional (default False)</span>
                <span class="s1">&#39;Shock Sensing&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="s1">&#39;Shock Sensing k&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -487,27 +461,6 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                <span class="c1"># Variable used for shock sensing, one of: &#39;density&#39;, &#39;temperature&#39;, &#39;mach&#39;, &#39;turbulence&#39;</span>
                <span class="s1">&#39;Shock Sensing Variable&#39;</span><span class="p">:</span> <span class="s1">&#39;density&#39;</span><span class="p">,</span>
             <span class="p">},</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="dg-order-specification">
-<h2>DG Order Specification<a class="headerlink" href="#dg-order-specification" title="Permalink to this headline">¶</a></h2>
-<p>Regions of the mesh may be specified be be a certain order in the DG solver. This can be done by supplying a list of dictionaries containing any number of entries of the following types</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;cell order&#39;</span> <span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;wall distance&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="s1">&#39;distance&#39;</span> <span class="p">:</span> <span class="mf">1000.0</span><span class="p">},</span>
-               <span class="p">{</span><span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;wall distance&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s1">&#39;distance&#39;</span> <span class="p">:</span> <span class="mf">2.0</span><span class="p">},</span>
-                <span class="p">{</span><span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;sphere&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="s1">&#39;radius&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                 <span class="s1">&#39;centre&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]},</span>
-                <span class="p">{</span><span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;cartesian&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="c1"># xmin, xmax, ymin, ymax, zmin, zmax</span>
-                 <span class="s1">&#39;box&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]}</span>
-                <span class="p">],</span>
 </pre></div>
 </div>
 </div>
@@ -681,6 +634,8 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
 <span class="c1"># Mass flow ratio</span>
 <span class="s1">&#39;mass flow ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="c1"># Or mass flow rate</span>
+<span class="s1">&#39;mass flow rate&#39;</span> <span class="p">:</span> <span class="mf">10.0</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example pressure ratio function</span>
@@ -806,7 +761,7 @@ value looked up in a node based scalar array called ‘Temperature’</p>
 </div>
 <div class="section" id="inflow">
 <h3>Inflow<a class="headerlink" href="#inflow" title="Permalink to this headline">¶</a></h3>
-<p>zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and massflow ratio is required. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.</p>
+<p>zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_3&#39;</span> <span class="p">:</span> <span class="p">{</span>
          <span class="c1"># Zone type tag</span>
          <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
@@ -858,7 +813,7 @@ value looked up in a node based scalar array called ‘Temperature’</p>
 </div>
 <div class="section" id="outflow">
 <h3>Outflow<a class="headerlink" href="#outflow" title="Permalink to this headline">¶</a></h3>
-<p>Pressure or massflow outflow boundaries are specified in a similar manner to the <a class="reference internal" href="#inflow">Inflow</a> boundary. They can be of :code`’kind’` <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>. When either pressure boundary is set the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions it refers to must set a static temperature ratio, when <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code> is specified a massflow ratio must be set.</p>
+<p>Pressure or massflow outflow boundaries are specified in a similar manner to the <a class="reference internal" href="#inflow">Inflow</a> boundary. They can be of :code`’kind’` <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>. When either pressure boundary is set the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions it refers to must set a static temperature ratio, when <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code> is specified a mass flow ratio or mass flow rate must be set. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_4&#39;</span> <span class="p">:</span> <span class="p">{</span>
          <span class="c1"># Zone type tag</span>
          <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
@@ -957,6 +912,10 @@ The transforms specified should map each zone onto each other.</p>
         <span class="s1">&#39;deformation distance&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
         <span class="c1"># Required (IDW only): Stiffness of the blending function used to decay the deformation (0.0-1.0)</span>
         <span class="s1">&#39;blending stiffness&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="c1"># Optional: Update the modal model every n cycles</span>
+        <span class="s1">&#39;update frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="c1"># Optional: Use only the surface nodes that influence the deformation on each partition</span>
+        <span class="s1">&#39;use local rbf nodes&#39;</span><span class="p">:</span> <span class="kc">False</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
@@ -1169,9 +1128,19 @@ The transforms specified should map each zone onto each other.</p>
 </div>
 </div>
 </div>
-<div class="section" id="aero-acoustics-optional">
-<h2>Aero-acoustics (Optional)<a class="headerlink" href="#aero-acoustics-optional" title="Permalink to this headline">¶</a></h2>
-<p>Broadband aero-acoustic simulations can be performed by selecting the DGCAA solver.  Aero-acoustic sources are currently limited to stochastic noise sources generated by the FRPM method.  These sources are typically driven by a steady state RANS simulation.</p>
+<div class="section" id="overset-meshes">
+<h2>Overset meshes<a class="headerlink" href="#overset-meshes" title="Permalink to this headline">¶</a></h2>
+<p>Within zCFD in finite volume mode it is possible to run with an arbitrary number of meshes overlapping one another.  It is also possible to run a single high order DG mesh (simulation) overlapping a single finite volume background mesh.  To activate the overset mesh capability, the user simply strings mesh and case names after the -p and -c options respectively.  There should be a python dictionary for each mesh with the appropriate boundary conditions for that mesh defined in it.  It should be noted that the ordering of the mesh and case names indicates superiority where the second mesh overlaps the first, and the third overlaps the second and first, and so on.  Any mesh which overlaps another must have the boundaries defined where solution information is to be from a lower mesh.  This is specified as follows.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+          <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;overset&#39;</span><span class="p">}</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="aero-acoustics">
+<h2>Aero-acoustics<a class="headerlink" href="#aero-acoustics" title="Permalink to this headline">¶</a></h2>
+<p>Broadband aero-acoustic simulations can be performed by selecting the DGCAA solver.  Aero-acoustic sources are currently limited to stochastic noise sources generated by the FRPM method.  These sources are typically driven by a steady state RANS simulation.  Several FRPM domains can be defined within the aero-acoustic simulation by adding additional <code class="code docutils literal notranslate"><span class="pre">'FRPM_2'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'FRPM_3'</span></code>, etc., dictionaries.  With a single FRPM domain, the dictionary must be labelled <code class="code docutils literal notranslate"><span class="pre">'FRPM_1'</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;DGCAA&#39;</span> <span class="p">:</span> <span class="p">{</span>
              <span class="c1"># Order of polynomial used to spatially represent</span>
              <span class="c1"># the solution within an element</span>
@@ -1210,7 +1179,7 @@ The transforms specified should map each zone onto each other.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FRPM&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FRPM_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
              <span class="c1"># The FRPM solver can run on a subset of MPI processes</span>
              <span class="c1"># Choose number of MPI processes to run FRPM (Optional)</span>
              <span class="s1">&#39;number of frpm mpi processes&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -1334,7 +1303,8 @@ The transforms specified should map each zone onto each other.</p>
                   <span class="c1"># Required: Field variables to be output</span>
                   <span class="s1">&#39;volume variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>
                   <span class="c1"># Optional: Volume interpolation - interpolates cell values to points in supplied meshes</span>
-                  <span class="s1">&#39;volume interpolate&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;mesh.vtp&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.vtu&#39;</span><span class="p">],</span>
+                  <span class="c1">#           File types can be vtp, vtu or binary stl</span>
+                  <span class="s1">&#39;volume interpolate&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;mesh.vtp&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.vtu&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.stl&#39;</span><span class="p">],</span>
                   <span class="c1"># Optional: Paraview catalyst scripts</span>
                   <span class="s1">&#39;scripts&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;paraview_catalyst1.py&#39;</span><span class="p">,</span><span class="s1">&#39;paraview_catalyst2.py&#39;</span><span class="p">],</span>
                   <span class="c1"># Optional: If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied</span>
@@ -1609,7 +1579,6 @@ The transforms specified should map each zone onto each other.</p>
 <li class="toctree-l2"><a class="reference internal" href="#low-mach-number-preconditioner-settings-optional">Low Mach number preconditioner settings (Optional)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#time-marcher">Time Marcher</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#equations">Equations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dg-order-specification">DG Order Specification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dg-nodal-locations">DG Nodal locations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#material-specification">Material Specification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#initial-conditions">Initial Conditions</a></li>
@@ -1618,7 +1587,8 @@ The transforms specified should map each zone onto each other.</p>
 <li class="toctree-l2"><a class="reference internal" href="#fluid-zones">Fluid Zones</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mesh-transformations">Mesh Transformations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reporting">Reporting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#aero-acoustics-optional">Aero-acoustics (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overset-meshes">Overset meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aero-acoustics">Aero-acoustics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
