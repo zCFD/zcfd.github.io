@@ -395,7 +395,7 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                 'Inviscid Flux Scheme': 'HLLC',
                 # Turbulence
                 'turbulence' : {
-                                  # turbulence model (options: 'sst', 'sa-neg')
+                                  # turbulence model (options: 'sst', 'sa-neg', 'sst-transition')
                                   'model' : 'sst',
                                   # Optional (default 'none'):
                                   # LES model (options 'none', 'DES', 'DDES', 'SAS')
@@ -421,6 +421,18 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                                   # Limit the sa-neg gradient based on the maximum value between neighbouring cells.
                                   # k = 0.0 corresponds to no limiting, k = 1.0 maximum limiting.
                                   'limit gradient k': 0.5
+                                  # Option when using 'sst-transition'
+                                  # Transition model constants
+                                  'ca1': 2.0,
+                                  'ca2': 0.06,
+                                  'ce1': 1.0,
+                                  'ce2': 50.0,
+                                  'cthetat': 0.03,
+                                  'sigmagamma': 1.0,
+                                  'sigmathetat': 2.0,
+                                  # Option when using 'sst-transition'
+                                  # Turn transition separation correction model on/off
+                                  'separation correction': True
                                 },
                },
 
@@ -1262,7 +1274,7 @@ Within zCFD in finite volume mode it is possible to run with an arbitrary number
 .. code-block:: python
 
    'BC_1': {
-             'zone': [5], 
+             'zone': [5],
              'type': 'overset'}
            }
 
