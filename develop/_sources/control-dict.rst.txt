@@ -257,8 +257,8 @@ The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step tha
                       # Optional (default 'cfl' value):
                       # Override max CFL number for coarse meshes
                       'cfl coarse' : 2.0,
-                      # Control of CFL for polynomial multigrid (from highest to lowest order)
-                      'multipolycfl' : [2.0,2.0,2.0],
+                      # Control of CFL for polynomial multigrid (highest and lowest order)
+                      'multipolycfl' : [2.0,2.0],
                       # Optional: Ramp cfl
                       'cfl ramp factor': {
                                          # cfl = cfl_ini * growth ^ cycle
