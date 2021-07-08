@@ -326,7 +326,7 @@ The equations key selects the equation set to be solved as well as the finite vo
 .. code-block:: python
 
     # Governing equations to be used
-    # one of: RANS, euler, viscous, LES, DGRANS, DGeuler, DGviscous, DGLES, DGCAA
+    # one of: RANS, euler, viscous, LES, DGRANS, DGviscous, DGLES, DGCAA
     'equations' : 'RANS',
 
 Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The compressible Euler equations are appropriate when modelling flows where momentum significantly dominates viscosity - for example at very high speed. The computational mesh used for Euler flow does not need to resolve the flow detail in the boundary layer and hence will generally have far fewer cells than the corresponding viscous mesh would have.
@@ -478,11 +478,11 @@ When using the high order strong form Discontinuous Galerkin/Flux Reconstruction
                    'Shock Sensing Variable': 'density',
                 },
 
-Hence all the available keys for :code:`'DGeuler'` are a combination of the :code:`'euler'` keys and the :code:`'DG...'` keys. The same logic applies to the :code:`'DGRANS'`, :code:`'DGviscous'` and :code:`'DGLES'` equation sets.
+Hence all the available keys for :code:`'DGviscous'` are a combination of the :code:`'viscous'` keys and the :code:`'DG...'` keys. The same logic applies to the :code:`'DGRANS'`, and :code:`'DGLES'` equation sets.
 
 .. code-block:: python
 
-    'DGeuler' : {
+    'DGviscous' : {
                    # Spatial polynomial order 0,1,2,3
                    'order' : 2,
                    # Optional (default False)
@@ -501,6 +501,10 @@ Hence all the available keys for :code:`'DGeuler'` are a combination of the :cod
                    'Shock Sensing Viscosity Scale': 1.0,
                    # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
                    'Shock Sensing Variable': 'density',
+		   # Optional (default False)
+		   'inviscid flow': False,
+		   # Optional (default False)
+		   'freeze diffusion during rk stages': False
                 },
 
 
