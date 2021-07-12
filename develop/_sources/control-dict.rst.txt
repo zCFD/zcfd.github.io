@@ -1282,6 +1282,18 @@ Within zCFD in finite volume mode it is possible to run with an arbitrary number
              'type': 'overset'}
            }
 
+With finite volume mode, the overset solver can also perform simulations with rotating domains overlapping fixed background domains.  It is assumed the geometry of the rotating domains is such that there is no new covering or uncovering of cells in the background mesh.  Multiple rotating domains can also be defined.  If an overset mesh is to rotate, the entire mesh must rotate with no fixed volumes and dual time-stepping time marching must be used.  The rotating mesh / domain must be specified in fluid zone 1 as follows:
+
+.. code-block:: python
+
+    'FZ_1': {
+        "type": "rotating",
+        "zone": [0],
+        "axis": [0, 0, -1],
+        "origin": [0, 0, 0],
+        "omega": 100,
+    },
+
 Aero-acoustics
 --------------------------------------------------
 
