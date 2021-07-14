@@ -1313,8 +1313,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
 
                 # Option to run the FRPM solver only, without running the acoustic propagation
                 # solver.  Defaults to False. (Optional)
-                'No CAA only FRPM solver' : False,
-
+                'FRPM solver only' : False,
 
                 # Specify mesh file to be used when mapping RANS simulation to CAA mesh
                 # (and / or FRPM mesh)
