@@ -257,8 +257,8 @@ The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step tha
                       # Optional (default 'cfl' value):
                       # Override max CFL number for coarse meshes
                       'cfl coarse' : 2.0,
-                      # Control of CFL for polynomial multigrid (from highest to lowest order)
-                      'multipolycfl' : [2.0,2.0,2.0],
+                      # Control of CFL for polynomial multigrid (highest and lowest order)
+                      'multipolycfl' : [2.0,2.0],
                       # Optional: Ramp cfl
                       'cfl ramp factor': {
                                          # cfl = cfl_ini * growth ^ cycle
@@ -326,7 +326,7 @@ The equations key selects the equation set to be solved as well as the finite vo
 .. code-block:: python
 
     # Governing equations to be used
-    # one of: RANS, euler, viscous, LES, DGRANS, DGeuler, DGviscous, DGLES, DGCAA
+    # one of: RANS, euler, viscous, LES, DGRANS, DGviscous, DGLES, DGCAA
     'equations' : 'RANS',
 
 Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The compressible Euler equations are appropriate when modelling flows where momentum significantly dominates viscosity - for example at very high speed. The computational mesh used for Euler flow does not need to resolve the flow detail in the boundary layer and hence will generally have far fewer cells than the corresponding viscous mesh would have.
@@ -395,7 +395,7 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                 'Inviscid Flux Scheme': 'HLLC',
                 # Turbulence
                 'turbulence' : {
-                                  # turbulence model (options: 'sst', 'sa-neg')
+                                  # turbulence model (options: 'sst', 'sa-neg', 'sst-transition')
                                   'model' : 'sst',
                                   # Optional (default 'none'):
                                   # LES model (options 'none', 'DES', 'DDES', 'SAS')
@@ -421,6 +421,18 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                                   # Limit the sa-neg gradient based on the maximum value between neighbouring cells.
                                   # k = 0.0 corresponds to no limiting, k = 1.0 maximum limiting.
                                   'limit gradient k': 0.5
+                                  # Option when using 'sst-transition'
+                                  # Transition model constants
+                                  'ca1': 2.0,
+                                  'ca2': 0.06,
+                                  'ce1': 1.0,
+                                  'ce2': 50.0,
+                                  'cthetat': 0.03,
+                                  'sigmagamma': 1.0,
+                                  'sigmathetat': 2.0,
+                                  # Option when using 'sst-transition'
+                                  # Turn transition separation correction model on/off
+                                  'separation correction': True
                                 },
                },
 
@@ -466,11 +478,11 @@ When using the high order strong form Discontinuous Galerkin/Flux Reconstruction
                    'Shock Sensing Variable': 'density',
                 },
 
-Hence all the available keys for :code:`'DGeuler'` are a combination of the :code:`'euler'` keys and the :code:`'DG...'` keys. The same logic applies to the :code:`'DGRANS'`, :code:`'DGviscous'` and :code:`'DGLES'` equation sets.
+Hence all the available keys for :code:`'DGviscous'` are a combination of the :code:`'viscous'` keys and the :code:`'DG...'` keys. The same logic applies to the :code:`'DGRANS'`, and :code:`'DGLES'` equation sets.
 
 .. code-block:: python
 
-    'DGeuler' : {
+    'DGviscous' : {
                    # Spatial polynomial order 0,1,2,3
                    'order' : 2,
                    # Optional (default False)
@@ -489,6 +501,10 @@ Hence all the available keys for :code:`'DGeuler'` are a combination of the :cod
                    'Shock Sensing Viscosity Scale': 1.0,
                    # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
                    'Shock Sensing Variable': 'density',
+		   # Optional (default False)
+		   'inviscid flow': False,
+		   # Optional (default False)
+		   'freeze diffusion during rk stages': False
                 },
 
 
@@ -1262,9 +1278,21 @@ Within zCFD in finite volume mode it is possible to run with an arbitrary number
 .. code-block:: python
 
    'BC_1': {
-             'zone': [5], 
+             'zone': [5],
              'type': 'overset'}
            }
+
+With finite volume mode, the overset solver can also perform simulations with rotating domains overlapping fixed background domains.  It is assumed the geometry of the rotating domains is such that there is no new covering or uncovering of cells in the background mesh.  Multiple rotating domains can also be defined.  If an overset mesh is to rotate, the entire mesh must rotate with no fixed volumes and dual time-stepping time marching must be used.  The rotating mesh / domain must be specified in fluid zone 1 as follows:
+
+.. code-block:: python
+
+    'FZ_1': {
+        "type": "rotating",
+        "zone": [0],
+        "axis": [0, 0, -1],
+        "origin": [0, 0, 0],
+        "omega": 100,
+    },
 
 Aero-acoustics
 --------------------------------------------------
@@ -1285,8 +1313,7 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
 
                 # Option to run the FRPM solver only, without running the acoustic propagation
                 # solver.  Defaults to False. (Optional)
-                'No CAA only FRPM solver' : False,
-
+                'FRPM solver only' : False,
 
                 # Specify mesh file to be used when mapping RANS simulation to CAA mesh
                 # (and / or FRPM mesh)
@@ -1445,16 +1472,20 @@ For solver efficiency, zCFD outputs the raw flow field data (plus any user-defin
                       # Optional: If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied
                       'variable_name_alias' : { "V" : "VELOCITY", },
                       # Required: Output frequency
-                      'frequency' : 100,
+                      "frequency": {
+                          # Output visualisation files every 3 cycles (default = 1000000)
+                          "volume data": 3,
+                          "surface data": 3,
+                          "volume interpolate": 3,
+                          "checkpoint": 3,
+                          # Start output every 3 cycles after 1 cycle (default = 1)
+                          "volume data start": 1
+                          "surface data start": 1,
+                          "volume interpolate start": 1,
+                          "checkpoint start": 1,
+                      },
                       # Optional for DG: Output high order surface data on zones
                       'high order surface list' : [1],
-                      # Only for time accirate simulations:
-                      # Start output after real time cycle
-                      'start output real time cycle' : 100,
-                      # Unsteady restart file output frequency
-                      'unsteady restart file output frequency' : 1000,
-                      # Output real time cycle frequency
-                      'output real time cycle frequency' : 10,
                       # Optional (default False):
                       # Don't output vtk volume data
                       'no volume vtk' : False
