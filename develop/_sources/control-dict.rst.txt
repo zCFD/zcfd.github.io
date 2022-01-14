@@ -127,14 +127,27 @@ Example User Defined Initialisation Function
 
 
 
-To restart from a previous solution
+To restart from a previous solution there are two options.  A solve can be restarted on the same mesh using the options:
 
 .. code-block:: python
 
     # Restart from previous solution
     'restart' : True,
-    # Optional: Restart from and different case
+    # Optional: Restart from a different case
     'restart casename' : 'my_case',
+
+Alternatively, a solution from another mesh can be mapped on to a new mesh using the options:
+
+.. code-block:: python
+
+    # Restart from previous solution on a different mesh
+    "interpolate restart": True,
+    # Required: Restart from a different case
+    "restart casename": "different_case",
+    # Required: Restart from a different mesh
+    "restart meshname": "different_mesh",
+    # Optional: Number of Laplace smoothing cycles to smooth initial mapped solution (default 0)
+    "solution smooth cycles": 0,
 
 It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key
 
@@ -411,6 +424,11 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                                   'CDES': 0.65
                                   'CDES_kw': 0.78,
                                   'CDES_keps': 0.61,
+                                  # Optional (default Cd1=20.0, Cd2=3, Cw= 0.15):
+                                  # (I)DDES constants
+                                  'Cd1': 20.0,
+                                  'Cd2': 3,
+                                  'Cw': 0.15,
                                   # Optional when using 'sst' (default 0):
                                   # Menter SST production term: 0=SST-V, 1=incompressible, 2=SST
                                   'production': 0,
@@ -1294,6 +1312,13 @@ With finite volume mode, the overset solver can also perform simulations with ro
         "omega": 100,
     },
 
+To control the order of accuracy when mapping between overset meshes, the user can specify the order of accuracy of the interpolation.  First (0) or second (1) order mapping can be chosen.  First order mapping will use the solution in the cell containing the location requiring data, whereas second order mapping will use an inverse distance weighted interpolation using neighbouring information as well.
+
+    'mapping' : {
+                    # Order of accuracy of mapping.  Defaults to 0.
+                    'idw from cells order' : 0,
+                    },
+
 Aero-acoustics
 --------------------------------------------------
 
@@ -1392,6 +1417,12 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # Values of 0.0 indicate no blending of sources
                 'FRPM Blend Sources From Side' : [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
 
+                # Physical distance from walls acoustic sources should be blended over to zero.
+                # Values of 0.0 or less indicates no blending using wall distance
+                # (default = -1.0).  The first half of the blending distance has no decay, the
+                # second half blends sources linearly to zero.
+		'wall distance blend over': -1.0,
+
                 # The FRPM method can reconstruct turbulence fields from many turbulence
                 # spectrum models.  Typically Gauss (default) is used. It is also possible to
                 # specify Liepmann.  Liepmann is associated with greater computational cost.
@@ -1448,6 +1479,11 @@ Broadband aero-acoustic simulations can be performed by selecting the DGCAA solv
                 # at least twice the turbulence integral length scale.  Note, this increases
                 # memory usage.
                 'frpm inverse distance source mapping distance' : 6.0,
+
+		# List used to specify which boundaries should be used for reseeding particled
+		# once they have left the domain [XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX]
+		# Defaults to all True.
+		'FRPM inflow boundaries': [True, True, True, True, True, True]
    }
 
 Output
@@ -1489,6 +1525,12 @@ For solver efficiency, zCFD outputs the raw flow field data (plus any user-defin
                       # Optional (default False):
                       # Don't output vtk volume data
                       'no volume vtk' : False
+                      # Optional
+                      # Calculate mean and RMS data when running unsteady
+                      # Adds 'V_avg", "V_rms", "T_avg", "T_rms", "p_avg" and "p_rms" to the available output variables.
+                      'calculate averge and rms': True,
+                      # Start time averaging at a specific time step
+                      'average start time cycle': 1000
                     },
 
 
