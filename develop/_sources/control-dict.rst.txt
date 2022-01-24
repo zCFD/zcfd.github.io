@@ -1560,7 +1560,7 @@ Output Variables
     helicity                                        `Helicity <https://en.wikipedia.org/wiki/Hydrodynamical_helicity>`_
     enstrophy
     ek
-    lesregion                                       Different depending on turbulence model??
+    lesregion
     turbulenceintensity       ti                    Turbulence intensity
     turbulencekineticenergy                         `Turbulence kinetic energy <https://en.wikipedia.org/wiki/Turbulence_kinetic_energy>`_ (:math:`J/kg`)
     turbulenceeddyfrequency                         `Turbulence eddy frequency <https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure>`_ (:math:`1/s`)
@@ -1569,7 +1569,7 @@ Output Variables
     cellzone
     cellorder
     centre                                          Cell centre location
-    viscouslengthscale                              Defined?? Minium distance between cell and its neighbours
+    viscouslengthscale                              Minimum distance between cell and its neighbours
     walldistance                                    Wall distance (:math:`m`)
     sponge                                          Sponge layer damping coefficient
    ========================= ===================== ==================================
