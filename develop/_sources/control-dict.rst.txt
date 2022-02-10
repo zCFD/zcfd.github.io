@@ -1007,7 +1007,11 @@ The transforms specified should map each zone onto each other.
 Fluid Structure Interaction
 ---------------------------
 
-Fluid structure interaction (FSI) can be simulated in zCFD using a modal representation of the structure, which must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
+zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme. 
+
+Model Model
+^^^^^^^^^^^
+The modal model must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
 
 .. code-block:: python
 
@@ -1055,6 +1059,39 @@ Fluid structure interaction (FSI) can be simulated in zCFD using a modal represe
             'use local rbf nodes': False
         },
     }
+
+General FSI
+^^^^^^^^^^^
+The general FSI capabilities of zCFD allow the solver to expose solution variables at run time, in order to allow for a user to couple the solver to any structural model. The behaviour of the coupling scheme can be modified within the open source python layer, by editing :code:`/bin/zcfd/utils/coupling/genericfsi.py`. The default file contains 4 hooks definining points within the code when FSI actions can be performed- post intialisation, start of the real time cycle, post advance and post solve. In addition the file contains examples of all the functions available to the user for data communication, and how they should be executed in regards the rank of the CPU. In general any user written code for communication should be performed on the rank 0 CPU to avoid issues with parallelisation. The generic FSI scheme can be setup using the :code:`fsi` key in the control dictionary.
+
+.. code-block:: python
+
+    'fsi': {
+        # Required: The fsi driver to launch into, for generic FSI use the key 'generic'
+        'type' : 'generic',
+        # Required: The wall zones in the mesh which correspond to the wetted surface of the structural model
+        'zone' : [1, 2, 3],
+        # Optional: Zones in the mesh which remain stationary
+        'fixed zones' : [4, 5, 6],
+        # Required: Type of mesh transform to use: 'rbf multiscale', 'rbf' or 'idw'
+        'transform type' : 'rbf multiscale',
+        # Required (RBF only): Support radius of the RBFs
+        'alpha' : 0.02,
+        # Required (RBF only): Basis function for the rbf: 'c0', 'c2', 'c4', 'tps', 'gaussian' (default = 'c2')
+        'basis' : 'c2',
+        # Required (Multiscale RBF only): Fraction of surface points in the RBF base set
+        'base point fraction': 0.1,
+        # Required (IDW only): number of nearest neighbours to
+        'n nearest' : 250,
+        # Required (IDW only): power of the interpolation weight in the far field, at the boundary and the blending function between them
+        'power' : [3.0, 5.0, 8.0],
+        # Required (IDW only): distance over which to decay the deformation
+        'deformation distance' : 100.0,
+        # Required (IDW only): Stiffness of the blending function used to decay the deformation (0.0-1.0)
+        'blending stiffness' : 0.5
+        # Optional: extra user variables to pass to solver through validation script
+        'user variables' : {'data path' : '/path/to/data'}
+    },
 
 
 Fluid Zones
