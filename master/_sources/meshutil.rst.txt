@@ -73,7 +73,7 @@ This produces the zCFD HDF5 file. If you require support for additional element 
 UGRID Mesh Converter
 --------------------
 
-UGRID is a NASA format for meshes (ref). You must follow the naming convention (ref) for UGRID files, which describes the format and *endian-ness* of the file data ("ascii8", "b8", "lb8", or "r8") depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.
+UGRID is a NASA format for meshes. You must follow the naming convention for UGRID files, which describes the format and *endian-ness* of the file data ("ascii8", "b8", "lb8", or "r8") depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.
 
 .. code-block:: python
 
@@ -89,5 +89,16 @@ Tau is a CFD solver produced by the DLR (http://tau.dlr.de/startseite/).  Note t
 .. code-block:: python
 
     (zCFD): tauconvert <filename>.XXX <new_filename>.h5
+
+This produces the zCFD HDF5 file.
+
+SU2 Mesh Converter
+--------------------
+
+SU2 is an open source CFD solver (https://su2code.github.io/). Note that conversion of 2D meshes is not supported as they are not handled in zCFD.
+
+.. code-block:: python
+
+    (zCFD): su2convert <filename>.su2 <new_filename>.h5
 
 This produces the zCFD HDF5 file.
