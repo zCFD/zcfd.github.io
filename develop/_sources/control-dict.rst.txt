@@ -44,7 +44,7 @@ Example scale function
 
    # Scale function
    def scale_func(point):
-       # Scale y coordinate by 100
+       # Scale z coordinate by 100
        point[2] = point[2] * 100.0
        return {'coord' : point}
 
