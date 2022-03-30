@@ -349,6 +349,9 @@ Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The
   'euler' : {
               # Spatial accuracy (options: first, second)
               'order' : 'second',
+              # Optional (default 0):
+              # Run first order spatial accuracy for the first x cycles
+              'first order cycles': 100,
               # Optional (default 'vanalbada'):
               # MUSCL limiter (options: vanalbada)
               'limiter' : 'vanalbada',
@@ -370,6 +373,9 @@ The viscous (laminar) equations model flow that is viscous but not turbulent.  T
     'viscous' : {
                   # Spatial accuracy (options: first, second)
                   'order' : 'second',
+                  # Optional (default 0):
+                  # Run first order spatial accuracy for the first x cycles
+                  'first order cycles': 100,
                   # Optional (default 'vanalbada'):
                   # MUSCL limiter (options: vanalbada)
                   'limiter' : 'vanalbada',
@@ -391,6 +397,9 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
     'RANS' : {
                 # Spatial accuracy (options: first, second, euler_second)
                 'order' : 'second',
+                # Optional (default 0):
+                # Run first order spatial accuracy for the first x cycles
+                'first order cycles': 100,
                 # Optional (default 'vanalbada'):
                 # MUSCL limiter (options: vanalbada)
                 'limiter' : 'vanalbada',
@@ -1007,7 +1016,7 @@ The transforms specified should map each zone onto each other.
 Fluid Structure Interaction
 ---------------------------
 
-zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme. 
+zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
 
 Model Model
 ^^^^^^^^^^^
