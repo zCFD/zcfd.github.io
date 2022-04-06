@@ -205,7 +205,7 @@ Time accurate (unsteady) simulation control
 
 Solver scheme
 ^^^^^^^^^^^^^
-There are three different time marching schemes available in zCFD: Euler, various orders of Runge Kutta (like Euler...) and the implicit LU-SGS scheme. These can be run with dual time-stepping for both steady and unsteady simulations or with global time-stepping for unsteady simulations. The choice of scheme and time stepping algorithm affects with dictionary keys are valid.
+There are three different time marching schemes available in zCFD: Explicit Euler, various orders of Runge Kutta (like Euler...) and the implicit Euler scheme. These can be run with dual time-stepping for both steady and unsteady simulations.  Explicit schemes with no preconditioning can be used with global time-stepping for unsteady simulations. The choice of scheme and time stepping algorithm affects which dictionary keys are valid.
 
 Runge Kutta
 """""""""""
@@ -214,7 +214,7 @@ Runge Kutta
 
    'time marching' : {
                      'scheme' : {
-                                 # Either 'euler' or 'runge kutta' or 'lu-sgs'
+                                 # Either 'euler' or 'runge kutta' or 'implicit euler'
                                  'name' : 'runge kutta',
                                  # Number of RK stages 'euler' or 1, 4, 5, 'rk third order tvd'
                                  'stage': 5,
@@ -224,34 +224,8 @@ Runge Kutta
                                  },
                       },
 
-LU-SGS
-""""""
-
-.. code-block:: python
-
-    'time marching' : {
-                       'scheme' : {
-                                  'name' : 'lu-sgs',
-                                  },
-                       'lu-sgs' : {
-                                  # Optional (default 8)
-                                  'Number Of SGS Cycles' : 8,
-                                  # Optional (default 1)
-                                  'Jacobian Update Frequency' : 1,
-                                  # Optional (default True)
-                                  'Include Backward Sweep' : True,
-                                  # Optional (default True)
-                                  'Include Relaxation' : True,
-                                  # Optional (default 1.0e-8)
-                                  'Jacobian Epsilon' : 1.0e-08,
-                                  # Optional (default True)
-                                  'Use Rusanov Flux For Jacobian' : True,
-                                  # Optional (default False)
-                                  'Finite Difference Jacobian' : True,
-                      },
-
 When global time-stepping is specified the keys :code:`['unsteady']['order']` and :code:`['unsteady']['start']` are not valid. The CFL keys in in the `CFL`_ section below are also not valid as the time step is explicitly specified.
-When the :code:`['unsteady']['total time']` and :code:`['unsteady']['time step']` keys are set to be equal values and :code:`['time marching']['scheme']['kind']` is set to :code:`'local timestepping'` the solver marches in pseudo time towards a steady state solution. If LU-SGS is selected then the :code:`'lu-sgs'` sub-dictionary must be provided.
+When the :code:`['unsteady']['total time']` and :code:`['unsteady']['time step']` keys are set to be equal values and :code:`['time marching']['scheme']['kind']` is set to :code:`'local timestepping'` the solver marches in pseudo time towards a steady state solution. If implicit euler is selected then the :code:`'multigrid'` keys must be removed.  For large CFL numbers, it is recommended the Roe inviscid flux scheme is used.
 
 
 CFL
@@ -362,7 +336,7 @@ Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The
               # Use linear gradients
               'linear gradients' : False,
               # Optional (default 'HLLC'):
-              # Scheme for inviscid flux: HLLC or Rusanov
+              # Scheme for inviscid flux: HLLC, Rusanov or Roe
               'Inviscid Flux Scheme': 'HLLC',
             },
 
