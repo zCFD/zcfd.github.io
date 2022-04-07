@@ -1334,10 +1334,21 @@ With finite volume mode, the overset solver can also perform simulations with ro
 
 To control the order of accuracy when mapping between overset meshes, the user can specify the order of accuracy of the interpolation.  First (0) or second (1) order mapping can be chosen.  First order mapping will use the solution in the cell containing the location requiring data, whereas second order mapping will use an inverse distance weighted interpolation using neighbouring information as well.
 
+.. code-block:: python
+
     'mapping' : {
                     # Order of accuracy of mapping.  Defaults to 0.
                     'idw from cells order' : 0,
                     },
+
+Sliding meshes
+--------------------------------------------------
+Sliding meshes (where interfaces on each mesh slide past one another, for a moving rotor simulation for example) can be simulated in a similar fashion to overset meshes.  In fact, sliding meshes are a simple extension of the overset mesh philosophy however no mesh in defined as a background mesh (with cells blanked off).  For two meshes sliding across one another, we simply set the sliding boundary as :code:`'overset'` in both python dictionaries as described above for BC_1 in the Overset meshes section.  The only additional requirement is that to indicate to the solver that the first mesh and solver dictionary combination are not background overset, we must add the following key value pair to the first solver dictionary.
+
+.. code-block:: python
+
+    'sliding planes' : True,
+
 
 Aero-acoustics
 --------------------------------------------------
