@@ -387,8 +387,14 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                 # Use least squares gradients
                 'leastsq gradients' : False,
                 # Optional (default 'HLLC'):
-                # Scheme for inviscid flux: HLLC or Rusanov
+                # Scheme for inviscid flux: HLLC, Rusanov, Roe or Roe low diss
                 'Inviscid Flux Scheme': 'HLLC',
+                # Optional (default 'NONE')
+                # Roe low dissipation sensor type: 'FD' (wall distance based), 'NTS' (vorticity based), 'DES' (DES blending function based) or 'NONE'
+                'roe low dissipation sensor': 'DES',
+                # Optional (default 0.05)
+                # Minimum value of the Roe low dissipation sensor
+                'roe dissipation sensor minimum': 0.05,
                 # Turbulence
                 'turbulence' : {
                                   # turbulence model (options: 'sst', 'sa-neg', 'sst-transition')
@@ -453,6 +459,18 @@ The filtered Large Eddy Simulation (LES) equations
                   # Optional (default False):
                   # Use linear gradients
                   'linear gradients' : False,
+                  # Optional (default False):
+                  # Use least squares gradients
+                  'leastsq gradients' : False,
+                  # Optional (default 'HLLC'):
+                  # Scheme for inviscid flux: HLLC, Rusanov, Roe or Roe low diss
+                  'Inviscid Flux Scheme': 'HLLC',
+                  # Optional (default 'NONE')
+                  # Roe low dissipation sensor type: 'FD' (wall distance based), 'NTS' (vorticity based), 'DES' (DES blending function based) or 'NONE'
+                  'roe low dissipation sensor': 'DES',
+                  # Optional (default 0.05)
+                  # Minimum value of the Roe low dissipation sensor
+                  'roe dissipation sensor minimum': 0.05,
                   'turbulence' : {
                                   # LES model (options 'none', 'WALE')
                                   'les' : 'none',
