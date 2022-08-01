@@ -441,7 +441,13 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                                   'sigmathetat': 2.0,
                                   # Option when using 'sst-transition'
                                   # Turn transition separation correction model on/off
-                                  'separation correction': True
+                                  'separation correction': True,
+                                  # Option when using 'sst' or 'sa-neg'
+                                  # Use the non-linear Quadratic Constitutive Relation
+                                  # Spalart, P. R., "Strategies for Turbulence Modelling and Simulation,"
+                                  # International Journal of Heat and Fluid Flow, Vol. 21, 2000, pp. 252-263,
+                                  # https://doi.org/10.1016/S0142-727X(00)00007-2
+                                  'qcr': True
                                 },
                },
 
