@@ -331,6 +331,9 @@ Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The
               # Optional (default 'vanalbada'):
               # MUSCL limiter (options: vanalbada)
               'limiter' : 'vanalbada',
+              # Optional (default off)
+              # Cycle on which to freeze the limiter values
+              'freeze limiter cycle': 500,
               # Optional (default False):
               # Use low speed mach preconditioner
               'precondition' : True,
@@ -379,6 +382,9 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                 # Optional (default 'vanalbada'):
                 # MUSCL limiter (options: vanalbada)
                 'limiter' : 'vanalbada',
+                # Optional (default off)
+                # Cycle on which to freeze the limiter values
+                'freeze limiter cycle': 500,
                 # Optional (default False):
                 # Use low speed mach preconditioner
                 'precondition' : True,
