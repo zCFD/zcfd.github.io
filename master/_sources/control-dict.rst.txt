@@ -331,6 +331,9 @@ Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The
               # Optional (default 'vanalbada'):
               # MUSCL limiter (options: vanalbada)
               'limiter' : 'vanalbada',
+              # Optional (default off)
+              # Cycle on which to freeze the limiter values
+              'freeze limiter cycle': 500,
               # Optional (default False):
               # Use low speed mach preconditioner
               'precondition' : True,
@@ -379,6 +382,9 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                 # Optional (default 'vanalbada'):
                 # MUSCL limiter (options: vanalbada)
                 'limiter' : 'vanalbada',
+                # Optional (default off)
+                # Cycle on which to freeze the limiter values
+                'freeze limiter cycle': 500,
                 # Optional (default False):
                 # Use low speed mach preconditioner
                 'precondition' : True,
@@ -441,7 +447,13 @@ The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
                                   'sigmathetat': 2.0,
                                   # Option when using 'sst-transition'
                                   # Turn transition separation correction model on/off
-                                  'separation correction': True
+                                  'separation correction': True,
+                                  # Option when using 'sst' or 'sa-neg'
+                                  # Use the non-linear Quadratic Constitutive Relation
+                                  # Spalart, P. R., "Strategies for Turbulence Modelling and Simulation,"
+                                  # International Journal of Heat and Fluid Flow, Vol. 21, 2000, pp. 252-263,
+                                  # https://doi.org/10.1016/S0142-727X(00)00007-2
+                                  'qcr': True
                                 },
                },
 
