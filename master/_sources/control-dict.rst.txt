@@ -1184,6 +1184,19 @@ and the variation in leaf area density is a function of height
 
     When using the field specification the height of the canopy at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the height value looked up in a node based scalar array called 'Height'
 
+For porous media
+
+.. code-block:: python
+
+    'FZ_1':{
+            'type':'porous',
+            # Use def when the vtp file specifies a closed volumetric region defining the canopy
+            'def':'porous_region.vtp',
+            # Use zone when the porous region is defined in the mesh as a cell zone
+            'zone': [124, 234],
+            'alpha': 0.1,
+            'c2':0.0,
+    },
 
 Mesh Transformations
 --------------------
