@@ -899,7 +899,10 @@ An example setup for a pressure inflow is given below:
     'IC_2' : {
              'reference' : 'IC_1',
              'total temperature ratio' : 1.0,
-             'total pressure ratio; : 1.0,
+             'total pressure ratio' : 1.0,
+             # Optional - specify mach number to set 
+             # static pressure at inflow from total pressure
+             'mach' : 0.1,
              },
     'BC_3' : {
              'ref' : 4,
@@ -915,6 +918,7 @@ Example Massflow Inflow
 An example setup for a massflow inflow is given below:
 
 .. code-block:: python
+
     def inflow_direction(x, y, z):
         # x, y, and z are the coordinates of the face centre
         cen = [1.0, 0.0, 0.0]
