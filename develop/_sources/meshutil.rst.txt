@@ -102,3 +102,14 @@ SU2 is an open source CFD solver (https://su2code.github.io/). Note that convers
     (zCFD): su2convert <filename>.su2 <new_filename>.h5
 
 This produces the zCFD HDF5 file.
+
+CBA Mesh Converter
+--------------------
+
+CBA is a strucutred multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.
+
+.. code-block:: python
+
+    (zCFD): cba_convert <filename>.[cba, blk] <new_filename>.h5
+
+This produces the zCFD HDF5 file.
