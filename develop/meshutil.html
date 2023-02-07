@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Mesh Conversion &#8212; zCFD User Guide v2023.01.3113-304-gec7f5 documentation</title>
+    <title>Mesh Conversion &#8212; zCFD User Guide v2023.01.3113-305-gc7d41 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -37,11 +37,11 @@
             
   <div class="section" id="mesh-conversion">
 <h1>Mesh Conversion<a class="headerlink" href="#mesh-conversion" title="Permalink to this headline">¶</a></h1>
-<p>zCFD uses unstructured meshes written in an <a class="reference external" href="http://www.hdfgroup.org/HDF5/">HDF5</a> file format. HDF5 provides a flexible, self describing specification supporting parallel I/O that can be tuned per filesystem type (e.g NFS, GPFS, Lustre etc).</p>
+<p>zCFD uses unstructured meshes written in an <a class="reference external" href="http://www.hdfgroup.org/HDF5/" target="_blank">HDF5</a> file format. HDF5 provides a flexible, self describing specification supporting parallel I/O that can be tuned per filesystem type (e.g NFS, GPFS, Lustre etc).</p>
 <p>Meshes from a wide variety of sources can be easily converted into this format as follows:</p>
 <div class="section" id="openfoam-x-x-x">
 <h2>OpenFOAM-x.x.x<a class="headerlink" href="#openfoam-x-x-x" title="Permalink to this headline">¶</a></h2>
-<p>We provide a range of converters for popular mesh types via a special version of the open-source CFD code OpenFOAM, available freely for download <a class="reference external" href="https://github.com/zCFD/foamTozCFD.git">here</a></p>
+<p>We provide a range of converters for popular mesh types via a special version of the open-source CFD code OpenFOAM, available freely for download <a class="reference external" href="https://github.com/zCFD/foamTozCFD.git" target="_blank">here</a></p>
 <p>Once downloaded and installed, the version of OpenFOAM will convert a range of file formats to the zCFD format. Prior to running any of these, you will need to activate your OpenFOAM environment using</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> <span class="nv">$FOAM_INST_DIR</span>/OpenFOAM-x.x.x/etc/bashrc
 </pre></div>
@@ -57,7 +57,7 @@
 </div>
 <div class="section" id="fluent-mesh-converter">
 <h2>Fluent Mesh Converter<a class="headerlink" href="#fluent-mesh-converter" title="Permalink to this headline">¶</a></h2>
-<p>The converter for <a class="reference external" href="http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent">ANSYS Fluent</a> files is a utility called <em>fluent_convert</em>.  This is included in the path set by activating the zCFD command line environment.</p>
+<p>The converter for <a class="reference external" href="http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent" target="_blank">ANSYS Fluent</a> files is a utility called <em>fluent_convert</em>.  This is included in the path set by activating the zCFD command line environment.</p>
 <p>To run the utility, use</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">fluent_convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">msh</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
@@ -70,7 +70,7 @@
 </div>
 <div class="section" id="star-ccm-mesh-converter">
 <h2>Star CCM+ Mesh Converter<a class="headerlink" href="#star-ccm-mesh-converter" title="Permalink to this headline">¶</a></h2>
-<p>There are a number of different file formats for <a class="reference external" href="http://www.cd-adapco.com/products/star-ccm%C2%AE">CD-Adapco Star CCM+</a> meshes.  The <em>&lt;filename&gt;.sim</em> file is in a propietary format and at this stage cannot be converted.  The <em>&lt;filename&gt;.ccm</em> can be converted using</p>
+<p>There are a number of different file formats for <a class="reference external" href="http://www.cd-adapco.com/products/star-ccm%C2%AE" target="_blank">CD-Adapco Star CCM+</a> meshes.  The <em>&lt;filename&gt;.sim</em> file is in a propietary format and at this stage cannot be converted.  The <em>&lt;filename&gt;.ccm</em> can be converted using</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">ccmconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">ccm</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
 </div>
@@ -82,7 +82,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">cgnsconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">cgns</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
 </div>
-<p>This produces the zCFD HDF5 file. If you require support for additional element types please contact us: <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com">mailto:zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a>.</p>
+<p>This produces the zCFD HDF5 file. If you require support for additional element types please contact us: <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com" target="_blank">mailto:zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a>.</p>
 </div>
 <div class="section" id="ugrid-mesh-converter">
 <span id="ugrid-converter"></span><h2>UGRID Mesh Converter<a class="headerlink" href="#ugrid-mesh-converter" title="Permalink to this headline">¶</a></h2>
@@ -94,7 +94,7 @@
 </div>
 <div class="section" id="dlr-tau-mesh-converter">
 <h2>DLR Tau Mesh Converter<a class="headerlink" href="#dlr-tau-mesh-converter" title="Permalink to this headline">¶</a></h2>
-<p>Tau is a CFD solver produced by the DLR (<a class="reference external" href="http://tau.dlr.de/startseite/">http://tau.dlr.de/startseite/</a>).  Note that Tau is a node-based solver so flow field variables are calculated for and stored at the mesh nodes (or vertices) rather than at cell centres (the approach used by Star CCM+, OpenFOAM, CFX and zCFD). Thus simply converting the file format will not guarantee a good result. In many cases, the conversion will not result in a valid cell-centred zCFD mesh.</p>
+<p>Tau is a CFD solver produced by the DLR (<a class="reference external" href="http://tau.dlr.de/startseite/" target="_blank">http://tau.dlr.de/startseite/</a>).  Note that Tau is a node-based solver so flow field variables are calculated for and stored at the mesh nodes (or vertices) rather than at cell centres (the approach used by Star CCM+, OpenFOAM, CFX and zCFD). Thus simply converting the file format will not guarantee a good result. In many cases, the conversion will not result in a valid cell-centred zCFD mesh.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">tauconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">XXX</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
 </div>
@@ -102,7 +102,7 @@
 </div>
 <div class="section" id="su2-mesh-converter">
 <h2>SU2 Mesh Converter<a class="headerlink" href="#su2-mesh-converter" title="Permalink to this headline">¶</a></h2>
-<p>SU2 is an open source CFD solver (<a class="reference external" href="https://su2code.github.io/">https://su2code.github.io/</a>). Note that conversion of 2D meshes is not supported as they are not handled in zCFD.</p>
+<p>SU2 is an open source CFD solver (<a class="reference external" href="https://su2code.github.io/" target="_blank">https://su2code.github.io/</a>). Note that conversion of 2D meshes is not supported as they are not handled in zCFD.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">su2convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">su2</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
 </div>
