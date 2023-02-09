@@ -1725,6 +1725,7 @@ Output Variables
     viscouslengthscale                              Minimum distance between cell and its neighbours
     walldistance                                    Wall distance (:math:`m`)
     sponge                                          Sponge layer damping coefficient
+    menterf1                                        Menter SST blending function
    ========================= ===================== ==================================
 
 
