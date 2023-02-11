@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Control Dictionary &#8212; zCFD User Guide v2023.01.3113-314-gfb891 documentation</title>
+    <title>Control Dictionary &#8212; zCFD User Guide v2023.01.3113-315-g4cc1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -1363,10 +1363,11 @@ The transforms specified should map each zone onto each other.</p>
 </div>
 <div class="section" id="sliding-meshes">
 <h2>Sliding meshes<a class="headerlink" href="#sliding-meshes" title="Permalink to this headline">¶</a></h2>
-<p>Sliding meshes (where interfaces on each mesh slide past one another, for a moving rotor simulation for example) can be simulated in a similar fashion to overset meshes.  In fact, sliding meshes are a simple extension of the overset mesh philosophy however no mesh in defined as a background mesh (with cells blanked off).  For two meshes sliding across one another, we simply set the sliding boundary as <code class="code docutils literal notranslate"><span class="pre">'overset'</span></code> in both python dictionaries as described above for BC_1 in the Overset meshes section.  The only additional requirement is that to indicate to the solver that the first mesh and solver dictionary combination are not background overset, we must add the following key value pair to the first solver dictionary.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;sliding planes&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<p>Sliding meshes (where interfaces on each mesh slide past one another, for a moving rotor simulation for example) can be simulated in a similar fashion to overset meshes.  In fact, sliding meshes are a simple extension of the overset mesh philosophy however no mesh is defined as a background mesh (with cells blanked off).  For two meshes sliding across one another, we simply set the sliding boundary as <code class="code docutils literal notranslate"><span class="pre">'overset'</span></code> in both python dictionaries as described above for BC_1 in the Overset meshes section.  The only additional requirement is that to indicate to the solver that the first mesh and solver dictionary combination are not background overset, we must add the following key value pair to the first solver dictionary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;create overset halos&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">'create</span> <span class="pre">overset</span> <span class="pre">halos'</span></code> keyword instructs the solver to generate an overset halo cell centre by projecting along the face normal a distance equal to the distance from the overset boundary face to the adjacent cell centre.  This fictitious cell centre is used for mapping data.</p>
 </div>
 <div class="section" id="aero-acoustics">
 <h2>Aero-acoustics<a class="headerlink" href="#aero-acoustics" title="Permalink to this headline">¶</a></h2>
