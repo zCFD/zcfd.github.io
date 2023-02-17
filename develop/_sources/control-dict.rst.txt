@@ -1101,9 +1101,9 @@ Fluid Structure Interaction
 
 zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
 
-Model Model
+Modal Model
 ^^^^^^^^^^^
-The modal model must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
+The modal model must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid using the method of modal superposition. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . For both steady and unsteady simulations the structural solution is advanced using a newmark integration scheme. The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
 
 .. code-block:: python
 
@@ -1149,6 +1149,12 @@ The modal model must be pre calculated and provided at run time. The total displ
             'update frequency' : 10,
             # Optional: Use only the surface nodes that influence the deformation on each partition
             'use local rbf nodes': False
+            # Required: alpha value to use for newmark scheme for structural integration (default 0.25)
+            'newmark alpha': 0.25,
+            # Required: delta value to use for newmark scheme for structural integration (default 0.5)
+            'newmark delta': 0.5,
+            # Optional: Relaxation factor to use instead of default newmark scheme when performing steady state FSI
+            'relaxation factor': 0.1,
         },
     }
 
