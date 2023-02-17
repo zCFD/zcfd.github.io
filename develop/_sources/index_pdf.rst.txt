@@ -13,7 +13,6 @@ Version: |version|
    :maxdepth: 2
 
    overview
-   formulation
    license
    execution
    mycluster
