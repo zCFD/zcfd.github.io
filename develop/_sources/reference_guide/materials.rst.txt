@@ -1,0 +1,22 @@
+.. _materials:
+
+Material Specification
+----------------------
+
+The user can specify any fluid material properties by following the (default) scheme for 'air':
+
+.. code-block:: python
+
+    'material' : 'air',
+
+Options
+
+.. code-block:: python
+
+    'air' : {
+              'gamma' : 1.4,
+              'gas constant' : 287.0,
+              'Sutherlands const': 110.4,
+              'Prandtl No' : 0.72,
+              'Turbulent Prandtl No' : 0.9,
+            },

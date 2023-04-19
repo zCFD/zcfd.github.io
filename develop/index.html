@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to the zCFD User Guide &#8212; zCFD User Guide v2023.01.3113-1181-gee088 documentation</title>
+    <title>Welcome to the zCFD User Guide &#8212; zCFD User Guide v2023.01.3113-1182-ged9c4 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -37,19 +37,37 @@
   <div class="section" id="welcome-to-the-zcfd-user-guide">
 <h1>Welcome to the zCFD User Guide<a class="headerlink" href="#welcome-to-the-zcfd-user-guide" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="version-version">
-<h2>Version: v2023.01.3113-1181-gee088<a class="headerlink" href="#version-version" title="Permalink to this headline">¶</a></h2>
+<h2>Version: v2023.01.3113-1182-ged9c4<a class="headerlink" href="#version-version" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#zcfd-command-line-environment">(zCFD) Command Line Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#smartlaunch">Smartlaunch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#input-validation">Input Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-zcfd">Installing zCFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#licence">Licence</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#activating-the-environment">Activating the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#input-files">Input Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#id1">Input Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#running-locally">Running locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#running-on-a-cluster">Running on a cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#using-the-zcfd-python-environment">Using the zCFD Python Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#using-juypter">Using Juypter</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/quick_start_1.html">Quick Start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/quick_start_2.html">More complex case</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#scale-mesh-function">Scale Mesh Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#ramp-cfl-function">Ramp CFL Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary (old)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="control-dict.html#reference-settings">Reference Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="control-dict.html#initialisation">Initialisation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="control-dict.html#low-mach-number-preconditioner-settings-optional">Low Mach number preconditioner settings (Optional)</a></li>
@@ -114,10 +132,12 @@
             </a></p><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary (old)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>

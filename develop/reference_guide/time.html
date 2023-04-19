@@ -1,0 +1,298 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Time Marching &#8212; zCFD User Guide v2023.01.3113-1182-ged9c4 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Equations" href="equations.html" />
+    <link rel="prev" title="Boundary Conditions" href="boundary.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="time-marching">
+<span id="time"></span><h1>Time Marching<a class="headerlink" href="#time-marching" title="Permalink to this headline">¶</a></h1>
+<p>zCFD is capable of performing both steady-state and time dependent simulations. Steady-state solutions are marched in pseudo time towards convergance. Time dependent simulations can be either globally time-stepped or use local pseudo time-stepping within a dual time-stepping iteration in physical time. The ‘time marching’ dictionary controls the selection of these schemes.  Major options are what CFL number to use, whether explicit or implicit timestepping is used and whether the simulation is time dependent.</p>
+<pre class="literal-block">
+parameters = {
+        ...
+        &quot;time marching&quot;: {
+            &quot;unsteady&quot;: {...},
+            &quot;scheme&quot;: {...},
+            'cfl': <a class="reference internal" href="#cfl-control">30.0</a>,
+            &quot;multigrid&quot;: {...}
+            &quot;cycles&quot;: 3000,
+        },
+        ...
+}
+</pre>
+<div class="section" id="cfl-control">
+<span id="id1"></span><h2>CFL Control<a class="headerlink" href="#cfl-control" title="Permalink to this headline">¶</a></h2>
+<p>The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step that the solver uses to reach a converged solution. The larger the CFL number, the faster the solver will run but the less stable it will be. The CFL dictionary keys are only valid when using dual time-stepping.</p>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="26%" />
+<col width="11%" />
+<col width="26%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘cfl’</td>
+<td>Yes</td>
+<td>0</td>
+<td>Any positive floating point number.</td>
+</tr>
+<tr class="row-odd"><td>‘cfl transport’</td>
+<td>No</td>
+<td>–</td>
+<td>Any positive floating point number.</td>
+</tr>
+<tr class="row-even"><td>‘cfl ramp’</td>
+<td>No</td>
+<td>–</td>
+<td>Dictionary containing ‘initial’ and ‘growth’ - respectively the starting CFL number and the growth rate applied as a multiplier each successive time step until the CFL number is reached.</td>
+</tr>
+<tr class="row-odd"><td>‘ramp func’</td>
+<td>No</td>
+<td>–</td>
+<td>Instead of the ‘cfl ramp’ parameter the user can specify a <a class="reference internal" href="../functions.html#ramp-function"><span class="std std-ref">ramp function</span></a>.</td>
+</tr>
+<tr class="row-even"><td>‘cfl coarse’</td>
+<td>No</td>
+<td>Current CFL number</td>
+<td>Any positive floating point number.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="cfl">
+<h3>cfl<a class="headerlink" href="#cfl" title="Permalink to this headline">¶</a></h3>
+<p>Sets the CFL number used in the mass, momentum and energy equations. When using <a class="reference internal" href="equations.html#equation-dgcaa"><span class="std std-ref">dgcaa</span></a> this applies to the the ‘rho’, ‘rhou_i’ and ‘rhoE’ equations.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typical value used for a RANS simulation using explicit time marching</span>
+<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typical value used for a RANS simulations using implicit time marching</span>
+<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">30</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Besides mesh quality, CFL is the most important parameter affecting simulation stability. If you find your simulation does not converge, consider reducing CFL</p>
+</div>
+</div>
+<div class="section" id="cfl-transport">
+<h3>cfl transport<a class="headerlink" href="#cfl-transport" title="Permalink to this headline">¶</a></h3>
+<p>Sets the maximum CFL number used to update the turbulent transport equations (for example <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use cfl transport to promote solver stability</span>
+<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+<span class="s1">&#39;cfl transport&#39;</span><span class="p">:</span> <span class="mi">20</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you find your simulation does not converge with high residuals on the turbulence equations, consider setting this to a value lower than ‘cfl’</p>
+</div>
+</div>
+<div class="section" id="cfl-ramp">
+<h3>cfl ramp<a class="headerlink" href="#cfl-ramp" title="Permalink to this headline">¶</a></h3>
+<p>This allows a relatively large target CFL number to be specified, but start the simulation using a smaller one to provide stability as large non-physical transients are eliminated from the solution.</p>
+<p>Starting a simulation with a large CFL number can cause instability to crash the solver.  A more gentle start will reduce the impact of non-physical transients.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start cfl at 0.1 and grow at a rate 1.1, reaching the target cfl of 30 in 26 steps</span>
+<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+<span class="s1">&#39;cfl ramp&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s1">&#39;growth&#39;</span><span class="p">:</span> <span class="mf">1.1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cfl-coarse">
+<h3>cfl coarse<a class="headerlink" href="#cfl-coarse" title="Permalink to this headline">¶</a></h3>
+<p>For simulations with multigrid acceleration, the ‘cfl coarse’ number is used as a CFL condition on the coarse meshes.  For such cases the ‘cfl’ number is still applied to the finest mesh.</p>
+<p>This only applies to explicit finite volume solutions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The quality of agglomerated (multigrid) coarse meshes is typically less than the quality of the primary (fine) mesh and so a lower CFL number may be required for numerical stability.</span>
+<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="s1">&#39;cfl coarse&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="solver-scheme">
+<h2>Solver scheme<a class="headerlink" href="#solver-scheme" title="Permalink to this headline">¶</a></h2>
+<p>There are three different time marching schemes available in zCFD: Explicit Euler, various orders of Runge Kutta (like Euler…) and the implicit Euler scheme. These can be run with dual time-stepping for both steady and unsteady simulations.  Explicit schemes with no preconditioning can be used with global time-stepping for unsteady simulations. The choice of scheme and time stepping algorithm affects which dictionary keys are valid.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                  <span class="s1">&#39;scheme&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                              <span class="c1"># Either &#39;euler&#39; or &#39;runge kutta&#39; or &#39;implicit euler&#39;</span>
+                              <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;runge kutta&#39;</span><span class="p">,</span>
+                              <span class="c1"># Number of RK stages &#39;euler&#39; or 1, 4, 5, &#39;rk third order tvd&#39;</span>
+                              <span class="s1">&#39;stage&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                              <span class="c1"># Time-stepping scheme: &#39;local timestepping&#39; for steady state or dual time step time accurate</span>
+                              <span class="c1"># &#39;global timestepping&#39; for time accurate</span>
+                              <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;local timestepping&#39;</span><span class="p">,</span>
+                              <span class="c1"># With AMGX, the linearsolver can be run in single or double precision modes</span>
+                              <span class="s1">&#39;double precision linear solve&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                              <span class="p">},</span>
+                   <span class="p">},</span>
+</pre></div>
+</div>
+<p>When global time-stepping is specified the keys <code class="code docutils literal notranslate"><span class="pre">['unsteady']['order']</span></code> and <code class="code docutils literal notranslate"><span class="pre">['unsteady']['start']</span></code> are not valid. The CFL keys in in the <a class="reference internal" href="#cfl">CFL</a> section below are also not valid as the time step is explicitly specified.
+When the <code class="code docutils literal notranslate"><span class="pre">['unsteady']['total</span> <span class="pre">time']</span></code> and <code class="code docutils literal notranslate"><span class="pre">['unsteady']['time</span> <span class="pre">step']</span></code> keys are set to be equal values and <code class="code docutils literal notranslate"><span class="pre">['time</span> <span class="pre">marching']['scheme']['kind']</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">'local</span> <span class="pre">timestepping'</span></code> the solver marches in pseudo time towards a steady state solution. If implicit euler is selected then the <code class="code docutils literal notranslate"><span class="pre">'multigrid'</span></code> keys must be removed.  For large CFL numbers, it is recommended the Roe inviscid flux scheme is used.</p>
+</div>
+<div class="section" id="cycles">
+<h2>Cycles<a class="headerlink" href="#cycles" title="Permalink to this headline">¶</a></h2>
+<p>For steady-state simulations, the number of pseudo time cycles is the same as the number of steps that the solver should use to reach a converged solution.  Note that the solver uses local pseudo time-stepping (the time-step varies according to local conditions) so any intermediate solution is not necessarily time-accurate.</p>
+<p>For unsteady (time-accurate) simulations using ‘dual time-stepping’ to advance the solution in time the number of pseudo time cycles determines the number of inner iterations that the solver uses to converge each real time step. When global time-stepping is specified the cycles key is not valid.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                  <span class="c1"># Required only for dual time-stepping:</span>
+                  <span class="c1"># Number of pseudo time cycles</span>
+                  <span class="s1">&#39;cycles&#39;</span> <span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multigrid">
+<h2>Multigrid<a class="headerlink" href="#multigrid" title="Permalink to this headline">¶</a></h2>
+<p>The mesh is automatically coarsened by merging cells on successive layers in order to accelerate solver convergence.  This does not alter the accuracy of the solution on the finest (original) mesh.  Advanced users can control the number of geometric multigrid levels and the ‘prolongation’ of quantities from coarse to fine meshes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="c1"># Maximum number of meshes (including fine mesh)</span>
+                <span class="s1">&#39;multigrid&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="c1"># Optional:</span>
+                <span class="c1"># Number of multigrid cycles before solving on fine mesh only</span>
+                <span class="s1">&#39;multigrid cycles&#39;</span> <span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>
+                <span class="c1"># Optional (default 0.75), Advanced:</span>
+                <span class="c1"># Prolongation factor</span>
+                <span class="s1">&#39;prolong factor&#39;</span> <span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
+                <span class="c1"># Optional (default 0.3), Advanced:</span>
+                <span class="c1"># Prolongation factor for transported quantities</span>
+                <span class="s1">&#39;prolong transport factor&#39;</span> <span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+                <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="polynomial-multigrid">
+<h2>Polynomial Multigrid<a class="headerlink" href="#polynomial-multigrid" title="Permalink to this headline">¶</a></h2>
+<p>The polynomial basis on which the solution is computed can be successively coarsened, thus allowing the solution to be evolved quicker due to weakened stability restrictions at lower polynomial orders. This does not alter the accuracy of the solution on the highest polynomial order.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                   <span class="c1"># Optional (default False):</span>
+                   <span class="c1"># Switch on polynomial multigrid</span>
+                   <span class="s1">&#39;multipoly&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                   <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Reference Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Time Marching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equations.html">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Material Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="write_output.html">Write Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report.html">Reporting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../control-dict.html">Control Dictionary (old)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/reference_guide/time.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

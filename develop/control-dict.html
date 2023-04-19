@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Control Dictionary &#8212; zCFD User Guide v2023.01.3113-1181-gee088 documentation</title>
+    <title>Control Dictionary (old) &#8212; zCFD User Guide v2023.01.3113-1182-ged9c4 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -18,7 +18,7 @@
     <link rel="shortcut icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Mesh Conversion" href="meshutil.html" />
-    <link rel="prev" title="MyCluster" href="mycluster.html" />
+    <link rel="prev" title="zCFD Functions" href="functions.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -35,14 +35,14 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="control-dictionary">
-<h1>Control Dictionary<a class="headerlink" href="#control-dictionary" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="control-dictionary-old">
+<h1>Control Dictionary (old)<a class="headerlink" href="#control-dictionary-old" title="Permalink to this headline">¶</a></h1>
 <p>The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.</p>
 <p>A python dictionary called ‘parameters’ provides the main interface to controlling zCFD</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="o">....</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>zCFD will validate the parameters dictionary specified at run time against a set of expected values for each key. In general, values that should be integers and floats will be coerced to the correct type. Values which should be strings, booleans, lists or dictionaries will cause an error if they are the incorrect type. The time marching scheme and solver/equation set chosen defines which dictionary keys are valid. A simple script is provided to allow the user to check the validity of their input parameters before submitting their job. See <a class="reference internal" href="execution.html#input-validation"><span class="std std-ref">Input Validation</span></a>.</p>
+<p>zCFD will validate the parameters dictionary specified at run time against a set of expected values for each key. In general, values that should be integers and floats will be coerced to the correct type. Values which should be strings, booleans, lists or dictionaries will cause an error if they are the incorrect type. The time marching scheme and solver/equation set chosen defines which dictionary keys are valid. A simple script is provided to allow the user to check the validity of their input parameters before submitting their job. See <a class="reference internal" href="execution.html#input-validation"><span class="std std-ref">Input Files</span></a>.</p>
 <div class="section" id="reference-settings">
 <h2>Reference Settings<a class="headerlink" href="#reference-settings" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="define-units">
@@ -55,10 +55,45 @@
 </div>
 <div class="section" id="scale-mesh">
 <h3>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional (default [1.0,1.0,1.0]):</span>
-<span class="c1"># Scale vector</span>
-<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘scale’</td>
+<td>No</td>
+<td>[1,1,1]</td>
+<td>[scaleX,scaleY,scaleZ] : Any list of positive integers with length 3</td>
+</tr>
+</tbody>
+</table>
+<p>Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from mm to metres</span>
+<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">]</span>
 </pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from inches to metres</span>
+<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale the mesh to be 10 times larger in y axis</span>
+<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see <em>Tab x</em>)</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional</span>
 <span class="c1"># Scale function</span>
@@ -1830,10 +1865,12 @@ The transforms specified should map each zone onto each other.</p>
             </a></p><h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mycluster.html">MyCluster</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Control Dictionary</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Control Dictionary (old)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#reference-settings">Reference Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#initialisation">Initialisation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#low-mach-number-preconditioner-settings-optional">Low Mach number preconditioner settings (Optional)</a></li>

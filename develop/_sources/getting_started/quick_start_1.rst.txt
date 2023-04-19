@@ -1,0 +1,9 @@
+
+Quick Start Guide
+-----------------
+
+1. downloaded
+2. unpack
+3. Download validation case
+4. Run it locally
+

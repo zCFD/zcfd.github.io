@@ -1,0 +1,11 @@
+Getting Started
+===============
+
+The getting started guide is here to teach the fundementals of using zCFD, starting with a simple case and building up the complexity of the simulation. These should provide you a good starting point for setting up your own simulations. All of the input files required for the guide are available on line.
+
+.. toctree::
+   :maxdepth: 2
+
+
+   quick_start_1
+   quick_start_2

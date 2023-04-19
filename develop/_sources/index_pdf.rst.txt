@@ -11,11 +11,14 @@ Version: |version|
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
    overview
-   license
+   installation
    execution
-   mycluster
+   getting_started/intro
+   reference_guide/intro
+   functions
    control-dict
    meshutil
    visualisation

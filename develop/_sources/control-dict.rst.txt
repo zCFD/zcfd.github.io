@@ -1,5 +1,5 @@
-Control Dictionary
-==================
+Control Dictionary (old)
+========================
 
 The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.
 
@@ -26,11 +26,40 @@ Define units
 Scale mesh
 ^^^^^^^^^^
 
+.. list-table:: 
+   :widths: 25 25 25 25
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'scale'
+     - No
+     - [1,1,1]
+     - [scaleX,scaleY,scaleZ] : Any list of positive integers with length 3
+
+Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.
+
+Example usage:
+
 .. code-block:: python
 
-    # Optional (default [1.0,1.0,1.0]):
-    # Scale vector
-    'scale' : [1.0,1.0,1.0],
+    # Scale from mm to metres
+    'scale' : [0.001,0.001,0.001]
+
+.. code-block:: python
+
+    # Scale from inches to metres
+    'scale' : [0.0254,0.0254,0.0254]
+
+.. code-block:: python
+
+    # Scale the mesh to be 10 times larger in y axis
+    'scale' : [1,10,1]
+
+.. note::
+    The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see *Tab x*)
 
 .. code-block:: python
 

@@ -1,0 +1,72 @@
+.. _reporting:
+
+Reporting
+---------
+
+In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be spcified.
+
+.. code-block:: python
+
+    'report' : {
+                # Report frequency
+                'frequency' : 1,
+                # Extract specified variable at fixed locations
+                'monitor' : {
+                            # Consecutively numbered blocks
+                            'MR_1' : {
+                                     # Required: Output name
+                                     'name' : 'monitor_1',
+                                     # Required: Location
+                                     'point' : [1.0, 1.0, 1.0],
+                                     # Required: Variables to be extracted
+                                     'variables' : ['V','ti'],
+                                     },
+                            },
+
+                # Report force coefficient in grid axis as well as using user defined transform
+                'forces' : {
+                           # Consecutively numbered blocks
+                           'FR_1' : {
+                                    # Required: Output name
+                                    'name' : 'force_1',
+                                    # Required: Zones to be included
+                                    'zone' : [1, 2, 3],
+                                    # Transformation function
+                                    'transform' : my_transform,
+                                    # Optional (default 1.0):
+                                    'reference area' : 0.112032,
+                                    # Optional (default 1.0):
+                                    'reference length' : 1.0,
+                                    # Optional (default [0.0, 0.0, 0.0]):
+                                    'reference point' : [0.0, 0.0, 0.0],
+                                    # Optional (default 0.0): Calculate forces using a specified reference pressure rather than absolute
+                                    'reference pressure': 0.0
+                                    },
+                           },
+
+                # Report massflow ratio
+                'massflow' : {
+                             # Consecutively numbered blocks
+                             'MF_1' : {
+                                      # Required: Output name
+                                      'name' : 'massflow_1',
+                                      # Required: Zones to be included
+                                      'zone' : [1, 2 ,3],
+                                      },
+                             },
+            },
+
+Example Transformation Function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A transformation function my be supplied to the force report block to transform the force into a different coordinate system, this a particularly useful for reporting lift and drag which are often rotated from the solver coordinate system.
+
+.. code-block:: python
+
+    # Angle of attack
+    alpha = 10.0
+    # Transform into wind axis
+    def my_transform(x,y,z):
+        v = [x,y,z]
+        v =  zutil.rotate_vector(v,alpha,0.0)
+        return {'v1' : v[0], 'v2' : v[1], 'v3' : v[2]}

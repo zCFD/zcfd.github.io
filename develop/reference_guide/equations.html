@@ -1,0 +1,525 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Equations &#8212; zCFD User Guide v2023.01.3113-1182-ged9c4 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Material Specification" href="materials.html" />
+    <link rel="prev" title="Time Marching" href="time.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="equations">
+<span id="id1"></span><h1>Equations<a class="headerlink" href="#equations" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="26%" />
+<col width="11%" />
+<col width="26%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘equations’</td>
+<td>Yes</td>
+<td>–</td>
+<td>Any of equation sets detailed below.</td>
+</tr>
+</tbody>
+</table>
+<p>The equations key selects the equation set to be solved as well as the finite volume solver or the high order strong form Discontinuous Galerkin/Flux Reconstruction solver.</p>
+<p>The corresponding equation set options should also be defined in the control dictionary.</p>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Value</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#equation-euler"><span class="std std-ref">“euler”</span></a></td>
+<td>Use the Euler flow equations in the simulation. These are compressible, inviscid flow equations.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#equation-rans"><span class="std std-ref">“rans”</span></a></td>
+<td>Use the RANS (Reynolds-Averaged Navier-Stokes) equations in the simulation. These are compressible, viscid flow equations with additional terms included to account for the effect of turbulence on the flow without the expense of simulating the turbulent flow structures themselves.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#equation-viscous"><span class="std std-ref">“viscous”</span></a></td>
+<td>Use the viscous flow equations. These are compressible, viscid flow equations which do not model turbulence.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#equation-les"><span class="std std-ref">“les”</span></a></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#equation-dg"><span class="std std-ref">“dgviscous”</span></a></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘dgrans’</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘dgles’</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘incomp viscous’</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘incomp rans’</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘incomp les’</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘dgcaa’</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="o">..</span>
+  <span class="c1"># Use the euler equation set</span>
+  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;euler&#39;</span><span class="p">,</span>
+  <span class="c1"># Define the inputs for the &#39;euler&#39; equation set</span>
+  <span class="s1">&#39;euler&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">..</span><span class="p">}</span>
+  <span class="o">..</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="common-settings">
+<span id="equation-common"></span><h2>Common Settings<a class="headerlink" href="#common-settings" title="Permalink to this headline">¶</a></h2>
+<p>The following parameters are common for all of the equation sets.</p>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="26%" />
+<col width="11%" />
+<col width="26%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘limiter’</td>
+<td>Yes</td>
+<td>‘vanalbada’</td>
+<td>‘vanalbada’</td>
+</tr>
+<tr class="row-odd"><td>‘order’</td>
+<td>Yes</td>
+<td>–</td>
+<td>‘first’,’second’,’euler_second’</td>
+</tr>
+<tr class="row-even"><td>‘first order cycles’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘linear gradients’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘leastsq gradients’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘inviscid flux scheme’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘roe low dissipation sensor’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘roe dissipation sensor minimum’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘roe entropy fix coefficient’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>‘freeze limiter cycle’</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>These values are valid for all equation sets.</p>
+</div>
+<div class="section" id="euler">
+<span id="equation-euler"></span><h2>Euler<a class="headerlink" href="#euler" title="Permalink to this headline">¶</a></h2>
+<p>Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The compressible Euler equations are appropriate when modelling flows where momentum significantly dominates viscosity - for example at very high speed. The computational mesh used for Euler flow does not need to resolve the flow detail in the boundary layer and hence will generally have far fewer cells than the corresponding viscous mesh would have.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;euler&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Spatial accuracy (options: first, second)</span>
+            <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
+            <span class="c1"># Optional (default 0):</span>
+            <span class="c1"># Run first order spatial accuracy for the first x cycles</span>
+            <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="c1"># Optional (default &#39;vanalbada&#39;):</span>
+            <span class="c1"># MUSCL limiter (options: vanalbada)</span>
+            <span class="s1">&#39;limiter&#39;</span> <span class="p">:</span> <span class="s1">&#39;vanalbada&#39;</span><span class="p">,</span>
+            <span class="c1"># Optional (default off)</span>
+            <span class="c1"># Cycle on which to freeze the limiter values</span>
+            <span class="s1">&#39;freeze limiter cycle&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="c1"># Optional (default False):</span>
+            <span class="c1"># Use low speed mach preconditioner</span>
+            <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="c1"># Optional (default False):</span>
+            <span class="c1"># Use linear gradients</span>
+            <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="c1"># Optional (default &#39;HLLC&#39;):</span>
+            <span class="c1"># Scheme for inviscid flux: HLLC, Rusanov or Roe</span>
+            <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+          <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viscous">
+<span id="equation-viscous"></span><h2>Viscous<a class="headerlink" href="#viscous" title="Permalink to this headline">¶</a></h2>
+<p>The viscous (laminar) equations model flow that is viscous but not turbulent.  The <a class="reference external" href="http://en.wikipedia.org/wiki/Reynolds_number" target="_blank">Reynolds number</a> of a flow regime determines whether or not the flow will be turbulent. The computational mesh for a viscous flow does have to resolve the boundary layer, but the solver will run faster as fewer equations are being included.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;viscous&#39;</span> <span class="p">:</span> <span class="p">{</span>
+              <span class="c1"># Spatial accuracy (options: first, second)</span>
+              <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
+              <span class="c1"># Optional (default 0):</span>
+              <span class="c1"># Run first order spatial accuracy for the first x cycles</span>
+              <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+              <span class="c1"># Optional (default &#39;vanalbada&#39;):</span>
+              <span class="c1"># MUSCL limiter (options: vanalbada)</span>
+              <span class="s1">&#39;limiter&#39;</span> <span class="p">:</span> <span class="s1">&#39;vanalbada&#39;</span><span class="p">,</span>
+              <span class="c1"># Optional (default False):</span>
+              <span class="c1"># Use low speed mach preconditioner</span>
+              <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="c1"># Optional (default False):</span>
+              <span class="c1"># Use linear gradients</span>
+              <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="c1"># Optional (default &#39;HLLC&#39;):</span>
+              <span class="c1"># Scheme for inviscid flux: HLLC or Rusanov</span>
+              <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rans">
+<span id="equation-rans"></span><h2>RANS<a class="headerlink" href="#rans" title="Permalink to this headline">¶</a></h2>
+<p>The fully turbulent (Reynolds Averaged Navier-Stokes Equations)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;RANS&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Spatial accuracy (options: first, second, euler_second)</span>
+            <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
+            <span class="c1"># Optional (default 0):</span>
+            <span class="c1"># Run first order spatial accuracy for the first x cycles</span>
+            <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="c1"># Optional (default &#39;vanalbada&#39;):</span>
+            <span class="c1"># MUSCL limiter (options: vanalbada)</span>
+            <span class="s1">&#39;limiter&#39;</span> <span class="p">:</span> <span class="s1">&#39;vanalbada&#39;</span><span class="p">,</span>
+            <span class="c1"># Optional (default off)</span>
+            <span class="c1"># Cycle on which to freeze the limiter values</span>
+            <span class="s1">&#39;freeze limiter cycle&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="c1"># Optional (default False):</span>
+            <span class="c1"># Use low speed mach preconditioner</span>
+            <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="c1"># Optional (default False):</span>
+            <span class="c1"># Use linear gradients</span>
+            <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="c1"># Optional (default False):</span>
+            <span class="c1"># Use least squares gradients</span>
+            <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="c1"># Optional (default &#39;HLLC&#39;):</span>
+            <span class="c1"># Scheme for inviscid flux: HLLC, Rusanov, Roe or Roe low diss</span>
+            <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+            <span class="c1"># Optional (default &#39;NONE&#39;)</span>
+            <span class="c1"># Roe low dissipation sensor type: &#39;FD&#39; (wall distance based), &#39;NTS&#39; (vorticity based), &#39;DES&#39; (DES blending function based) or &#39;NONE&#39;</span>
+            <span class="s1">&#39;roe low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
+            <span class="c1"># Optional (default 0.05)</span>
+            <span class="c1"># Minimum value of the Roe low dissipation sensor</span>
+            <span class="s1">&#39;roe dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="c1"># Turbulence</span>
+            <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                              <span class="c1"># turbulence model (options: &#39;sst&#39;, &#39;sa-neg&#39;, &#39;sst-transition&#39;)</span>
+                              <span class="s1">&#39;model&#39;</span> <span class="p">:</span> <span class="s1">&#39;sst&#39;</span><span class="p">,</span>
+                              <span class="c1"># Optional (default &#39;none&#39;):</span>
+                              <span class="c1"># LES model (options &#39;none&#39;, &#39;DES&#39;, &#39;DDES&#39;, &#39;SAS&#39;)</span>
+                              <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                              <span class="c1"># Optional (default 0.09):</span>
+                              <span class="c1"># betastar turbulence closure constant</span>
+                              <span class="s1">&#39;betastar&#39;</span> <span class="p">:</span> <span class="mf">0.09</span><span class="p">,</span>
+                              <span class="c1"># Optional (default True):</span>
+                              <span class="c1"># turn off mu_t limiter</span>
+                              <span class="s1">&#39;limit mut&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                              <span class="c1"># Optional (default CDES=0.65, CDES_kw=0.78, CDES_keps=0.61):</span>
+                              <span class="c1"># DES constants</span>
+                              <span class="s1">&#39;CDES&#39;</span><span class="p">:</span> <span class="mf">0.65</span>
+                              <span class="s1">&#39;CDES_kw&#39;</span><span class="p">:</span> <span class="mf">0.78</span><span class="p">,</span>
+                              <span class="s1">&#39;CDES_keps&#39;</span><span class="p">:</span> <span class="mf">0.61</span><span class="p">,</span>
+                              <span class="c1"># Optional (default Cd1=20.0, Cd2=3, Cw= 0.15):</span>
+                              <span class="c1"># (I)DDES constants</span>
+                              <span class="s1">&#39;Cd1&#39;</span><span class="p">:</span> <span class="mf">20.0</span><span class="p">,</span>
+                              <span class="s1">&#39;Cd2&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                              <span class="s1">&#39;Cw&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+                              <span class="c1"># Optional when using &#39;sst&#39; (default 0):</span>
+                              <span class="c1"># Menter SST production term: 0=SST-V, 1=incompressible, 2=SST</span>
+                              <span class="s1">&#39;production&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                              <span class="c1"># Optional when using &#39;sa-neg&#39; (default False):</span>
+                              <span class="c1"># Use sa-neg rotation correction</span>
+                              <span class="s1">&#39;rotation correction&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                              <span class="c1"># Optional when using sa-neg (default 0.0):</span>
+                              <span class="c1"># Limit the sa-neg gradient based on the maximum value between neighbouring cells.</span>
+                              <span class="c1"># k = 0.0 corresponds to no limiting, k = 1.0 maximum limiting.</span>
+                              <span class="s1">&#39;limit gradient k&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
+                              <span class="c1"># Option when using &#39;sst-transition&#39;</span>
+                              <span class="c1"># Transition model constants</span>
+                              <span class="s1">&#39;ca1&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+                              <span class="s1">&#39;ca2&#39;</span><span class="p">:</span> <span class="mf">0.06</span><span class="p">,</span>
+                              <span class="s1">&#39;ce1&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                              <span class="s1">&#39;ce2&#39;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
+                              <span class="s1">&#39;cthetat&#39;</span><span class="p">:</span> <span class="mf">0.03</span><span class="p">,</span>
+                              <span class="s1">&#39;sigmagamma&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                              <span class="s1">&#39;sigmathetat&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+                              <span class="c1"># Option when using &#39;sst-transition&#39;</span>
+                              <span class="c1"># Turn transition separation correction model on/off</span>
+                              <span class="s1">&#39;separation correction&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                              <span class="c1"># Option when using &#39;sst&#39; or &#39;sa-neg&#39;</span>
+                              <span class="c1"># Use the non-linear Quadratic Constitutive Relation</span>
+                              <span class="c1"># Spalart, P. R., &quot;Strategies for Turbulence Modelling and Simulation,&quot;</span>
+                              <span class="c1"># International Journal of Heat and Fluid Flow, Vol. 21, 2000, pp. 252-263,</span>
+                              <span class="c1"># https://doi.org/10.1016/S0142-727X(00)00007-2</span>
+                              <span class="s1">&#39;qcr&#39;</span><span class="p">:</span> <span class="kc">True</span>
+                            <span class="p">},</span>
+           <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="les">
+<span id="equation-les"></span><h2>LES<a class="headerlink" href="#les" title="Permalink to this headline">¶</a></h2>
+<p>The filtered Large Eddy Simulation (LES) equations</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;LES&#39;</span> <span class="p">:</span> <span class="p">{</span>
+              <span class="c1"># Spatial accuracy (options: first, second)</span>
+              <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
+              <span class="c1"># Optional (default &#39;vanalbada&#39;):</span>
+              <span class="c1"># MUSCL limiter (options: vanalbada)</span>
+              <span class="s1">&#39;limiter&#39;</span> <span class="p">:</span> <span class="s1">&#39;vanalbada&#39;</span><span class="p">,</span>
+              <span class="c1"># Optional (default False):</span>
+              <span class="c1"># Use low speed mach preconditioner</span>
+              <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="c1"># Optional (default False):</span>
+              <span class="c1"># Use linear gradients</span>
+              <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="c1"># Optional (default False):</span>
+              <span class="c1"># Use least squares gradients</span>
+              <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="c1"># Optional (default &#39;HLLC&#39;):</span>
+              <span class="c1"># Scheme for inviscid flux: HLLC, Rusanov, Roe or Roe low diss</span>
+              <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+              <span class="c1"># Optional (default &#39;NONE&#39;)</span>
+              <span class="c1"># Roe low dissipation sensor type: &#39;FD&#39; (wall distance based), &#39;NTS&#39; (vorticity based), &#39;DES&#39; (DES blending function based) or &#39;NONE&#39;</span>
+              <span class="s1">&#39;roe low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
+              <span class="c1"># Optional (default 0.05)</span>
+              <span class="c1"># Minimum value of the Roe low dissipation sensor</span>
+              <span class="s1">&#39;roe dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                              <span class="c1"># LES model (options &#39;none&#39;, &#39;WALE&#39;)</span>
+                              <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                            <span class="p">},</span>
+
+            <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="high-order">
+<span id="equation-dg"></span><h2>High Order<a class="headerlink" href="#high-order" title="Permalink to this headline">¶</a></h2>
+<p>When using the high order strong form Discontinuous Galerkin/Flux Reconstruction solver the keys in the equations dictionary are the same for each equation set except that the <code class="code docutils literal notranslate"><span class="pre">'linear</span> <span class="pre">gradients'</span></code> and <code class="code docutils literal notranslate"><span class="pre">'limiter'</span></code> keys are not valid and additional keys are available in the equations dictionary. These additional keys are given below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;DG...&#39;</span> <span class="p">:</span> <span class="p">{</span>
+               <span class="c1"># Spatial polynomial order 0,1,2,3</span>
+               <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+               <span class="c1"># Optional (default 0.0)</span>
+               <span class="s1">&#39;c11 stability parameter&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="c1"># Optional (default 0.5)</span>
+               <span class="s1">&#39;LDG upwind parameter&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+               <span class="c1"># Optional (default False)</span>
+               <span class="s1">&#39;Shock Sensing&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s1">&#39;Shock Sensing k&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+               <span class="s1">&#39;Shock Sensing Viscosity Scale&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+               <span class="c1"># Variable used for shock sensing, one of: &#39;density&#39;, &#39;temperature&#39;, &#39;mach&#39;, &#39;turbulence&#39;</span>
+               <span class="s1">&#39;Shock Sensing Variable&#39;</span><span class="p">:</span> <span class="s1">&#39;density&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+</pre></div>
+</div>
+<p>Hence all the available keys for <code class="code docutils literal notranslate"><span class="pre">'DGviscous'</span></code> are a combination of the <code class="code docutils literal notranslate"><span class="pre">'viscous'</span></code> keys and the <code class="code docutils literal notranslate"><span class="pre">'DG...'</span></code> keys. The same logic applies to the <code class="code docutils literal notranslate"><span class="pre">'DGRANS'</span></code>, and <code class="code docutils literal notranslate"><span class="pre">'DGLES'</span></code> equation sets.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;DGviscous&#39;</span> <span class="p">:</span> <span class="p">{</span>
+               <span class="c1"># Spatial polynomial order 0,1,2,3</span>
+               <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+               <span class="c1"># Optional (default False)</span>
+               <span class="c1"># Use low speed mach preconditioner</span>
+               <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="c1"># Optional (default &#39;HLLC&#39;)</span>
+               <span class="c1"># scheme for inviscid flux: HLLC or Rusanov</span>
+               <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+               <span class="c1"># Optional (default 0.0)</span>
+               <span class="s1">&#39;c11 stability parameter&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="c1"># Optional (default 0.5)</span>
+               <span class="s1">&#39;LDG upwind parameter&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+               <span class="c1"># Optional (default False)</span>
+               <span class="s1">&#39;Shock Sensing&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s1">&#39;Shock Sensing k&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+               <span class="s1">&#39;Shock Sensing Viscosity Scale&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+               <span class="c1"># Variable used for shock sensing, one of: &#39;density&#39;, &#39;temperature&#39;, &#39;mach&#39;, &#39;turbulence&#39;</span>
+               <span class="s1">&#39;Shock Sensing Variable&#39;</span><span class="p">:</span> <span class="s1">&#39;density&#39;</span><span class="p">,</span>
+               <span class="c1"># Optional (default False)</span>
+               <span class="s1">&#39;inviscid flow&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="c1"># Optional (default False)</span>
+               <span class="s1">&#39;freeze diffusion during rk stages&#39;</span><span class="p">:</span> <span class="kc">False</span>
+            <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dg-nodal-locations">
+<h2>DG Nodal locations<a class="headerlink" href="#dg-nodal-locations" title="Permalink to this headline">¶</a></h2>
+<p>The location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zcfd.solvers.utils.DGNodalLocations</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>To use the default values</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;Nodal Locations&#39;</span> <span class="p">:</span> <span class="n">nodal_locations_default</span><span class="p">[</span><span class="s1">&#39;Nodal Locations&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Or select from the available types</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;Nodal Locations&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                      <span class="c1"># Options line_evenly_spaced, line_gauss_lobatto or line_gauss_legendre_lobatto</span>
+                      <span class="s1">&#39;Line&#39;</span><span class="p">:</span>  <span class="n">line_gauss_legendre_lobatto</span><span class="p">,</span>
+                      <span class="c1"># Options tet_evenly_spaced, tet_shunn_ham</span>
+                      <span class="s1">&#39;Tetrahedron&#39;</span><span class="p">:</span> <span class="n">tet_evenly_spaced</span><span class="p">,</span>
+                      <span class="c1"># Options tri_evenly_spaced, tri_shunn_ham</span>
+                      <span class="s1">&#39;Tri&#39;</span> <span class="p">:</span> <span class="n">tri_evenly_spaced</span><span class="p">,</span>
+                    <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dgcaa">
+<span id="equation-dgcaa"></span><h2>DGCAA<a class="headerlink" href="#dgcaa" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Reference Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time.html">Time Marching</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Material Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="write_output.html">Write Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report.html">Reporting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../control-dict.html">Control Dictionary (old)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/reference_guide/equations.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

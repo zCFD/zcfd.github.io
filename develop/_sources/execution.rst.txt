@@ -1,12 +1,12 @@
-Execution
-=========
+Running zCFD
+============
 
 zCFD is run from the command line using a customised environment that automatically sets up all of the paths and file locations correctly.  To make the execution of parallel jobs easier, we also provide the free tool :ref:`mycluster` that simplifies the interaction with a range of job schedulers.
 
 .. _`zcfd-command`:
 
-(zCFD) Command Line Environment
--------------------------------
+Activating the environment
+--------------------------
 
 To run zCFD, the *zCFD command line environment* must be active. The zCFD command line environment is initialised from a terminal window by sourcing the *activate* script in the zCFD installation directory.  It does not matter where this directory is - all of the executable paths and file locations will be set automatically:
 
@@ -28,8 +28,36 @@ To deactivate the command line environment, returning the environment to the pre
 
 Your command prompt should return to its normal appearance.
 
-Smartlaunch
+.. _`input-validation`:
+
+
+
+Input Files
 -----------
+
+
+Input Validation
+----------------
+
+zCFD provides an input validation script which can be used to check the solver control dictionary before runtime reducing the likelihood of a job spending a long time queuing only to fail at start up. The script can be executed from the zCFD environment as follows:
+
+.. code-block:: bash
+
+    validate_input input.py [-m mesh.h5]
+
+    Validating parameters dictionary...
+    Parameters dictionary is valid
+    Checking BC_, FR_, FZ_, IC_ and TR_ numbering...
+    IC_ numbering is correct
+    FR_ numbering is correct
+    BC_ numbering is correct
+    zCFD input file input.py is valid
+
+If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.
+
+
+Running locally
+---------------
 
 zCFD makes very effective use of a range of processor types and computer configurations.  We provide a *smartlaunch.bsh* script with zCFD to automatically detect the processor type and the presence of any accelerators (like Nvidia GPUs or Intel Xeon Phi's).
 
@@ -55,23 +83,104 @@ Alternatively, :ref:`mycluster` is a powerful tool for setting up, running and m
 
     cluster_run -p $PROBLEM_NAME -c $CASE_NAME -j mycluster_job.job
 
-.. _`input-validation`:
 
-Input Validation
-----------------
+Running on a cluster
+--------------------
 
-zCFD provides an input validation script which can be used to check the solver control dictionary before runtime reducing the likelihood of a job spending a long time queuing only to fail at start up. The script can be executed from the zCFD environment as follows:
+.. _mycluster:
+
+MyCluster
+^^^^^^^^^
+
+MyCluster from Zenotech is used to set up, run, monitor and manage parallel jobs on a range of high performance computing environments without the user having to know the details of the queueing systems and job scheduler commands.
+
+MyCluster is distributed as part of zCFD, and is automatically available from within the zCFD command line environment. Alternatively, MyCluster can be `downloaded <https://github.com/zenotech/MyCluster>`_ and installed separately.
+
+To use MyCluster within the zCFD command line environment, you first need to configure it with your user details.  This is so that MyCluster can keep track of your jobs, and email you with alerts.  This step only needs to be done once per user.
+
+First enter your details:
 
 .. code-block:: bash
 
-    validate_input input.py [-m mesh.h5]
+    (zCFD): mycluster --firstname <Your First Name>
+    (zCFD): mycluster --lastname <Your Last Name>
+    (zCFD): mycluster --email <Your Email Address>
 
-    Validating parameters dictionary...
-    Parameters dictionary is valid
-    Checking BC_, FR_, FZ_, IC_ and TR_ numbering...
-    IC_ numbering is correct
-    FR_ numbering is correct
-    BC_ numbering is correct
-    zCFD input file input.py is valid
+MyCluster generates and uses *job* files for zCFD (and other software packages) for each different computer system. To set up a job file for zCFD, enter (for example):
 
-If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.
+.. code-block:: bash
+
+    (zCFD): mycluster --create=my-job.job \
+                      --jobname=my-job \
+                      --project=my-project \
+                      --jobqueue=my-job-queue \
+                      --ntasks=12 \
+                      --taskpernode=2 \
+                      --script=mycluster-zcfd.bsh \
+                      --maxtime=12
+
+This will create a *job* file called *my-job.job*.
+
+The *my-job.job* file can be called whatever you like, but avoid the use of spaces and other special characters in the title. The *project* is a billing code used on the system.  If you do not know what this code should be, ask your system administrator.
+
+The *jobqueue* is the name of the local `job scheduler <http://en.wikipedia.org/wiki/Job_scheduler>`_ on the system (for example *slurm*, *moab* or *pbs*).  To find out which local job scheduler is running on your system, type:
+
+.. code-block:: bash
+
+    (zCFD): mycluster -q
+
+This will also provide a list of *job queues*, and show how much resource is currently available on each.
+
+The *ntasks* setting is the total number of processors (sockets) that you want to use. For zCFD this will be equal to the number of mesh partitions that are generated. The number of tasks per node should match the number of compute devices per node (CPU sockets, Xeon Phi devices or Nvidia GPU devices).  Usually there are two sockets per node, so set *taskpernode* equal to 2. Your system administrator should advise if the local setup is different to this.
+
+The *script* is software specific. The *mycluster-zcfd.bsh* script is included (along with scripts for a number of other CFD codes) in the MyCluster distribution in the *share/* directory, so you do not need to alter the *script* setting if you are running zCFD.
+
+The *maxtime* setting is used to prevent failed jobs from over-running and to allow schedulers to prioritise short jobs where they can be accommodated between larger jobs.  The default setting is 12 hours *(maxtime=12)* but you can specify any amount of time in hours (up to the local queue maximum) can be used.  The actual limit will be shown in the *job* file, and it is worth checking whether this is adequate.
+
+Once created, the *job* file can be re-used for similar simulation tasks on the same computer.  If any of the parameters change (size of job, project, etc.) then you will need to create a new *job* file.
+
+To run zCFD using MyCluster, make sure that the *job* file is in the directory containing the mesh and input files, change to that directory and enter (for example):
+
+Example usage:
+
+.. code-block:: bash
+
+    (zCFD): (export PROBLEM=my-mesh.h5;\
+             export CASE=my-case;\
+             mycluster --submit=my-job.job)
+
+where *my-mesh.h5* is the name of the HDF5 mesh file and *my-case.py* is the name of the python input parameters file. This command will submit the job to the queue.
+
+To track the progress of your jobs via MyCluster, enter:
+
+.. code-block:: bash
+
+    (zCFD): mycluster -p
+
+To delete a job from the queue, check the *Job ID* using *mycluster -p* and then enter:
+
+.. code-block:: bash
+
+    (zCFD): mycluster -d <Job ID>
+
+A full list of MyCluster commands can be obtained:
+
+.. code-block:: bash
+
+    (zCFD): mycluster --help
+
+Using the zCFD Python Environment
+---------------------------------
+
+
+Using Juypter
+-------------
+
+We also recommend the use of  `Jupyter Notebooks <https://jupyter.org/>`_ for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser. 
+Jupyter is included in the zCFD distribution and notebooks for visualising the residual data will automatically be created when you run a zCFD case. In addition there are several example notebooks available in the `zPost <https://github.com/zenotech/zPost>`_.
+
+To automatically start up notebook server on your computer within the zCFD environment run:
+
+.. code-block:: bash
+
+    > start_notebook

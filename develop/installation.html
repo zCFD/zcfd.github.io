@@ -6,31 +6,24 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Search &#8212; zCFD User Guide v2023.01.3113-1182-ged9c4 documentation</title>
+    <title>Installation &#8212; zCFD User Guide v2023.01.3113-1182-ged9c4 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/searchtools.js"></script>
     <link rel="shortcut icon" href="_static/fav.png"/>
-    <link rel="search" title="Search" href="#" />
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
-  
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running zCFD" href="execution.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
 
   </head><body>
   
@@ -42,29 +35,25 @@
 
           <div class="body" role="main">
             
-  <h1 id="search-documentation">Search</h1>
-  <div id="fallback" class="admonition warning">
-  <script type="text/javascript">$('#fallback').hide();</script>
-  <p>
-    Please activate JavaScript to enable the search
-    functionality.
-  </p>
-  </div>
-  <p>
-    From here you can search these documents. Enter your search
-    words into the box below and click "search". Note that the search
-    function will automatically search for all of the words. Pages
-    containing fewer words won't appear in the result list.
-  </p>
-  <form action="" method="get">
-    <input type="text" name="q" value="" />
-    <input type="submit" value="search" />
-    <span id="search-progress" style="padding-left: 10px"></span>
-  </form>
-  
-  <div id="search-results">
-  
-  </div>
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-zcfd">
+<h2>Installing zCFD<a class="headerlink" href="#installing-zcfd" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
+<p>zCFD requires a license.  If you do not already have a license, please contact <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com" target="_blank">mailto:zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a> to obtain one.  The license file provided can be placed in the same directory alongside the input files or else its location can be defined using the environment variables below</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">RLM_LICENSE</span><span class="o">=</span>port@server
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">RLM_LICENSE</span><span class="o">=</span>/path/to/license/file
+</pre></div>
+</div>
+<p>In the case that the system running the simulation cannot access the internet a local license server will be required. See <a class="reference external" href="http://www.reprisesoftware.com/admin/software-licensing.php" target="_blank">http://www.reprisesoftware.com/admin/software-licensing.php</a> for details.</p>
+</div>
+</div>
+
 
           </div>
           
@@ -75,9 +64,13 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
             </a></p><h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-zcfd">Installing zCFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#licence">Licence</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
@@ -90,6 +83,18 @@
 </ul>
 
 
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -97,6 +102,9 @@
     <div class="footer">
       &copy;2016-23, Zenotech Ltd.
       
+      |
+      <a href="_sources/installation.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
     

@@ -1,0 +1,196 @@
+.. _time:
+
+Time Marching
+-------------
+
+zCFD is capable of performing both steady-state and time dependent simulations. Steady-state solutions are marched in pseudo time towards convergance. Time dependent simulations can be either globally time-stepped or use local pseudo time-stepping within a dual time-stepping iteration in physical time. The 'time marching' dictionary controls the selection of these schemes.  Major options are what CFL number to use, whether explicit or implicit timestepping is used and whether the simulation is time dependent. 
+
+.. parsed-literal::
+    
+    parameters = {
+            ...
+            "time marching": {
+                "unsteady": {...},
+                "scheme": {...},
+                'cfl': `30.0 <cfl_control_>`_,
+                "multigrid": {...}
+                "cycles": 3000, 
+            },
+            ...
+    }
+
+.. _cfl_control:
+
+CFL Control
+^^^^^^^^^^^
+
+The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step that the solver uses to reach a converged solution. The larger the CFL number, the faster the solver will run but the less stable it will be. The CFL dictionary keys are only valid when using dual time-stepping.
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'cfl'
+     - Yes
+     - 0
+     - Any positive floating point number. 
+   * - 'cfl transport'
+     - No
+     - --
+     - Any positive floating point number.
+   * - 'cfl ramp'
+     - No
+     - --
+     - Dictionary containing 'initial' and 'growth' - respectively the starting CFL number and the growth rate applied as a multiplier each successive time step until the CFL number is reached.  
+   * - 'ramp func'
+     - No
+     - --
+     - Instead of the 'cfl ramp' parameter the user can specify a :ref:`ramp function <ramp_function>`.
+   * - 'cfl coarse'
+     - No
+     - Current CFL number
+     - Any positive floating point number.
+
+cfl
+===
+Sets the CFL number used in the mass, momentum and energy equations. When using :ref:`dgcaa <equation_dgcaa>` this applies to the the 'rho', 'rhou_i' and 'rhoE' equations.
+
+Example usage:
+
+.. code-block:: python
+
+    # Typical value used for a RANS simulation using explicit time marching
+    'cfl' : 1
+
+.. code-block:: python
+
+    # Typical value used for a RANS simulations using implicit time marching
+    'cfl' : 30
+
+.. note::
+    Besides mesh quality, CFL is the most important parameter affecting simulation stability. If you find your simulation does not converge, consider reducing CFL
+
+cfl transport
+=============
+
+Sets the maximum CFL number used to update the turbulent transport equations (for example :math:`k` and :math:`\omega`). 
+
+.. code-block:: python
+
+    # Use cfl transport to promote solver stability
+    'cfl' : 30,
+    'cfl transport': 20
+
+.. note::
+    If you find your simulation does not converge with high residuals on the turbulence equations, consider setting this to a value lower than 'cfl'
+    
+
+cfl ramp
+========
+
+This allows a relatively large target CFL number to be specified, but start the simulation using a smaller one to provide stability as large non-physical transients are eliminated from the solution.   
+
+Starting a simulation with a large CFL number can cause instability to crash the solver.  A more gentle start will reduce the impact of non-physical transients. 
+
+.. code-block:: python
+
+    # Start cfl at 0.1 and grow at a rate 1.1, reaching the target cfl of 30 in 26 steps
+    'cfl' : 30,
+    'cfl ramp': {
+        'initial': 0.1,
+        'growth': 1.1
+    }
+
+cfl coarse
+==========
+
+For simulations with multigrid acceleration, the 'cfl coarse' number is used as a CFL condition on the coarse meshes.  For such cases the 'cfl' number is still applied to the finest mesh.  
+
+This only applies to explicit finite volume solutions.
+
+.. code-block:: python
+
+    # The quality of agglomerated (multigrid) coarse meshes is typically less than the quality of the primary (fine) mesh and so a lower CFL number may be required for numerical stability.
+    'cfl' : 1.0,
+    'cfl coarse': 0.5
+
+Solver scheme
+^^^^^^^^^^^^^
+There are three different time marching schemes available in zCFD: Explicit Euler, various orders of Runge Kutta (like Euler...) and the implicit Euler scheme. These can be run with dual time-stepping for both steady and unsteady simulations.  Explicit schemes with no preconditioning can be used with global time-stepping for unsteady simulations. The choice of scheme and time stepping algorithm affects which dictionary keys are valid.
+
+Runge Kutta
+"""""""""""
+
+.. code-block:: python
+
+   'time marching' : {
+                     'scheme' : {
+                                 # Either 'euler' or 'runge kutta' or 'implicit euler'
+                                 'name' : 'runge kutta',
+                                 # Number of RK stages 'euler' or 1, 4, 5, 'rk third order tvd'
+                                 'stage': 5,
+                                 # Time-stepping scheme: 'local timestepping' for steady state or dual time step time accurate
+                                 # 'global timestepping' for time accurate
+                                 'kind' : 'local timestepping',
+				 # With AMGX, the linearsolver can be run in single or double precision modes
+				 'double precision linear solve': True,
+                                 },
+                      },
+
+When global time-stepping is specified the keys :code:`['unsteady']['order']` and :code:`['unsteady']['start']` are not valid. The CFL keys in in the `CFL`_ section below are also not valid as the time step is explicitly specified.
+When the :code:`['unsteady']['total time']` and :code:`['unsteady']['time step']` keys are set to be equal values and :code:`['time marching']['scheme']['kind']` is set to :code:`'local timestepping'` the solver marches in pseudo time towards a steady state solution. If implicit euler is selected then the :code:`'multigrid'` keys must be removed.  For large CFL numbers, it is recommended the Roe inviscid flux scheme is used.
+
+
+Cycles
+^^^^^^
+
+For steady-state simulations, the number of pseudo time cycles is the same as the number of steps that the solver should use to reach a converged solution.  Note that the solver uses local pseudo time-stepping (the time-step varies according to local conditions) so any intermediate solution is not necessarily time-accurate.
+
+For unsteady (time-accurate) simulations using 'dual time-stepping' to advance the solution in time the number of pseudo time cycles determines the number of inner iterations that the solver uses to converge each real time step. When global time-stepping is specified the cycles key is not valid.
+
+.. code-block:: python
+
+    'time marching' : {
+                      # Required only for dual time-stepping:
+                      # Number of pseudo time cycles
+                      'cycles' : 5000,
+    },
+
+Multigrid
+^^^^^^^^^
+
+The mesh is automatically coarsened by merging cells on successive layers in order to accelerate solver convergence.  This does not alter the accuracy of the solution on the finest (original) mesh.  Advanced users can control the number of geometric multigrid levels and the 'prolongation' of quantities from coarse to fine meshes.
+
+.. code-block:: python
+
+    'time marching' : {
+                    # Maximum number of meshes (including fine mesh)
+                    'multigrid' : 10,
+                    # Optional:
+                    # Number of multigrid cycles before solving on fine mesh only
+                    'multigrid cycles' : 5000,
+                    # Optional (default 0.75), Advanced:
+                    # Prolongation factor
+                    'prolong factor' : 0.75,
+                    # Optional (default 0.3), Advanced:
+                    # Prolongation factor for transported quantities
+                    'prolong transport factor' : 0.3,
+                    },
+
+
+Polynomial Multigrid
+^^^^^^^^^^^^^^^^^^^^
+
+The polynomial basis on which the solution is computed can be successively coarsened, thus allowing the solution to be evolved quicker due to weakened stability restrictions at lower polynomial orders. This does not alter the accuracy of the solution on the highest polynomial order.
+
+.. code-block:: python
+
+    'time marching' : {
+                       # Optional (default False):
+                       # Switch on polynomial multigrid
+                       'multipoly' : True,
+                       },
