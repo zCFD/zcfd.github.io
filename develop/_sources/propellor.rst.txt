@@ -5,7 +5,7 @@ Propellor Modelling
 Overview
 ^^^^^^^^
 
-Propellors are similar to wind turbines except that they are desgined to produce thrust rather than torque from lift.  zCFD includes a blade element fluid zone model based on an actuator disc, for propellors:
+Propellors are similar to wind turbines except that they are designed to produce thrust rather than torque from lift.  zCFD includes a blade element fluid zone model based on an actuator disc, for propellors:
 
 .. code-block:: bash
 

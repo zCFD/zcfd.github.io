@@ -1,0 +1,5 @@
+source/functions.rst:4: (reqiured)  Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when reqiured. This allows you to customise & tune to solver as it runs.
+source/functions.rst:23: (coord)  {‘coord’: [x, y, z]}: Transformed coordinates
+source/functions.rst:50: (pmg)  The ramp function returns a single floating point number (the CFL number) and can also be used to update elements of the ‘cfl’ Python object such as cfl.min_cfl, cfl.max_cfl, cfl.current_cfl, cfl.coarse_cfl, cfl.transport_cfl, cfl.cfl_ramp, cfl.cfl_pmg, or cfl.transport_cfl_pmg.
+source/functions.rst:50: (pmg)  The ramp function returns a single floating point number (the CFL number) and can also be used to update elements of the ‘cfl’ Python object such as cfl.min_cfl, cfl.max_cfl, cfl.current_cfl, cfl.coarse_cfl, cfl.transport_cfl, cfl.cfl_ramp, cfl.cfl_pmg, or cfl.transport_cfl_pmg.
+source/functions.rst:119: (kwargs)  kwargs dictionary containing “pressure”, “temperature”, “velocity”, “wall_distance”, “location”

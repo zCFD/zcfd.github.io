@@ -1,0 +1,5 @@
+source/execution.rst:62: (Nvidia)   script with zCFD to automatically detect the processor type and the presence of any accelerators (like Nvidia GPUs or Intel Xeon Phi’s).
+source/execution.rst:64: (Smartlaunch)  Smartlaunch uses this information to calculate the number of OpenMP threads to set per MPI task and to perform NUMA binding to specific cores and memory banks.
+source/execution.rst:95: (queueing)  MyCluster from Zenotech is used to set up, run, monitor and manage parallel jobs on a range of high performance computing environments without the user having to know the details of the queueing systems and job scheduler commands.
+source/execution.rst:134: (Nvidia)   setting is the total number of processors (sockets) that you want to use. For zCFD this will be equal to the number of mesh partitions that are generated. The number of tasks per node should match the number of compute devices per node (CPU sockets, Xeon Phi devices or Nvidia GPU devices).  Usually there are two sockets per node, so set 
+source/execution.rst:177: (Juypter)  Using Juypter

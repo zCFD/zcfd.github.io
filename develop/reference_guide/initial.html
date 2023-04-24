@@ -1,21 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Initial Conditions &#8212; zCFD User Guide v2023.01.3113-1189-g7f7a0 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="shortcut icon" href="../_static/fav.png"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Initial Conditions &#8212; zCFD User Guide v2023.01.3113-1190-g7be1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Write Output" href="write_output.html" />
     <link rel="prev" title="Material Specification" href="materials.html" />
@@ -36,9 +33,9 @@
           <div class="body" role="main">
             
   <div class="section" id="initial-conditions">
-<span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this heading">¶</a></h1>
 <div class="section" id="initialisation">
-<h2>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this headline">¶</a></h2>
+<h2>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this heading">¶</a></h2>
 <p>Initial conditions are used to set the flow variable values in all cells at the start of a simulation.  The initial conditions default to the reference state (above) if not specified</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial conditions</span>
 <span class="s1">&#39;initial&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_2&#39;</span><span class="p">,</span>
@@ -56,7 +53,7 @@
 </div>
 </div>
 <div class="section" id="example-user-defined-initialisation-function">
-<h2>Example User Defined Initialisation Function<a class="headerlink" href="#example-user-defined-initialisation-function" title="Permalink to this headline">¶</a></h2>
+<h2>Example User Defined Initialisation Function<a class="headerlink" href="#example-user-defined-initialisation-function" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_initialisation</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
     <span class="c1"># Dimensional primitive variables</span>
@@ -76,7 +73,7 @@
 </div>
 </div>
 <div class="section" id="id2">
-<h2>Initial Conditions<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>Initial Conditions<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
 <p>The initial condition properties are defined using consecutively numbered blocks</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
 <span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -122,7 +119,7 @@
 For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)</p>
 <p>For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
 by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:</p>
-<table border="1" class="docutils">
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="13%" />
 <col width="13%" />
@@ -226,7 +223,7 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </div>
 </div>
 <div class="section" id="driven-initial-conditions">
-<h2>Driven Initial Conditions<a class="headerlink" href="#driven-initial-conditions" title="Permalink to this headline">¶</a></h2>
+<h2>Driven Initial Conditions<a class="headerlink" href="#driven-initial-conditions" title="Permalink to this heading">¶</a></h2>
 <p>Another way of prescribing a farfield initial condition is by defining a ‘driving function’, which on evaluation returns an initial condition dictionary.
 The driving function is re-evaluated at zCFD’s reporting frequency, meaning that the condition (e.g. inlet velocity) can be programmed to change as the simulation progresses.
 For a driving function <code class="docutils literal notranslate"><span class="pre">lift_target_ic_func</span></code>, the IC should be set up as follows in the parameters dictionary.</p>
@@ -238,7 +235,7 @@ However, the driving function is subsequently provided with key word arguments c
 For any driven initial condition, every value in the initial condition dictionary is also appended to the _report.csv file.</p>
 <p>This means that the initial condition can be programmed to respond to the flow. An example is shown below, where the driven IC will continually adjust inlet angle of attack until a specified lift coefficient is acheived.</p>
 <p>If the driven initial condition has been programmed to respond to changes in the flow, it is important to ensure that the flow has had enough time to propogate from the farfield through to the region of interest and settle before readjusting the driven initial condition.
-For simulations where the farfield is distant from the geometry, local and implicit timestepping will likely give the fastest propogation of adjusted farfield conditions through the domain.</p>
+For simulations where the farfield is distant from the geometry, local and implicit time-stepping will likely give the fastest propogation of adjusted farfield conditions through the domain.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lift_target_ic_func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
    <span class="n">alpha_init</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Initial angle of attack</span>
    <span class="n">lift_target</span><span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Targeted lift coefficient</span>
@@ -331,17 +328,15 @@ For simulations where the farfield is distant from the geometry, local and impli
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>

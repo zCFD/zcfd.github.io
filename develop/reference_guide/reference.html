@@ -1,21 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reference Settings &#8212; zCFD User Guide v2023.01.3113-1189-g7f7a0 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="shortcut icon" href="../_static/fav.png"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reference Settings &#8212; zCFD User Guide v2023.01.3113-1190-g7be1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Boundary Conditions" href="boundary.html" />
     <link rel="prev" title="Reference Guide" href="intro.html" />
@@ -36,10 +32,10 @@
           <div class="body" role="main">
             
   <div class="section" id="reference-settings">
-<span id="reference"></span><h1>Reference Settings<a class="headerlink" href="#reference-settings" title="Permalink to this headline">¶</a></h1>
+<span id="reference"></span><h1>Reference Settings<a class="headerlink" href="#reference-settings" title="Permalink to this heading">¶</a></h1>
 <div class="section" id="reference-state">
-<span id="id1"></span><h2>Reference state<a class="headerlink" href="#reference-state" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="colwidths-given docutils">
+<span id="id1"></span><h2>Reference state<a class="headerlink" href="#reference-state" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="26%" />
 <col width="11%" />
@@ -69,8 +65,8 @@
 “IC_?” must be a valid <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">initial conditions</span></a> dictionary  defined in the parameters file</p>
 </div>
 <div class="section" id="initial-state">
-<span id="id2"></span><h2>Initial State<a class="headerlink" href="#initial-state" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="colwidths-given docutils">
+<span id="id2"></span><h2>Initial State<a class="headerlink" href="#initial-state" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="26%" />
 <col width="11%" />
@@ -111,8 +107,8 @@ If <strong>‘func’</strong> is provided it will be used to provde the initial
 </div>
 </div>
 <div class="section" id="scale-mesh">
-<span id="id3"></span><h2>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="colwidths-given docutils">
+<span id="id3"></span><h2>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="26%" />
 <col width="11%" />
@@ -153,13 +149,13 @@ If <strong>‘func’</strong> is provided it will be used to provde the initial
 <p class="last">The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see <em>Tab x</em>)</p>
 </div>
 <div class="section" id="scale-function">
-<h3>Scale Function<a class="headerlink" href="#scale-function" title="Permalink to this headline">¶</a></h3>
+<h3>Scale Function<a class="headerlink" href="#scale-function" title="Permalink to this heading">¶</a></h3>
 <p>As an alternative to passing a fixed scaling factor the ‘scale’ parameter will also accept a function. See the <a class="reference internal" href="../functions.html#scale-function"><span class="std std-ref">Scale Function</span></a> for details.</p>
 </div>
 </div>
 <div class="section" id="partitioner">
-<h2>Partitioner<a class="headerlink" href="#partitioner" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="colwidths-given docutils">
+<h2>Partitioner<a class="headerlink" href="#partitioner" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="26%" />
 <col width="11%" />
@@ -184,8 +180,8 @@ If <strong>‘func’</strong> is provided it will be used to provde the initial
 <p>The ‘metis’ partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases</p>
 </div>
 <div class="section" id="restart">
-<span id="id4"></span><h2>Restart<a class="headerlink" href="#restart" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="colwidths-given docutils">
+<span id="id4"></span><h2>Restart<a class="headerlink" href="#restart" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="26%" />
 <col width="11%" />
@@ -245,7 +241,7 @@ If <strong>‘func’</strong> is provided it will be used to provde the initial
 </pre></div>
 </div>
 <div class="section" id="advanced-restart">
-<h3>Advanced Restart<a class="headerlink" href="#advanced-restart" title="Permalink to this headline">¶</a></h3>
+<h3>Advanced Restart<a class="headerlink" href="#advanced-restart" title="Permalink to this heading">¶</a></h3>
 <p>It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate approximate initial field for SA-neg</span>
 <span class="s1">&#39;approximate sa from sst results&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -254,8 +250,8 @@ If <strong>‘func’</strong> is provided it will be used to provde the initial
 </div>
 </div>
 <div class="section" id="safe-mode">
-<h2>Safe Mode<a class="headerlink" href="#safe-mode" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="colwidths-given docutils">
+<h2>Safe Mode<a class="headerlink" href="#safe-mode" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils align-default">
 <colgroup>
 <col width="26%" />
 <col width="11%" />
@@ -323,17 +319,15 @@ If <strong>‘func’</strong> is provided it will be used to provde the initial
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>

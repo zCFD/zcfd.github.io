@@ -3,7 +3,7 @@
 Time Marching
 -------------
 
-zCFD is capable of performing both steady-state and time dependent simulations. Steady-state solutions are marched in pseudo time towards convergance. Time dependent simulations can be either globally time-stepped or use local pseudo time-stepping within a dual time-stepping iteration in physical time. The 'time marching' dictionary controls the selection of these schemes.  Major options are what CFL number to use, whether explicit or implicit timestepping is used and whether the simulation is time dependent. 
+zCFD is capable of performing both steady-state and time dependent simulations. Steady-state solutions are marched in pseudo time towards convergence. Time dependent simulations can be either globally time-stepped or use local pseudo time-stepping within a dual time-stepping iteration in physical time. The 'time marching' dictionary controls the selection of these schemes.  Major options are what CFL number to use, whether explicit or implicit time-stepping is used and whether the simulation is time dependent. 
 
 .. parsed-literal::
     

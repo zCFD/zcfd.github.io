@@ -3,7 +3,7 @@
 Reporting
 ---------
 
-In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be spcified.
+In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be specified.
 
 .. code-block:: python
 
