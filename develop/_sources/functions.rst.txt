@@ -100,3 +100,55 @@ Example:
       }
     ...
    }
+
+
+.. _initial_function:
+
+Initialisation Function
+-----------------------
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Provide the initial flow field variables on a cell-by-cell basis
+   * - **Valid for parameter**
+     - :ref:`initial <initial_state>`
+   * - **Parameters**
+     - kwargs dictionary containing "pressure", "temperature", "velocity", "wall_distance", "location"
+   * - **Returns**
+     - dictionary containing one or more of "pressure", "temperature" or "velocity"
+
+
+
+.. code-block:: python
+    
+    
+    def my_initialisation(**kwargs):
+      # Dimensional primitive variables
+      pressure = kwargs['pressure']
+      temperature = kwargs['temperature']
+      velocity = kwargs['velocity']
+      wall_distance = kwargs['wall_distance']
+      # Cell centre localtion [X, Y, Z]
+      location = kwargs['location'] 
+
+      if location[0] > 10.0:
+        velocity[0] *= 2.0
+
+      # Return a dictionary with user defined quantity.
+      return { 'velocity' : velocity }
+
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'initial': {
+      ...
+      'func': my_initialisation,
+      ...
+      }
+    ...
+   }

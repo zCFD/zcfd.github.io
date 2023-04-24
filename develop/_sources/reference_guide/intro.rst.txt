@@ -17,6 +17,7 @@ This reference guide documents the parameters available in a zCFD control dictio
 
     parameters = {
         'reference': :ref:`IC_1 <reference_state>`,
+        'initial': { :ref:`initial_state` },
         'restart': :ref:`False <restart>`,
         'partitioner': 'metis',
         'scale': :ref:`[1,1,1] <scale_mesh>`,

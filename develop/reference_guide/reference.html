@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reference Settings &#8212; zCFD User Guide v2023.01.3113-1185-g2a266 documentation</title>
+    <title>Reference Settings &#8212; zCFD User Guide v2023.01.3113-1188-gb8f6bc documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -68,8 +68,50 @@
 <p>Sets the <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Condition</span></a> which provides the reference quantities when non-dimensionalisation is applied to <a class="reference internal" href="report.html#reporting"><span class="std std-ref">force reporting.</span></a>
 “IC_?” must be a valid <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">initial conditions</span></a> dictionary  defined in the parameters file</p>
 </div>
+<div class="section" id="initial-state">
+<span id="id2"></span><h2>Initial State<a class="headerlink" href="#initial-state" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="26%" />
+<col width="11%" />
+<col width="26%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘name’</td>
+<td>No</td>
+<td>‘IC_1’</td>
+<td>“IC_?” where ? is an integer.</td>
+</tr>
+<tr class="row-odd"><td>‘func’</td>
+<td>No</td>
+<td>–</td>
+<td>An (optional) initial conditions function.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set initital state to IC_1</span>
+<span class="s2">&quot;initial&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;IC_1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Sets which block <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Condition</span></a> block will be used to provide initial flow field conditions for the simulation.
+If <strong>‘func’</strong> is provided it will be used to provde the initial flow field variables on a cell-by-cell basis.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the <strong>‘initial’</strong> entry is missing then the conditions default to the <a class="reference internal" href="#reference-state"><span class="std std-ref">reference</span></a> state.</p>
+</div>
+</div>
 <div class="section" id="scale-mesh">
-<span id="id2"></span><h2>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="colwidths-given docutils">
 <colgroup>
 <col width="26%" />
@@ -142,7 +184,7 @@
 <p>The ‘metis’ partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases</p>
 </div>
 <div class="section" id="restart">
-<span id="id3"></span><h2>Restart<a class="headerlink" href="#restart" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2>Restart<a class="headerlink" href="#restart" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="colwidths-given docutils">
 <colgroup>
 <col width="26%" />

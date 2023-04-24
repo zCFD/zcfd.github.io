@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>zCFD Functions &#8212; zCFD User Guide v2023.01.3113-1185-g2a266 documentation</title>
+    <title>zCFD Functions &#8212; zCFD User Guide v2023.01.3113-1188-gb8f6bc documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -134,6 +134,56 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="initialisation-function">
+<span id="initial-function"></span><h2>Initialisation Function<a class="headerlink" href="#initialisation-function" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Description</strong></td>
+<td>Provide the initial flow field variables on a cell-by-cell basis</td>
+</tr>
+<tr class="row-even"><td><strong>Valid for parameter</strong></td>
+<td><a class="reference internal" href="reference_guide/reference.html#initial-state"><span class="std std-ref">initial</span></a></td>
+</tr>
+<tr class="row-odd"><td><strong>Parameters</strong></td>
+<td>kwargs dictionary containing “pressure”, “temperature”, “velocity”, “wall_distance”, “location”</td>
+</tr>
+<tr class="row-even"><td><strong>Returns</strong></td>
+<td>dictionary containing one or more of “pressure”, “temperature” or “velocity”</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_initialisation</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="c1"># Dimensional primitive variables</span>
+  <span class="n">pressure</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span>
+  <span class="n">temperature</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span>
+  <span class="n">velocity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]</span>
+  <span class="n">wall_distance</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wall_distance&#39;</span><span class="p">]</span>
+  <span class="c1"># Cell centre localtion [X, Y, Z]</span>
+  <span class="n">location</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+
+  <span class="k">if</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">10.0</span><span class="p">:</span>
+    <span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">2.0</span>
+
+  <span class="c1"># Return a dictionary with user defined quantity.</span>
+  <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;velocity&#39;</span> <span class="p">:</span> <span class="n">velocity</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="o">...</span>
+ <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="p">{</span>
+   <span class="o">...</span>
+   <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">my_initialisation</span><span class="p">,</span>
+   <span class="o">...</span>
+   <span class="p">}</span>
+ <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -155,6 +205,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">zCFD Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#scale-mesh-function">Scale Mesh Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ramp-cfl-function">Ramp CFL Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialisation-function">Initialisation Function</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="control-dict.html">Control Dictionary (old)</a></li>

@@ -29,6 +29,42 @@ Reference state
 Sets the :ref:`Initial Condition <initial_conditions>` which provides the reference quantities when non-dimensionalisation is applied to :ref:`force reporting. <reporting>`
 "IC\_?" must be a valid :ref:`initial conditions <initial_conditions>` dictionary  defined in the parameters file
 
+
+.. _initial_state:
+
+Initial State
+^^^^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'name'
+     - No
+     - 'IC_1'
+     - "IC\_?" where ? is an integer. 
+   * - 'func'
+     - No
+     - --
+     - An (optional) initial conditions function.
+
+.. code-block:: python
+
+    # set initital state to IC_1
+    "initial": {
+      "name": "IC_1"
+    }
+
+Sets which block :ref:`Initial Condition <initial_conditions>` block will be used to provide initial flow field conditions for the simulation.
+If **'func'** is provided it will be used to provde the initial flow field variables on a cell-by-cell basis.
+
+.. note::
+  If the **'initial'** entry is missing then the conditions default to the :ref:`reference <reference_state>` state.
+
 .. _scale_mesh:
 
 Scale mesh
