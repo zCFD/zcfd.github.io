@@ -18,36 +18,38 @@ Equations
 
 The equations key selects the equation set to be solved as well as the finite volume solver or the high order strong form Discontinuous Galerkin/Flux Reconstruction solver.
 
-The corresponding equation set options should also be defined in the control dictionary.
+The corresponding equation set options should also be defined in the control dictionary. The valid equation keys are shown in the table below.
 
 .. list-table:: 
-   :widths: 20 80
+   :widths: 10 60 10 10 10
    :header-rows: 1
 
-   * - Value
+   * - Solver
      - Description
-   * - :ref:`"euler" <equation_euler>`
+     - Compressible
+     - High order
+     - Incompressible
+   * - Euler
      - Use the Euler flow equations in the simulation. These are compressible, inviscid flow equations.
-   * - :ref:`"rans" <equation_rans>`
+     - :ref:`"euler" <equation_euler>`
+     - --
+     - --
+   * - RANS
      - Use the RANS (Reynolds-Averaged Navier-Stokes) equations in the simulation. These are compressible, viscid flow equations with additional terms included to account for the effect of turbulence on the flow without the expense of simulating the turbulent flow structures themselves.
-   * - :ref:`"viscous" <equation_viscous>`
+     - :ref:`"rans" <equation_rans>`
+     - :ref:`"dgrans" <equation_dg>`
+     - Coming soon
+   * - Viscous
      - Use the viscous flow equations. These are compressible, viscid flow equations which do not model turbulence.
-   * - :ref:`"les" <equation_les>`
-     - 
-   * - :ref:`"dgviscous" <equation_dg>`
-     - 
-   * - 'dgrans'
-     -
-   * - 'dgles'
-     - 
-   * - 'incomp viscous'
-     - 
-   * - 'incomp rans'
-     - 
-   * - 'incomp les'
-     - 
-   * - 'dgcaa'
-     - 
+     - :ref:`"viscous" <equation_viscous>`
+     - :ref:`"dgviscous" <equation_dg>`
+     - Coming soon
+   * - LES
+     - Use the Large Eddy Simulation (LES) equations.
+     - :ref:`"les" <equation_les>`
+     - :ref:`"dgles" <equation_dg>`
+     - Coming soon
+
 
 Example usage:
 
@@ -64,61 +66,132 @@ Example usage:
 
 .. _equation_common:
 
+
 Common Settings
 ^^^^^^^^^^^^^^^
 
 The following parameters are common for all of the equation sets.
 
 .. list-table:: 
-   :widths: 25 10 25 35
+   :widths: 20 10 10 20 
    :header-rows: 1
 
    * - Keyword
      - Required
      - Default
      - Valid values
-   * - 'limiter'
-     - Yes
-     - 'vanalbada'
-     - 'vanalbada'
    * - 'order'
      - Yes
      - --
-     - 'first','second','euler_second'
+     - 'first' | 'second' | 'euler_second'
    * - 'first order cycles'
-     - 
-     - 
-     - 
+     - No
+     - --
+     - Positive integer
    * - 'linear gradients'
-     - 
-     - 
-     - 
+     - No
+     - False
+     - True | False
    * - 'leastsq gradients'
-     - 
-     - 
-     - 
+     - No
+     - False
+     - True | False
    * - 'inviscid flux scheme'
-     - 
-     - 
-     - 
+     - Yes
+     - "HLLC"
+     - "HLLC" | "Rusanov" | "Roe" | "Roe low diss"
    * - 'roe low dissipation sensor'
-     - 
-     - 
-     - 
+     - No
+     - -- 
+     - "FD" | "NTS" | "DES" | "NONE"
    * - 'roe dissipation sensor minimum'
-     - 
-     - 
-     - 
-   * - 'roe entropy fix coefficient'
-     - 
-     - 
-     - 
+     - No
+     - -- 
+     - Float between 0.05 and 1.0
    * - 'freeze limiter cycle'
-     - 
-     - 
-     - 
+     - No
+     - -- 
+     - Positive integer
+   * - 'relax'
+     - Yes (for incompressible equation set)
+     - 0.5
+     - Positive float
+   * - 'turbulence'
+     - Yes (for 'les' or 'rans' equation set)
+     - {}
+     - See :ref:`"turbulence" <turbulence>`
 
-These values are valid for all equation sets.
+order
+=====
+Sets the order of the spatial discretisation. **'euler_second'** is second order for the flow varialbes and first order for the turbulence.
+
+first order cycles
+==================
+Specifices the number of cycles the solver will run with first order spatial discretisation. This can be used to improve stability at start up.
+
+Example usage:
+Run 500 cycles first order.
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    'equations' : 'euler',
+    'euler': {
+      ...
+      'first order cycles': 500,
+      ...
+    }
+    ..
+  }
+
+linear gradients & leastsq gradients
+======================================
+By default zCFD uses a Weighted Green-Gauss gradient calculation. This can be switched to a standard Green-Gauss by setting **'linear gradients'** to True. Setting **'leastsq gradients'** to True will set the gradient calculation to Least Squares.
+
+
+inviscid flux scheme
+====================
+Picks the scheme to use for the inviscid flux. **HLLC** is good when running explicit, **Roe** is best for implicit and **Rusanov** is good for getting an implicit simulation going. The **Roe low diss** scheme can be used with LES or Hybrid RANS/LES
+
+roe low dissipation sensor
+==========================
+The sensor used to decide whether to use (and by how much) the Roe low dissipation scheme.
+
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Setting
+     - Notes
+   * - **'DES'**
+     - Uses the blending function from the selected DES model to turn on the Roe low dissipation scheme in LES regions
+   * - **'NONE'**
+     - Uses the value set on **'roe dissipation sensor minimum'** everywhere
+   * - **'FD'**
+     - See Jonhsen et al. JCP 229 (2010) pag. 1234
+   * - **'NTS'**
+     - See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007
+
+
+roe dissipation sensor minimum
+==============================
+Sets the minimum value that the dissipation term in the Roe scheme is multiplied by when using the **'Row low diss'** scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
+
+freeze limiter cycle
+====================
+If set the values of the limiter used in the MUSCL reconstruction are frozen at the specified cycle. This can be useful in the latter stages of a simulation if noise from the limiter is causing the residual convergence to stall.
+
+relax
+=====
+The relaxation factor used on the flow equations in the incompressible solver. Increasing this will speed up convergence at the expense of stability and vice versa.
+
+.. _turbulence:
+
+Turbulence
+^^^^^^^^^^
+
 
 .. _equation_euler:
 
@@ -127,31 +200,41 @@ Euler
 
 Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The compressible Euler equations are appropriate when modelling flows where momentum significantly dominates viscosity - for example at very high speed. The computational mesh used for Euler flow does not need to resolve the flow detail in the boundary layer and hence will generally have far fewer cells than the corresponding viscous mesh would have.
 
+As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'precondition'
+     - Yes
+     - False
+     - True | False
+     - Use low speed mach preconditioner
+
+Example usage:
+
 .. code-block:: python
 
-  'euler' : {
-              # Spatial accuracy (options: first, second)
+  parameters = {
+    ..
+    # Use the euler equation set
+    'equations' : 'euler',
+    'euler' : {
               'order' : 'second',
-              # Optional (default 0):
-              # Run first order spatial accuracy for the first x cycles
               'first order cycles': 100,
-              # Optional (default 'vanalbada'):
-              # MUSCL limiter (options: vanalbada)
-              'limiter' : 'vanalbada',
-              # Optional (default off)
               # Cycle on which to freeze the limiter values
               'freeze limiter cycle': 500,
-              # Optional (default False):
               # Use low speed mach preconditioner
               'precondition' : True,
-              # Optional (default False):
-              # Use linear gradients
-              'linear gradients' : False,
-              # Optional (default 'HLLC'):
-              # Scheme for inviscid flux: HLLC, Rusanov or Roe
               'Inviscid Flux Scheme': 'HLLC',
             },
-
+  }
 
 .. _equation_viscous:
 
@@ -160,27 +243,41 @@ Viscous
 
 The viscous (laminar) equations model flow that is viscous but not turbulent.  The `Reynolds number <http://en.wikipedia.org/wiki/Reynolds_number>`_ of a flow regime determines whether or not the flow will be turbulent. The computational mesh for a viscous flow does have to resolve the boundary layer, but the solver will run faster as fewer equations are being included.
 
+As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'precondition'
+     - Yes
+     - False
+     - True | False
+     - Use low speed mach preconditioner
+
+Example usage:
+
 .. code-block:: python
 
+  parameters = {
+    ..
+    # Use the viscous equation set
+    'equations' : 'viscous',
     'viscous' : {
-                  # Spatial accuracy (options: first, second)
                   'order' : 'second',
-                  # Optional (default 0):
-                  # Run first order spatial accuracy for the first x cycles
                   'first order cycles': 100,
-                  # Optional (default 'vanalbada'):
-                  # MUSCL limiter (options: vanalbada)
-                  'limiter' : 'vanalbada',
-                  # Optional (default False):
                   # Use low speed mach preconditioner
                   'precondition' : True,
-                  # Optional (default False):
-                  # Use linear gradients
                   'linear gradients' : False,
-                  # Optional (default 'HLLC'):
-                  # Scheme for inviscid flux: HLLC or Rusanov
                   'Inviscid Flux Scheme': 'HLLC',
                 },
+    ..
+  }
 
 .. _equation_rans:
 
@@ -188,131 +285,254 @@ RANS
 ^^^^
 The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
 
+As well as the :ref:`"common" <equation_common>` settings, the **'RANS'** equation set requires the additional **'turbulence'** dictionary, which can have the following parameters:
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'les'
+     - Yes
+     - 'none'
+     - 'none' | 'DES" | 'DDES' | 'IDDES' | 'SAS'
+     - Selects the hybrid RANS/LES model.
+   * - 'model'
+     - Yes
+     - --
+     - 'sst' | 'sas' | 'sa-neg' | 'sst-transition'
+     - Selects the RANS turbulence model 
+   * - 'approximate sa from sst results'
+     - No
+     - 
+     - True | False
+     - Restart an SA-neg calculation from an SST solution
+   * - 'rotation correction'
+     - No
+     - False
+     - True | False
+     - Adds the rotation correction term to SST or SA-neg
+   * - 'limit gradient k'
+     - No
+     - 
+     - Float from 0.01 to 1
+     - Activates the :math:`\tilde{\nu}` gradient limiter in the SA-neg model
+   * - 'qcr'
+     - No
+     - False
+     - True | False
+     - Activates the non-linear QCR correction to the turbulent stress. Applicible to both SST and SA-neg
+
+
+les
+===
+Selects the hybrid RANS/LES model in the RANS solver which is applied to the base model selected with the **"model"** key word.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Setting
+     - Notes
+   * - **'none'**
+     - Solve the RANS equations with no hybrid RANS/LES model
+   * - **'DES'**
+     - Detached Eddy Simulation
+   * - **'DDES'**
+     - Delayed Detached Eddy Simulation
+   * - **'IDDES'**
+     - Improved Delayed Detached Eddy Simulation 
+   * - **'SAS'**
+     - Scale Adaptive Simulation
+
+model
+=====
+Selects the RANS turbulence model. 
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Setting
+     - Notes
+   * - **'sst'**
+     - The Menter Shear Stress Transport Turbulence Model (https://turbmodels.larc.nasa.gov/sst.html)
+   * - **'sa'**
+     - Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
+   * - **'sa-neg'**
+     - 
+   * - **'sst-transition'**
+     - The Langtry-Menter 4-equation Transitional SST Model (https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html)
+
+
+limit gradient k
+================
+Activates the :math:`\tilde{\nu}` gradient limiter in the SA-neg model. This helps eliminate gradient under/over shoot in regions of poor mesh quality.
+
+The value should be between 0 and 1. **0** is off and **1** is maximum limiting.
+
+qcr
+===
+Activates the non-linear QCR correction to the turbulent stress. Applicible to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings.
+
+
+Example RANS usage:
+===================
+
 .. code-block:: python
 
-    'RANS' : {
-                # Spatial accuracy (options: first, second, euler_second)
+  parameters = {
+    ..
+    # Use the viscous equation set
+    'equations' : 'RANS',
+    'RANS': {
                 'order' : 'second',
-                # Optional (default 0):
-                # Run first order spatial accuracy for the first x cycles
                 'first order cycles': 100,
-                # Optional (default 'vanalbada'):
-                # MUSCL limiter (options: vanalbada)
-                'limiter' : 'vanalbada',
-                # Optional (default off)
-                # Cycle on which to freeze the limiter values
                 'freeze limiter cycle': 500,
-                # Optional (default False):
-                # Use low speed mach preconditioner
-                'precondition' : True,
-                # Optional (default False):
-                # Use linear gradients
                 'linear gradients' : False,
-                # Optional (default False):
-                # Use least squares gradients
                 'leastsq gradients' : False,
-                # Optional (default 'HLLC'):
-                # Scheme for inviscid flux: HLLC, Rusanov, Roe or Roe low diss
                 'Inviscid Flux Scheme': 'HLLC',
-                # Optional (default 'NONE')
-                # Roe low dissipation sensor type: 'FD' (wall distance based), 'NTS' (vorticity based), 'DES' (DES blending function based) or 'NONE'
                 'roe low dissipation sensor': 'DES',
-                # Optional (default 0.05)
-                # Minimum value of the Roe low dissipation sensor
                 'roe dissipation sensor minimum': 0.05,
-                # Turbulence
                 'turbulence' : {
-                                  # turbulence model (options: 'sst', 'sa-neg', 'sst-transition')
                                   'model' : 'sst',
-                                  # Optional (default 'none'):
-                                  # LES model (options 'none', 'DES', 'DDES', 'SAS')
+                                  # No Hybrid RANS/LES
                                   'les' : 'none',
-                                  # Optional (default 0.09):
-                                  # betastar turbulence closure constant
-                                  'betastar' : 0.09,
-                                  # Optional (default True):
-                                  # turn off mu_t limiter
-                                  'limit mut' : False,
-                                  # Optional (default CDES=0.65, CDES_kw=0.78, CDES_keps=0.61):
-                                  # DES constants
-                                  'CDES': 0.65
-                                  'CDES_kw': 0.78,
-                                  'CDES_keps': 0.61,
-                                  # Optional (default Cd1=20.0, Cd2=3, Cw= 0.15):
-                                  # (I)DDES constants
-                                  'Cd1': 20.0,
-                                  'Cd2': 3,
-                                  'Cw': 0.15,
-                                  # Optional when using 'sst' (default 0):
-                                  # Menter SST production term: 0=SST-V, 1=incompressible, 2=SST
-                                  'production': 0,
-                                  # Optional when using 'sa-neg' (default False):
-                                  # Use sa-neg rotation correction
-                                  'rotation correction': True,
-                                  # Optional when using sa-neg (default 0.0):
-                                  # Limit the sa-neg gradient based on the maximum value between neighbouring cells.
-                                  # k = 0.0 corresponds to no limiting, k = 1.0 maximum limiting.
+                                  'rotation correction': False,
                                   'limit gradient k': 0.5
-                                  # Option when using 'sst-transition'
-                                  # Transition model constants
-                                  'ca1': 2.0,
-                                  'ca2': 0.06,
-                                  'ce1': 1.0,
-                                  'ce2': 50.0,
-                                  'cthetat': 0.03,
-                                  'sigmagamma': 1.0,
-                                  'sigmathetat': 2.0,
-                                  # Option when using 'sst-transition'
-                                  # Turn transition separation correction model on/off
-                                  'separation correction': True,
-                                  # Option when using 'sst' or 'sa-neg'
-                                  # Use the non-linear Quadratic Constitutive Relation
-                                  # Spalart, P. R., "Strategies for Turbulence Modelling and Simulation,"
-                                  # International Journal of Heat and Fluid Flow, Vol. 21, 2000, pp. 252-263,
-                                  # https://doi.org/10.1016/S0142-727X(00)00007-2
                                   'qcr': True
                                 },
                },
+    ...
+  }
+
+Advanced parameters for turbulence models
+=========================================
+The following parameters can be used in the 'turbulence' dictionary to allow tuning of the turbulence models in zCFD. These are advanced parameters and shouldn't normally need to be adjusted.
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'betastar'
+     - No
+     - 0.09
+     - Positive number
+     - Constant in the dissipation term on the k equation in the SST model
+   * - 'cdes_kw'
+     - No
+     - 0.78
+     - Positive number
+     - The :math:`k - \omega` part of the blended :math:`C_{DES}` in SST
+   * - 'cdes_keps'
+     - No
+     - 0.21
+     - Positive number
+     - The :math:`k - \epsilon` part of the blended :math:`C_{DES}` in SST
+   * - 'cd1'
+     - No
+     - 20
+     - Positive number
+     - Constant in the :math:`f_{dt}` blending function in IDDES
+   * - 'cd2'
+     - No
+     - 3
+     - Positive integer
+     - Constant in the :math:`f_{dt}` blending function in IDDES
+   * - 'production'
+     - No
+     - 0
+     - Positive integer
+     - Selects the model for the production term in the SST model.
+   * - 'cdes'
+     - No
+     - 0.65
+     - Positive number
+     - :math:`C_{DES}` constant used for SA-neg based hybrid RANS/LES
+
+
+**'production'** can have the following values:
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Setting
+     - Notes
+   * - 0
+     - Selects the vorticity based production term (SST-V) :math:`P_m=\mu_t\Omega_v^2-\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+   * - 1
+     - Selects the strain based production term for incompressible flows :math:`P_m=\mu_t S^2`
+   * - 2
+     - Selects the strain based production term for compressible flows :math:`P_m=\mu_t S^2 -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+   * - 3
+     - Selects the Kato-Launder source term :math:`P_m=\mu_t S\Omega_v -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+
 
 
 .. _equation_les:
 
 LES
 ^^^
-The filtered Large Eddy Simulation (LES) equations
+
+As well as the :ref:`"common" <equation_common>` settings, the **'LES'** equation set requires the additional **'turbulence'** dictionary, which can have the following parameters:
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'les'
+     - Yes
+     - 'none'
+     - 'none' | 'WALE" | 
+     - Selects the hybrid RANS/LES model.
+ 
+
+
+les
+===
+
+Selects the model for the subgrid eddy viscosity in the LES solver: either **"none"** for implicit LES or **"WALE"** to use the Wall Adapted Local Eddy Viscosity model.
+
+
+Example usage:
 
 .. code-block:: python
 
-    'LES' : {
-                  # Spatial accuracy (options: first, second)
-                  'order' : 'second',
-                  # Optional (default 'vanalbada'):
-                  # MUSCL limiter (options: vanalbada)
-                  'limiter' : 'vanalbada',
-                  # Optional (default False):
-                  # Use low speed mach preconditioner
-                  'precondition' : True,
-                  # Optional (default False):
-                  # Use linear gradients
-                  'linear gradients' : False,
-                  # Optional (default False):
-                  # Use least squares gradients
-                  'leastsq gradients' : False,
-                  # Optional (default 'HLLC'):
-                  # Scheme for inviscid flux: HLLC, Rusanov, Roe or Roe low diss
-                  'Inviscid Flux Scheme': 'HLLC',
-                  # Optional (default 'NONE')
-                  # Roe low dissipation sensor type: 'FD' (wall distance based), 'NTS' (vorticity based), 'DES' (DES blending function based) or 'NONE'
-                  'roe low dissipation sensor': 'DES',
-                  # Optional (default 0.05)
-                  # Minimum value of the Roe low dissipation sensor
-                  'roe dissipation sensor minimum': 0.05,
-                  'turbulence' : {
-                                  # LES model (options 'none', 'WALE')
+  parameters = {
+    ..
+    # Use the viscous equation set
+    'equations' : 'LES',
+    'LES': {
+                'order' : 'second',
+                'first order cycles': 100,
+                'freeze limiter cycle': 500,
+                'linear gradients' : False,
+                'leastsq gradients' : False,
+                'Inviscid Flux Scheme': 'HLLC',
+                'roe low dissipation sensor': 'DES',
+                'roe dissipation sensor minimum': 0.05,
+                'turbulence' : {
                                   'les' : 'none',
                                 },
+               },
+    ...
+  }
 
-                },
 
 
 .. _equation_dg:
@@ -320,84 +540,167 @@ The filtered Large Eddy Simulation (LES) equations
 High Order
 ^^^^^^^^^^
 
-When using the high order strong form Discontinuous Galerkin/Flux Reconstruction solver the keys in the equations dictionary are the same for each equation set except that the :code:`'linear gradients'` and :code:`'limiter'` keys are not valid and additional keys are available in the equations dictionary. These additional keys are given below
+When using the high order strong form Discontinuous Galerkin/Flux Reconstruction solver the keys in the :ref:`"common" <equation_common>` equations dictionary are the same for each equation set except that the **'linear gradients'** and **'limiter'** keys are not valid and additional keys are available in the equations dictionary.  For example all the available keys for **'dgviscous'** are a combination of the **'viscous'** keys and the keys shows below. The same logic applies to the **'dgrans'**, and **'dgles'** equation sets.
 
-.. code-block:: python
+These additional DG keys are:
 
-    'DG...' : {
-                   # Spatial polynomial order 0,1,2,3
-                   'order' : 2,
-                   # Optional (default 0.0)
-                   'c11 stability parameter': 0.0,
-                   # Optional (default 0.5)
-                   'LDG upwind parameter': 0.5,
-                   # Optional (default False)
-                   'Shock Sensing': False,
-                   'Shock Sensing k': 1.0,
-                   'Shock Sensing Viscosity Scale': 1.0,
-                   # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
-                   'Shock Sensing Variable': 'density',
-                },
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
 
-Hence all the available keys for :code:`'DGviscous'` are a combination of the :code:`'viscous'` keys and the :code:`'DG...'` keys. The same logic applies to the :code:`'DGRANS'`, and :code:`'DGLES'` equation sets.
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'order'
+     - Yes
+     - 
+     - 0 |1 | 2 | 3 | 4
+     - This parameter sets the order of the polynomials within each element used to define the numerical solution
+   * - 'freeze diffusion during rk stages'
+     - Yes
+     - True
+     - True | False
+     - Fixes diffusion terms after first RK stage
+   * - 'inviscid flow'
+     - Yes
+     - False
+     - True | False
+     - Defines if only advective terms should be computed
+   * - 'c11 stability parameter'
+     - Yes
+     - 0
+     - Number
+     -
+   * - 'ldg upwind parameter'
+     - Yes
+     - 0.5
+     - Number between 0 & 1
+     -
+   * - 'shock sensing'
+     - Yes
+     - False
+     - True | False
+     -
+   * - 'shock sensing variable'
+     - Yes
+     - density
+     - "density" | "temperature" | "mach" | "turbulence"
+     -
+   * - 'shock k'
+     - No
+     - 1.0
+     - Number
+     -
+   * - 'shock sensing viscosity scale'
+     - No
+     - 1.0
+     - Number
+     -
 
-.. code-block:: python
-
-    'DGviscous' : {
-                   # Spatial polynomial order 0,1,2,3
-                   'order' : 2,
-                   # Optional (default False)
-                   # Use low speed mach preconditioner
-                   'precondition' : True,
-                   # Optional (default 'HLLC')
-                   # scheme for inviscid flux: HLLC or Rusanov
-                   'Inviscid Flux Scheme': 'HLLC',
-                   # Optional (default 0.0)
-                   'c11 stability parameter': 0.0,
-                   # Optional (default 0.5)
-                   'LDG upwind parameter': 0.5,
-                   # Optional (default False)
-                   'Shock Sensing': False,
-                   'Shock Sensing k': 1.0,
-                   'Shock Sensing Viscosity Scale': 1.0,
-                   # Variable used for shock sensing, one of: 'density', 'temperature', 'mach', 'turbulence'
-                   'Shock Sensing Variable': 'density',
-		   # Optional (default False)
-		   'inviscid flow': False,
-		   # Optional (default False)
-		   'freeze diffusion during rk stages': False
-                },
-
+.. _dg_nodal_locations:
 
 DG Nodal locations
-^^^^^^^^^^^^^^^^^^
+==================
+In addition to the equation set the location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary. The nodal locations are used in the generation of Lagrange polynomials used to define the solution within an element.
 
-The location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary
+There are various sets of nodal locations defined in literature for use with high order methods.  Varying the nodal locations can minimise aliasing errors within the DG method.  It is recommended to use the default values.
+
+.. list-table:: 
+   :widths: 10 10 10 20 50
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'line'
+     - Yes
+     - line_gauss_lobatto
+     - line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
+     - Specifies 1D points defining nodal locations.
+   * - 'tri'
+     - Yes
+     - tri_shunn_ham
+     - tri_shunn_ham | tri_evenly_spaced, 
+     - Specifies 2D triangle points defining nodal locations.
+   * - 'tetrahedron'
+     - Yes
+     - tet_shunn_ham
+     - tet_shunn_ham | tet_evenly_spaced
+     - Specifies 3D tetra points defining nodal locations.
+   * - 'pyramid'
+     - Yes
+     - pyramid_gauss_legendre_lobatto
+     - pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
+     - Specifies 3D pyramid points defining nodal locations.
+
+
+Before you use the nodal locations the dictionaries must be imported by adding the following to your control file:
 
 .. code-block:: python
 
     from zcfd.solvers.utils.DGNodalLocations import *
 
-To use the default values
+To use the default values:
 
 .. code-block:: python
+    
+    from zcfd.solvers.utils.DGNodalLocations import *
+    
+    parameters = {
+    ..
+        'Nodal Locations' : nodal_locations_default['Nodal Locations']
+    ..
+    }
 
-    'Nodal Locations' : nodal_locations_default['Nodal Locations']
 
 Or select from the available types
 
 .. code-block:: python
 
-    'Nodal Locations' : {
-                          # Options line_evenly_spaced, line_gauss_lobatto or line_gauss_legendre_lobatto
-                          'Line':  line_gauss_legendre_lobatto,
-                          # Options tet_evenly_spaced, tet_shunn_ham
-                          'Tetrahedron': tet_evenly_spaced,
-                          # Options tri_evenly_spaced, tri_shunn_ham
-                          'Tri' : tri_evenly_spaced,
-                        },
+    from zcfd.solvers.utils.DGNodalLocations import *
+    
+    parameters = {
+    ..
+      'Nodal Locations' : {
+                            'line':  line_gauss_legendre_lobatto,
+                            'tetrahedron': tet_evenly_spaced,
+                            'tri' : tri_evenly_spaced,
+                            'pyramid': pyramid_evenly_spaced
+                          },
+    ..
+    }
 
-.. _equation_dgcaa:
 
-DGCAA
-^^^^^
+Example "dgviscous"
+===================
+
+.. code-block:: python
+
+    from zcfd.solvers.utils.DGNodalLocations import *
+    
+    parameters = {
+    ..
+        'equation': "dgviscous",
+        'dgviscous' : {
+                   # Keys for viscous
+                   'precondition' : True,
+                   'Inviscid Flux Scheme': 'HLLC',
+                   
+                   # Additional DG Keys 
+                   'order' : 2,
+                   'inviscid flow': False,
+                   'freeze diffusion during rk stages': False
+                   'c11 stability parameter': 0.0,
+                   'LDG upwind parameter': 0.5,
+                   'Shock Sensing': False,
+                   'Shock Sensing k': 1.0,
+                   'Shock Sensing Viscosity Scale': 1.0,
+                   'Shock Sensing Variable': 'density',
+                },
+        'Nodal Locations' : nodal_locations_default['Nodal Locations']
+    ..
+    } 
