@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Equations &#8212; zCFD User Guide v2023.01.3113-1195-g683f documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2023.01.3113-1196-g0b046 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -253,9 +253,10 @@ Run 500 cycles first order.</p>
 <h3>relax<a class="headerlink" href="#relax" title="Permalink to this heading">¶</a></h3>
 <p>The relaxation factor used on the flow equations in the incompressible solver. Increasing this will speed up convergence at the expense of stability and vice versa.</p>
 </div>
-</div>
 <div class="section" id="turbulence">
-<span id="id2"></span><h2>Turbulence<a class="headerlink" href="#turbulence" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h3>turbulence<a class="headerlink" href="#turbulence" title="Permalink to this heading">¶</a></h3>
+<p>The turbulence dictionary is required for the <a class="reference internal" href="#equation-rans"><span class="std std-ref">“rans”</span></a> and <a class="reference internal" href="#equation-les"><span class="std std-ref">“les”</span></a> equations sets.</p>
+</div>
 </div>
 <div class="section" id="euler">
 <span id="equation-euler"></span><h2>Euler<a class="headerlink" href="#euler" title="Permalink to this heading">¶</a></h2>
@@ -306,7 +307,35 @@ Run 500 cycles first order.</p>
 </div>
 <div class="section" id="viscous">
 <span id="equation-viscous"></span><h2>Viscous<a class="headerlink" href="#viscous" title="Permalink to this heading">¶</a></h2>
-<p>The viscous (laminar) equations model flow that is viscous but not turbulent.  The <a class="reference external" href="http://en.wikipedia.org/wiki/Reynolds_number" target="_blank">Reynolds number</a> of a flow regime determines whether or not the flow will be turbulent. The computational mesh for a viscous flow does have to resolve the boundary layer, but the solver will run faster as fewer equations are being included.</p>
+<p>The viscous (laminar) equations model flow that is viscous but not turbulent.  The <a class="reference external" href="http://en.wikipedia.org/wiki/Reynolds_number" target="_blank">Reynolds number</a> of a flow regime determines whether or not the flow will be turbulent.</p>
+<p>The computational mesh for a viscous flow has to resolve the boundary layer so will generally be larger than that used for an Euler simulation. A viscous simulation will run faster than a RANS simulation using the same mesh since fewer equations are being modelled.</p>
+<p>As well as the <a class="reference internal" href="#equation-common"><span class="std std-ref">“common”</span></a> settings, the following settings are available:</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="29%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="29%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘precondition’</td>
+<td>Yes</td>
+<td>False</td>
+<td>True | False</td>
+<td>Use low speed mach preconditioner</td>
+</tr>
+</tbody>
+</table>
+<p>Example usage:</p>
 <p>As well as the <a class="reference internal" href="#equation-common"><span class="std std-ref">“common”</span></a> settings, the following settings are available:</p>
 <table border="1" class="docutils align-default">
 <colgroup>
@@ -463,13 +492,20 @@ Run 500 cycles first order.</p>
 <td>Spalart-Allmaras turbulence model (<a class="reference external" href="https://turbmodels.larc.nasa.gov/spalart.html" target="_blank">https://turbmodels.larc.nasa.gov/spalart.html</a>)</td>
 </tr>
 <tr class="row-even"><td><strong>‘sa-neg’</strong></td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td><strong>‘sst-transition’</strong></td>
-<td>The Langtry-Menter 4-equation Transitional SST Model (<a class="reference external" href="https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html" target="_blank">https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html</a>)</td>
+<td>Negative Spalart-Allmaras turbulence model (<a class="reference external" href="https://turbmodels.larc.nasa.gov/spalart.html" target="_blank">https://turbmodels.larc.nasa.gov/spalart.html</a>)</td>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>develop</dt><dd><ul class="simple">
+<li><ul class="first">
+<li><strong>‘sst-transition’</strong></li>
+<li>The Langtry-Menter 4-equation Transitional SST Model (<a class="reference external" href="https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html" target="_blank">https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html</a>)</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
 </div>
 <div class="section" id="limit-gradient-k">
 <h3>limit gradient k<a class="headerlink" href="#limit-gradient-k" title="Permalink to this heading">¶</a></h3>

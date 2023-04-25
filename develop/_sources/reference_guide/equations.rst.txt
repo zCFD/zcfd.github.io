@@ -189,8 +189,9 @@ The relaxation factor used on the flow equations in the incompressible solver. I
 
 .. _turbulence:
 
-Turbulence
-^^^^^^^^^^
+turbulence
+==========
+The turbulence dictionary is required for the :ref:`"rans" <equation_rans>` and :ref:`"les" <equation_les>` equations sets.
 
 
 .. _equation_euler:
@@ -241,7 +242,28 @@ Example usage:
 Viscous
 ^^^^^^^
 
-The viscous (laminar) equations model flow that is viscous but not turbulent.  The `Reynolds number <http://en.wikipedia.org/wiki/Reynolds_number>`_ of a flow regime determines whether or not the flow will be turbulent. The computational mesh for a viscous flow does have to resolve the boundary layer, but the solver will run faster as fewer equations are being included.
+The viscous (laminar) equations model flow that is viscous but not turbulent.  The `Reynolds number <http://en.wikipedia.org/wiki/Reynolds_number>`_ of a flow regime determines whether or not the flow will be turbulent. 
+
+The computational mesh for a viscous flow has to resolve the boundary layer so will generally be larger than that used for an Euler simulation. A viscous simulation will run faster than a RANS simulation using the same mesh since fewer equations are being modelled.
+
+As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'precondition'
+     - Yes
+     - False
+     - True | False
+     - Use low speed mach preconditioner
+
+Example usage:
 
 As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
 
@@ -364,7 +386,8 @@ Selects the RANS turbulence model.
    * - **'sa'**
      - Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
    * - **'sa-neg'**
-     - 
+     - Negative Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
+develop
    * - **'sst-transition'**
      - The Langtry-Menter 4-equation Transitional SST Model (https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html)
 
