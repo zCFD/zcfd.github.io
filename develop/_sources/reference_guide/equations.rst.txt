@@ -387,7 +387,6 @@ Selects the RANS turbulence model.
      - Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
    * - **'sa-neg'**
      - Negative Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
-develop
    * - **'sst-transition'**
      - The Langtry-Menter 4-equation Transitional SST Model (https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html)
 
