@@ -50,7 +50,7 @@ Initial State
    * - 'func'
      - No
      - --
-     - An (optional) initial conditions function.
+     - An (optional) :ref:`initial conditions function <initial_function>`.
 
 .. code-block:: python
 

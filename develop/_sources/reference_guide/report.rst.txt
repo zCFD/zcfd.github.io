@@ -3,70 +3,345 @@
 Reporting
 ---------
 
+zCFD has the capability to output certain parameters to a <casename>_report.csv file as the solver progresses. These can be used to monitor the solver's convergence, By default, the solver outputs volume integrated residuals for each solution variable to the <casename>_report.csv file, but adding to the report dictionary means other quantities of interest can also be monitored as the simulation progresses.
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'frequency'
+     - Yes
+     - 1
+     - Positive integer
+   * - :ref:`'monitor' <monitor_points>`
+     - No
+     - --
+     - Dictionary of monitor point configs (MR\_?)
+   * - :ref:`'forces' <forces>`
+     - No
+     - --
+     - Dictionary of force configs (FR\_?)
+   * - :ref:`'massflow' <massflow>`
+     - No
+     - --
+     - Dictionary of massflow configs (MF\_?)
+
+**'frequency'** sets how frequently a new line is appended to the <casename>_report.csv dictionary. If frequency = x, the solver will output to the <casename>_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (psuedo-time), not outer, cycles.
+
+**'monitor'**, **'forces'** and **'massflow'** should be dictionaries of the required format. The dictionary's keys should be consecutively numbered blocks prefixed with the correct string:
+
+.. list-table:: 
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Reporting on
+     - Key name
+   * - **'monitor'** 
+     - MR\_?
+   * - **'forces'** 
+     - FR\_?
+   * - **'massflow'** 
+     - MF\_?
+
+
+Example usage:
+
+For a simulation with 1000's of cycles, it can be unnecessary to report every time cycle, which slows the solver down. For a dual timestepping simulation with 20 inner time cycles, outputting every 10 cycles generally gives enough information without substantially slowing the solver down
+
+.. code-block:: python
+
+    # Report every 10 cycles
+    'report' : {
+        ...
+        'frequency': 10
+        ...
+    } 
+
+
+A simulation with two monitor points and one forces block.
+====================================================================================================
 In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be specified.
 
 .. code-block:: python
 
+    # Report every 10 cycles
     'report' : {
-                # Report frequency
-                'frequency' : 1,
-                # Extract specified variable at fixed locations
-                'monitor' : {
-                            # Consecutively numbered blocks
-                            'MR_1' : {
-                                     # Required: Output name
-                                     'name' : 'monitor_1',
-                                     # Required: Location
-                                     'point' : [1.0, 1.0, 1.0],
-                                     # Required: Variables to be extracted
-                                     'variables' : ['V','ti'],
-                                     },
-                            },
+        ...
+        'frequency': 10
+        'monitor' {
+          'MR_1': {
+             ...
+           },
+           'MR_2': {
+             ...
+           },
+        }
+        'forces' {
+          'FR_1': {
+             ...
+           }
+        }  
+        ...
+    } 
 
-                # Report force coefficient in grid axis as well as using user defined transform
-                'forces' : {
-                           # Consecutively numbered blocks
-                           'FR_1' : {
-                                    # Required: Output name
-                                    'name' : 'force_1',
-                                    # Required: Zones to be included
-                                    'zone' : [1, 2, 3],
-                                    # Transformation function
-                                    'transform' : my_transform,
-                                    # Optional (default 1.0):
-                                    'reference area' : 0.112032,
-                                    # Optional (default 1.0):
-                                    'reference length' : 1.0,
-                                    # Optional (default [0.0, 0.0, 0.0]):
-                                    'reference point' : [0.0, 0.0, 0.0],
-                                    # Optional (default 0.0): Calculate forces using a specified reference pressure rather than absolute
-                                    'reference pressure': 0.0
-                                    },
-                           },
 
-                # Report massflow ratio
-                'massflow' : {
-                             # Consecutively numbered blocks
-                             'MF_1' : {
-                                      # Required: Output name
-                                      'name' : 'massflow_1',
-                                      # Required: Zones to be included
-                                      'zone' : [1, 2 ,3],
-                                      },
-                             },
-            },
+.. _monitor_points:
 
-Example Transformation Function
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Monitor Points
+^^^^^^^^^^^^^^
 
-A transformation function my be supplied to the force report block to transform the force into a different coordinate system, this a particularly useful for reporting lift and drag which are often rotated from the solver coordinate system.
+Monitor points report the specified variable at fixed mesh locations.
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'name'
+     - Yes
+     - --
+     - String; Name of the monitor point
+   * - 'point'
+     - No
+     - --
+     - [x,y,z] position vector specifying a valid location in the mesh
+   * - 'variables'
+     - No
+     - --
+     - List of variables to report (see Output Variables)
+
+
+**'name'** sets the name that appears in the <casename>_report.csv column heading for variables from this monitor point. 
+
+**'point'** should be the x,y,z location of the point of interest in the mesh as it appears in the solver (i.e. after any mesh scaling due to parameters :ref:`scaling <scale_mesh>` parameters)
+
+**'variables'** controls which variables are reported at this point. In the <casename>_report.csv the column name will be a combination of the **'name'** and the variable name.
+
+Example usage:
+
+Tracking pressure and velocity is useful for determining shedding cycle behaviour, or in the case of a scale resolving simulation, to determine the turbulence spectrum which is being resolved. It may be important to track other variables (e.g. turbulence intensity) may also be appropriate depnding on the simulation setup.
 
 .. code-block:: python
 
-    # Angle of attack
-    alpha = 10.0
-    # Transform into wind axis
-    def my_transform(x,y,z):
-        v = [x,y,z]
-        v =  zutil.rotate_vector(v,alpha,0.0)
-        return {'v1' : v[0], 'v2' : v[1], 'v3' : v[2]}
+    'report' : {
+            'frequency' : 10,
+            'monitor' : {
+                'MR_1' : {
+                    'name' : 'monitor_1',
+                    'point' : [180.0, 100.0, 50.0],
+                    'variables' : ['V','p','T',"Ti"],
+            },
+    },
+
+
+.. _forces:
+
+Forces
+^^^^^^
+Force reporting outputs the x,y,z total forces and moments on a surface or set of surfaces. These are presented as force coefficients (using the non-dimensionalisation convention used for aerofoil lift, drag and moment coefficients), as opposed to dimensional values. 
+The force and moment coefficients resulting exclusively from viscous forces and exclusively from pressure forces are also given. 
+
+
+.. list-table:: 
+   :widths: 20 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'name'
+     - Yes
+     - --
+     - String
+     - Sets the name that appears in the <casename>_report.csv column headings for variables from this force monitor.
+   * - 'zone'
+     - Yes
+     - --
+     - List of valid mesh zone IDs (integers)
+     - All the mesh zone IDs for the surfaces used in this force report. The forces and moments over all the zones are summed to give the forces and moments outputted in the force report.
+   * - 'transform'
+     - No
+     - --
+     - An (optional) transform function.
+     - See :ref:`Transform function <transform_function>`. A transformation function my be supplied to the force report block to transform the force into a different coordinate system.
+     
+   * - 'reference area'
+     - No
+     - --
+     - Positive number
+     - Sets the dimensional reference area which is used to non-dimensionalise the reported force and moment coefficients
+   * - 'reference length'
+     - No
+     - --
+     - Positive number
+     - Sets the dimensional reference length which is used to non-dimensionalise the moment coefficients
+   * - 'reference point'
+     - No
+     - --
+     - [x,y,z] position vector
+     - Sets the reference point which is which is used to non-dimensionalise the moment coefficients
+   * - 'reference pressure'
+     - No
+     - --
+     - Positive number
+     - For a wetted surface, this sets the pressure on the non-wetted side of the surface. Pressure forces on the surface are calculated by integrating (p - pRef) over the surface
+
+
+Example usage:
+
+.. code-block:: python
+
+    'report' : {
+            'frequency' : 10,
+            # Report force coefficient in grid axis as well as using user defined transform
+            'forces' : {
+                        'FR_1' : {
+                                'name' : 'force_1',
+                                # Required: Zones to be included
+                                'zone' : [1, 2, 3],
+                                # Transformation function
+                                'transform' : my_transform,
+                                'reference area' : 0.112032,
+                                'reference length' : 1.0,
+                                'reference point' : [0.0, 0.0, 0.0],
+                                # Calculate forces using a specified reference pressure rather than absolute
+                                'reference pressure': 0.0
+                                },
+                        },
+    },
+
+
+
+Output names
+^^^^^^^^^^^^
+
+The forces will be written into the <casename>_report.csv prefixed with the supplied **'name'**. The forces will be written with the following names:
+
+.. list-table:: 
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Item
+     - Reporting output name
+   * - Total forces and moments
+     - **'name'**\_F[x,y,z] and **'name'**\_M[x,y,z]
+   * - Forces and moments due only to pressure forces
+     - **'name'**\_Fp[x,y,z] and **'name'**\_Mp[x,y,z]
+   * - Forces and moments due only to viscous forces
+     - **'name'**\_Fv[x,y,z] and **'name'**\_Mv[x,y,z]     
+   * - Transformed total forces and moments (if transform function is set)
+     - **'name'**\_Ft[x,y,z] and **'name'**\_Mt[x,y,z]
+   * - Transformed forces and moments due only to pressure forces (if transform function is set)
+     - **'name'**\_Ftp[x,y,z] and **'name'**\_Mtp[x,y,z] 
+   * - Transformed Forces and moments due only to viscous forces (if transform function is set)
+     - **'name'**\_Ftv[x,y,z] and **'name'**\_Mtv[x,y,z] 
+   * - Total forces and moments in static frame of reference (if specified zone is rotating)
+     - **'name'**\_Fif[x,y,z] and **'name'**\_Mif[x,y,z]
+   * - Forces and moments due only to pressure forces in static frame of reference (if specified zone is rotating)
+     - **'name'**\_Fifp[x,y,z] and **'name'**\_Mifp[x,y,z]
+   * - Forces and moments due only to viscous forces in static frame of reference (if specified zone is rotating)
+     - **'name'**\_Fifv[x,y,z] and **'name'**\_Mifv[x,y,z]
+
+
+
+
+
+Additional information
+^^^^^^^^^^^^^^^^^^^^^^
+
+Total force
+"""""""""""
+Total force, :math:`\mathbf{F}`, is simply , :math:`\mathbf{F}_p +  \mathbf{F}_v`, and likewise for moments.
+
+Non-dimensionalisation
+""""""""""""""""""""""
+Forces are non-dimensionalised into force coefficients as :math:`C_{x} = \frac{ \mathbf{F}_x  }{ q_{\inf} S }`
+Where :math:`q_{\inf}` = reference dynamic pressure and :math:`S` = reference area
+
+Moments are non-dimensionalised into force coefficients as :math:`C_{Mx} = \frac{\mathbf{M}_x  }{ q_{\inf} S c}`
+Where :math:`c` = reference length
+
+
+Dimensional pressure force
+""""""""""""""""""""""""""
+:math:`\mathbf{F_p} = \oint - (p-p_{ref}) \ \hat{\mathbf{n}} \ \textrm d A`
+
+Where :math:`p` is surface pressure and  :math:`\hat{\mathbf{n}}` is the surface normal (pointing towards the wetted area).
+
+Dimensional viscous force
+"""""""""""""""""""""""""
+:math:`\mathbf{F}_v = \oint \mu \nabla . V \  \textrm d A`
+
+Where :math:`\mu` is dynamic viscosity and :math:`V` is the velocity vector at the wall.
+
+Dimensional pressure moment
+"""""""""""""""""""""""""""
+:math:`\mathbf{M}_p = \oint -(p-p_{ref}) \hat{\textbf{n}} \ (x - x_{ref}) \ \mathrm d A`
+
+Dimensional viscous moment
+"""""""""""""""""""""""""""
+:math:`\mathbf{M}_p = \oint  \mu \nabla V \ (x - x_{ref}) \ \mathrm d A`
+
+
+.. note::
+    Reference pressure :math:`p_{ref}` is dynamic pressure (:math:`\frac{1}{2} \rho V^2`), taken from the :ref:`reference state<reference_state>`.
+
+
+
+.. _massflow:
+
+Mass flow
+^^^^^^^^^
+
+.. list-table:: 
+   :widths: 20 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'name'
+     - Yes
+     - --
+     - String
+     - Sets the name that appears in the <casename>_report.csv column headings for variables from this force monitor.
+   * - 'zone'
+     - Yes
+     - --
+     - List of valid mesh zone IDs (integers)
+     - All the mesh zone IDs used in this mass flow monitor
+
+
+**`name`** Sets the name that appears in the <casename>_report.csv column heading for variables from this mass flow monitor. For example, setting this to 'pipe_outflow' would mean the massflow would appear as 'pipe_outflow_massflow in the <casename>_report.csv file
+
+**'zones'** The mass flows through all the zones are summed to give a single output value for the mass flow monitor. Flow out of the domain is considered positive massflow, flow into the domain is considered positive massflow and the massflows are dimensional (typically kg per second).
+
+
+Example usage:
+
+.. code-block:: python
+
+    'report' : {
+            'frequency' : 10,
+            # Report massflow ratio
+            'massflow' : {
+                'MF_1' : {
+                        # Output name
+                        'name' : 'massflow_1',
+                        # Zones to be included
+                        'zone' : [1, 2 ,3],
+                        },
+                },
+    },
+

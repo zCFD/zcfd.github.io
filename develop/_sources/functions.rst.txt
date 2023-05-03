@@ -101,6 +101,42 @@ Example:
     ...
    }
 
+.. _transform_function:
+
+Transform Function
+------------------
+
+A transformation function my be supplied to the force report block to transform the force into a different coordinate system. This is particularly useful for reporting lift and drag, which are often rotated from the solver coordinate system.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Transform a supplied point - rotate, scale or translate.
+   * - **Valid for parameter**
+     - :ref:`Forces transform <forces>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - (x, y, z): floats
+     
+
+Example:
+
+.. code-block:: python
+
+  #zutil is a Zenotech python library providing various utilities, available within a zCFD installation
+  import zutil 
+  
+  # Angle of attack
+  alpha = 10.0
+  # Transform into wind axis
+  def my_transform(x,y,z):
+      v = [x,y,z]
+      v =  zutil.rotate_vector(v,alpha,0.0)
+      return  {v[0], v[1], v[2]}
+
 
 .. _initial_function:
 
@@ -110,7 +146,7 @@ Initialisation Function
 .. list-table:: 
    :widths: 30 70
    :header-rows: 0
-
+   
    * - **Description**
      - Provide the initial flow field variables on a cell-by-cell basis
    * - **Valid for parameter**
@@ -121,9 +157,7 @@ Initialisation Function
      - dictionary containing one or more of "pressure", "temperature" or "velocity"
 
 
-
 .. code-block:: python
-    
     
     def my_initialisation(**kwargs):
       # Dimensional primitive variables
@@ -152,3 +186,4 @@ Initialisation Function
       }
     ...
    }
+
