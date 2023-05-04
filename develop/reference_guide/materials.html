@@ -5,12 +5,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Material Specification &#8212; zCFD User Guide v2023.01.3113-1209-g7eba5 documentation</title>
+    <title>Material Specification &#8212; zCFD User Guide v2023.01.3113-1210-g69af3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Initial Conditions" href="initial.html" />
@@ -33,19 +34,106 @@
             
   <div class="section" id="material-specification">
 <span id="materials"></span><h1>Material Specification<a class="headerlink" href="#material-specification" title="Permalink to this heading">¶</a></h1>
-<p>The user can specify any fluid material properties by following the (default) scheme for ‘air’:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;material&#39;</span> <span class="p">:</span> <span class="s1">&#39;air&#39;</span><span class="p">,</span>
-</pre></div>
-</div>
-<p>Options</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;air&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<p>This dictionary sets the material properties of the fluid being modelled. The default values are those of air, but the dictionary can be modified to model any ideal, compressible, perfect gas.</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="26%" />
+<col width="11%" />
+<col width="26%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keyword</th>
+<th class="head">Required</th>
+<th class="head">Default</th>
+<th class="head">Valid values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘sutherlands const’</td>
+<td>Yes</td>
+<td>110.4</td>
+<td>Float</td>
+</tr>
+<tr class="row-odd"><td>‘prandtl no’</td>
+<td>Yes</td>
+<td>0.72</td>
+<td>Float</td>
+</tr>
+<tr class="row-even"><td>‘gas constant’</td>
+<td>Yes</td>
+<td>287</td>
+<td>Float</td>
+</tr>
+<tr class="row-odd"><td>‘gamma’</td>
+<td>Yes</td>
+<td>1.4</td>
+<td>Float</td>
+</tr>
+<tr class="row-even"><td>‘turbulent prandtl no’</td>
+<td>Yes</td>
+<td>0.9</td>
+<td>Float</td>
+</tr>
+<tr class="row-odd"><td>‘gravity’</td>
+<td>No</td>
+<td>&#160;</td>
+<td>Vector</td>
+</tr>
+</tbody>
+</table>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+<span class="o">..</span>
+<span class="s1">&#39;material&#39;</span> <span class="p">:</span> <span class="s1">&#39;air&#39;</span><span class="p">,</span>
+<span class="s1">&#39;air&#39;</span> <span class="p">:</span> <span class="p">{</span>
           <span class="s1">&#39;gamma&#39;</span> <span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
           <span class="s1">&#39;gas constant&#39;</span> <span class="p">:</span> <span class="mf">287.0</span><span class="p">,</span>
           <span class="s1">&#39;Sutherlands const&#39;</span><span class="p">:</span> <span class="mf">110.4</span><span class="p">,</span>
           <span class="s1">&#39;Prandtl No&#39;</span> <span class="p">:</span> <span class="mf">0.72</span><span class="p">,</span>
           <span class="s1">&#39;Turbulent Prandtl No&#39;</span> <span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
         <span class="p">},</span>
+<span class="o">..</span>
+<span class="p">}</span>
 </pre></div>
+</div>
+<div class="section" id="sutherlands-const">
+<h2>sutherlands const<a class="headerlink" href="#sutherlands-const" title="Permalink to this heading">¶</a></h2>
+<p>This option controls the variation of the viscosity of the fluid with temperature.</p>
+<p>Sutherland’s law:
+<span class="math notranslate nohighlight">\(\mu = \mu_{ref} \left( \frac{T}{T_{ref}} \right) ^ {3/2} \frac{T_{ref} + S}{T+S}\)</span>, where <span class="math notranslate nohighlight">\(S\)</span> is Sutherland’s constant.</p>
+<p>In zCFD, <span class="math notranslate nohighlight">\(T_{ref}\)</span> and <span class="math notranslate nohighlight">\(\mu_{ref}\)</span> are given by the <a class="reference internal" href="reference.html#reference"><span class="std std-ref">reference</span></a> intial condition dictionary, where <span class="math notranslate nohighlight">\(T\)</span> is specified directly and <span class="math notranslate nohighlight">\(\mu\)</span> is specified either directly via <strong>‘viscosity’</strong> or indirectly via <strong>‘reynolds no’</strong>.</p>
+<p>Typically for air <span class="math notranslate nohighlight">\(\mu_{ref} = 1.716e-5\)</span> and <span class="math notranslate nohighlight">\(T_{ref} = 273.15\)</span></p>
+<p>For more information:
+<a class="reference external" href="https://www.cfd-online.com/Wiki/Sutherland%27s_law" target="_blank">https://www.cfd-online.com/Wiki/Sutherland%27s_law</a></p>
+</div>
+<div class="section" id="prandtl-no">
+<h2>prandtl no<a class="headerlink" href="#prandtl-no" title="Permalink to this heading">¶</a></h2>
+<p>This option sets the Prandtl number, a non-dimensional number which is the ratio of momentum and thermal diffusivities in a fluid. In zCFD, where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(c_p\)</span> are already set, setting the Prandtl number has the effect of setting the thermal conductivity, <span class="math notranslate nohighlight">\(k\)</span>,  of the fluid.</p>
+<p><span class="math notranslate nohighlight">\(\Pr = \frac{\mathrm{ momentum\ diffusivity}}{\mathrm{thermal\ diffusivity}} = \frac{ c_p \mu} {k}\)</span></p>
+<p>This can also be considered as <span class="math notranslate nohighlight">\(\Pr = \frac{Thickness\ of\ thermal\ boundary\ layer}{Thickness\ of\ fluid\ boundary\ layer}\)</span></p>
+</div>
+<div class="section" id="gas-constant">
+<h2>gas constant<a class="headerlink" href="#gas-constant" title="Permalink to this heading">¶</a></h2>
+<p>This changes <span class="math notranslate nohighlight">\(R\)</span>, the gas constant of the fluid. Different fluids have different molecular masses, and therefore different gas constants. 287.1 is appropriate for air.</p>
+<p>Constant pressure and constant volume specific heats, <span class="math notranslate nohighlight">\(c_p\)</span> and <span class="math notranslate nohighlight">\(c_v\)</span>, are set by <span class="math notranslate nohighlight">\(gamma\)</span> and <span class="math notranslate nohighlight">\(R\)</span> according to the following relationships:</p>
+<p><span class="math notranslate nohighlight">\(c_p = \frac{\gamma-1}{\gamma} R\)</span></p>
+<p><span class="math notranslate nohighlight">\(\gamma = \frac{c_p}{c_v}\)</span></p>
+</div>
+<div class="section" id="gamma">
+<h2>gamma<a class="headerlink" href="#gamma" title="Permalink to this heading">¶</a></h2>
+<p>This changes <span class="math notranslate nohighlight">\(\gamma\)</span>, the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhuast gases.</p>
+</div>
+<div class="section" id="turbulent-prandtl-no">
+<h2>turbulent prandtl no<a class="headerlink" href="#turbulent-prandtl-no" title="Permalink to this heading">¶</a></h2>
+<p>This changes the turbulent Prandtl number of the fluid being modelled.</p>
+<p>In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, <span class="math notranslate nohighlight">\(\mu_t\)</span> accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additiional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this.</p>
+<p>In an eddy viscosity based simulation, <span class="math notranslate nohighlight">\(Pr_t = \frac{ c_p \mu_t }{k_t}\)</span></p>
+</div>
+<div class="section" id="gravity">
+<h2>gravity<a class="headerlink" href="#gravity" title="Permalink to this heading">¶</a></h2>
+<p>This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.</p>
+<p><strong>gravity</strong> is specified as x,y,z vector, for example “[0,0,-9.81]”</p>
 </div>
 </div>
 
