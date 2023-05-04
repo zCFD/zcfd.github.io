@@ -26,7 +26,7 @@ The DGCAA is configured in the same way as the other solvers via an equations se
      - Yes
      - 
      - 0 | 1 | 2 | 3 | 4
-   * - 'Map CFD to CAA mesh'
+   * - 'map cfd to caa mesh'
      - Yes
      - True
      - True | False
@@ -54,7 +54,7 @@ The DGCAA is configured in the same way as the other solvers via an equations se
      - No
      - 
      - String; mesh file name
-   * - 'FRPM'
+   * - 'frpm'
      - No
      - {}
      - See :ref:`"frpm" <frpm>`
@@ -69,13 +69,13 @@ Example usage
     'equations' : 'DGCAA',
     'DGCAA' : {
              'order' : 2,
-             'Map CFD to CAA mesh' : True,
-             'FRPM solver only' : False,
-             'RANS mesh name' : "rans_mesh.h5",
-             'RANS case name' : "rans_case.py",
+             'map cfd to caa mesh' : True,
+             'frpm solver only' : False,
+             'rans mesh name' : "rans_mesh.h5",
+             'rans case name' : "rans_case.py",
              'frpm sources' : True,
              'microphone output frequency' : 10,
-             'FRPM' : {...}
+             'frpm' : {...}
         }
     ..
     }
@@ -241,18 +241,18 @@ Example usage
         ..
         "FRPM_1": {
             "number of frpm mpi processes": 1,
-            "Map CFD to FRPM mesh": True,
+            "map cfd to frpm mesh": True,
             "frpm Spacing": 0.1,
-            "frpm Turbulence Integral Length Scale": 0.2,
-            "frpm Cart Num Mesh Cells": [100, 100, 100],
-            "frpm March Frequency": [0, 0, 0],
-            "frpm Domain Translate": [0, 0, 0],
-            "frpm Domain Rotate (Deg)": [0, 0, 0],
-            "frpm Blend Sources From Side": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
-            "frpm Monitor Points": [0.0, 0.0, 0.0],
-            "frpm Flush Particle Cycles": 2500,
-            "frpm Mapped TKE Smoothing iterations": 5,
-            "frpm Mapped TKE Smoothing relaxation": 0.2,
+            "frpm turbulence integral length scale": 0.2,
+            "frpm cart num mesh cells": [100, 100, 100],
+            "frpm march frequency": [0, 0, 0],
+            "frpm domain translate": [0, 0, 0],
+            "frpm domain rotate (Deg)": [0, 0, 0],
+            "frpm blend sources From side": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+            "frpm monitor points": [0.0, 0.0, 0.0],
+            "frpm flush particle cycles": 2500,
+            "frpm mapped tke smoothing iterations": 5,
+            "frpm mapped tke smoothing relaxation": 0.2,
             "frpm inverse distance source mapping": True,
             "use constant integral length scale": False,
             "frpm turbulence integral length scale parameter": 0.61,
@@ -451,9 +451,9 @@ Example usage
     ..
     'equations' : 'DGCAA',
     'DGCAA': {..},
-    "Sponge Layer Damping": {
-      "Distance": 1.0,
-      "Damping Factor": 1.0,
+    "sponge layer damping": {
+      "distance": 1.0,
+      "damping factor": 1.0,
       },
     ..
   }

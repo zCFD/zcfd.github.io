@@ -265,25 +265,6 @@ As well as the :ref:`"common" <equation_common>` settings, the following setting
 
 Example usage:
 
-As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
-
-.. list-table:: 
-   :widths: 20 10 10 10 20
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'precondition'
-     - Yes
-     - False
-     - True | False
-     - Use low speed mach preconditioner
-
-Example usage:
-
 .. code-block:: python
 
   parameters = {
