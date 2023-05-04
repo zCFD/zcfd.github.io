@@ -45,4 +45,5 @@ This reference guide documents the parameters available in a zCFD control dictio
    boundary
    write_output
    report
+   variables
  
