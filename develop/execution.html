@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Running zCFD &#8212; zCFD User Guide v2023.01.3113-1231-ga2503a documentation</title>
+    <title>Running zCFD &#8212; zCFD User Guide v2023.01.3113-1232-g6ed16 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -33,30 +33,76 @@
             
   <div class="section" id="running-zcfd">
 <h1>Running zCFD<a class="headerlink" href="#running-zcfd" title="Permalink to this heading">¶</a></h1>
-<p>zCFD is run from the command line using a customised environment that automatically sets up all of the paths and file locations correctly.  To make the execution of parallel jobs easier, we also provide the free tool <a class="reference internal" href="#mycluster"><span class="std std-ref">MyCluster</span></a> that simplifies the interaction with a range of job schedulers.</p>
-<div class="section" id="activating-the-environment">
-<span id="zcfd-command"></span><h2>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this heading">¶</a></h2>
-<p>To run zCFD, the <em>zCFD command line environment</em> must be active. The zCFD command line environment is initialised from a terminal window by sourcing the <em>activate</em> script in the zCFD installation directory.  It does not matter where this directory is - all of the executable paths and file locations will be set automatically:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/INSTALL_LOCATION/zCFD-version/bin/activate
+<p>zCFD is designed to exploit parallelism in the target computing hardware, making use of multiple processes (MPI), multiple threads per CPU process (OpenMP) and / or many threads per GPU.   zCFD will handle most parallel functions automatically, so the user just needs to specify how much, and what type, of resource to use for a given run.</p>
+<div class="section" id="command-line-execution">
+<span id="zcfd-command"></span><h2>Command Line Execution<a class="headerlink" href="#command-line-execution" title="Permalink to this heading">¶</a></h2>
+<p>zCFD includes an in-built command-line environment, which should be activated either when run directly or via a cluster management and job scheduling system, such as Slurm.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;source<span class="w"> </span>/INSTALL_LOCATION/zCFD-version/bin/activate
 </pre></div>
 </div>
-<p>This sets up the environment to enable execution of the specific version. When this environment is active, you should see a prefix to your command prompt, such as:</p>
+<p>This sets up the environment to enable execution of the specific version. When within the command-line environment, the command prompt will show a zCFD prefix:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;
 </pre></div>
 </div>
-<p>To deactivate the command line environment, returning the environment to the previous state use</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;<span class="w"> </span>zdeactivate
+<p>To deactivate the command line environment, returning the environment to the previous state use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;zdeactivate
 </pre></div>
 </div>
 <p>Your command prompt should return to its normal appearance.</p>
+<p>To run zCFD on the command-line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;<span class="w"> </span>run_zcfd<span class="w"> </span>-n<span class="w"> </span>&lt;num_tasks&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;device_type&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
+</pre></div>
 </div>
-<div class="section" id="input-files">
-<span id="input-validation"></span><h2>Input Files<a class="headerlink" href="#input-files" title="Permalink to this heading">¶</a></h2>
+<p>where:</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="18%" />
+<col width="18%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Value</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>num_tasks</strong></td>
+<td>Integer</td>
+<td>The number of partitions (one per device socket - CPU or GPU)</td>
+</tr>
+<tr class="row-odd"><td><strong>device_type</strong></td>
+<td>CPU or GPU</td>
+<td>Specifies whether or not to use GPU(s) if present</td>
+</tr>
+<tr class="row-even"><td><strong>mesh_name</strong></td>
+<td>String</td>
+<td>The name of the mesh file (&lt;mesh&gt;.h5)</td>
+</tr>
+<tr class="row-odd"><td><strong>case_name</strong></td>
+<td>String</td>
+<td>The name of the control dictionary (&lt;control_dict&gt;.py)</td>
+</tr>
+</tbody>
+</table>
+<p>For example, to run zCFD from the command-line environment on a desktop computer with a single 12-core CPU processor and no GPU:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-d<span class="w"> </span>cpu<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
+</pre></div>
 </div>
-<div class="section" id="id1">
-<h2>Input Validation<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
-<p>zCFD provides an input validation script which can be used to check the solver control dictionary before runtime reducing the likelihood of a job spending a long time queuing only to fail at start up. The script can be executed from the zCFD environment as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>validate_input<span class="w"> </span>input.py<span class="w"> </span><span class="o">[</span>-m<span class="w"> </span>mesh.h5<span class="o">]</span>
+<p>By default, zCFD will use all 12 cores via OpenMP unless a specific number is required. To run the above case using only 6 cores (there will be one thread per CPU core):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;export<span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">6</span><span class="p">;</span><span class="w"> </span>run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-d<span class="w"> </span>cpu<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
+</pre></div>
+</div>
+<p>To run zCFD on a desktop computer with a single CPU and two GPUs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span>gpu<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="input-validation">
+<span id="id1"></span><h2>Input Validation<a class="headerlink" href="#input-validation" title="Permalink to this heading">¶</a></h2>
+<p>zCFD provides an input validation script which can be used to check the solver control dictionary before runtime reducing the likelihood of a job spending a long time queuing only to fail at start up.</p>
+<p>The script can be executed from the zCFD environment as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;validate_input<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span><span class="o">[</span>-m<span class="w"> </span>&lt;mesh_name&gt;<span class="o">]</span>
 
 Validating<span class="w"> </span>parameters<span class="w"> </span>dictionary...
 Parameters<span class="w"> </span>dictionary<span class="w"> </span>is<span class="w"> </span>valid
@@ -64,97 +110,63 @@ Checking<span class="w"> </span>BC_,<span class="w"> </span>FR_,<span class="w">
 IC_<span class="w"> </span>numbering<span class="w"> </span>is<span class="w"> </span>correct
 FR_<span class="w"> </span>numbering<span class="w"> </span>is<span class="w"> </span>correct
 BC_<span class="w"> </span>numbering<span class="w"> </span>is<span class="w"> </span>correct
-zCFD<span class="w"> </span>input<span class="w"> </span>file<span class="w"> </span>input.py<span class="w"> </span>is<span class="w"> </span>valid
+zCFD<span class="w"> </span>input<span class="w"> </span>file<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span>is<span class="w"> </span>valid
 </pre></div>
 </div>
 <p>If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.</p>
 </div>
-<div class="section" id="running-locally">
-<h2>Running locally<a class="headerlink" href="#running-locally" title="Permalink to this heading">¶</a></h2>
-<p>zCFD makes very effective use of a range of processor types and computer configurations.  We provide a <em>smartlaunch.bsh</em> script with zCFD to automatically detect the processor type and the presence of any accelerators (like Nvidia GPUs or Intel Xeon Phi’s).</p>
-<p>Smartlaunch uses this information to calculate the number of OpenMP threads to set per MPI task and to perform NUMA binding to specific cores and memory banks.</p>
-<p>The optimum number of execution tasks ($NTASKS below) should match the total number of sockets (usually two per node) <strong>not</strong> the number of cores.  This configuration will also work for systems with accelerators present.</p>
-<p>It is also recommended to always use any computational nodes in exclusive mode to achieve the best performance.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># MESH_NAME is the name of the hdf5 file containing the mesh</span>
-<span class="c1"># CASE_NAME is the name of the python control file</span>
-
-run_zcfd<span class="w"> </span>--ntask<span class="w"> </span><span class="m">10</span><span class="w"> </span>-p<span class="w"> </span><span class="nv">$MESH_NAME</span><span class="w"> </span>-c<span class="w"> </span><span class="nv">$CASE_NAME</span>
+<div class="section" id="overriding-mesh-and-case-names">
+<h2>Overriding Mesh and Case Names<a class="headerlink" href="#overriding-mesh-and-case-names" title="Permalink to this heading">¶</a></h2>
+<p>For more advanced simulations with overset meshes (see <a class="reference internal" href="reference_guide/overset.html#overset"><span class="std std-ref">overset</span></a>) an override dictionary can be supplied as an additional argument to the command-line, in interactive mode or within a batch submission script, to specify multiple meshes and associated control dictionaries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span>gpu<span class="w"> </span>-f<span class="w"> </span>&lt;override_file&gt;
 </pre></div>
 </div>
-<p>Alternatively, <a class="reference internal" href="#mycluster"><span class="std std-ref">MyCluster</span></a> is a powerful tool for setting up, running and monitoring zCFD jobs on a range of schedulers.  We recommend this tool, and it is provided as part of the zCFD environment.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># MESH_NAME is the name of the hdf5 file containing the mesh</span>
-<span class="c1"># CASE_NAME is the name of the python control file</span>
-
-cluster_run<span class="w"> </span>-p<span class="w"> </span><span class="nv">$MESH_NAME</span><span class="w"> </span>-c<span class="w"> </span><span class="nv">$CASE_NAME</span><span class="w"> </span>-j<span class="w"> </span>mycluster_job.job
+<p>An example override.py file for a background domain with a single rotating turbine would be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">override</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;problem_case_pair&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s1">&#39;background.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;background.py&#39;</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;turbine.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;turbine.py&#39;</span><span class="p">)]}</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="running-on-a-cluster">
-<h2>Running on a cluster<a class="headerlink" href="#running-on-a-cluster" title="Permalink to this heading">¶</a></h2>
-<div class="section" id="mycluster">
-<span id="id2"></span><h3>MyCluster<a class="headerlink" href="#mycluster" title="Permalink to this heading">¶</a></h3>
-<p>MyCluster from Zenotech is used to set up, run, monitor and manage parallel jobs on a range of high performance computing environments without the user having to know the details of the queueing systems and job scheduler commands.</p>
-<p>MyCluster is distributed as part of zCFD, and is automatically available from within the zCFD command line environment. Alternatively, MyCluster can be <a class="reference external" href="https://github.com/zenotech/MyCluster" target="_blank">downloaded</a> and installed separately.</p>
-<p>To use MyCluster within the zCFD command line environment, you first need to configure it with your user details.  This is so that MyCluster can keep track of your jobs, and email you with alerts.  This step only needs to be done once per user.</p>
-<p>First enter your details:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>--firstname<span class="w"> </span>&lt;Your<span class="w"> </span>First<span class="w"> </span>Name&gt;
-<span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>--lastname<span class="w"> </span>&lt;Your<span class="w"> </span>Last<span class="w"> </span>Name&gt;
-<span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>--email<span class="w"> </span>&lt;Your<span class="w"> </span>Email<span class="w"> </span>Address&gt;
+<div class="section" id="batch-queue-submission">
+<h2>Batch Queue Submission<a class="headerlink" href="#batch-queue-submission" title="Permalink to this heading">¶</a></h2>
+<p>To run zCFD on a compute cluster with a queuing system (such as Slurm), the command-line environment activation is included within the submission script:</p>
+<p>Example Slurm submission script “run_zcfd.sub”:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH -J account_name</span>
+<span class="c1">#SBATCH --output zcfd.out</span>
+<span class="c1">#SBATCH --nodes 2</span>
+<span class="c1">#SBATCH --ntasks 4</span>
+<span class="c1">#SBATCH --exclusive</span>
+<span class="c1">#SBATCH --no-requeue</span>
+<span class="c1">#SBATCH --time=10:00:00</span>
+<span class="c1">#SBATCH --gres=gpu:2</span>
+<span class="c1">#SBATCH --cpus-per-task=16</span>
+<span class="nb">source</span><span class="w"> </span>/INSTALL_LOCATION/zCFD-version/bin/activate
+run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>-d<span class="w"> </span>gpu<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
 </pre></div>
 </div>
-<p>MyCluster generates and uses <em>job</em> files for zCFD (and other software packages) for each different computer system. To set up a job file for zCFD, enter (for example):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>--create<span class="o">=</span>my-job.job<span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--jobname<span class="o">=</span>my-job<span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--project<span class="o">=</span>my-project<span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--jobqueue<span class="o">=</span>my-job-queue<span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--ntasks<span class="o">=</span><span class="m">12</span><span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--taskpernode<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--script<span class="o">=</span>mycluster-zcfd.bsh<span class="w"> </span><span class="se">\</span>
-<span class="w">                  </span>--maxtime<span class="o">=</span><span class="m">12</span>
+<p>In this system we have 2 nodes, each with 2 GPUs.  We allocate one task per GPU, giving a total of 4 tasks.  Note that num_tasks, in this case 4, on the last line should match Slurm “ntasks” on line 5.  The case is, optionally, run in “exclusive” mode which means that zCFD has uncontended use of the devices.  In this case we have a 64-core CPU, giving 16 CPU cores for each of the 4 tasks.  The “gres” line tells zCFD that there are 2 GPUs available on each node.</p>
+<p>The submission script would be submitted from the command-line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sbatch<span class="w"> </span>run_zcfd.sub
 </pre></div>
 </div>
-<p>This will create a <em>job</em> file called <em>my-job.job</em>.</p>
-<p>The <em>my-job.job</em> file can be called whatever you like, but avoid the use of spaces and other special characters in the title. The <em>project</em> is a billing code used on the system.  If you do not know what this code should be, ask your system administrator.</p>
-<p>The <em>jobqueue</em> is the name of the local <a class="reference external" href="http://en.wikipedia.org/wiki/Job_scheduler" target="_blank">job scheduler</a> on the system (for example <em>slurm</em>, <em>moab</em> or <em>pbs</em>).  To find out which local job scheduler is running on your system, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>-q
-</pre></div>
-</div>
-<p>This will also provide a list of <em>job queues</em>, and show how much resource is currently available on each.</p>
-<p>The <em>ntasks</em> setting is the total number of processors (sockets) that you want to use. For zCFD this will be equal to the number of mesh partitions that are generated. The number of tasks per node should match the number of compute devices per node (CPU sockets, Xeon Phi devices or Nvidia GPU devices).  Usually there are two sockets per node, so set <em>taskpernode</em> equal to 2. Your system administrator should advise if the local setup is different to this.</p>
-<p>The <em>script</em> is software specific. The <em>mycluster-zcfd.bsh</em> script is included (along with scripts for a number of other CFD codes) in the MyCluster distribution in the <em>share/</em> directory, so you do not need to alter the <em>script</em> setting if you are running zCFD.</p>
-<p>The <em>maxtime</em> setting is used to prevent failed jobs from over-running and to allow schedulers to prioritise short jobs where they can be accommodated between larger jobs.  The default setting is 12 hours <em>(maxtime=12)</em> but you can specify any amount of time in hours (up to the local queue maximum) can be used.  The actual limit will be shown in the <em>job</em> file, and it is worth checking whether this is adequate.</p>
-<p>Once created, the <em>job</em> file can be re-used for similar simulation tasks on the same computer.  If any of the parameters change (size of job, project, etc.) then you will need to create a new <em>job</em> file.</p>
-<p>To run zCFD using MyCluster, make sure that the <em>job</em> file is in the directory containing the mesh and input files, change to that directory and enter (for example):</p>
-<p>Example usage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span><span class="o">(</span><span class="nb">export</span><span class="w"> </span><span class="nv">PROBLEM</span><span class="o">=</span>my-mesh.h5<span class="p">;</span><span class="se">\</span>
-<span class="w">         </span><span class="nb">export</span><span class="w"> </span><span class="nv">CASE</span><span class="o">=</span>my-case<span class="p">;</span><span class="se">\</span>
-<span class="w">         </span>mycluster<span class="w"> </span>--submit<span class="o">=</span>my-job.job<span class="o">)</span>
-</pre></div>
-</div>
-<p>where <em>my-mesh.h5</em> is the name of the HDF5 mesh file and <em>my-case.py</em> is the name of the python input parameters file. This command will submit the job to the queue.</p>
-<p>To track the progress of your jobs via MyCluster, enter:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>-p
-</pre></div>
-</div>
-<p>To delete a job from the queue, check the <em>Job ID</em> using <em>mycluster -p</em> and then enter:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>-d<span class="w"> </span>&lt;Job<span class="w"> </span>ID&gt;
-</pre></div>
-</div>
-<p>A full list of MyCluster commands can be obtained:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>mycluster<span class="w"> </span>--help
-</pre></div>
+<p>The job can then be managed using the standard Slurm commands.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Users unfamiliar with the batch submission parameters in a specific system should consult the system administrator.</p>
 </div>
 </div>
-</div>
-<div class="section" id="using-the-zcfd-python-environment">
-<h2>Using the zCFD Python Environment<a class="headerlink" href="#using-the-zcfd-python-environment" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="epic">
+<h2>EPIC<a class="headerlink" href="#epic" title="Permalink to this heading">¶</a></h2>
+<p>For larger jobs or where resource availability is limited, <a class="reference external" href="https://epic.zenotech.com/" target="_blank">EPIC</a> allows users to submit zCFD jobs to a range of on-demand computing resources in an intuitive and secure way.  EPIC also provides access to interactive post-processing environments without the need to download large data files.</p>
+<a class="reference internal image-reference" href="_images/epic.png"><img alt="EPIC" src="_images/epic.png" style="width: 600px;" /></a>
 </div>
 <div class="section" id="using-juypter">
 <h2>Using Juypter<a class="headerlink" href="#using-juypter" title="Permalink to this heading">¶</a></h2>
 <p>We also recommend the use of  <a class="reference external" href="https://jupyter.org/" target="_blank">Jupyter Notebooks</a> for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser.
-Jupyter is included in the zCFD distribution and notebooks for visualising the residual data will automatically be created when you run a zCFD case. In addition there are several example notebooks available in the <a class="reference external" href="https://github.com/zenotech/zPost" target="_blank">zPost</a>.</p>
+Jupyter is included in the zCFD distribution and notebooks for visualising the residual data will automatically be created when you run a zCFD case.</p>
 <p>To automatically start up notebook server on your computer within the zCFD environment run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span>start_notebook
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;start_notebook
 </pre></div>
 </div>
 </div>
@@ -174,12 +186,11 @@ Jupyter is included in the zCFD distribution and notebooks for visualising the r
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Running zCFD</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#activating-the-environment">Activating the environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#input-files">Input Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Input Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-locally">Running locally</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-on-a-cluster">Running on a cluster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-the-zcfd-python-environment">Using the zCFD Python Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-execution">Command Line Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-validation">Input Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overriding-mesh-and-case-names">Overriding Mesh and Case Names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#batch-queue-submission">Batch Queue Submission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#epic">EPIC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-juypter">Using Juypter</a></li>
 </ul>
 </li>
