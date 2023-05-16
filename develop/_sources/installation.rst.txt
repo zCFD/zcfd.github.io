@@ -1,25 +1,122 @@
+.. _installation:
+
 Installation
+------------
+
+.. _system_requirements:
+
+System Requirements
+===================
+zCFD is supported on the following Linux distributions:
+ - RHEL 7+
+ - CENTOS 7+
+ - Ubuntu 20.04+
+ - Windows 10/11 via `WSL2 <https://learn.microsoft.com/en-us/windows/wsl/install>`_ 
+
+By default zCFD is compiled for x86_64 but is available for ARM and IBM Power on request.
+
+GPU support
+^^^^^^^^^^^
+zCFD supports running on NVidia GPUs with a compute capability of 6.1 and above (See `Compute Capability <https://developer.nvidia.com/cuda-gpus>`_ ). 
+
+An AMD GPU (HIP) based version is available on request.
+
+
+Linux / Unix
 ============
-
-
-Installing zCFD
----------------
-
-
-Licence
--------
-
-
-zCFD requires a license.  If you do not already have a license, please contact mailto:zcfd@zenotech.com to obtain one.  The license file provided can be placed in the same directory alongside the input files or else its location can be defined using the environment variables below
+If you are running Linux/Unix zCFD is provided as a stand-alone installer containing all the packages required to get started. The installer is available for download from the `zCFD website <https://zcfd.zenotech.com>`_.
+Once the zCFD installer has been downloaded run the install script and follow the prompts.
 
 .. code-block:: bash
 
-    export RLM_LICENSE=port@server
+    $ bash zCFD-icx-sse-impi-<INSTALL_VERSION>-Linux-64bit.sh
 
-or
+Then copy the license file provided over email into the lic folder in the install directory.
+
+.. code-block:: bash
+
+    $ cp zcfd.lic /<path to zCFD install>/lic/
+
+Once zCFD has been installed the zCFD environment can be activated from a bash shell:
+
+.. code-block:: bash
+
+    $ source /<path to zCFD install>/bin/activate
+    (zCFD)$
+
+
+Windows
+=======
+
+zCFD can be run locally on windows machines if Windows Subsystem for Linux 2 (WSL2) is installed. To install WSL2 simply follow the Microsoft instructions which can be found `here <https://learn.microsoft.com/en-us/windows/wsl/install>`_.
+
+The chosen Linux distribution shouldn't have an effect on how the code runs, but the Linux distributions listed above are supported.
+
+In order to access your Linux filesystem on Windows it can be useful to add a quick access link in file explorer. To do this, in the address in file explorer enter
+
+.. code-block:: 
+
+    \\wsl$\
+
+
+This will show you show you the root folders for your installed Linux distributions.
+
+The installer is available for download from the `zCFD website <https://zcfd.zenotech.com>`_. For WSL, download the standard linux distribution. Once the zCFD installer has been downloaded run the install script from within the WSL2 environment and follow the prompts.
+
+.. code-block:: bash
+
+    $ bash zCFD-icc-sse-impi-<INSTALL_VERSION>-Linux-64bit.sh
+
+Then copy the license file provided over email into the lic folder in the install directory.
+
+.. code-block:: bash
+
+    $ cp zcfd.lic /<path to zCFD install>/lic/
+
+Once zCFD has been installed the zCFD environment can be activated:
+
+.. code-block:: bash
+
+    $ source /<path to zCFD install>/bin/activate
+    (zCFD)$
+
+
+.. _licence:
+
+Licence
+=======
+
+zCFD requires a license.  If you do not already have a license, please contact `zcfd@zenotech.com <mailto:zcfd@zenotech.com>`_ to obtain one.  When zCFD starts it will look in the following locations for a licence file:
+
+1. 'zcfd.lic' in the directory alongside the input files
+2. 'zcfd.lic' in the lic directory of the zCFD installation. i.e. /<path to zCFD install>/lic/
+3. RLM_LICENSE environment variable
+
+The RLM_LICENSE environment variable can be defined as below.
 
 .. code-block:: bash
 
     export RLM_LICENSE=/path/to/license/file
 
+or, where port is the port number in the license file, and host is the hostname in the license file
+
+.. code-block:: bash
+
+    export RLM_LICENSE=port@server
+
+
 In the case that the system running the simulation cannot access the internet a local license server will be required. See http://www.reprisesoftware.com/admin/software-licensing.php for details.
+
+
+Licence Error codes
+^^^^^^^^^^^^^^^^^^^
+
+
+.. list-table:: 
+   :widths: 20 80
+   :header-rows: 1
+
+   * - Error code
+     - Possible Cause
+   * - 
+     -
