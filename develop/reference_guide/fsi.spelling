@@ -1,0 +1,30 @@
+source/reference_guide/fsi.rst:5: (cability)  zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
+source/reference_guide/fsi.rst:19: (abaqus)  ‘abaqus’ | ‘generic’
+source/reference_guide/fsi.rst:34: (rbf)  ‘rbf multiscale’ | ‘rbf’ | ‘IDW’
+source/reference_guide/fsi.rst:34: (multiscale)  ‘rbf multiscale’ | ‘rbf’ | ‘IDW’
+source/reference_guide/fsi.rst:34: (rbf)  ‘rbf multiscale’ | ‘rbf’ | ‘IDW’
+source/reference_guide/fsi.rst:44: (tps)  ‘c2’ | ‘c4’ | c0’ | ‘tps’ | ‘gaussian’
+source/reference_guide/fsi.rst:44: (gaussian)  ‘c2’ | ‘c4’ | c0’ | ‘tps’ | ‘gaussian’
+source/reference_guide/fsi.rst:50: (rbf)  Number of points to use in the reduced base set for rbf multiscale interpolation
+source/reference_guide/fsi.rst:50: (multiscale)  Number of points to use in the reduced base set for rbf multiscale interpolation
+source/reference_guide/fsi.rst:51: (tol)  ‘tol’
+source/reference_guide/fsi.rst:55: (rbf)  Set the target error tolerance for the rbf interpolation
+source/reference_guide/fsi.rst:60: (rbf)  Set the maximum initial error tolerance for rbf interpolation
+source/reference_guide/fsi.rst:79: (nearfield)  Set the IDW power for the nearfield and farfield boundaries, and the power between them.
+source/reference_guide/fsi.rst:89: (Speficies)  Speficies which FSI driver should be used when coupling to an FEA code, 
+source/reference_guide/fsi.rst:96: (Abaqus)  Abaqus requires the CSE engine to be built with zCFD
+source/reference_guide/fsi.rst:100: (normals)   should be a list of zone IDs, these specify which surface is the moving FSI surface. This provides methods to extract surface normals, pressure forces, and cell centres from the specified cells, as well as allowing these surface points to drive mesh deformations in the volume mesh.
+source/reference_guide/fsi.rst:106: (symmetery)   should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetery plane, these surfaces will remain untouched by the IDW mesh motion interpolation.
+source/reference_guide/fsi.rst:113: (interplation)   defines which interplation scheme should be used.
+source/reference_guide/fsi.rst:123: (continous)  Radial Basis Functions require the solving of a linear system, where a continous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.
+source/reference_guide/fsi.rst:125: (multiscale)  RBF multiscale uses the a multiscale algorithm using a varying support radius to reduce the number of nodes in the linear system, where as RBF uses a Greedy algorithm.
+source/reference_guide/fsi.rst:125: (multiscale)  RBF multiscale uses the a multiscale algorithm using a varying support radius to reduce the number of nodes in the linear system, where as RBF uses a Greedy algorithm.
+source/reference_guide/fsi.rst:130: (superceeded)   has generally superceeded the greedy algorithm, used in 
+source/reference_guide/fsi.rst:136: (rbf)   sets the support radius used by the RBF. The Radial Basis Function used in RBF interpolation will have a set support radius defining the 1D shape of the function as a function of r. This determines the region of influence for the function. Compact functions such as C0, C2, C4 have a maximum radius, outside of which the influence of the RBF is 0. For functions with global influence such as Gaussian and TPS, alpha becomes the normalisation factor - i.e. when r = alpha, e = 1 if rbf = f(e).
+source/reference_guide/fsi.rst:144: (interpolant)  When performing RBF interpolation a specific function needs to be defined to create the interpolant. Compact functions such as C0, C2, C4 have a maximum region of influence, Gaussian and TPS have global influence.
+source/reference_guide/fsi.rst:153: (NxN)  Solving the RBF system requires solving an NxN sized linear system, where N is the number of moving nodes- i.e. nodes on the surface [4] defined earlier. For large meshes this quickly becomes prohibitively expensive, therefor it is desirable to solve a reduced set of points. The Multiscale method is a ‘reduced base set method’ where the linear system is only solved on the base set of nodes, with the remaining nodes solved iteratively. 
+source/reference_guide/fsi.rst:153: (Multiscale)  Solving the RBF system requires solving an NxN sized linear system, where N is the number of moving nodes- i.e. nodes on the surface [4] defined earlier. For large meshes this quickly becomes prohibitively expensive, therefor it is desirable to solve a reduced set of points. The Multiscale method is a ‘reduced base set method’ where the linear system is only solved on the base set of nodes, with the remaining nodes solved iteratively. 
+source/reference_guide/fsi.rst:153: (iteratively)  Solving the RBF system requires solving an NxN sized linear system, where N is the number of moving nodes- i.e. nodes on the surface [4] defined earlier. For large meshes this quickly becomes prohibitively expensive, therefor it is desirable to solve a reduced set of points. The Multiscale method is a ‘reduced base set method’ where the linear system is only solved on the base set of nodes, with the remaining nodes solved iteratively. 
+source/reference_guide/fsi.rst:156: (tol)  tol
+source/reference_guide/fsi.rst:177: (neighours)  Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than “n” neighbours within a distance “d”, then only neighours within that distance are used.
+source/reference_guide/fsi.rst:189: (nearfield)  Set the IDW power for the nearfield and farfield boundaries, and the power between them.
