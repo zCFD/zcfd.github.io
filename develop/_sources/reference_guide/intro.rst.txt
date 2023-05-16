@@ -26,6 +26,7 @@ This reference guide documents the parameters available in a zCFD control dictio
         'material': { :ref:`materials` },
         'IC_1': {:ref:`initial_conditions`}
         'BC_1': {:ref:`boundary_conditions`}
+        'mapping': {:ref:`overset`}
         'write output': {:ref:`write_output`}
         'report': {:ref:`reporting`}
     }
@@ -44,7 +45,9 @@ This reference guide documents the parameters available in a zCFD control dictio
    materials
    initial
    boundary
+   overset
    write_output
    report
    variables
+
  
