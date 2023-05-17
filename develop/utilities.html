@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Utilities &#8212; zCFD User Guide v2023.01.3113-1237-g356962 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Utilities &#8212; zCFD User Guide v2023.01.3113-1238-g63f4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -31,16 +31,16 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="utilities">
+  <section id="utilities">
 <span id="id1"></span><h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">¶</a></h1>
 <p>zCFD is bundled with a number of utility functions to streamline specific workflows:</p>
-<div class="section" id="windfarm-modelling">
+<section id="windfarm-modelling">
 <h2>Windfarm Modelling<a class="headerlink" href="#windfarm-modelling" title="Permalink to this heading">¶</a></h2>
-<div class="section" id="overview">
+<section id="overview">
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h3>
 <p>Windfarms consist of a set of specific turbine types at geographic locations.  zCFD allows users to specify the turbine characteristics and locations, and will automatically create turbine models within an existing mesh and update the local flow conditions to match the thrust coefficient and tip speed ratio for each turbine.</p>
-</div>
-<div class="section" id="the-locations-and-trbx-turbine-definition">
+</section>
+<section id="the-locations-and-trbx-turbine-definition">
 <h3>The locations and TRBX turbine definition<a class="headerlink" href="#the-locations-and-trbx-turbine-definition" title="Permalink to this heading">¶</a></h3>
 <p>zCFD provides a utility function <em>create_trbx_zcfd_data</em> that can be called from within the zCFD environment and Python interactive shell. To start the zCFD command line environment, type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/INSTALL_LOCATION/zCFD-version/bin/activate
@@ -205,8 +205,8 @@ T015<span class="w"> </span><span class="m">253308</span>.0<span class="w"> </sp
 </pre></div>
 </div>
 <p>When run, zCFD will include the probe data in the <em>&lt;case_name&gt;_report.csv</em> file. Note that this utility may take a few seconds to run, especially if there are large numbers of turbines, or points on the mesh boundary.</p>
-</div>
-<div class="section" id="writing-windfarmer-data-files">
+</section>
+<section id="writing-windfarmer-data-files">
 <h3>Writing WindFarmer Data Files<a class="headerlink" href="#writing-windfarmer-data-files" title="Permalink to this heading">¶</a></h3>
 <p>In order to export the data from a zCFD run in a format that can be read by WindFarmer, we provide the utility <em>write_windfarmer_data</em>, with usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil.farm</span> <span class="k">as</span> <span class="nn">farm</span>
@@ -217,11 +217,11 @@ T015<span class="w"> </span><span class="m">253308</span>.0<span class="w"> </sp
 </div>
 <p>The <em>up</em> vector is used to check that the orientation expected by WindFarmer is that same as the orientation used in the simulation.  In most cases this will be the <em>z</em>-axis.</p>
 <p>The utility will output the probe information plus additional fields, calculated automatically.</p>
-</div>
-</div>
-<div class="section" id="propellor-modelling">
+</section>
+</section>
+<section id="propellor-modelling">
 <h2>Propellor Modelling<a class="headerlink" href="#propellor-modelling" title="Permalink to this heading">¶</a></h2>
-<div class="section" id="id2">
+<section id="id2">
 <h3>Overview<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <p>Propellors are similar to wind turbines except that they are designed to produce thrust rather than torque from lift.  zCFD includes a blade element fluid zone model based on an actuator disc, for propellors:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">propellor_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
@@ -312,9 +312,9 @@ def<span class="w"> </span>pv_rotate<span class="o">(</span>pt,args<span class="
 <p>The <em>‘aerofoil cl’</em> and <em>‘aerofoil cd’</em> curves are lists of points defining the aerofoil characteristics.  zCFD interpolates values between these points and will extrapolate if necessary.</p>
 <p>The <em>‘number of segments’</em> used in the model should be chosen to match the mesh spacing in the CFD mesh around the propellor.  zCFD does not generate a new mesh in order to apply the propellor model.</p>
 <p>A <em>‘tip loss correction’</em> can be applied to the blade element model, and the only option is <em>‘elliptic’</em>. The <em>‘tip loss correction radius’</em> is the radius from which the tip correction is applied and has a default value of 0.8.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>

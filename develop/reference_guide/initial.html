@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Initial Conditions &#8212; zCFD User Guide v2023.01.3113-1237-g356962 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Initial Conditions &#8212; zCFD User Guide v2023.01.3113-1238-g63f4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -32,9 +32,9 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="initial-conditions">
+  <section id="initial-conditions">
 <span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this heading">¶</a></h1>
-<div class="section" id="initialisation">
+<section id="initialisation">
 <h2>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this heading">¶</a></h2>
 <p>Initial conditions are used to set the flow variable values in all cells at the start of a simulation.  The initial conditions default to the reference state (above) if not specified</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial conditions</span>
@@ -51,8 +51,8 @@
             <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="example-user-defined-initialisation-function">
+</section>
+<section id="example-user-defined-initialisation-function">
 <h2>Example User Defined Initialisation Function<a class="headerlink" href="#example-user-defined-initialisation-function" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_initialisation</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
@@ -71,8 +71,8 @@
     <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;velocity&#39;</span> <span class="p">:</span> <span class="n">velocity</span> <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h2>Initial Conditions<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
 <p>The initial condition properties are defined using consecutively numbered blocks</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -119,32 +119,23 @@
 For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)</p>
 <p>For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
 by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:</p>
-<table border="1" class="docutils align-default">
-<colgroup>
-<col width="13%" />
-<col width="13%" />
-<col width="11%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="20%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Re</td>
-<td>3000</td>
-<td>5000</td>
-<td>10,000</td>
-<td>15,000</td>
-<td>20,000</td>
-<td>&gt; 100,000</td>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Re</p></td>
+<td><p>3000</p></td>
+<td><p>5000</p></td>
+<td><p>10,000</p></td>
+<td><p>15,000</p></td>
+<td><p>20,000</p></td>
+<td><p>&gt; 100,000</p></td>
 </tr>
-<tr class="row-even"><td>eddy</td>
-<td>11.6</td>
-<td>16.5</td>
-<td>26.7</td>
-<td>34.0</td>
-<td>50.1</td>
-<td>100</td>
+<tr class="row-even"><td><p>eddy</p></td>
+<td><p>11.6</p></td>
+<td><p>16.5</p></td>
+<td><p>26.7</p></td>
+<td><p>34.0</p></td>
+<td><p>50.1</p></td>
+<td><p>100</p></td>
 </tr>
 </tbody>
 </table>
@@ -177,8 +168,8 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The conditions in the VTK file are specified by node based arrays with names ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.</p>
+<p class="admonition-title">Note</p>
+<p>The conditions in the VTK file are specified by node based arrays with names ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.</p>
 </div>
 <p>Certain conditions are specified relative to a reference set of conditions</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
@@ -218,11 +209,11 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><span class="math notranslate nohighlight">\(W^* =\frac{\dot{m}}{\rho V}\)</span></p>
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(W^* =\frac{\dot{m}}{\rho V}\)</span></p>
 </div>
-</div>
-<div class="section" id="driven-initial-conditions">
+</section>
+<section id="driven-initial-conditions">
 <h2>Driven Initial Conditions<a class="headerlink" href="#driven-initial-conditions" title="Permalink to this heading">¶</a></h2>
 <p>Another way of prescribing a farfield initial condition is by defining a ‘driving function’, which on evaluation returns an initial condition dictionary.
 The driving function is re-evaluated at zCFD’s reporting frequency, meaning that the condition (e.g. inlet velocity) can be programmed to change as the simulation progresses.
@@ -285,11 +276,11 @@ For simulations where the farfield is distant from the geometry, local and impli
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Driven initial conditions cannot be used as reference conditions, to initialise the flow or within a restarted simulation.</p>
+<p class="admonition-title">Note</p>
+<p>Driven initial conditions cannot be used as reference conditions, to initialise the flow or within a restarted simulation.</p>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>

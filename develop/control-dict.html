@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Control Dictionary (old) &#8212; zCFD User Guide v2023.01.3113-1237-g356962 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Control Dictionary (old) &#8212; zCFD User Guide v2023.01.3113-1238-g63f4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -32,7 +32,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="control-dictionary-old">
+  <section id="control-dictionary-old">
 <h1>Control Dictionary (old)<a class="headerlink" href="#control-dictionary-old" title="Permalink to this heading">¶</a></h1>
 <p>The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.</p>
 <p>A python dictionary called ‘parameters’ provides the main interface to controlling zCFD</p>
@@ -40,37 +40,37 @@
 </pre></div>
 </div>
 <p>zCFD will validate the parameters dictionary specified at run time against a set of expected values for each key. In general, values that should be integers and floats will be coerced to the correct type. Values which should be strings, booleans, lists or dictionaries will cause an error if they are the incorrect type. The time marching scheme and solver/equation set chosen defines which dictionary keys are valid. A simple script is provided to allow the user to check the validity of their input parameters before submitting their job. See <a class="reference internal" href="execution.html#input-validation"><span class="std std-ref">Input Validation</span></a>.</p>
-<div class="section" id="reference-settings">
+<section id="reference-settings">
 <h2>Reference Settings<a class="headerlink" href="#reference-settings" title="Permalink to this heading">¶</a></h2>
-<div class="section" id="define-units">
+<section id="define-units">
 <h3>Define units<a class="headerlink" href="#define-units" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional (default &#39;SI&#39;):</span>
 <span class="c1"># units for dimensional quantities</span>
 <span class="s1">&#39;units&#39;</span> <span class="p">:</span> <span class="s1">&#39;SI&#39;</span><span class="p">,</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="scale-mesh">
+</section>
+<section id="scale-mesh">
 <h3>Scale mesh<a class="headerlink" href="#scale-mesh" title="Permalink to this heading">¶</a></h3>
-<table border="1" class="docutils align-default">
+<table class="docutils align-default">
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Keyword</th>
-<th class="head">Required</th>
-<th class="head">Default</th>
-<th class="head">Valid values</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>‘scale’</td>
-<td>No</td>
-<td>[1,1,1]</td>
-<td>[scaleX,scaleY,scaleZ] : Any list of positive integers with length 3</td>
+<tbody>
+<tr class="row-even"><td><p>‘scale’</p></td>
+<td><p>No</p></td>
+<td><p>[1,1,1]</p></td>
+<td><p>[scaleX,scaleY,scaleZ] : Any list of positive integers with length 3</p></td>
 </tr>
 </tbody>
 </table>
@@ -89,8 +89,8 @@
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see <em>Tab x</em>)</p>
+<p class="admonition-title">Note</p>
+<p>The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see <em>Tab x</em>)</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional</span>
 <span class="c1"># Scale function</span>
@@ -105,16 +105,16 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;coord&#39;</span> <span class="p">:</span> <span class="n">point</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="reference-state">
+</section>
+<section id="reference-state">
 <h3>Reference state<a class="headerlink" href="#reference-state" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># reference state</span>
 <span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="#initial-conditions">Initial Conditions</a></p>
-</div>
-<div class="section" id="partitioner">
+</section>
+<section id="partitioner">
 <h3>Partitioner<a class="headerlink" href="#partitioner" title="Permalink to this heading">¶</a></h3>
 <p>The ‘metis’ partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional (default &#39;metis&#39;):</span>
@@ -122,8 +122,8 @@
 <span class="s1">&#39;partitioner&#39;</span> <span class="p">:</span> <span class="s1">&#39;metis&#39;</span><span class="p">,</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="safe-mode">
+</section>
+<section id="safe-mode">
 <h3>Safe Mode<a class="headerlink" href="#safe-mode" title="Permalink to this heading">¶</a></h3>
 <p>Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional (default False):</span>
@@ -131,9 +131,9 @@
 <span class="s1">&#39;safe&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="initialisation">
+</section>
+</section>
+<section id="initialisation">
 <h2>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this heading">¶</a></h2>
 <p>Initial conditions are used to set the flow variable values in all cells at the start of a simulation.  The initial conditions default to the reference state (above) if not specified</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial conditions</span>
@@ -150,7 +150,7 @@
             <span class="p">},</span>
 </pre></div>
 </div>
-<div class="section" id="example-user-defined-initialisation-function">
+<section id="example-user-defined-initialisation-function">
 <h3>Example User Defined Initialisation Function<a class="headerlink" href="#example-user-defined-initialisation-function" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_initialisation</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
@@ -192,9 +192,9 @@
 <span class="s1">&#39;approximate sa from sst results&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="low-mach-number-preconditioner-settings-optional">
+</section>
+</section>
+<section id="low-mach-number-preconditioner-settings-optional">
 <h2>Low Mach number preconditioner settings (Optional)<a class="headerlink" href="#low-mach-number-preconditioner-settings-optional" title="Permalink to this heading">¶</a></h2>
 <p>The preconditioner is a mathematical technique for improving the speed of the solver when the fluid flow is slow compared to the speed of sound.  Use of the preconditioner does not alter the final converged solution produced by the solver.  The preconditioner factor is used to improve the robustness of the solver in regions of very low speed. The preconditioner is controlled in the <code class="code docutils literal notranslate"><span class="pre">'equations'</span></code> dictionary (see <a class="reference internal" href="#equations">Equations</a>) by setting the <code class="code docutils literal notranslate"><span class="pre">'precondition'</span></code> key, for example when using the euler solver</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;euler&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -209,8 +209,8 @@
                    <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="time-marcher">
+</section>
+<section id="time-marcher">
 <h2>Time Marcher<a class="headerlink" href="#time-marcher" title="Permalink to this heading">¶</a></h2>
 <p>zCFD is capable of performing both steady-state and time accurate simulations. In the first case the solution is marched in pseudo time using the dual time-stepping algorithm towards the steady-state solution. For time accurate simulations the solution can be either globally time-stepped or use dual time-stepping. The <code class="code docutils literal notranslate"><span class="pre">'time</span> <span class="pre">marching'</span></code> dictionary controls the selection of these schemes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -233,10 +233,10 @@
                    <span class="p">},</span>
 </pre></div>
 </div>
-<div class="section" id="solver-scheme">
+<section id="solver-scheme">
 <h3>Solver scheme<a class="headerlink" href="#solver-scheme" title="Permalink to this heading">¶</a></h3>
 <p>There are three different time marching schemes available in zCFD: Explicit Euler, various orders of Runge Kutta (like Euler…) and the implicit Euler scheme. These can be run with dual time-stepping for both steady and unsteady simulations.  Explicit schemes with no preconditioning can be used with global time-stepping for unsteady simulations. The choice of scheme and time stepping algorithm affects which dictionary keys are valid.</p>
-<div class="section" id="runge-kutta">
+<section id="runge-kutta">
 <h4>Runge Kutta<a class="headerlink" href="#runge-kutta" title="Permalink to this heading">¶</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
                   <span class="s1">&#39;scheme&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -255,9 +255,9 @@
 </div>
 <p>When global time-stepping is specified the keys <code class="code docutils literal notranslate"><span class="pre">['unsteady']['order']</span></code> and <code class="code docutils literal notranslate"><span class="pre">['unsteady']['start']</span></code> are not valid. The CFL keys in in the <a class="reference internal" href="#cfl">CFL</a> section below are also not valid as the time step is explicitly specified.
 When the <code class="code docutils literal notranslate"><span class="pre">['unsteady']['total</span> <span class="pre">time']</span></code> and <code class="code docutils literal notranslate"><span class="pre">['unsteady']['time</span> <span class="pre">step']</span></code> keys are set to be equal values and <code class="code docutils literal notranslate"><span class="pre">['time</span> <span class="pre">marching']['scheme']['kind']</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">'local</span> <span class="pre">timestepping'</span></code> the solver marches in pseudo time towards a steady state solution. If implicit euler is selected then the <code class="code docutils literal notranslate"><span class="pre">'multigrid'</span></code> keys must be removed.  For large CFL numbers, it is recommended the Roe inviscid flux scheme is used.</p>
-</div>
-</div>
-<div class="section" id="cfl">
+</section>
+</section>
+<section id="cfl">
 <h3>CFL<a class="headerlink" href="#cfl" title="Permalink to this heading">¶</a></h3>
 <p>The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step that the solver uses to reach a converged solution. The larger the CFL number, the faster the solver will run but the less stable it will be.  The default values should be appropriate for most cases, but for lower-quality meshes or very complex geometries it may be necessary to use lower values (e.g. CFL of 1.0).  In such cases it may also be helpful to turn off Multigrid (above) by setting the maximum number of meshes to 0. The CFL dictionary keys are only valid when using dual time-stepping.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -281,8 +281,8 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                   <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="cycles">
+</section>
+<section id="cycles">
 <h3>Cycles<a class="headerlink" href="#cycles" title="Permalink to this heading">¶</a></h3>
 <p>For steady-state simulations, the number of pseudo time cycles is the same as the number of steps that the solver should use to reach a converged solution.  Note that the solver uses local pseudo time-stepping (the time-step varies according to local conditions) so any intermediate solution is not necessarily time-accurate.</p>
 <p>For unsteady (time-accurate) simulations using ‘dual time-stepping’ to advance the solution in time the number of pseudo time cycles determines the number of inner iterations that the solver uses to converge each real time step. When global time-stepping is specified the cycles key is not valid.</p>
@@ -293,8 +293,8 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
 <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="multigrid">
+</section>
+<section id="multigrid">
 <h3>Multigrid<a class="headerlink" href="#multigrid" title="Permalink to this heading">¶</a></h3>
 <p>The mesh is automatically coarsened by merging cells on successive layers in order to accelerate solver convergence.  This does not alter the accuracy of the solution on the finest (original) mesh.  Advanced users can control the number of geometric multigrid levels and the ‘prolongation’ of quantities from coarse to fine meshes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -312,8 +312,8 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                 <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="polynomial-multigrid">
+</section>
+<section id="polynomial-multigrid">
 <h3>Polynomial Multigrid<a class="headerlink" href="#polynomial-multigrid" title="Permalink to this heading">¶</a></h3>
 <p>The polynomial basis on which the solution is computed can be successively coarsened, thus allowing the solution to be evolved quicker due to weakened stability restrictions at lower polynomial orders. This does not alter the accuracy of the solution on the highest polynomial order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -323,9 +323,9 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                    <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="equations">
+</section>
+</section>
+<section id="equations">
 <h2>Equations<a class="headerlink" href="#equations" title="Permalink to this heading">¶</a></h2>
 <p>The equations key selects the equation set to be solved as well as the finite volume solver or the high order strong form Discontinuous Galerkin/Flux Reconstruction solver. For each equation type the valid keys are listed below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Governing equations to be used</span>
@@ -543,8 +543,8 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
             <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dg-nodal-locations">
+</section>
+<section id="dg-nodal-locations">
 <h2>DG Nodal locations<a class="headerlink" href="#dg-nodal-locations" title="Permalink to this heading">¶</a></h2>
 <p>The location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zcfd.solvers.utils.DGNodalLocations</span> <span class="kn">import</span> <span class="o">*</span>
@@ -565,8 +565,8 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
                     <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="material-specification">
+</section>
+<section id="material-specification">
 <h2>Material Specification<a class="headerlink" href="#material-specification" title="Permalink to this heading">¶</a></h2>
 <p>The user can specify any fluid material properties by following the (default) scheme for ‘air’:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;material&#39;</span> <span class="p">:</span> <span class="s1">&#39;air&#39;</span><span class="p">,</span>
@@ -582,8 +582,8 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
         <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="initial-conditions">
+</section>
+<section id="initial-conditions">
 <h2>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this heading">¶</a></h2>
 <p>The initial condition properties are defined using consecutively numbered blocks</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -630,32 +630,23 @@ When the <code class="code docutils literal notranslate"><span class="pre">['uns
 For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)</p>
 <p>For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
 by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:</p>
-<table border="1" class="docutils align-default">
-<colgroup>
-<col width="13%" />
-<col width="13%" />
-<col width="11%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="20%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Re</td>
-<td>3000</td>
-<td>5000</td>
-<td>10,000</td>
-<td>15,000</td>
-<td>20,000</td>
-<td>&gt; 100,000</td>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Re</p></td>
+<td><p>3000</p></td>
+<td><p>5000</p></td>
+<td><p>10,000</p></td>
+<td><p>15,000</p></td>
+<td><p>20,000</p></td>
+<td><p>&gt; 100,000</p></td>
 </tr>
-<tr class="row-even"><td>eddy</td>
-<td>11.6</td>
-<td>16.5</td>
-<td>26.7</td>
-<td>34.0</td>
-<td>50.1</td>
-<td>100</td>
+<tr class="row-even"><td><p>eddy</p></td>
+<td><p>11.6</p></td>
+<td><p>16.5</p></td>
+<td><p>26.7</p></td>
+<td><p>34.0</p></td>
+<td><p>50.1</p></td>
+<td><p>100</p></td>
 </tr>
 </tbody>
 </table>
@@ -688,8 +679,8 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The conditions in the VTK file are specified by node based arrays with names ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.</p>
+<p class="admonition-title">Note</p>
+<p>The conditions in the VTK file are specified by node based arrays with names ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.</p>
 </div>
 <p>Certain conditions are specified relative to a reference set of conditions</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
@@ -729,10 +720,10 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><span class="math notranslate nohighlight">\(W^* =\frac{\dot{m}}{\rho V}\)</span></p>
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(W^* =\frac{\dot{m}}{\rho V}\)</span></p>
 </div>
-<div class="section" id="driven-initial-conditions">
+<section id="driven-initial-conditions">
 <h3>Driven Initial Conditions<a class="headerlink" href="#driven-initial-conditions" title="Permalink to this heading">¶</a></h3>
 <p>Another way of prescribing a farfield initial condition is by defining a ‘driving function’, which on evaluation returns an initial condition dictionary.
 The driving function is re-evaluated at zCFD’s reporting frequency, meaning that the condition (e.g. inlet velocity) can be programmed to change as the simulation progresses.
@@ -795,12 +786,12 @@ For simulations where the farfield is distant from the geometry, local and impli
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Driven initial conditions cannot be used as reference conditions, to initialise the flow or within a restarted simulation.</p>
+<p class="admonition-title">Note</p>
+<p>Driven initial conditions cannot be used as reference conditions, to initialise the flow or within a restarted simulation.</p>
 </div>
-</div>
-</div>
-<div class="section" id="boundary-conditions">
+</section>
+</section>
+<section id="boundary-conditions">
 <h2>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Permalink to this heading">¶</a></h2>
 <p>Boundary condition properties are defined using consecutively numbered blocks</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -808,7 +799,7 @@ For simulations where the farfield is distant from the geometry, local and impli
 </pre></div>
 </div>
 <p>zCFD will automatically detect zone types and numbers in a number of mesh formats, and assign appropriate boundary conditions. The type tags follow the Fluent convention (wall = 3, etc), and if present no further information is required.  Alternatively, the mesh format may contain explicitly numbered zones (which can be determined by inspecting the mesh).  In this case, the user can specify the list of zone numbers for each boundary condition ‘type’ and ‘kind’ (see below).</p>
-<div class="section" id="wall">
+<section id="wall">
 <span id="id1"></span><h3>Wall<a class="headerlink" href="#wall" title="Permalink to this heading">¶</a></h3>
 <p>Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e <span class="math notranslate nohighlight">\((y^{+} \leq 1)\)</span>) otherwise automatic wall functions should be used. This behaviour is chosen by setting <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> in the wall specification below. Optionally it is possible to set wall velocity, roughness and temperature.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -857,17 +848,17 @@ For simulations where the farfield is distant from the geometry, local and impli
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The roughness at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the roughness
+<p class="admonition-title">Note</p>
+<p>The roughness at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the roughness
 value looked up in a node based scalar array called ‘Roughness’</p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The temperature at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the temperature
+<p class="admonition-title">Note</p>
+<p>The temperature at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the temperature
 value looked up in a node based scalar array called ‘Temperature’</p>
 </div>
-</div>
-<div class="section" id="farfield">
+</section>
+<section id="farfield">
 <h3>Farfield<a class="headerlink" href="#farfield" title="Permalink to this heading">¶</a></h3>
 <p>The farfield boundary condition can automatically determine whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by referring to an <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_2&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -905,8 +896,8 @@ value looked up in a node based scalar array called ‘Temperature’</p>
          <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="inflow">
+</section>
+<section id="inflow">
 <h3>Inflow<a class="headerlink" href="#inflow" title="Permalink to this heading">¶</a></h3>
 <p>zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_3&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -923,7 +914,7 @@ value looked up in a node based scalar array called ‘Temperature’</p>
          <span class="p">},</span>
 </pre></div>
 </div>
-<div class="section" id="example-pressure-inflow">
+<section id="example-pressure-inflow">
 <h4>Example Pressure Inflow<a class="headerlink" href="#example-pressure-inflow" title="Permalink to this heading">¶</a></h4>
 <p>An example setup for a pressure inflow is given below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -955,8 +946,8 @@ value looked up in a node based scalar array called ‘Temperature’</p>
          <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="example-massflow-inflow">
+</section>
+<section id="example-massflow-inflow">
 <h4>Example Massflow Inflow<a class="headerlink" href="#example-massflow-inflow" title="Permalink to this heading">¶</a></h4>
 <p>An example setup for a massflow inflow is given below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">inflow_direction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
@@ -999,9 +990,9 @@ value looked up in a node based scalar array called ‘Temperature’</p>
          <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="outflow">
+</section>
+</section>
+<section id="outflow">
 <h3>Outflow<a class="headerlink" href="#outflow" title="Permalink to this heading">¶</a></h3>
 <p>Pressure or massflow outflow boundaries are specified in a similar manner to the <a class="reference internal" href="#inflow">Inflow</a> boundary. They can be of :code`’kind’` <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>. When either pressure boundary is set the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions it refers to must set a static temperature ratio, when <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code> is specified a mass flow ratio or mass flow rate must be set. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_4&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -1021,8 +1012,8 @@ value looked up in a node based scalar array called ‘Temperature’</p>
          <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="symmetry">
+</section>
+<section id="symmetry">
 <h3>Symmetry<a class="headerlink" href="#symmetry" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_5&#39;</span> <span class="p">:</span> <span class="p">{</span>
          <span class="c1"># Zone type tag</span>
@@ -1034,8 +1025,8 @@ value looked up in a node based scalar array called ‘Temperature’</p>
          <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="periodic">
+</section>
+<section id="periodic">
 <h3>Periodic<a class="headerlink" href="#periodic" title="Permalink to this heading">¶</a></h3>
 <p>This boundary condition needs to be specified in pairs with opposing transformations.
 The transforms specified should map each zone onto each other.</p>
@@ -1059,12 +1050,12 @@ The transforms specified should map each zone onto each other.</p>
                 <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="fluid-structure-interaction">
+</section>
+</section>
+<section id="fluid-structure-interaction">
 <h2>Fluid Structure Interaction<a class="headerlink" href="#fluid-structure-interaction" title="Permalink to this heading">¶</a></h2>
 <p>zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.</p>
-<div class="section" id="modal-model">
+<section id="modal-model">
 <h3>Modal Model<a class="headerlink" href="#modal-model" title="Permalink to this heading">¶</a></h3>
 <p>The modal model must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid using the method of modal superposition. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in <a class="reference internal" href="#mesh-transformations">Mesh Transformations</a> . For both steady and unsteady simulations the structural solution is advanced using a newmark integration scheme. The dictionary keys related to the different mesh deformation algorithms are the same as described in <a class="reference internal" href="#mesh-transformations">Mesh Transformations</a> . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one <code class="code docutils literal notranslate"><span class="pre">MM_*</span></code> key per modal model:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="s1">&#39;modal model&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -1119,8 +1110,8 @@ The transforms specified should map each zone onto each other.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="general-fsi">
+</section>
+<section id="general-fsi">
 <h3>General FSI<a class="headerlink" href="#general-fsi" title="Permalink to this heading">¶</a></h3>
 <p>The general FSI capabilities of zCFD allow the solver to expose solution variables at run time, in order to allow for a user to couple the solver to any structural model. The behaviour of the coupling scheme can be modified within the open source python layer, by editing <code class="code docutils literal notranslate"><span class="pre">/bin/zcfd/utils/coupling/genericfsi.py</span></code>. The default file contains 4 hooks definining points within the code when FSI actions can be performed- post intialisation, start of the real time cycle, post advance and post solve. In addition the file contains examples of all the functions available to the user for data communication, and how they should be executed in regards the rank of the CPU. In general any user written code for communication should be performed on the rank 0 CPU to avoid issues with parallelisation. The generic FSI scheme can be setup using the <code class="code docutils literal notranslate"><span class="pre">fsi</span></code> key in the control dictionary.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;fsi&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -1151,9 +1142,9 @@ The transforms specified should map each zone onto each other.</p>
 <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="fluid-zones">
+</section>
+</section>
+<section id="fluid-zones">
 <h2>Fluid Zones<a class="headerlink" href="#fluid-zones" title="Permalink to this heading">¶</a></h2>
 <p>The fluidic zone properties are defined using consecutively numbered blocks like</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -1214,8 +1205,8 @@ The transforms specified should map each zone onto each other.</p>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">When using the field specification the height of the canopy at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the height value looked up in a node based scalar array called ‘Height’</p>
+<p class="admonition-title">Note</p>
+<p>When using the field specification the height of the canopy at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the height value looked up in a node based scalar array called ‘Height’</p>
 </div>
 <p>For porous media</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
@@ -1229,8 +1220,8 @@ The transforms specified should map each zone onto each other.</p>
 <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mesh-transformations">
+</section>
+<section id="mesh-transformations">
 <h2>Mesh Transformations<a class="headerlink" href="#mesh-transformations" title="Permalink to this heading">¶</a></h2>
 <p>Radial Basis Functions (RBFs) or Inverse Distance Weighted (IDW) interpolation can be used to deform the volume mesh according to the motion of some or all of the boundary nodes. zCFD can perform an arbitrary number of transforms which are specified in consecutively numbered blocks.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;TR_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
@@ -1304,8 +1295,8 @@ The transforms specified should map each zone onto each other.</p>
  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;v1&#39;</span> <span class="p">:</span> <span class="n">x2</span><span class="p">,</span> <span class="s1">&#39;v2&#39;</span> <span class="p">:</span> <span class="n">y2</span><span class="p">,</span> <span class="s1">&#39;v3&#39;</span> <span class="p">:</span> <span class="n">z2</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="reporting">
+</section>
+<section id="reporting">
 <h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this heading">¶</a></h2>
 <p>In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of <code class="code docutils literal notranslate"><span class="pre">'MR_'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'FR_'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'MF_'</span></code> blocks may be spcified.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -1358,7 +1349,7 @@ The transforms specified should map each zone onto each other.</p>
         <span class="p">},</span>
 </pre></div>
 </div>
-<div class="section" id="example-transformation-function">
+<section id="example-transformation-function">
 <h3>Example Transformation Function<a class="headerlink" href="#example-transformation-function" title="Permalink to this heading">¶</a></h3>
 <p>A transformation function my be supplied to the force report block to transform the force into a different coordinate system, this a particularly useful for reporting lift and drag which are often rotated from the solver coordinate system.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Angle of attack</span>
@@ -1370,9 +1361,9 @@ The transforms specified should map each zone onto each other.</p>
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;v1&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;v2&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;v3&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="overset-meshes">
+</section>
+</section>
+<section id="overset-meshes">
 <h2>Overset meshes<a class="headerlink" href="#overset-meshes" title="Permalink to this heading">¶</a></h2>
 <p>Within zCFD in finite volume mode it is possible to run with an arbitrary number of meshes overlapping one another.  It is also possible to run a single high order DG mesh (simulation) overlapping a single finite volume background mesh.  To activate the overset mesh capability, the user simply strings mesh and case names after the -p and -c options respectively.  There should be a python dictionary for each mesh with the appropriate boundary conditions for that mesh defined in it.  It should be noted that the ordering of the mesh and case names indicates superiority where the second mesh overlaps the first, and the third overlaps the second and first, and so on.  Any mesh which overlaps another must have the boundaries defined where solution information is to be from a lower mesh.  This is specified as follows.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -1398,16 +1389,16 @@ The transforms specified should map each zone onto each other.</p>
                 <span class="p">},</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="sliding-meshes">
+</section>
+<section id="sliding-meshes">
 <h2>Sliding meshes<a class="headerlink" href="#sliding-meshes" title="Permalink to this heading">¶</a></h2>
 <p>Sliding meshes (where interfaces on each mesh slide past one another, for a moving rotor simulation for example) can be simulated in a similar fashion to overset meshes.  In fact, sliding meshes are a simple extension of the overset mesh philosophy however no mesh is defined as a background mesh (with cells blanked off).  For two meshes sliding across one another, we simply set the sliding boundary as <code class="code docutils literal notranslate"><span class="pre">'overset'</span></code> in both python dictionaries as described above for BC_1 in the Overset meshes section.  The only additional requirement is that to indicate to the solver that the first mesh and solver dictionary combination are not background overset, we must add the following key value pair to the first solver dictionary.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;create overset halos&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>The <code class="code docutils literal notranslate"><span class="pre">'create</span> <span class="pre">overset</span> <span class="pre">halos'</span></code> keyword instructs the solver to generate an overset halo cell centre by projecting along the face normal a distance equal to the distance from the overset boundary face to the adjacent cell centre.  This fictitious cell centre is used for mapping data.</p>
-</div>
-<div class="section" id="aero-acoustics">
+</section>
+<section id="aero-acoustics">
 <h2>Aero-acoustics<a class="headerlink" href="#aero-acoustics" title="Permalink to this heading">¶</a></h2>
 <p>Broadband aero-acoustic simulations can be performed by selecting the DGCAA solver.  Aero-acoustic sources are currently limited to stochastic noise sources generated by the FRPM method.  These sources are typically driven by a steady state RANS simulation.  Several FRPM domains can be defined within the aero-acoustic simulation by adding additional <code class="code docutils literal notranslate"><span class="pre">'FRPM_2'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'FRPM_3'</span></code>, etc., dictionaries.  With a single FRPM domain, the dictionary must be labelled <code class="code docutils literal notranslate"><span class="pre">'FRPM_1'</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;DGCAA&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -1570,8 +1561,8 @@ The transforms specified should map each zone onto each other.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="output">
+</section>
+<section id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h2>
 <p>For solver efficiency, zCFD outputs the raw flow field data (plus any user-defined variables) to each parallel partition without re-combining the output files. The <code class="code docutils literal notranslate"><span class="pre">'write</span> <span class="pre">output'</span></code> dictionary controls solver output.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -1615,240 +1606,230 @@ The transforms specified should map each zone onto each other.</p>
                 <span class="p">},</span>
 </pre></div>
 </div>
-<div class="section" id="output-variables">
+<section id="output-variables">
 <h3>Output Variables<a class="headerlink" href="#output-variables" title="Permalink to this heading">¶</a></h3>
 <blockquote>
-<div><table border="1" class="docutils align-default">
-<colgroup>
-<col width="14%" />
-<col width="12%" />
-<col width="74%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable Name</th>
-<th class="head">Alias</th>
-<th class="head">Definition</th>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable Name</p></th>
+<th class="head"><p>Alias</p></th>
+<th class="head"><p>Definition</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>temperature</td>
-<td>T, t</td>
-<td>Temperature in (<span class="math notranslate nohighlight">\(K\)</span>)</td>
+<tbody>
+<tr class="row-even"><td><p>temperature</p></td>
+<td><p>T, t</p></td>
+<td><p>Temperature in (<span class="math notranslate nohighlight">\(K\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td>temperaturegrad</td>
-<td>&#160;</td>
-<td>Temperature gradient vector</td>
+<tr class="row-odd"><td><p>temperaturegrad</p></td>
+<td></td>
+<td><p>Temperature gradient vector</p></td>
 </tr>
-<tr class="row-even"><td>potentialtemperature</td>
-<td>&#160;</td>
-<td>Potential temperature in (<span class="math notranslate nohighlight">\(K\)</span>)</td>
+<tr class="row-even"><td><p>potentialtemperature</p></td>
+<td></td>
+<td><p>Potential temperature in (<span class="math notranslate nohighlight">\(K\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td>pressure</td>
-<td>p</td>
-<td>Pressure (<span class="math notranslate nohighlight">\(Pa\)</span>)</td>
+<tr class="row-odd"><td><p>pressure</p></td>
+<td><p>p</p></td>
+<td><p>Pressure (<span class="math notranslate nohighlight">\(Pa\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>gauge_pressure</td>
-<td>&#160;</td>
-<td>Pressure relative to the reference value (<span class="math notranslate nohighlight">\(Pa\)</span>)</td>
+<tr class="row-even"><td><p>gauge_pressure</p></td>
+<td></td>
+<td><p>Pressure relative to the reference value (<span class="math notranslate nohighlight">\(Pa\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td>density</td>
-<td>rho</td>
-<td>Density (<span class="math notranslate nohighlight">\(kg/m^3\)</span>)</td>
+<tr class="row-odd"><td><p>density</p></td>
+<td><p>rho</p></td>
+<td><p>Density (<span class="math notranslate nohighlight">\(kg/m^3\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>velocity</td>
-<td>V, v</td>
-<td>Velocity vector (<span class="math notranslate nohighlight">\(m/s\)</span>)</td>
+<tr class="row-even"><td><p>velocity</p></td>
+<td><p>V, v</p></td>
+<td><p>Velocity vector (<span class="math notranslate nohighlight">\(m/s\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td>velocitygradient</td>
-<td>&#160;</td>
-<td>Velocity gradient tensor</td>
+<tr class="row-odd"><td><p>velocitygradient</p></td>
+<td></td>
+<td><p>Velocity gradient tensor</p></td>
 </tr>
-<tr class="row-even"><td>cp</td>
-<td>&#160;</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/Pressure_coefficient" target="_blank">Pressure coefficient</a></td>
+<tr class="row-even"><td><p>cp</p></td>
+<td></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Pressure_coefficient" target="_blank">Pressure coefficient</a></p></td>
 </tr>
-<tr class="row-odd"><td>totalcp</td>
-<td>&#160;</td>
-<td>Total presure coefficient</td>
+<tr class="row-odd"><td><p>totalcp</p></td>
+<td></td>
+<td><p>Total presure coefficient</p></td>
 </tr>
-<tr class="row-even"><td>mach</td>
-<td>m</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/Mach_number" target="_blank">Mach number</a></td>
+<tr class="row-even"><td><p>mach</p></td>
+<td><p>m</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Mach_number" target="_blank">Mach number</a></p></td>
 </tr>
-<tr class="row-odd"><td>viscosity</td>
-<td>mu</td>
-<td>Dynamic viscosity (<span class="math notranslate nohighlight">\(Pa/s\)</span>)</td>
+<tr class="row-odd"><td><p>viscosity</p></td>
+<td><p>mu</p></td>
+<td><p>Dynamic viscosity (<span class="math notranslate nohighlight">\(Pa/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>kinematicviscosity</td>
-<td>nu</td>
-<td>Kinematic viscosity (<span class="math notranslate nohighlight">\(m^2/s\)</span>)</td>
+<tr class="row-even"><td><p>kinematicviscosity</p></td>
+<td><p>nu</p></td>
+<td><p>Kinematic viscosity (<span class="math notranslate nohighlight">\(m^2/s\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td>vorticity</td>
-<td>&#160;</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/Vorticity" target="_blank">Vorticity vector</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</td>
+<tr class="row-odd"><td><p>vorticity</p></td>
+<td></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Vorticity" target="_blank">Vorticity vector</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>Qcriterion</td>
-<td>&#160;</td>
-<td>Q criterion</td>
+<tr class="row-even"><td><p>Qcriterion</p></td>
+<td></td>
+<td><p>Q criterion</p></td>
 </tr>
-<tr class="row-odd"><td>reynoldstress</td>
-<td>&#160;</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/Reynolds_stress" target="_blank">Reynolds stress tensor</a></td>
+<tr class="row-odd"><td><p>reynoldstress</p></td>
+<td></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Reynolds_stress" target="_blank">Reynolds stress tensor</a></p></td>
 </tr>
-<tr class="row-even"><td>helicity</td>
-<td>&#160;</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/Hydrodynamical_helicity" target="_blank">Helicity</a></td>
+<tr class="row-even"><td><p>helicity</p></td>
+<td></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Hydrodynamical_helicity" target="_blank">Helicity</a></p></td>
 </tr>
-<tr class="row-odd"><td>enstrophy</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>enstrophy</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>ek</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>ek</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>lesregion</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>lesregion</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>turbulenceintensity</td>
-<td>ti</td>
-<td>Turbulence intensity</td>
+<tr class="row-even"><td><p>turbulenceintensity</p></td>
+<td><p>ti</p></td>
+<td><p>Turbulence intensity</p></td>
 </tr>
-<tr class="row-odd"><td>turbulencekineticenergy</td>
-<td>&#160;</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/Turbulence_kinetic_energy" target="_blank">Turbulence kinetic energy</a> (<span class="math notranslate nohighlight">\(J/kg\)</span>)</td>
+<tr class="row-odd"><td><p>turbulencekineticenergy</p></td>
+<td></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Turbulence_kinetic_energy" target="_blank">Turbulence kinetic energy</a> (<span class="math notranslate nohighlight">\(J/kg\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>turbulenceeddyfrequency</td>
-<td>&#160;</td>
-<td><a class="reference external" href="https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure" target="_blank">Turbulence eddy frequency</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</td>
+<tr class="row-even"><td><p>turbulenceeddyfrequency</p></td>
+<td></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure" target="_blank">Turbulence eddy frequency</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td>eddy</td>
-<td>&#160;</td>
-<td>Eddy viscosity (<span class="math notranslate nohighlight">\(Pa/s\)</span>)</td>
+<tr class="row-odd"><td><p>eddy</p></td>
+<td></td>
+<td><p>Eddy viscosity (<span class="math notranslate nohighlight">\(Pa/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>cell_velocity</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>cell_velocity</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>cellzone</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>cellzone</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>cellorder</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>cellorder</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>centre</td>
-<td>&#160;</td>
-<td>Cell centre location</td>
+<tr class="row-odd"><td><p>centre</p></td>
+<td></td>
+<td><p>Cell centre location</p></td>
 </tr>
-<tr class="row-even"><td>viscouslengthscale</td>
-<td>&#160;</td>
-<td>Minimum distance between cell and its neighbours</td>
+<tr class="row-even"><td><p>viscouslengthscale</p></td>
+<td></td>
+<td><p>Minimum distance between cell and its neighbours</p></td>
 </tr>
-<tr class="row-odd"><td>walldistance</td>
-<td>&#160;</td>
-<td>Wall distance (<span class="math notranslate nohighlight">\(m\)</span>)</td>
+<tr class="row-odd"><td><p>walldistance</p></td>
+<td></td>
+<td><p>Wall distance (<span class="math notranslate nohighlight">\(m\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td>sponge</td>
-<td>&#160;</td>
-<td>Sponge layer damping coefficient</td>
+<tr class="row-even"><td><p>sponge</p></td>
+<td></td>
+<td><p>Sponge layer damping coefficient</p></td>
 </tr>
-<tr class="row-odd"><td>menterf1</td>
-<td>&#160;</td>
-<td>Menter SST blending function</td>
+<tr class="row-odd"><td><p>menterf1</p></td>
+<td></td>
+<td><p>Menter SST blending function</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-<div class="section" id="surface-only-quantities">
+<section id="surface-only-quantities">
 <h4>Surface Only Quantities<a class="headerlink" href="#surface-only-quantities" title="Permalink to this heading">¶</a></h4>
 <blockquote>
-<div><table border="1" class="docutils align-default">
-<colgroup>
-<col width="27%" />
-<col width="22%" />
-<col width="51%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable Name</th>
-<th class="head">Alias</th>
-<th class="head">Definition</th>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable Name</p></th>
+<th class="head"><p>Alias</p></th>
+<th class="head"><p>Definition</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>pressureforce</td>
-<td>&#160;</td>
-<td>Pressure component of force on a face</td>
+<tbody>
+<tr class="row-even"><td><p>pressureforce</p></td>
+<td></td>
+<td><p>Pressure component of force on a face</p></td>
 </tr>
-<tr class="row-odd"><td>pressuremoment</td>
-<td>&#160;</td>
-<td>Pressure component of moment on a face</td>
+<tr class="row-odd"><td><p>pressuremoment</p></td>
+<td></td>
+<td><p>Pressure component of moment on a face</p></td>
 </tr>
-<tr class="row-even"><td>pressuremomentx</td>
-<td>&#160;</td>
-<td>Component of pressure moment around x axis</td>
+<tr class="row-even"><td><p>pressuremomentx</p></td>
+<td></td>
+<td><p>Component of pressure moment around x axis</p></td>
 </tr>
-<tr class="row-odd"><td>pressuremomenty</td>
-<td>&#160;</td>
-<td>Component of pressure moment around y axis</td>
+<tr class="row-odd"><td><p>pressuremomenty</p></td>
+<td></td>
+<td><p>Component of pressure moment around y axis</p></td>
 </tr>
-<tr class="row-even"><td>pressuremomentz</td>
-<td>&#160;</td>
-<td>Component of pressure moment around z axis</td>
+<tr class="row-even"><td><p>pressuremomentz</p></td>
+<td></td>
+<td><p>Component of pressure moment around z axis</p></td>
 </tr>
-<tr class="row-odd"><td>frictionforce</td>
-<td>&#160;</td>
-<td>Skin friction component of force on a face</td>
+<tr class="row-odd"><td><p>frictionforce</p></td>
+<td></td>
+<td><p>Skin friction component of force on a face</p></td>
 </tr>
-<tr class="row-even"><td>frictionmoment</td>
-<td>&#160;</td>
-<td>Skin friction component of moment on a face</td>
+<tr class="row-even"><td><p>frictionmoment</p></td>
+<td></td>
+<td><p>Skin friction component of moment on a face</p></td>
 </tr>
-<tr class="row-odd"><td>frictionmomentx</td>
-<td>&#160;</td>
-<td>Component of skin friction moment around x axis</td>
+<tr class="row-odd"><td><p>frictionmomentx</p></td>
+<td></td>
+<td><p>Component of skin friction moment around x axis</p></td>
 </tr>
-<tr class="row-even"><td>frictionmomenty</td>
-<td>&#160;</td>
-<td>Component of skin friction moment around y axis</td>
+<tr class="row-even"><td><p>frictionmomenty</p></td>
+<td></td>
+<td><p>Component of skin friction moment around y axis</p></td>
 </tr>
-<tr class="row-odd"><td>frictionmomentz</td>
-<td>&#160;</td>
-<td>Component of skin friction moment around z axis</td>
+<tr class="row-odd"><td><p>frictionmomentz</p></td>
+<td></td>
+<td><p>Component of skin friction moment around z axis</p></td>
 </tr>
-<tr class="row-even"><td>roughness</td>
-<td>&#160;</td>
-<td>Wall roughness height</td>
+<tr class="row-even"><td><p>roughness</p></td>
+<td></td>
+<td><p>Wall roughness height</p></td>
 </tr>
-<tr class="row-odd"><td>yplus</td>
-<td>&#160;</td>
-<td>Non-dinemsional wall distance</td>
+<tr class="row-odd"><td><p>yplus</p></td>
+<td></td>
+<td><p>Non-dinemsional wall distance</p></td>
 </tr>
-<tr class="row-even"><td>zone</td>
-<td>&#160;</td>
-<td>Boundary zone number</td>
+<tr class="row-even"><td><p>zone</p></td>
+<td></td>
+<td><p>Boundary zone number</p></td>
 </tr>
-<tr class="row-odd"><td>cf</td>
-<td>&#160;</td>
-<td>Skin friction coefficient</td>
+<tr class="row-odd"><td><p>cf</p></td>
+<td></td>
+<td><p>Skin friction coefficient</p></td>
 </tr>
-<tr class="row-even"><td>facecentre</td>
-<td>&#160;</td>
-<td>Face centre location</td>
+<tr class="row-even"><td><p>facecentre</p></td>
+<td></td>
+<td><p>Face centre location</p></td>
 </tr>
-<tr class="row-odd"><td>frictionvelocity</td>
-<td>ut</td>
-<td>Friction velocity at the wall</td>
+<tr class="row-odd"><td><p>frictionvelocity</p></td>
+<td><p>ut</p></td>
+<td><p>Friction velocity at the wall</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
           </div>

@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Propellor Modelling &#8212; zCFD User Guide v2023.01.3113-1237-g356962 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Propellor Modelling &#8212; zCFD User Guide v2023.01.3113-1238-g63f4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -29,9 +29,9 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="propellor-modelling">
+  <section id="propellor-modelling">
 <h1>Propellor Modelling<a class="headerlink" href="#propellor-modelling" title="Permalink to this heading">¶</a></h1>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>Propellors are similar to wind turbines except that they are designed to produce thrust rather than torque from lift.  zCFD includes a blade element fluid zone model based on an actuator disc, for propellors:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">propellor_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
@@ -122,8 +122,8 @@ def<span class="w"> </span>pv_rotate<span class="o">(</span>pt,args<span class="
 <p>The <em>‘aerofoil cl’</em> and <em>‘aerofoil cd’</em> curves are lists of points defining the aerofoil characteristics.  zCFD interpolates values between these points and will extrapolate if necessary.</p>
 <p>The <em>‘number of segments’</em> used in the model should be chosen to match the mesh spacing in the CFD mesh around the propellor.  zCFD does not generate a new mesh in order to apply the propellor model.</p>
 <p>A <em>‘tip loss correction’</em> can be applied to the blade element model, and the only option is <em>‘elliptic’</em>. The <em>‘tip loss correction radius’</em> is the radius from which the tip correction is applied and has a default value of 0.8.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
