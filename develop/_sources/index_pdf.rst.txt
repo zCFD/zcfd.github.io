@@ -12,14 +12,13 @@ Version: |version|
 .. toctree::
    :maxdepth: 2
    :glob:
+   :includehidden:
 
    overview
    installation
    execution
-   getting_started/intro
    reference_guide/intro
    functions
-   control-dict
    meshutil
    visualisation
    utilities
