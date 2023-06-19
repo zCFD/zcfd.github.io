@@ -1,0 +1,417 @@
+.. _time:
+
+Time Marching
+-------------
+
+zCFD is capable of performing both steady-state and time dependent simulations. Steady-state solutions are marched in pseudo time towards convergence. Time dependent simulations can be either globally time-stepped or use local pseudo time-stepping within a dual time-stepping iteration in physical time. The 'time marching' dictionary controls the selection of these schemes.  Major options are what CFL number to use, whether explicit or implicit time-stepping is used and whether the simulation is time dependent. 
+
+.. parsed-literal::
+    
+    parameters = {
+            ...
+            "time marching": {
+                "cycles": `5000 <cycles_>`_, 
+                "unsteady": `{...} <unsteady_>`_,
+                "scheme": `{...} <scheme_>`_,
+                'cfl': `30.0 <cfl_control_>`_,
+                "multigrid": `3 <multigrid_>`_,
+                "multigrid cycles": `20000 <multigrid_>`_,
+                "multipoly": `False <multigrid_>`_,
+                "moving mesh": `False <moving_mesh_>`_,
+            },
+            ...
+    }
+
+
+.. _cycles:
+
+Cycles
+^^^^^^
+The total number of pseudo time-steps to use in a `steady-state <running_steady_>`_ simulation, or the number of pseudo time-steps to use in each real time-step of an `unsteady <running_unsteady_>`_ time-dependent simulation 
+
+Example usage:
+
+.. code-block:: python
+
+    # A good starting value for most explicit, steady state cases. Implicit simulations can use a higher CFL and therefore require fewer cycles - around 100 - 500 cycles is a good starting point for an implicit steady state case.   
+    'cycles' : 5000,
+
+
+.. _cfl_control:
+
+CFL Control
+^^^^^^^^^^^
+
+The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step that the solver uses to reach a converged solution. The larger the CFL number, the faster the solver will run but the less stable it will be. The CFL dictionary keys are only valid when using dual time-stepping.
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'cfl'
+     - Yes
+     - 0
+     - Any positive floating point number. 
+   * - 'cfl transport'
+     - No
+     - --
+     - Any positive floating point number.
+   * - 'cfl ramp'
+     - No
+     - --
+     - Dictionary containing 'initial' and 'growth' - respectively the starting CFL number and the growth rate applied as a multiplier each successive time step until the CFL number is reached.  
+   * - 'ramp func'
+     - No
+     - --
+     - Instead of the 'cfl ramp' parameter the user can specify a :ref:`ramp function <ramp_function>`.
+   * - 'cfl coarse'
+     - No
+     - Current CFL number
+     - Any positive floating point number.
+   * - 'cfl viscous factor'
+     - Yes
+     - 1
+     - Any positive floating point number.
+   * - 'cfl for pmg levels'
+     - No
+     - --
+     - List of 2 floating point numbers.
+
+
+cfl
+===
+Sets the CFL number used in the mass, momentum and energy equations. When using :ref:`dgcaa <equation_dgcaa>` this applies to the the 'rho', 'rhou_i' and 'rhoE' equations.
+
+Example usage:
+
+.. code-block:: python
+
+    # Typical value used for a RANS simulation using explicit time marching
+    'cfl' : 1
+
+.. code-block:: python
+
+    # Typical value used for a RANS simulations using implicit time marching
+    'cfl' : 30
+
+.. note::
+    Besides mesh quality, CFL is the most important parameter affecting simulation stability. If you find your simulation does not converge, consider reducing CFL
+
+cfl transport
+=============
+
+Sets the maximum CFL number used to update the turbulent transport equations (for example :math:`k` and :math:`\omega`). 
+
+.. code-block:: python
+
+    # Use cfl transport to promote solver stability
+    'cfl' : 30,
+    'cfl transport': 20
+
+.. note::
+    If you find your simulation does not converge and reports high turbulence equation residuals which increase with successive cycles, consider setting this to a value lower than **'cfl'**
+    
+
+cfl ramp
+========
+
+This allows a relatively large target CFL number to be specified, but start the simulation using a smaller one to provide stability as large non-physical transients are eliminated from the solution.   
+
+Starting a simulation with a large CFL number can cause instability to crash the solver.  A more gentle start will reduce the impact of non-physical transients. 
+
+.. code-block:: python
+
+    # Start cfl at 0.1 and grow at a rate 1.1, reaching the target cfl of 30 in 26 steps
+    'cfl' : 30,
+    'cfl ramp': {
+        'initial': 0.1,
+        'growth': 1.1
+    }
+
+cfl coarse
+==========
+
+For simulations with multigrid acceleration, the **'cfl coarse'** number is used as a CFL condition on the coarse meshes.  For such cases the **'cfl'** number is still applied to the finest mesh.  
+
+This only applies to explicit finite volume solutions.
+
+.. code-block:: python
+
+    # The quality of agglomerated (multigrid) coarse meshes is typically less than the quality of the primary (fine) mesh and so a lower CFL number may be required for numerical stability.
+    'cfl' : 1.0,
+    'cfl coarse': 0.5
+
+cfl viscous factor
+==================
+
+Factor applied to the diffusive (viscous) time step when applying the CFL condition.  As viscous effects are rarely the cause of solver instability, the contribution of the viscous terms to the time step evaluation may be reduced by setting **'cfl viscous factor'** to a number less than 1.   
+
+.. code-block:: python
+
+    # For the low Reynolds number cylinder case, viscous effects are dominant but do not contribute to instability.  
+    # The value of 1e-6 effectively discounts viscosity in the determination of the time step when applying the CFL condition.  
+    "cfl": 200,
+    "cfl viscous factor": 1.0E-6,
+    "cfl ramp factor": {"initial": 0.1, "growth": 1.05},
+
+cfl for pmg levels
+==================
+
+**'cfl for pmg levels'** sets the cfl number for each polynomial level during a polynomial multigrid cycle.  Two values are required in the Python list, the CFL number for the highest polynomial order, and the CFL number for a P0 polynomial. The CFL number varies with polynomial order in accordance with the linear formula as :math:`1.0 / (2 * P + 1)`. Note that the order of spatial accuracy of a P0 polynomial is P + 1 and for a P2 polynomial the order is P + 3.
+
+.. code-block:: python
+
+    # For the high order (DG) cylinder case, the CFL for the P2 polynomial is 0.55, while the CFL for the P0 polynomial can be larger at 1.5.  
+    "cfl": 0.55,
+    "cfl for pmg levels": [0.55, 1.5],
+    "cfl viscous factor": 0.5,
+    "cfl ramp factor": {"initial": 0.1, "growth": 1.05},
+
+
+.. _scheme:
+
+Solver scheme
+^^^^^^^^^^^^^
+
+There are two different time marching schemes available in zCFD: multistage explicit and euler implicit scheme. These can be used for both steady and unsteady (using global or dual time-stepping) simulations. Global time-stepping requires no preconditioning and excludes some of the multistage RK schemes. 
+
+
+.. list-table:: 
+   :widths: 20 10 10 20 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'name'
+     - Yes
+     - "runge kutta"
+     - "euler" | "runge kutta" | "implicit euler"
+     - Name of scheme
+   * - 'stage'
+     - No
+     - "rk third order tvd"
+     - 1 | 4 | 5 | 'rk third order tvd'
+     - ("runge kutta" only) Number of RK stages
+   * - 'kind'
+     - No
+     - --
+     - 'local timestepping' | 'global timestepping'
+     - Timestepping mode
+
+.. note::
+    The Euler scheme has a single stage and is the safest option for new or problematic cases. 
+
+
+name
+====
+The solution is integrated in time (solved) using an integration scheme that can be either explicit (variables driving the change are evaluated at the previous step) or implicit (some or all of the variables driving the change are evaluated at the current step). **'euler'** or **'runge kutta'** are the explicit schemes and **'implicit euler'** is the implicit option.
+
+A larger time step can be taken using the implicit scheme, as the method is more stable than an explicit scheme. 
+
+.. note::
+    The trade off in using implicit time integration is the increase in memory requirement, typically 3-5 times more than for an explicit scheme. 
+
+stage
+=====
+The number of Runge-Kutta stages in each step of the integration scheme affects the order of temporal convergence, and affects the maximum CFL that can be used.   
+
+.. note::
+    For most of the test cases where Runge-Kutta inegration is used, 5 stages are applied.  This is a typical industry standard and has been shown to be robust for most test cases.  
+
+kind
+====
+Global time stepping uses the same time step in each cell for the integration, whereas local time stepping calculates and uses the time step in each cell as determined by the local flow conditions and the prescribed CFL number. In cases where there are very small cells. it would be impractical to use global timestepping as all the cells would have to march at the pace of the slowest.  
+
+.. note::
+    While global timestepping restricts all cells to the smallest timestep and should only be used for unsteady simulations. 
+
+.. _unsteady:
+
+Unsteady
+^^^^^^^^
+
+The Unsteady dictionary controls the simulation time and can be used to set up both Steady and Unsteady cases.
+
+
+.. list-table:: 
+   :widths: 20 10 10 20 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'total time'
+     - Yes
+     - --
+     - Positive float
+     - Total time to simulate
+   * - 'time step'
+     - Yes
+     - --
+     - Positive float
+     - Physical time step for the simulation
+   * - 'order'
+     - Yes
+     - "second" 
+     - "first" | "second" | 1 | 2
+     - (Unsteady only) Order of time integration.
+   * - 'start'
+     - No 
+     - --
+     - Positive integer
+     - (Unsteady only)  For unsteady simulations, how many steady-state timesteps to run to initialise solution.
+
+
+.. _running_steady:
+
+Running steady state
+====================
+For steady-state simulations, **'total time'** should be set equal to the **'time step'** value.  The solver will then automatically run a steady-state simulation.   
+
+Example usage:
+
+.. code-block:: python
+
+    # Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds
+   'time marching' : {
+            ...
+            "unsteady": {
+                "total time": 1.0, 
+                "time step": 1.0, 
+            },
+            ...
+    }
+
+.. _running_unsteady:
+
+Running unsteady
+================
+If the **'time step'** value is less than the **'total time'** value, then an unsteady simulation is created.  
+
+Time integration for unsteady simulations is based on the solution at the current time step and the contribution of the solution in previous time steps, represented by a Backward Difference Formula. Dual time-stepping is used to update the current solution with data from previous time steps. **'order'** controls the order of the Dual time-stepping.
+
+**'start'** provides the option of initialising an unsteady simulation with a number of steady-state pseudo timesteps.
+
+
+Example usage:
+
+The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 1.7 seconds to allow the oscillation to begin and establish a well-formed pattern. We set the time step to a small enough value to captue the unsteady shedding phenomenon.
+
+.. code-block:: python
+
+    # Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds
+   'time marching' : {
+            ...
+            "unsteady": {
+                "total time": 1.7, 
+                "time step": 0.002, 
+                "order": "second",
+                "start": 0
+            },
+            ...
+    }
+
+The example below uses a relatively large time step and maintains accuracy with a second order integration scheme. The case starts with 2000 pseudo-timesteps before starting the unsteady simulation. 
+
+.. code-block:: python
+
+    # Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds
+   'time marching' : {
+            ...
+            "unsteady": {
+                "total time": 0.06, 
+                "time step": 2.0e-5, 
+                "order": "second",
+                "start":2000
+            },
+            ...
+    }
+
+.. _multigrid:
+
+Multigrid
+^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'multigrid'
+     - No
+     - --
+     - Any positive integer.
+   * - 'multigrid cycles'
+     - No
+     - --
+     - Any positive integer.
+   * - 'multipoly'
+     - No
+     - False
+     - True | False
+
+To accelerate an explicit finite volume solution, coarse meshes are generated from the original (fine) mesh by agglomerating or combining cells together to create larger cells.  The **'multigrid'** value sets the number of successive times to apply this operation, each iteration resulting in a coarser mesh with fewer cells.  By solving on the hierarchy of coarser meshes as well as the fine mesh, information is moved faster in the flow domain and a converged solution is reached more efficiently.  The multigrid scheme is designed so that the acceleration does not (in theory) change the result that would be obtained just by solving on the finest mesh alone, though in practice the use of multigrid does ultimately stall convergence on most meshes.  
+
+Use multigrid acceleration for a specified number of **'multigrid cycles'** and then revert to the finest mesh only.  This is to make use of the more efficient scheme at the start, and avoid convergence stall due to multigrid at the end of a solution process.  
+
+For high order (Discontinuous Galerkin) simulations, **'multipoly'** may be used to accelerate convergence by using lower order polynomials in a manner analogous to finite volume multigrid acceleration.  The time step limitation on the lower order polynomials is less restrictive that for the higher order polynomials and hence information corresponding to longer wavelengths may be more efficintly propaged in the fluid domain.  The use of **'multipoly'** automatically uses the highest one specified and P0.   
+
+Example usage:
+
+.. code-block:: python
+
+    # 3 levels of multigrid is sufficient in most cases to reduce the number of cycles required by an order of magnitude.
+    # If this causes instablility, a reduction to 2 may solve the problem. 
+   'time marching' : {
+            ...
+            'multigrid': 3,
+            ...
+    }
+
+.. code-block:: python
+
+    # After 20000 explicit cycles, multigrid stall prevents convergence to the correct drag value.
+    # By turning it off, the correct value is obtained on the finest mesh.
+   'time marching' : {
+            ...
+            'multigrid': 3,
+            'multigrid cycles' 20000,
+            ...
+    }
+
+.. note::
+    Multigrid only applies to explicit finite volume solutions. Multipoly only applies to High Order (DG) solutions.
+
+
+.. _moving_mesh:
+
+Moving Mesh
+^^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'moving mesh'
+     - No
+     - False
+     - True | False
+
+In any case where the mesh (or a fluid zone within the mesh) is moving (translation or rotation) the simulation can be performed in either the frame of reference of the mesh or in a fixed coordinate system.  For simulations where there is no relative movement of interest, **'moving mesh'** may be set to False.  For simulations where there is relative movement, setting **'moving mesh'** to True will force a recalculation of the physical location of the mesh, including the recalculation of any overset mappings.   
+

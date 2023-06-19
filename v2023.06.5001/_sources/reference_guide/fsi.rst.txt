@@ -1,0 +1,193 @@
+.. _fsi:
+
+Fluid-structure interaction 
+---------------------------
+zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
+
+.. list-table:: 
+   :widths: 20 5 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'type'
+     - Yes
+     - 
+     - 'abaqus' | 'generic'
+     - FSI driver to be used when coupling to an FEA code
+   * - 'zone'
+     - Yes
+     - 
+     - List of zone ID integers
+     - Which boundaries within the aerodynamic mesh are moving structural boundaries
+   * - 'fixed zones'
+     - Yes
+     - 
+     - List of zone ID integers
+     - Which boundaries should not be moved by any mesh deformation
+   * - 'transform type'
+     - Yes
+     - 
+     - 'rbf multiscale' | 'rbf' | 'IDW'
+     - Interpolation method to be used.
+   * - 'alpha'
+     - Yes
+     - 1
+     - Float
+     - Support radius used by RBF
+   * - 'basis'
+     - Yes
+     - 'c2'
+     - 'c2' | 'c4' | c0' | 'tps' | 'gaussian'
+     - Which basis function to use for RBF
+   * - 'base point fraction'
+     - Yes
+     - 0.1
+     - Float
+     - Number of points to use in the reduced base set for rbf multiscale interpolation
+   * - 'tol'
+     - Yes
+     - 0.01
+     - Float
+     - Set the target error tolerance for the rbf interpolation
+   * - 'max error'
+     - Yes
+     - 0.1
+     - Float
+     - Set the maximum initial error tolerance for rbf interpolation
+   * - 'n nearest'
+     - Yes
+     - 100
+     - Positive integer
+     - Number of points to be used in IDW interpolation
+   * - 'deformation distance'
+     - Yes
+     - 1
+     - Float
+     - Set the maximum support radius for IDW interpolation
+   * - 'blending stiffness'
+     - Yes
+     - 0.5
+     - Float
+     - Set the blending stiffness for the IDW interpolation
+   * - 'power'
+     - Yes
+     - [3.0,5.0,10.0]
+     - Set the IDW power for the nearfield and farfield boundaries, and the power between them.
+     - List of Float
+   * - 'user variables'
+     - No
+     - {}
+     - Dict of variables to values
+     - Custom parameters passed into the generic FSI code
+
+type
+====
+Speficies which FSI driver should be used when coupling to an FEA code, **'abaqus'** or **'generic'**.
+This tells zCFD which FSI python file should be used to execute the FSI coupling:
+ **'generic'** will use the **genericFSI.py** interface that should be implemented to meet your requirements. Out the box **genericFSI.py** will not perform any changes.
+ 
+ **'abaqus'**  is an extension of generic interface that allows the solver to run in tandem with the SIMULIA CSE engine.
+
+.. note::
+    Abaqus requires the CSE engine to be built with zCFD
+
+zone
+====
+**zone** should be a list of zone IDs, these specify which surface is the moving FSI surface. This provides methods to extract surface normals, pressure forces, and cell centres from the specified cells, as well as allowing these surface points to drive mesh deformations in the volume mesh.
+
+For RBF, this must include any static zones, where the motion of a static zone is set to 0.
+
+fixed zones
+===========
+**fixed zones** should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetery plane, these surfaces will remain untouched by the IDW mesh motion interpolation.
+
+.. note::
+    IDW only
+
+transform type
+==============
+In FSI simulations the active surface defined in the 'zone' block, will move relative to the rest of the mesh. In order to maintain a conformal volume mesh, these displacements must be interpolated into the volume mesh. **transform type** defines which interplation scheme should be used. 
+
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Setting
+     - Notes
+   * - **'rbf'**
+     - Radial Basis Functions require the solving of a linear system, where a continous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.
+   * - **'rbf multiscale'**
+     - RBF multiscale uses the a multiscale algorithm using a varying support radius to reduce the number of nodes in the linear system, where as RBF uses a Greedy algorithm.
+   * - **'IDW'**
+     - Inverse Distance Weighting does not require the solving of a linear system, and instead represents a function using a weighted sum of nearby function values. 
+
+.. note::
+    **'rbf multiscale'** has generally superceeded the greedy algorithm, used in **'rbf'**, in terms of both speed performance and accuracy, so is the preferred RBF option. 
+
+alpha
+=====
+Only applies to **'rbf'** and **'rbf multiscale'** interpolation schemes.
+
+**'alpha'** sets the support radius used by the RBF. The Radial Basis Function used in RBF interpolation will have a set support radius defining the 1D shape of the function as a function of r. This determines the region of influence for the function. Compact functions such as C0, C2, C4 have a maximum radius, outside of which the influence of the RBF is 0. For functions with global influence such as Gaussian and TPS, alpha becomes the normalisation factor - i.e. when r = alpha, e = 1 if rbf = f(e).
+
+**'alpha'** should be larger than the maximum anticipated deformation.
+
+basis
+=====
+Only applies to **'rbf'** and **'rbf multiscale'** interpolation schemes.
+
+When performing RBF interpolation a specific function needs to be defined to create the interpolant. Compact functions such as C0, C2, C4 have a maximum region of influence, Gaussian and TPS have global influence.
+
+.. note::
+    For 99% of applications C2 works best
+
+base point fraction
+===================
+Only applies to **'rbf'** and **'rbf multiscale'** interpolation schemes.
+
+Solving the RBF system requires solving an NxN sized linear system, where N is the number of moving nodes- i.e. nodes on the surface [4] defined earlier. For large meshes this quickly becomes prohibitively expensive, therefor it is desirable to solve a reduced set of points. The Multiscale method is a 'reduced base set method' where the linear system is only solved on the base set of nodes, with the remaining nodes solved iteratively. **'base point fraction'** dictates how many nodes of the full set should be included in the base set. Setting the base point fraction to 1.0 returns a standard full RBF.
+
+tol
+===
+Only applies to **'rbf'** interpolation scheme.
+
+At each point selection step during Greedy selection, the interpolation problem is solved on the current base set of data. From this the error between the exact solution and interpolated solution for all points in the mesh is identified, this value is used as the initial guess for the 'worst' error within the mesh. Once the total error is below this tolerance, the greedy point selection is complete.
+
+max error
+=========
+Only applies to **'rbf'** interpolation scheme.
+
+At each point selection step during Greedy selection, the interpolation problem is solved on the current base set of data. From this the error between the exact solution and interpolated solution for all points in the mesh is identified. If this error is greater than the max error specified here, an error message is thrown.
+
+n nearest
+=========
+Only applies to **'IDW'** interpolation scheme.
+
+When using IDW mapping, the deformation of each surface point is mapped onto a set number of volume points, with the value determined by the weighted inverse distance between the donor and the recipient. 
+
+deformation distance
+====================
+Only applies to **'IDW'** interpolation scheme.
+
+Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than "n" neighbours within a distance "d", then only neighours within that distance are used.
+
+blending stiffness
+==================
+Only applies to **'IDW'** interpolation scheme.
+
+Set the blending stiffness for the IDW interpolation.
+
+power
+=====
+Only applies to **'IDW'** interpolation scheme.
+
+Set the IDW power for the nearfield and farfield boundaries, and the power between them.
+
+user variables
+==============
+If you had additional variables for time marching scheme or FSI control (e.g. file names) you may want to pass as variables to the **genericFSI.py** script, these should be included in this dictionary.

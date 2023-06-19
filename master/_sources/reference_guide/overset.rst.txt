@@ -1,0 +1,83 @@
+.. _overset:
+
+Overset
+-------
+zCFD is capable of automatically oversetting multiple meshes into a single simulation. To run an overset case you need to provide an :ref:`override file <override_file>`.
+
+.. _override_file:
+
+Override file
+=============
+The override file tells zCFD which combinations of mesh and control dictionary to load and overset. The first entry in the list should be the background mesh, this is typically the largest of the meshes that the other meshes overlap with. The following entries in the list are then overset onto the background mesh when the solver starts. The meshes are overlapped in the order they appear in the list, starting with the background mesh.
+
+The list should be defined in a seperate python file containing an **override** dictionary.
+
+Example **override** dictionary (e.g. override.py):
+
+.. code-block:: python
+
+    override = {
+        'problem_case_pair': [
+            ("background_mesh.h5", "background.py"),
+            ("overset_1.h5", "overset_1.py"),
+            ("overset_2.h5", "overset_2.py"),
+        ]
+    }
+
+
+Running an overset case:
+
+.. code-block:: bash
+
+    (zCFD)> run_zcfd -f override.py 
+
+Mapping
+=======
+
+The **mapping** dictionary sets additional mapping options for overset methods and should be defined in the background control file. 
+
+.. list-table:: 
+   :widths: 25 10 20 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'idw from cells order'
+     - 0
+     - --
+     - 0 or 1
+     - Sets the order of accuracy for IDW mapping
+   * - 'number of additional overset active layers'
+     - Yes
+     - 0
+     - Positive integer
+     - Adds additional active cells to overlapped mesh
+
+
+Example usage:
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    'mapping': {
+        'idw from cells order': 0,
+        'number of additional overset active layers': 0,
+    }
+    ..
+  }
+
+
+idw from cells order
+^^^^^^^^^^^^^^^^^^^^
+If **'idw from cells order'** is set to 0, this provides a 0th order interpolation where we only utilise data from cell a mapped point is located within.  If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.
+
+number of additional overset active layers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Adds additional active cells which may have been made inactive by an overlapping mesh. If for example, we have a rotating domain, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering cells made inactive.  This will result in no mapping between background and overset meshes at these points.  To resolve this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and background meshes.  Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.
+
+
+

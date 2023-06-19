@@ -1,0 +1,81 @@
+source/reference_guide/equations.rst:31: (Incompressible)  Incompressible
+source/reference_guide/equations.rst:95: (leastsq)  ‘leastsq gradients’
+source/reference_guide/equations.rst:102: (Rusanov)  “HLLC” | “Rusanov” | “Roe” | “Roe low diss”
+source/reference_guide/equations.rst:102: (diss)  “HLLC” | “Rusanov” | “Roe” | “Roe low diss”
+source/reference_guide/equations.rst:116: (incompressible)  Yes (for incompressible equation set)
+source/reference_guide/equations.rst:120: (les)  Yes (for ‘les’ or ‘rans’ equation set)
+source/reference_guide/equations.rst:120: (rans)  Yes (for ‘les’ or ‘rans’ equation set)
+source/reference_guide/equations.rst:126: (varialbes)   is second order for the flow varialbes and first order for the turbulence.
+source/reference_guide/equations.rst:130: (Specifices)  Specifices the number of cycles the solver will run with first order spatial discretisation. This can be used to improve stability at start up.
+source/reference_guide/equations.rst:149: (leastsq)  linear gradients & leastsq gradients
+source/reference_guide/equations.rst:173: (Jonhsen)  See Jonhsen et al. JCP 229 (2010) pag. 1234
+source/reference_guide/equations.rst:173: (et)  See Jonhsen et al. JCP 229 (2010) pag. 1234
+source/reference_guide/equations.rst:173: (al)  See Jonhsen et al. JCP 229 (2010) pag. 1234
+source/reference_guide/equations.rst:173: (pag)  See Jonhsen et al. JCP 229 (2010) pag. 1234
+source/reference_guide/equations.rst:175: (Xiao)  See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 
+source/reference_guide/equations.rst:175: (et)  See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 
+source/reference_guide/equations.rst:175: (al)  See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 
+source/reference_guide/equations.rst:175: (pag)  See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 
+source/reference_guide/equations.rst:180: (diss)   scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
+source/reference_guide/equations.rst:188: (incompressible)  The relaxation factor used on the flow equations in the incompressible solver. Increasing this will speed up convergence at the expense of stability and vice versa.
+source/reference_guide/equations.rst:302: (les)  ‘les’
+source/reference_guide/equations.rst:310: (sst)  ‘sst’ | ‘sas’ | ‘sa-neg’ | ‘sst-transition’
+source/reference_guide/equations.rst:310: (sas)  ‘sst’ | ‘sas’ | ‘sa-neg’ | ‘sst-transition’
+source/reference_guide/equations.rst:310: (sa)  ‘sst’ | ‘sas’ | ‘sa-neg’ | ‘sst-transition’
+source/reference_guide/equations.rst:310: (sst)  ‘sst’ | ‘sas’ | ‘sa-neg’ | ‘sst-transition’
+source/reference_guide/equations.rst:312: (sa)  ‘approximate sa from sst results’
+source/reference_guide/equations.rst:312: (sst)  ‘approximate sa from sst results’
+source/reference_guide/equations.rst:327: (qcr)  ‘qcr’
+source/reference_guide/equations.rst:331: (Applicible)  Activates the non-linear QCR correction to the turbulent stress. Applicible to both SST and SA-neg
+source/reference_guide/equations.rst:335: (les)  les
+source/reference_guide/equations.rst:368: (Spalart)  Spalart-Allmaras turbulence model (
+source/reference_guide/equations.rst:368: (Allmaras)  Spalart-Allmaras turbulence model (
+source/reference_guide/equations.rst:370: (Spalart)  Negative Spalart-Allmaras turbulence model (
+source/reference_guide/equations.rst:370: (Allmaras)  Negative Spalart-Allmaras turbulence model (
+source/reference_guide/equations.rst:372: (Langtry)  The Langtry-Menter 4-equation Transitional SST Model (
+source/reference_guide/equations.rst:382: (qcr)  qcr
+source/reference_guide/equations.rst:383: (Applicible)  Activates the non-linear QCR correction to the turbulent stress. Applicible to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings.
+source/reference_guide/equations.rst:418: (shouldn)  The following parameters can be used in the ‘turbulence’ dictionary to allow tuning of the turbulence models in zCFD. These are advanced parameters and shouldn’t normally need to be adjusted.
+source/reference_guide/equations.rst:429: (betastar)  ‘betastar’
+source/reference_guide/equations.rst:434: (cdes)  ‘cdes_kw’
+source/reference_guide/equations.rst:439: (cdes)  ‘cdes_keps’
+source/reference_guide/equations.rst:439: (keps)  ‘cdes_keps’
+source/reference_guide/equations.rst:444: (cd)  ‘cd1’
+source/reference_guide/equations.rst:449: (cd)  ‘cd2’
+source/reference_guide/equations.rst:459: (cdes)  ‘cdes’
+source/reference_guide/equations.rst:475: (vorticity)  Selects the vorticity based production term (SST-V) 
+source/reference_guide/equations.rst:477: (incompressible)  Selects the strain based production term for incompressible flows 
+source/reference_guide/equations.rst:481: (Kato)  Selects the Kato-Launder source term 
+source/reference_guide/equations.rst:501: (les)  ‘les’
+source/reference_guide/equations.rst:510: (les)  les
+source/reference_guide/equations.rst:512: (subgrid)  Selects the model for the subgrid eddy viscosity in the LES solver: either 
+source/reference_guide/equations.rst:564: (rk)  ‘freeze diffusion during rk stages’
+source/reference_guide/equations.rst:573: (advective)  Defines if only advective terms should be computed
+source/reference_guide/equations.rst:579: (ldg)  ‘ldg upwind parameter’
+source/reference_guide/equations.rst:624: (gauss)  line_gauss_lobatto
+source/reference_guide/equations.rst:624: (lobatto)  line_gauss_lobatto
+source/reference_guide/equations.rst:625: (gauss)  line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
+source/reference_guide/equations.rst:625: (lobatto)  line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
+source/reference_guide/equations.rst:625: (gauss)  line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
+source/reference_guide/equations.rst:625: (legendre)  line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
+source/reference_guide/equations.rst:625: (lobatto)  line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
+source/reference_guide/equations.rst:627: (tri)  ‘tri’
+source/reference_guide/equations.rst:629: (tri)  tri_shunn_ham
+source/reference_guide/equations.rst:629: (shunn)  tri_shunn_ham
+source/reference_guide/equations.rst:630: (tri)  tri_shunn_ham | tri_evenly_spaced,
+source/reference_guide/equations.rst:630: (shunn)  tri_shunn_ham | tri_evenly_spaced,
+source/reference_guide/equations.rst:630: (tri)  tri_shunn_ham | tri_evenly_spaced,
+source/reference_guide/equations.rst:634: (tet)  tet_shunn_ham
+source/reference_guide/equations.rst:634: (shunn)  tet_shunn_ham
+source/reference_guide/equations.rst:635: (tet)  tet_shunn_ham | tet_evenly_spaced
+source/reference_guide/equations.rst:635: (shunn)  tet_shunn_ham | tet_evenly_spaced
+source/reference_guide/equations.rst:635: (tet)  tet_shunn_ham | tet_evenly_spaced
+source/reference_guide/equations.rst:639: (gauss)  pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:639: (legendre)  pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:639: (lobatto)  pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:640: (gauss)  pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:640: (legendre)  pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:640: (gauss)  pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:640: (legendre)  pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:640: (lobatto)  pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
+source/reference_guide/equations.rst:682: (dgviscous)  Example “dgviscous”

@@ -1,0 +1,6 @@
+source/reference_guide/overset.rst:5: (oversetting)  zCFD is capable of automatically oversetting multiple meshes into a single simulation. To run an overset case you need to provide an 
+source/reference_guide/overset.rst:13: (seperate)  The list should be defined in a seperate python file containing an 
+source/reference_guide/overset.rst:15: (py)   dictionary (e.g. override.py):
+source/reference_guide/overset.rst:48: (idw)  ‘idw from cells order’
+source/reference_guide/overset.rst:75: (idw)  idw from cells order
+source/reference_guide/overset.rst:76: (th)   is set to 0, this provides a 0th order interpolation where we only utilise data from cell a mapped point is located within.  If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.

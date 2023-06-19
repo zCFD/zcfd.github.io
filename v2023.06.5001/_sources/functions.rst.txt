@@ -1,0 +1,189 @@
+zCFD Functions
+==============
+
+Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when reqiured. This allows you to customise & tune to solver as it runs.
+
+.. _scale_function:
+
+Scale Mesh Function
+-------------------
+
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Transform the location of a supplied point. 
+   * - **Valid for parameter**
+     - :ref:`scale_mesh <scale_mesh>`
+   * - **Parameters**
+     - [x, y, z]: Point to transform
+   * - **Returns**
+     - {'coord': [x, y, z]}: Transformed coordinates
+
+
+Example:
+
+.. code-block:: python
+
+   # Custom function to scale z coordinate by 100
+   def my_scale_func(point):
+       point[2] = point[2] * 100.0
+       return {'coord' : point}
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'scale': my_scale_func
+    ...
+   }
+
+.. _ramp_function:
+
+Ramp CFL Function
+-----------------
+
+There may be cases where more detailed control of the CFL number is desired - for example in some aerodynamic simulations where a specific physical event occurs at a given time.  The CFL Ramp function lets you do this.
+
+The ramp function returns a single floating point number (the CFL number) and can also be used to update elements of the 'cfl' Python object such as cfl.min_cfl, cfl.max_cfl, cfl.current_cfl, cfl.coarse_cfl, cfl.transport_cfl, cfl.cfl_ramp, cfl.cfl_pmg, or cfl.transport_cfl_pmg. 
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Provide a dynamic CFL number 
+   * - **Valid for parameter**
+     - :ref:`ramp func <cfl_control>`
+   * - **Parameters**
+     - solve_cycle, real_time_cycle, cfl
+   * - **Returns**
+     - cfl: float
+     
+
+
+Example:
+
+.. code-block:: python
+
+  # Custom function to ramp CFL based on cycle, updates the cfl object variables and returns a CFL
+  def my_cfl_ramp(solve_cycle, real_time_cycle, cfl):
+    cfl.min_cfl = 1.0
+    cfl.max_cfl = 10.0
+    cfl.cfl_ramp = 1.005
+    cfl_transport = 5.0
+    if solve_cycle < 500:
+        cfl_new = min(cfl.min_cfl * cfl.cfl_ramp ** (max(0, solve_cycle - 1)), cfl.max_cfl)
+        cfl.transport_cfl = cfl_transport * cfl_new / cfl.max_cfl
+        return cfl_new
+
+    elif solve_cycle < 1000:
+        cfl.trasport_cfl = 7.5
+        cfl.max_cfl = 15.0
+        return 15.0
+
+    else:
+        cfl.transport_cfl = 10.0
+        cfl.max_cfl = 30.0
+        return 30.0
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'time marching': {
+      ...
+      'ramp func': my_cfl_ramp,
+      ...
+      }
+    ...
+   }
+
+.. _transform_function:
+
+Transform Function
+------------------
+
+A transformation function my be supplied to the force report block to transform the force into a different coordinate system. This is particularly useful for reporting lift and drag, which are often rotated from the solver coordinate system.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Transform a supplied point - rotate, scale or translate.
+   * - **Valid for parameter**
+     - :ref:`Forces transform <forces>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - (x, y, z): floats
+     
+
+Example:
+
+.. code-block:: python
+
+  #zutil is a Zenotech python library providing various utilities, available within a zCFD installation
+  import zutil 
+  
+  # Angle of attack
+  alpha = 10.0
+  # Transform into wind axis
+  def my_transform(x,y,z):
+      v = [x,y,z]
+      v =  zutil.rotate_vector(v,alpha,0.0)
+      return  {v[0], v[1], v[2]}
+
+
+.. _initial_function:
+
+Initialisation Function
+-----------------------
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+   
+   * - **Description**
+     - Provide the initial flow field variables on a cell-by-cell basis
+   * - **Valid for parameter**
+     - :ref:`initial <initial_state>`
+   * - **Parameters**
+     - kwargs dictionary containing "pressure", "temperature", "velocity", "wall_distance", "location"
+   * - **Returns**
+     - dictionary containing one or more of "pressure", "temperature" or "velocity"
+
+
+.. code-block:: python
+    
+    def my_initialisation(**kwargs):
+      # Dimensional primitive variables
+      pressure = kwargs['pressure']
+      temperature = kwargs['temperature']
+      velocity = kwargs['velocity']
+      wall_distance = kwargs['wall_distance']
+      # Cell centre localtion [X, Y, Z]
+      location = kwargs['location'] 
+
+      if location[0] > 10.0:
+        velocity[0] *= 2.0
+
+      # Return a dictionary with user defined quantity.
+      return { 'velocity' : velocity }
+
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'initial': {
+      ...
+      'func': my_initialisation,
+      ...
+      }
+    ...
+   }
+

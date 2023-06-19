@@ -1,0 +1,19 @@
+source/reference_guide/materials.rst:16: (sutherlands)  ‘sutherlands const’
+source/reference_guide/materials.rst:16: (const)  ‘sutherlands const’
+source/reference_guide/materials.rst:20: (prandtl)  ‘prandtl no’
+source/reference_guide/materials.rst:32: (prandtl)  ‘turbulent prandtl no’
+source/reference_guide/materials.rst:59: (sutherlands)  sutherlands const
+source/reference_guide/materials.rst:59: (const)  sutherlands const
+source/reference_guide/materials.rst:65: (intial)   intial condition dictionary, where 
+source/reference_guide/materials.rst:73: (prandtl)  prandtl no
+source/reference_guide/materials.rst:74: (Prandtl)  This option sets the Prandtl number, a non-dimensional number which is the ratio of momentum and thermal diffusivities in a fluid. In zCFD, where 
+source/reference_guide/materials.rst:74: (diffusivities)  This option sets the Prandtl number, a non-dimensional number which is the ratio of momentum and thermal diffusivities in a fluid. In zCFD, where 
+source/reference_guide/materials.rst:74: (Prandtl)   are already set, setting the Prandtl number has the effect of setting the thermal conductivity, 
+source/reference_guide/materials.rst:95: (exhuast)  , the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhuast gases.
+source/reference_guide/materials.rst:98: (prandtl)  turbulent prandtl no
+source/reference_guide/materials.rst:99: (Prandtl)  This changes the turbulent Prandtl number of the fluid being modelled.
+source/reference_guide/materials.rst:101: (additiional)   accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additiional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this.
+source/reference_guide/materials.rst:101: (prandtl)   accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additiional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this.
+source/reference_guide/materials.rst:107: (bouyancy)  This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.
+source/reference_guide/materials.rst:107: (bouyancy)  This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.
+source/reference_guide/materials.rst:107: (bouyancy)  This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.

@@ -1,0 +1,109 @@
+.. _materials:
+
+Material Specification
+----------------------
+This dictionary sets the material properties of the fluid being modelled. The default values are those of air, but the dictionary can be modified to model any ideal, compressible, perfect gas.
+
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'sutherlands const'
+     - Yes
+     - 110.4
+     - Float
+   * - 'prandtl no'
+     - Yes
+     - 0.72
+     - Float
+   * - 'gas constant'
+     - Yes
+     - 287
+     - Float
+   * - 'gamma'
+     - Yes
+     - 1.4
+     - Float
+   * - 'turbulent prandtl no'
+     - Yes
+     - 0.9
+     - Float
+   * - 'gravity'
+     - No
+     - 
+     - Vector
+
+Example usage:
+
+.. code-block:: python
+
+    parameters = {
+    ..
+    'material' : 'air',
+    'air' : {
+              'gamma' : 1.4,
+              'gas constant' : 287.0,
+              'Sutherlands const': 110.4,
+              'Prandtl No' : 0.72,
+              'Turbulent Prandtl No' : 0.9,
+            },
+    ..
+    }
+
+sutherlands const
+^^^^^^^^^^^^^^^^
+This option controls the variation of the viscosity of the fluid with temperature.
+
+Sutherland's law:
+:math:`\mu = \mu_{ref} \left( \frac{T}{T_{ref}} \right) ^ {3/2} \frac{T_{ref} + S}{T+S}`, where :math:`S` is Sutherland's constant.
+
+In zCFD, :math:`T_{ref}` and :math:`\mu_{ref}` are given by the :ref:`reference <reference>` intial condition dictionary, where :math:`T` is specified directly and :math:`\mu` is specified either directly via **'viscosity'** or indirectly via **'reynolds no'**.
+
+Typically for air :math:`\mu_{ref} = 1.716e-5` and :math:`T_{ref} = 273.15`
+
+For more information:
+https://www.cfd-online.com/Wiki/Sutherland%27s_law
+
+prandtl no
+^^^^^^^^^^
+This option sets the Prandtl number, a non-dimensional number which is the ratio of momentum and thermal diffusivities in a fluid. In zCFD, where :math:`\mu` and :math:`c_p` are already set, setting the Prandtl number has the effect of setting the thermal conductivity, :math:`k`,  of the fluid.
+
+:math:`\Pr = \frac{\mathrm{ momentum\ diffusivity}}{\mathrm{thermal\ diffusivity}} = \frac{ c_p \mu} {k}`
+
+This can also be considered as :math:`\Pr = \frac{Thickness\ of\ thermal\ boundary\ layer}{Thickness\ of\ fluid\ boundary\ layer}`
+
+
+gas constant
+^^^^^^^^^^^^
+This changes :math:`R`, the gas constant of the fluid. Different fluids have different molecular masses, and therefore different gas constants. 287.1 is appropriate for air.
+
+
+Constant pressure and constant volume specific heats, :math:`c_p` and :math:`c_v`, are set by :math:`gamma` and :math:`R` according to the following relationships:
+
+:math:`c_p = \frac{\gamma-1}{\gamma} R`
+
+:math:`\gamma = \frac{c_p}{c_v}`
+
+
+gamma
+^^^^^
+This changes :math:`\gamma`, the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhuast gases.
+
+turbulent prandtl no
+^^^^^^^^^^^^^^^^^^^^
+This changes the turbulent Prandtl number of the fluid being modelled.
+
+In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, :math:`\mu_t` accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additiional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this. 
+
+In an eddy viscosity based simulation, :math:`Pr_t = \frac{ c_p \mu_t }{k_t}`
+
+gravity
+^^^^^^^
+This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.
+
+**gravity** is specified as x,y,z vector, for example "[0,0,-9.81]"
