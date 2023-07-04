@@ -5,12 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Quick Start Guide &#8212; zCFD User Guide v2023.06.5001-12-g5c280 documentation</title>
+    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-13-g42b9e documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
    
@@ -29,14 +30,342 @@
 
           <div class="body" role="main">
             
-  <section id="quick-start-guide">
-<h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permalink to this heading">¶</a></h1>
+  <section id="tutorial-1-simple-aerofoil">
+<h1>Tutorial 1: Simple Aerofoil<a class="headerlink" href="#tutorial-1-simple-aerofoil" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#what-is-in-this-tutorial" id="id9">What is in this tutorial?</a></p></li>
+<li><p><a class="reference internal" href="#what-you-need" id="id10">What you need?</a></p></li>
+<li><p><a class="reference internal" href="#step-1-download-the-files" id="id11">Step 1. Download the files</a></p></li>
+<li><p><a class="reference internal" href="#step-2-review-control-file" id="id12">Step 2. Review Control file</a></p>
+<ul>
+<li><p><a class="reference internal" href="#time-marching" id="id13">Time marching</a></p></li>
+<li><p><a class="reference internal" href="#equations" id="id14">Equations</a></p></li>
+<li><p><a class="reference internal" href="#ic-1" id="id15">IC_1</a></p></li>
+<li><p><a class="reference internal" href="#bc-1" id="id16">BC_1</a></p></li>
+<li><p><a class="reference internal" href="#bc-2" id="id17">BC_2</a></p></li>
+<li><p><a class="reference internal" href="#bc-3" id="id18">BC_3</a></p></li>
+<li><p><a class="reference internal" href="#report" id="id19">Report</a></p></li>
+<li><p><a class="reference internal" href="#write-output" id="id20">Write Output</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#step-3-running-zcfd" id="id21">Step 3. Running zCFD</a></p></li>
+<li><p><a class="reference internal" href="#step-4-review-the-output" id="id22">Step 4. Review the output</a></p></li>
+<li><p><a class="reference internal" href="#step-4-looking-at-residuals-with-notebook" id="id23">Step 4. Looking at residuals with notebook</a></p>
+<ul>
+<li><p><a class="reference internal" href="#plotting-residuals" id="id24">Plotting residuals</a></p></li>
+<li><p><a class="reference internal" href="#plotting-forces" id="id25">Plotting forces</a></p></li>
+<li><p><a class="reference internal" href="#plotting-performance" id="id26">Plotting performance</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#step-4-looking-at-results-with-paraview" id="id27">Step 4. Looking at results with Paraview</a></p>
+<ul>
+<li><p><a class="reference internal" href="#loading-your-data" id="id28">Loading your data</a></p></li>
+<li><p><a class="reference internal" href="#visualising-variables" id="id29">Visualising Variables</a></p></li>
+<li><p><a class="reference internal" href="#pressure-coefficient-plot" id="id30">Pressure Coefficient Plot</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="what-is-in-this-tutorial">
+<h2>What is in this tutorial?<a class="headerlink" href="#what-is-in-this-tutorial" title="Permalink to this heading">¶</a></h2>
+<p>The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading &lt;this zip file&gt; and following the instructions below, you should learn to to run, postprocess and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.</p>
+</section>
+<section id="what-you-need">
+<h2>What you need?<a class="headerlink" href="#what-you-need" title="Permalink to this heading">¶</a></h2>
+<p>To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for this tutorial). For instructions on installing zCFD please see <a class="reference internal" href="../installation.html#installation"><span class="std std-ref">here</span></a>.
+The tutorial assumes that you are running all commands using a bash shell on Linux.</p>
+</section>
+<section id="step-1-download-the-files">
+<h2>Step 1. Download the files<a class="headerlink" href="#step-1-download-the-files" title="Permalink to this heading">¶</a></h2>
+<p>The tutorial zip file can be downloaded <a class="reference external" href="https://zcfd.zenotech.com/tutorials/1/naca0012.zip" target="_blank">here</a>. The zip file contains a mesh file (naca0012.h5), a zCFD control file (naca0012.py).</p>
+<p>This tutorial will assume you unzip the file in a directory called “zcfd_tutorial_1” in your users home directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~
+mkdir<span class="w"> </span>zcfd_tutorial_1
+wget<span class="w"> </span>https://zcfd.zenotech.com/tutorials/1/naca0012.zip
+unzip<span class="w"> </span>naca0012.zip
+</pre></div>
+</div>
+</section>
+<section id="step-2-review-control-file">
+<h2>Step 2. Review Control file<a class="headerlink" href="#step-2-review-control-file" title="Permalink to this heading">¶</a></h2>
+<p>Naca0012.py is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the python dictionary ‘parameters’ to set the solver settings. A brief overview of the parameters dictionary for the NACA0012 simulation is given below; for a more detailed description of the control file structure, see the <span class="xref std std-ref">reference guide</span>.</p>
+<pre class="literal-block">parameters = {
+    <a class="reference internal" href="#tutorial-1-time"><span class="std std-ref">&quot;time marching&quot;</span></a>: {
+        &quot;unsteady&quot;: {&quot;total time&quot;: 1.0, &quot;time step&quot;: 1.0},
+        &quot;scheme&quot;: {&quot;name&quot;: &quot;runge kutta&quot;, &quot;stage&quot;: 5},
+        &quot;cfl&quot;: 1.5,
+        &quot;cycles&quot;: 500,
+    },
+    <a class="reference internal" href="#tutorial-1-equations"><span class="std std-ref">&quot;equations&quot;</span></a>: &quot;RANS&quot;,
+    &quot;RANS&quot;: {
+        &quot;order&quot;: &quot;euler_second&quot;,
+        &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+    },
+    <a class="reference internal" href="#tutorial-1-ic1"><span class="std std-ref">&quot;IC_1&quot;</span></a>: {
+        &quot;temperature&quot;: 300,
+        &quot;pressure&quot;: 101325.0,
+        &quot;V&quot;: {&quot;vector&quot;: [1.0,0.0,0.0], &quot;Mach&quot;: 0.15},
+        &quot;viscosity&quot;: 1.846e-5,
+        &quot;turbulence intensity&quot;: 5.2e-2,
+        &quot;eddy viscosity ratio&quot;: 1.0,
+    },
+    <a class="reference internal" href="#tutorial-1-bc1"><span class="std std-ref">&quot;BC_1&quot;</span></a>: {
+        &quot;zone&quot;: [1],
+        &quot;type&quot;: &quot;farfield&quot;,
+        &quot;condition&quot;: &quot;IC_1&quot;,
+        &quot;kind&quot;: &quot;riemann&quot;,
+    },
+    <a class="reference internal" href="#tutorial-1-bc2"><span class="std std-ref">&quot;BC_2&quot;</span></a>: {
+        &quot;zone&quot;: [4],
+        &quot;type&quot;: &quot;wall&quot;,
+        &quot;kind&quot;: &quot;noslip&quot;,
+    },
+    <a class="reference internal" href="#tutorial-1-bc3"><span class="std std-ref">&quot;BC_3&quot;</span></a>: {
+        &quot;zone&quot;: [2, 3],
+        &quot;type&quot;: &quot;symmetry&quot;,
+    },
+    <a class="reference internal" href="#tutorial-1-report"><span class="std std-ref">&quot;report&quot;</span></a>: {
+        &quot;frequency&quot;: 10,
+    },
+    &quot;reference&quot;: &quot;IC_1&quot;,
+    <a class="reference internal" href="#tutorial-1-output"><span class="std std-ref">&quot;write output&quot;</span></a>: {
+        &quot;surface variables&quot;: [&quot;V&quot;,&quot;p&quot;,&quot;mach&quot;,&quot;cp&quot;,&quot;cf&quot;,&quot;pressureforce&quot;,&quot;frictionforce&quot;],
+        &quot;volume variables&quot;:  [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;mach&quot;, &quot;cp&quot;, &quot;eddy&quot;],
+    },
+}</pre>
+<section id="time-marching">
+<span id="tutorial-1-time"></span><h3>Time marching<a class="headerlink" href="#time-marching" title="Permalink to this heading">¶</a></h3>
+<p>The start of the parameters dictionary contains the <a class="reference internal" href="../reference_guide/time.html#time"><span class="std std-ref">time marching</span></a> sub-dictionary. The <a class="reference internal" href="../reference_guide/time.html#unsteady"><span class="std std-ref">unsteady</span></a> sub-dictionary sets whether we are running an ‘unsteady’ or a ‘steady’ simulation. The fact that ‘total time’ and ‘time step’ are the same number means that we’re running a steady simulation.
+Steady simulations assume that the flow we are simulating does not vary with time. Most real flows are not truly ‘steady’, but for an attached, streamlined flow like this one making this assumption should  in our simulation tends to make the simulation much easier and cheaper to run.</p>
+<p>CFD simulations work by iteration - we start with a very rough estimate of the flow <span class="math notranslate nohighlight">\(f(x, 0)\)</span>, then during the first  ‘iteration cycle’ the solver uses <span class="math notranslate nohighlight">\(f(x, 0)\)</span> to create a better approximation of the flow, <span class="math notranslate nohighlight">\(f(x,1)\)</span>. This is repeated many times  - we use <span class="math notranslate nohighlight">\(f(x,1)\)</span> to calculate <span class="math notranslate nohighlight">\(f(x,2)\)</span>, <span class="math notranslate nohighlight">\(f(x,2)\)</span> to calculate <span class="math notranslate nohighlight">\(f(x,3)\)</span> and so on, until eventually we reach an estimate of the flow we are happy with.</p>
+<p>The flow will generally change very quickly in the first few iterations, and then converge asymptotically on the ‘right’ answer. The <a class="reference internal" href="../reference_guide/time.html#cycles"><span class="std std-ref">cycles</span></a> parameter states how many iterations should be used in the simulation - the higher it is the more accurate the solution is likely to be, but given the convergence is asymptotic setting it too high will lead to lots of computational effort being used for very little change in the solution towards the end.</p>
+<p>The <a class="reference internal" href="../reference_guide/time.html#scheme"><span class="std std-ref">scheme</span></a>  defines the numerical scheme used by the solver to get from <span class="math notranslate nohighlight">\(f(x,n)\)</span> to :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>f(x,n+1). The 5 stage Runge Kutta is a sensible scheme to use for this type of simulation.</p>
+<p>The <a class="reference internal" href="../reference_guide/time.html#cfl-control"><span class="std std-ref">CFL</span></a> essentially sets how much the flow is allowed to change between <span class="math notranslate nohighlight">\(f(x,n)\)</span> and <span class="math notranslate nohighlight">\(f(x,n+1)\)</span> approximations of the flow field - if it is set too high the simulation will not converge, and if it is set too low the simulation will take many cycles reach the appropriate flow.</p>
+</section>
+<section id="equations">
+<span id="tutorial-1-equations"></span><h3>Equations<a class="headerlink" href="#equations" title="Permalink to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="../reference_guide/equations.html#equations"><span class="std std-ref">equations</span></a> sets the type of flow we are simulating - there are a number of different options depending on the assumptions we make about the flow. ‘RANS’ is used when we are simulating a compressible flow, and want to simulate the effects of turbulence on the mean flow by use of a turbulence equation. The ‘order’ sets how the flow is spatially discretised, and the ‘turbulence’ sets the turbulence model used.</p>
+</section>
+<section id="ic-1">
+<span id="tutorial-1-ic1"></span><h3>IC_1<a class="headerlink" href="#ic-1" title="Permalink to this heading">¶</a></h3>
+<p>Now that the numerical settings have been defined, the flow needs to have boundary conditions. Boundary conditions define what happens at exterior faces of the mesh. In this case, there are three boundary conditions.</p>
+<p>The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 Kelvin, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The ‘IC_1’ dictionary defines a flow at these conditions.</p>
+<p>Because the RANS equations include the effect of viscosity, we also need to define the viscosity at the ‘IC_1’ flow condition (in this case, we set it to be <span class="math notranslate nohighlight">\(1.02145 {\times}10^{-5}\ \mathrm{kg\  m^{-1}\ s^{-1}}\)</span> at 300 K). This corresponds to a chord based Reynolds number of 6 million. Because the RANS equations include turbulence modelling, we also need to set the ‘turbulence intensity’ and ‘eddy viscosity ratio’ - these are used as boundary conditions for the SST turbulence model equations. The values given are sensible values for flows without significant freestream turbulence.</p>
+</section>
+<section id="bc-1">
+<span id="tutorial-1-bc1"></span><h3>BC_1<a class="headerlink" href="#bc-1" title="Permalink to this heading">¶</a></h3>
+<p>The ‘BC_1’ dictionary assigns the ‘IC_1’ flow condition to all mesh faces contained in the mesh zone <cite>1</cite>. Mesh zones are defined during the meshing process, and in this case mesh zone <cite>1</cite> contains all the mesh faces which are on the fairfield exterior surface of the mesh. The ‘farfield’ type means that flow can pass freely through the specified mesh faces, and the ‘riemann’ kind means that flow can pass both in and out of the mesh via the specified mesh faces.</p>
+<p>THe ‘IC_1’ dictionary is, by default, also used to define the initial guess for the flow - at 0 cycles we assume that the entirety of the flow is flowing at the <a href="#id3"><span class="problematic" id="id4">`</span></a>IC_1’ conditions.</p>
+</section>
+<section id="bc-2">
+<span id="tutorial-1-bc2"></span><h3>BC_2<a class="headerlink" href="#bc-2" title="Permalink to this heading">¶</a></h3>
+<p>The ‘BC_2’ dictionary assigns a no-slip wall boundary condition to all mesh faces contained in the mesh zone <cite>4</cite>. Mesh zone 4, in this case, contains all faces on the aerofoil surface.</p>
+</section>
+<section id="bc-3">
+<span id="tutorial-1-bc3"></span><h3>BC_3<a class="headerlink" href="#bc-3" title="Permalink to this heading">¶</a></h3>
+<p>The ‘BC_3’ dictionary assigns a symmetry boundary condition to all mesh faces contained in mesh zones <cite>2</cite> and <cite>3</cite>, which are the +ve z and -ve z faces of the mesh. This boundary condition type is used here so that we can simulate an aerofoil of effectively infinite span, but with a low mesh resolution in the z axis to reduce simulation cost.</p>
+</section>
+<section id="report">
+<span id="tutorial-1-report"></span><h3>Report<a class="headerlink" href="#report" title="Permalink to this heading">¶</a></h3>
+<p>The ‘report’ dictionary defines which flow statistics zCFD should output to the user during the simulation, and how often. The ‘frequency’ key here defines that zCFD should report flow statistics to the user every 10 iteration cycles during the simulation. Exactly which flow statistics are outputted can be changed by the user, but the defaults should be enough for us to successfully monitor the convergence of the solution. The ‘forces’ sub-dictionary allows us to monitor the forces on specific mesh zones- here we are outputting the forces on mesh zone 1, which is the aerofoil surface.
+Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensionalised (see <a href="#id5"><span class="problematic" id="id6">**</span></a><a href="#id7"><span class="problematic" id="id8">*</span></a>), and the ‘reference’ parameter defines the flow state they should be non-dimensionalised against. This is normally chosen to be the freestream state.</p>
+</section>
+<section id="write-output">
+<span id="tutorial-1-output"></span><h3>Write Output<a class="headerlink" href="#write-output" title="Permalink to this heading">¶</a></h3>
+<p>The final section of ‘parameters’, ‘write output’, defines which variables should be outputted into VTK format for visualisation by the user at the end of the simulation.</p>
+</section>
+</section>
+<section id="step-3-running-zcfd">
+<h2>Step 3. Running zCFD<a class="headerlink" href="#step-3-running-zcfd" title="Permalink to this heading">¶</a></h2>
+<p>To run zCFD you first need to source the “activate” script and then use the “run_zcfd” path.</p>
 <ol class="arabic simple">
-<li><p>downloaded</p></li>
-<li><p>unpack</p></li>
-<li><p>Download validation case</p></li>
-<li><p>Run it locally</p></li>
+<li><p>Activating your environment:</p></li>
 </ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Run zCFD validate input to check the control dictionary for errors:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/zcfd_tutorial_1/
+validate_input<span class="w"> </span>naca0012.py<span class="w"> </span>-m<span class="w"> </span>naca0012.h5
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run zCFD in the case directory:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-p<span class="w"> </span>naca0012.h5<span class="w"> </span>-c<span class="w"> </span>naca0012.py
+</pre></div>
+</div>
+<p>zCFD will attempt to detect the number of CPU cores and any GPUs present and make use of them. If you want to manually configure this see <a class="reference internal" href="../execution.html#zcfd-command"><span class="std std-ref">here</span></a></p>
+<p>As the solver is running it will output information about the current CFL, Multigrid level, timing, reporting information and file I/O. The output from zCFD will be written to the screen and also to a log file “naca0012.log”.</p>
+<a class="reference internal image-reference" href="../_images/zcfd_output.png"><img alt="zCFD Output" src="../_images/zcfd_output.png" style="width: 600px;" /></a>
+<p>zCFD will run for the 500 “cycles” specified in the control dictionary, if you want to stop the solver early then you can either press CTRL+C to kill the process or update the “cycles” keyword to be a value smaller than the current cycle number, zCFD will detect this change and stop the solver.</p>
+<p>The solver should take a few minutes to complete on a modern CPU or GPU.</p>
+</section>
+<section id="step-4-review-the-output">
+<h2>Step 4. Review the output<a class="headerlink" href="#step-4-review-the-output" title="Permalink to this heading">¶</a></h2>
+<p>A successful zCFD run will result in the following files and directories being created. In this case, since our control file is called <cite>naca0012.py</cite> the output files will also be created with that name. The _OUTPUT folder also includes an indication of the number of parallel partitions used, this tutorial assumes a single partition and so the output will be “naca0012_P<strong>1</strong>_OUTPUT” if we ran on two partitions it would be “naca0012_P<strong>2</strong>_OUTPUT”</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>File/Directory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>naca0012.log</p></td>
+<td><p>This is simply a copy of the output to screen (see above) which happened during the run.</p></td>
+</tr>
+<tr class="row-odd"><td><p>naca0012_report.csv</p></td>
+<td><p>A .csv format table which shows the variation of flow statistics with cycle number</p></td>
+</tr>
+<tr class="row-even"><td><p>naca0012_report.ipynb</p></td>
+<td><p>An auto-generated Jupyter notebook which can be used to read the naca0012_report.csv file and easily plot the flow statistics varying with cycle number.</p></td>
+</tr>
+<tr class="row-odd"><td><p>naca0012_results.h5</p></td>
+<td><p>The flow solution calculated by zCFD, in zCFD format. This can be used for visualisation, but it is generally only used for restarting zCFD simulations from</p></td>
+</tr>
+<tr class="row-even"><td><p>naca0012_status.txt</p></td>
+<td><p>A .json format file outputted by zCFD. Among other things, it  records when the simulation was last run, which mesh was used and which control file was used.</p></td>
+</tr>
+<tr class="row-odd"><td><p>naca0012_P1_OUTPUT/</p></td>
+<td><p>A directory which contains flow solution calculated by zCFD, in VTK format. This is generally more suitable for visualising the data with than the zCFD proprietary format.</p></td>
+</tr>
+<tr class="row-even"><td><p>naca0012_P1_OUTPUT/naca0012.pvd</p></td>
+<td><p>A VTK file which, when opened, will load all the volume data from the simulation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>naca0012_P1_OUTPUT/naca0012_farfield.pvd, naca0012_wall.pvd etc</p></td>
+<td><p>A series of VTK files (one for each boundary condition type) which, when opened, will load the surface data for that boundary condition.</p></td>
+</tr>
+<tr class="row-even"><td><p>naca0012_P1_OUTPUT/VISUALISATION/</p></td>
+<td><p>Contains the raw data files which are loaded when the naca0012.pvd and naca0012_farfield.pvd, naca0012_wall.pvd etc. files are opened.</p></td>
+</tr>
+<tr class="row-odd"><td><p>naca0012_P1_OUTPUT/LOGGING/</p></td>
+<td><p>Contains a separate copy of the naca0012.log file for each MPI partition. Used for debugging.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="step-4-looking-at-residuals-with-notebook">
+<h2>Step 4. Looking at residuals with notebook<a class="headerlink" href="#step-4-looking-at-residuals-with-notebook" title="Permalink to this heading">¶</a></h2>
+<p>The naca0012_report.ipynb file can be loaded using a variety of methods, but here we will load it using a browser.
+The commands below should open Jupyter Notebook within a browser window. If the browser does not open automatically then the notebook URL should be visable in the command output.</p>
+<ol class="arabic simple">
+<li><p>Activate your environment:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Start the Jupyter Notebook:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/zcfd_tutorial_1/
+start_notebook
+</pre></div>
+</div>
+<p>Load the naca0012_report.ipynb in Jupyter, then click <code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">all</span></code>.</p>
+<section id="plotting-residuals">
+<h3>Plotting residuals<a class="headerlink" href="#plotting-residuals" title="Permalink to this heading">¶</a></h3>
+<p>The naca0012_report.ipynb makes use of the <cite>zutil.plot.Report</cite> class to read and plot the zCFD report data. Calling the <cite>plot(‘naca0012_report.csv’)</cite> method reads the naca0012_report.csv file and prints a graph of solution variable residuals against cycle number .</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zutil.plot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">Report</span><span class="p">()</span>
+<span class="n">r</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;naca0012_report.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The residual variables essentially measure how close to a stable solution of the chosen flow equations (e.g. the RANS equations) the simulation is. There is a residual for each flow variable, and the lower the residual, the more converged  the flow solution is.</p>
+<a class="reference internal image-reference" href="../_images/tutorial_1_plot_1.png"><img alt="zCFD Output" src="../_images/tutorial_1_plot_1.png" style="width: 600px;" /></a>
+<p>As would be expected (note the logarithmic y axis), the residuals drop very quickly in the first couple of hundred iterations as the flow quickly develops from the initial condition (which in this case, is the freestream condition everywhere). After that, the flow residuals (<cite>rho</cite>, <cite>rhoV[0]</cite>, <cite>rhoV[1]</cite>, <cite>rhoV[2]</cite> and  <cite>rhoE</cite>) residuals continue to drop, while the turbulence residuals (<cite>rhok</cite> and <cite>rhoOmega</cite>) drop initially before flatlining / increasing.</p>
+<p>This behaviour is common - the turbulence equations can take a while to react to changes in the flow field, and the initial guess for the turbulence equations is often poorer than the initial conditions for the flow field. A combination of the fact that the flow residuals have dropped several orders of magnitude over the simulation history and the fact that the residuals are in effect flat from 20,000 cycles onwards mean we can be confident that the simulation is sufficiently converged.</p>
+</section>
+<section id="plotting-forces">
+<h3>Plotting forces<a class="headerlink" href="#plotting-forces" title="Permalink to this heading">¶</a></h3>
+<p>Next, we can use the Jupyter notebook to plot the variation of the force coefficients on the aerofoil surface with cycle number.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="o">.</span><span class="n">plot_forces</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Check the ‘wall_Fx’ and ‘wall_Fy’ tickboxes  - given this is a symmetrical aerofoil run at 0 angle of attack, the x force corresponds to drag and the y force corresponds to lift. We would expect zero lift and a non-zero, positive drag.</p>
+<a class="reference internal image-reference" href="../_images/tutorial_1_plot_2.png"><img alt="zCFD Output" src="../_images/tutorial_1_plot_2.png" style="width: 600px;" /></a>
+<p>The force plots tell a similar story to the residuals - there are initially large oscillations as the flow settles down, before the force traces essentially flatline from 20,000 cycles onwards.</p>
+</section>
+<section id="plotting-performance">
+<h3>Plotting performance<a class="headerlink" href="#plotting-performance" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="o">.</span><span class="n">plot_performance</span><span class="p">(</span><span class="s1">&#39;naca0012.log&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can plot the time used per cycle using the <code class="docutils literal notranslate"><span class="pre">plot_performance(naca0012.log)</span></code> method. The last cycle is particularly long because it is the only cycle where the flow solution is written to a file.</p>
+</section>
+</section>
+<section id="step-4-looking-at-results-with-paraview">
+<h2>Step 4. Looking at results with Paraview<a class="headerlink" href="#step-4-looking-at-results-with-paraview" title="Permalink to this heading">¶</a></h2>
+<p>Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView.org</a> for download and installation instructions.</p>
+<section id="loading-your-data">
+<h3>Loading your data<a class="headerlink" href="#loading-your-data" title="Permalink to this heading">¶</a></h3>
+<p>As mentioned above a “naca0012_P1_OUTPUT” folder has been generated, and contains a “.pvd” file (naca0012.pvd). This file can be seen as an of index of all the different output files, this way, your output data is imported onto Paraview using a single file, making it easier to handle.</p>
+<p>After opening Paraview, simply click on the “Open” icon shown below or go into File&gt;Open or press Ctrl+O. Locate the directory in which you have stored your data and open naca0012.pvd.</p>
+<a class="reference internal image-reference" href="../_images/Figure_1.png"><img alt="File open menu in Paraview" class="align-center" src="../_images/Figure_1.png" style="width: 500px;" /></a>
+<p>Once the file is correctly loaded in Paraview, the “Pipeline Browser” on the left of your screen should look like this:</p>
+<a class="reference internal image-reference" href="../_images/Figure_2.png"><img alt="Paraview Pipeline" class="align-center" src="../_images/Figure_2.png" style="width: 500px;" /></a>
+<p>Now you need to click “Apply”, which will lead to the following layout:</p>
+<a class="reference internal image-reference" href="../_images/Figure_3.png"><img alt="Paraview after loading pvd file" src="../_images/Figure_3.png" style="width: 600px;" /></a>
+<p>You may need to use the ‘set view direction to +ve y’ button:</p>
+<a class="reference internal image-reference" href="../_images/Figure_17.png"><img alt="Set view direction to +ve y" src="../_images/Figure_17.png" style="width: 600px;" /></a>
+</section>
+<section id="visualising-variables">
+<h3>Visualising Variables<a class="headerlink" href="#visualising-variables" title="Permalink to this heading">¶</a></h3>
+<p>By default, Paraview shows the “cellvolume” variable. This allows to see that the mesh is refined near the center of the mesh, where the airfoil is. This is common practice, as capturing the flow around a body is more demanding than doing so in the free-stream. Naturally, having a really fine mesh over the entire fluid domain would make the problem really computationally expensive.</p>
+<p>Other variables can be selected and shown using the following scrolling menu:</p>
+<a class="reference internal image-reference" href="../_images/Figure_4.png"><img alt="Variables drop down" src="../_images/Figure_4.png" style="width: 600px;" /></a>
+<p>Let’s observe the pressure coefficient around the airfoil. To do so, use the scrolling menu and select the “cp” variable.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The pressure coefficient is given by the following formula
+<span class="math notranslate nohighlight">\(C_p = \frac{p-p_{\infty }}{0.5\rho _{\infty }V_{\infty }}\)</span></p>
+</div>
+<p>This gives the following (you will need to zoom in substantially to the centre of the mesh before you can clearly see the airfoil):</p>
+<a class="reference internal image-reference" href="../_images/Figure_5.png"><img alt="Pressure around airfoil" src="../_images/Figure_5.png" style="width: 600px;" /></a>
+<p>Note that you can change the colormap used by Paraview by clicking on the “Choose Preset” icon:</p>
+<a class="reference internal image-reference" href="../_images/Figure_6.png"><img alt="Colour map icon" class="align-center" src="../_images/Figure_6.png" style="width: 500px;" /></a>
+<p>Here are the same results shown using different colormaps:</p>
+<a class="reference internal image-reference" href="../_images/Figure_7.png"><img alt="Jet" src="../_images/Figure_7.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Figure_8.png"><img alt="Cool to warm (extended)" src="../_images/Figure_8.png" style="width: 600px;" /></a>
+<p>Those simple steps allow to qualitatively inspect the solution given by our CFD simulation. More advanced analysis is also feasible. A common result in aerodynamics, especially around an airfoil, is the plot of the pressure coefficient along the plot.</p>
+</section>
+<section id="pressure-coefficient-plot">
+<h3>Pressure Coefficient Plot<a class="headerlink" href="#pressure-coefficient-plot" title="Permalink to this heading">¶</a></h3>
+<p>Open the “naca0012_wall.pvd” file . Naturally, the resulting image looks different from the previous as this only contains the zones where a “wall” boundary condition has been defined, which in this case happens to just be the airfoil itself.</p>
+<a class="reference internal image-reference" href="../_images/Figure_9.png"><img alt="Wall.pvd" src="../_images/Figure_9.png" style="width: 600px;" /></a>
+<p>It is usually of interest to have a plot showing the pressure coefficient on the upper and the lower surface, therefore it is necessary to extract the data separately for each face of the airfoil. The upper and lower surfaces of the airfoil then need to be separated.</p>
+<p>To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the “Clip” filter are displayed on the left. You should set them to the following combination:</p>
+<a class="reference internal image-reference" href="../_images/Figure_10.png"><img alt="Clip parameters" class="align-center" src="../_images/Figure_10.png" style="width: 500px;" /></a>
+<p>By default, this will “remove” the lower surface of the airfoil, leaving the following shape:</p>
+<a class="reference internal image-reference" href="../_images/Figure_11.png"><img alt="Airfoil upper surface" src="../_images/Figure_11.png" style="width: 600px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To remove the upper surface instead, just tick the “Invert” option in the “Clip” filter’s properties.</p>
+</div>
+<p>Now, we want to take a “Slice” of the remaining surface. To do so, follow the same
+procedure as for the “Clip” filter but select the “Slice” filter instead. When prompted, set the properties of the filter to be as follows:</p>
+<a class="reference internal image-reference" href="../_images/Figure_12.png"><img alt="Slice parameters" class="align-center" src="../_images/Figure_12.png" style="width: 500px;" /></a>
+<p>You should end up with this:</p>
+<a class="reference internal image-reference" href="../_images/Figure_13.png"><img alt="Upper airfoil slice" src="../_images/Figure_13.png" style="width: 600px;" /></a>
+<p>Then the data should be converted from “cell data” to “point data”. This is done by using the “CellDatatoPointData” filter. Access by right-clicking on the “Slice” object selecting “Add filters”.</p>
+<p>Once this is done, a plot can be produced in Paraview using the “PlotOnSortedLines” filter. Right-click on the “CellDatatoPointData1” object created previously and add the “PlotOnSortedLines” filter. A plot should appear on the right. You can select the variables to plot in the “Properties -&gt; Series Parameters” window, as well as changing the settings of the axis.
+Select the “cp” variable in “Series Parameters’, and use ‘Points_X’ as the ‘X Array Name’. Untick ‘Show Legend’, set ‘Left Axis Title’ to ‘$C_p$’ and set the ‘Bottom Axis Title’ to ‘x’. You can also use the “Left Axis Use Custom Range” option to  change the y-axis range:</p>
+<a class="reference internal image-reference" href="../_images/Figure_14.png"><img alt="Left axis parameters" class="align-center" src="../_images/Figure_14.png" style="width: 500px;" /></a>
+<p>Note that setting the maximum as a negative number will “invert” the y-axis and the negative numbers will be shown “at the top”.</p>
+<a class="reference internal image-reference" href="../_images/Figure_15.png"><img alt="Cp vs Chord" class="align-center" src="../_images/Figure_15.png" style="width: 600px; height: 300px;" /></a>
+<p>The data can be exported as a .csv file, which can then be manipulated in Python, Excel, MATLAB or any other software. To do so, go to File -&gt; Save data -&gt; <em>select a folder and give a name to the file</em>. The following window should appear:</p>
+<a class="reference internal image-reference" href="../_images/Figure_16.png"><img alt="CSV Writer tool" class="align-center" src="../_images/Figure_16.png" style="width: 500px;" /></a>
+<p>By default, Paraview writes all the variables into the .csv file. However, if only a few of them are of interest, you can use the “Choose Arrays To Write” option.</p>
+<p>Now, this procedure can be repeated for the lower surface of the airfoil. A pressure coefficient plot can then be made for validation purposes.</p>
+</section>
+</section>
 </section>
 
 
