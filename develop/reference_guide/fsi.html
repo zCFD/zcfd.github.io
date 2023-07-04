@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fluid-structure interaction &#8212; zCFD User Guide v2023.06.5001-10-gf29b1 documentation</title>
+    <title>Fluid-structure interaction &#8212; zCFD User Guide v2023.06.5001-12-g5c280 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
             
   <section id="fluid-structure-interaction">
 <span id="fsi"></span><h1>Fluid-structure interaction<a class="headerlink" href="#fluid-structure-interaction" title="Permalink to this heading">¶</a></h1>
-<p>zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.</p>
+<p>zCFD has the capability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 23.5%" />
@@ -139,7 +139,7 @@
 </table>
 <section id="type">
 <h2>type<a class="headerlink" href="#type" title="Permalink to this heading">¶</a></h2>
-<p>Speficies which FSI driver should be used when coupling to an FEA code, <strong>‘abaqus’</strong> or <strong>‘generic’</strong>.
+<p>Specifies which FSI driver should be used when coupling to an FEA code, <strong>‘abaqus’</strong> or <strong>‘generic’</strong>.
 This tells zCFD which FSI python file should be used to execute the FSI coupling:</p>
 <blockquote>
 <div><p><strong>‘generic’</strong> will use the <strong>genericFSI.py</strong> interface that should be implemented to meet your requirements. Out the box <strong>genericFSI.py</strong> will not perform any changes.</p>
@@ -157,7 +157,7 @@ This tells zCFD which FSI python file should be used to execute the FSI coupling
 </section>
 <section id="fixed-zones">
 <h2>fixed zones<a class="headerlink" href="#fixed-zones" title="Permalink to this heading">¶</a></h2>
-<p><strong>fixed zones</strong> should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetery plane, these surfaces will remain untouched by the IDW mesh motion interpolation.</p>
+<p><strong>fixed zones</strong> should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetry plane, these surfaces will remain untouched by the IDW mesh motion interpolation.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>IDW only</p>
@@ -165,7 +165,7 @@ This tells zCFD which FSI python file should be used to execute the FSI coupling
 </section>
 <section id="transform-type">
 <h2>transform type<a class="headerlink" href="#transform-type" title="Permalink to this heading">¶</a></h2>
-<p>In FSI simulations the active surface defined in the ‘zone’ block, will move relative to the rest of the mesh. In order to maintain a conformal volume mesh, these displacements must be interpolated into the volume mesh. <strong>transform type</strong> defines which interplation scheme should be used.</p>
+<p>In FSI simulations the active surface defined in the ‘zone’ block, will move relative to the rest of the mesh. In order to maintain a conformal volume mesh, these displacements must be interpolated into the volume mesh. <strong>transform type</strong> defines which interpolation scheme should be used.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -178,7 +178,7 @@ This tells zCFD which FSI python file should be used to execute the FSI coupling
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>‘rbf’</strong></p></td>
-<td><p>Radial Basis Functions require the solving of a linear system, where a continous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.</p></td>
+<td><p>Radial Basis Functions require the solving of a linear system, where a continuous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>‘rbf multiscale’</strong></p></td>
 <td><p>RBF multiscale uses the a multiscale algorithm using a varying support radius to reduce the number of nodes in the linear system, where as RBF uses a Greedy algorithm.</p></td>
@@ -190,7 +190,7 @@ This tells zCFD which FSI python file should be used to execute the FSI coupling
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>‘rbf multiscale’</strong> has generally superceeded the greedy algorithm, used in <strong>‘rbf’</strong>, in terms of both speed performance and accuracy, so is the preferred RBF option.</p>
+<p><strong>‘rbf multiscale’</strong> has generally superseded the greedy algorithm, used in <strong>‘rbf’</strong>, in terms of both speed performance and accuracy, so is the preferred RBF option.</p>
 </div>
 </section>
 <section id="alpha">
@@ -231,7 +231,7 @@ This tells zCFD which FSI python file should be used to execute the FSI coupling
 <section id="deformation-distance">
 <h2>deformation distance<a class="headerlink" href="#deformation-distance" title="Permalink to this heading">¶</a></h2>
 <p>Only applies to <strong>‘IDW’</strong> interpolation scheme.</p>
-<p>Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than “n” neighbours within a distance “d”, then only neighours within that distance are used.</p>
+<p>Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than “n” neighbours within a distance “d”, then only neighbours within that distance are used.</p>
 </section>
 <section id="blending-stiffness">
 <h2>blending stiffness<a class="headerlink" href="#blending-stiffness" title="Permalink to this heading">¶</a></h2>

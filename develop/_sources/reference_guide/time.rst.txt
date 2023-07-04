@@ -223,7 +223,7 @@ stage
 The number of Runge-Kutta stages in each step of the integration scheme affects the order of temporal convergence, and affects the maximum CFL that can be used.   
 
 .. note::
-    For most of the test cases where Runge-Kutta inegration is used, 5 stages are applied.  This is a typical industry standard and has been shown to be robust for most test cases.  
+    For most of the test cases where Runge-Kutta integration is used, 5 stages are applied.  This is a typical industry standard and has been shown to be robust for most test cases.  
 
 kind
 ====
@@ -304,7 +304,7 @@ Time integration for unsteady simulations is based on the solution at the curren
 
 Example usage:
 
-The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 1.7 seconds to allow the oscillation to begin and establish a well-formed pattern. We set the time step to a small enough value to captue the unsteady shedding phenomenon.
+The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 1.7 seconds to allow the oscillation to begin and establish a well-formed pattern. We set the time step to a small enough value to capture the unsteady shedding phenomenon.
 
 .. code-block:: python
 
@@ -366,7 +366,7 @@ To accelerate an explicit finite volume solution, coarse meshes are generated fr
 
 Use multigrid acceleration for a specified number of **'multigrid cycles'** and then revert to the finest mesh only.  This is to make use of the more efficient scheme at the start, and avoid convergence stall due to multigrid at the end of a solution process.  
 
-For high order (Discontinuous Galerkin) simulations, **'multipoly'** may be used to accelerate convergence by using lower order polynomials in a manner analogous to finite volume multigrid acceleration.  The time step limitation on the lower order polynomials is less restrictive that for the higher order polynomials and hence information corresponding to longer wavelengths may be more efficintly propaged in the fluid domain.  The use of **'multipoly'** automatically uses the highest one specified and P0.   
+For high order (Discontinuous Galerkin) simulations, **'multipoly'** may be used to accelerate convergence by using lower order polynomials in a manner analogous to finite volume multigrid acceleration.  The time step limitation on the lower order polynomials is less restrictive that for the higher order polynomials and hence information corresponding to longer wavelengths may be more efficiently propagated in the fluid domain.  The use of **'multipoly'** automatically uses the highest one specified and P0.   
 
 Example usage:
 

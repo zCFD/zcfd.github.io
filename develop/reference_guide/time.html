@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Time Marching &#8212; zCFD User Guide v2023.06.5001-10-gf29b1 documentation</title>
+    <title>Time Marching &#8212; zCFD User Guide v2023.06.5001-12-g5c280 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -247,7 +247,7 @@
 <p>The number of Runge-Kutta stages in each step of the integration scheme affects the order of temporal convergence, and affects the maximum CFL that can be used.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For most of the test cases where Runge-Kutta inegration is used, 5 stages are applied.  This is a typical industry standard and has been shown to be robust for most test cases.</p>
+<p>For most of the test cases where Runge-Kutta integration is used, 5 stages are applied.  This is a typical industry standard and has been shown to be robust for most test cases.</p>
 </div>
 </section>
 <section id="kind">
@@ -327,7 +327,7 @@
 <p>Time integration for unsteady simulations is based on the solution at the current time step and the contribution of the solution in previous time steps, represented by a Backward Difference Formula. Dual time-stepping is used to update the current solution with data from previous time steps. <strong>‘order’</strong> controls the order of the Dual time-stepping.</p>
 <p><strong>‘start’</strong> provides the option of initialising an unsteady simulation with a number of steady-state pseudo timesteps.</p>
 <p>Example usage:</p>
-<p>The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 1.7 seconds to allow the oscillation to begin and establish a well-formed pattern. We set the time step to a small enough value to captue the unsteady shedding phenomenon.</p>
+<p>The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 1.7 seconds to allow the oscillation to begin and establish a well-formed pattern. We set the time step to a small enough value to capture the unsteady shedding phenomenon.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds</span>
 <span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
@@ -393,7 +393,7 @@
 </table>
 <p>To accelerate an explicit finite volume solution, coarse meshes are generated from the original (fine) mesh by agglomerating or combining cells together to create larger cells.  The <strong>‘multigrid’</strong> value sets the number of successive times to apply this operation, each iteration resulting in a coarser mesh with fewer cells.  By solving on the hierarchy of coarser meshes as well as the fine mesh, information is moved faster in the flow domain and a converged solution is reached more efficiently.  The multigrid scheme is designed so that the acceleration does not (in theory) change the result that would be obtained just by solving on the finest mesh alone, though in practice the use of multigrid does ultimately stall convergence on most meshes.</p>
 <p>Use multigrid acceleration for a specified number of <strong>‘multigrid cycles’</strong> and then revert to the finest mesh only.  This is to make use of the more efficient scheme at the start, and avoid convergence stall due to multigrid at the end of a solution process.</p>
-<p>For high order (Discontinuous Galerkin) simulations, <strong>‘multipoly’</strong> may be used to accelerate convergence by using lower order polynomials in a manner analogous to finite volume multigrid acceleration.  The time step limitation on the lower order polynomials is less restrictive that for the higher order polynomials and hence information corresponding to longer wavelengths may be more efficintly propaged in the fluid domain.  The use of <strong>‘multipoly’</strong> automatically uses the highest one specified and P0.</p>
+<p>For high order (Discontinuous Galerkin) simulations, <strong>‘multipoly’</strong> may be used to accelerate convergence by using lower order polynomials in a manner analogous to finite volume multigrid acceleration.  The time step limitation on the lower order polynomials is less restrictive that for the higher order polynomials and hence information corresponding to longer wavelengths may be more efficiently propagated in the fluid domain.  The use of <strong>‘multipoly’</strong> automatically uses the highest one specified and P0.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># 3 levels of multigrid is sufficient in most cases to reduce the number of cycles required by an order of magnitude.</span>
  <span class="c1"># If this causes instablility, a reduction to 2 may solve the problem.</span>

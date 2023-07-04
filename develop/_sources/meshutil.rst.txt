@@ -49,7 +49,7 @@ The will produce 2 files: the zCFD HDF5 file and the *name_zone.py* python file 
 Star CCM+ Mesh Converter
 ------------------------
 
-There are a number of different file formats for `CD-Adapco Star CCM+ <http://www.cd-adapco.com/products/star-ccm%C2%AE>`_ meshes.  The *<filename>.sim* file is in a propietary format and at this stage cannot be converted.  The *<filename>.ccm* can be converted using
+There are a number of different file formats for `CD-Adapco Star CCM+ <http://www.cd-adapco.com/products/star-ccm%C2%AE>`_ meshes.  The *<filename>.sim* file is in a proprietary format and at this stage cannot be converted.  The *<filename>.ccm* can be converted using
 
 .. code-block:: python
 
@@ -106,7 +106,7 @@ This produces the zCFD HDF5 file.
 CBA Mesh Converter
 --------------------
 
-CBA is a strucutred multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.
+CBA is a structured multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.
 
 .. code-block:: python
 

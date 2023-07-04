@@ -91,7 +91,7 @@ Selects the file format to output the data in. Using 'none' as format will outpu
 
 scripts
 ^^^^^^^
-zCFD is cabable of calling ParaView catalyst scripts while running, this allows you to generate "in situ" visualisation output while the solver is running.
+zCFD is capable of calling ParaView catalyst scripts while running, this allows you to generate "in situ" visualisation output while the solver is running.
 
 This allows you to extract data as your simulation progresses without needing to store the full solution at every timestep. For instance a video of a slice through the dataset could be generated for an unsteady solution.
 

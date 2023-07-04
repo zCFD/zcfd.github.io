@@ -786,8 +786,8 @@ For any driven initial condition, every value in the initial condition dictionar
 
 This means that the initial condition can be programmed to respond to the flow. An example is shown below, where the driven IC will continually adjust inlet angle of attack until a specified lift coefficient is achieved.
 
-If the driven initial condition has been programmed to respond to changes in the flow, it is important to ensure that the flow has had enough time to propogate from the farfield through to the region of interest and settle before readjusting the driven initial condition.
-For simulations where the farfield is distant from the geometry, local and implicit timestepping will likely give the fastest propogation of adjusted farfield conditions through the domain.
+If the driven initial condition has been programmed to respond to changes in the flow, it is important to ensure that the flow has had enough time to propagate from the farfield through to the region of interest and settle before readjusting the driven initial condition.
+For simulations where the farfield is distant from the geometry, local and implicit timestepping will likely give the fastest propagation of adjusted farfield conditions through the domain.
 
 .. code-block:: python
 
@@ -1128,11 +1128,11 @@ The transforms specified should map each zone onto each other.
 Fluid Structure Interaction
 ---------------------------
 
-zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
+zCFD has the capability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
 
 Modal Model
 ^^^^^^^^^^^
-The modal model must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid using the method of modal superposition. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . For both steady and unsteady simulations the structural solution is advanced using a newmark integration scheme. The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
+The modal model must be pre calculated and provided at run time. The total displacement of the structure is calculated from the contribution of each mode when excited by the force exerted by the fluid using the method of modal superposition. This displacement is then propagated through the mesh using the RBF or IDW transform capability detailed in `Mesh Transformations`_ . For both steady and unsteady simulations the structural solution is advanced using a Newmark integration scheme. The dictionary keys related to the different mesh deformation algorithms are the same as described in `Mesh Transformations`_ . zCFD is capable of solving more than one modal model in a simulation. The modal model(s) is(are) setup using the following keys in the Parameters dictionary with one :code:`MM_*` key per modal model:
 
 .. code-block:: python
 
@@ -1189,7 +1189,7 @@ The modal model must be pre calculated and provided at run time. The total displ
 
 General FSI
 ^^^^^^^^^^^
-The general FSI capabilities of zCFD allow the solver to expose solution variables at run time, in order to allow for a user to couple the solver to any structural model. The behaviour of the coupling scheme can be modified within the open source python layer, by editing :code:`/bin/zcfd/utils/coupling/genericfsi.py`. The default file contains 4 hooks definining points within the code when FSI actions can be performed- post intialisation, start of the real time cycle, post advance and post solve. In addition the file contains examples of all the functions available to the user for data communication, and how they should be executed in regards the rank of the CPU. In general any user written code for communication should be performed on the rank 0 CPU to avoid issues with parallelisation. The generic FSI scheme can be setup using the :code:`fsi` key in the control dictionary.
+The general FSI capabilities of zCFD allow the solver to expose solution variables at run time, in order to allow for a user to couple the solver to any structural model. The behaviour of the coupling scheme can be modified within the open source python layer, by editing :code:`/bin/zcfd/utils/coupling/genericfsi.py`. The default file contains 4 hooks defining points within the code when FSI actions can be performed- post initialisation, start of the real time cycle, post advance and post solve. In addition the file contains examples of all the functions available to the user for data communication, and how they should be executed in regards the rank of the CPU. In general any user written code for communication should be performed on the rank 0 CPU to avoid issues with parallelisation. The generic FSI scheme can be setup using the :code:`fsi` key in the control dictionary.
 
 .. code-block:: python
 
@@ -1398,7 +1398,7 @@ An example of a function to deform a surface is given below
 Reporting
 ---------
 
-In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be spcified.
+In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of :code:`'MR_'`, :code:`'FR_'` or :code:`'MF_'` blocks may be specified.
 
 .. code-block:: python
 
@@ -1740,7 +1740,7 @@ Output Variables
     velocity                  V, v                  Velocity vector (:math:`m/s`)
     velocitygradient                                Velocity gradient tensor
     cp                                              `Pressure coefficient <https://en.wikipedia.org/wiki/Pressure_coefficient>`_
-    totalcp                                         Total presure coefficient
+    totalcp                                         Total pressure coefficient
     mach                      m                     `Mach number <https://en.wikipedia.org/wiki/Mach_number>`_
     viscosity                 mu                    Dynamic viscosity (:math:`Pa/s`)
     kinematicviscosity        nu                    Kinematic viscosity (:math:`m^2/s`)
@@ -1784,7 +1784,7 @@ Surface Only Quantities
     frictionmomenty                                 Component of skin friction moment around y axis
     frictionmomentz                                 Component of skin friction moment around z axis
     roughness                                       Wall roughness height
-    yplus                                           Non-dinemsional wall distance
+    yplus                                           Non-dimensional wall distance
     zone                                            Boundary zone number
     cf                                              Skin friction coefficient
     facecentre                                      Face centre location

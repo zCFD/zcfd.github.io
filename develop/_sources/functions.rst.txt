@@ -1,7 +1,7 @@
 zCFD Functions
 ==============
 
-Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when reqiured. This allows you to customise & tune to solver as it runs.
+Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when required. This allows you to customise & tune to solver as it runs.
 
 .. _scale_function:
 

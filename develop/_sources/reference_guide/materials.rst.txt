@@ -62,7 +62,7 @@ This option controls the variation of the viscosity of the fluid with temperatur
 Sutherland's law:
 :math:`\mu = \mu_{ref} \left( \frac{T}{T_{ref}} \right) ^ {3/2} \frac{T_{ref} + S}{T+S}`, where :math:`S` is Sutherland's constant.
 
-In zCFD, :math:`T_{ref}` and :math:`\mu_{ref}` are given by the :ref:`reference <reference>` intial condition dictionary, where :math:`T` is specified directly and :math:`\mu` is specified either directly via **'viscosity'** or indirectly via **'reynolds no'**.
+In zCFD, :math:`T_{ref}` and :math:`\mu_{ref}` are given by the :ref:`reference <reference>` initial condition dictionary, where :math:`T` is specified directly and :math:`\mu` is specified either directly via **'viscosity'** or indirectly via **'reynolds no'**.
 
 Typically for air :math:`\mu_{ref} = 1.716e-5` and :math:`T_{ref} = 273.15`
 
@@ -92,13 +92,13 @@ Constant pressure and constant volume specific heats, :math:`c_p` and :math:`c_v
 
 gamma
 ^^^^^
-This changes :math:`\gamma`, the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhuast gases.
+This changes :math:`\gamma`, the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhaust gases.
 
 turbulent prandtl no
 ^^^^^^^^^^^^^^^^^^^^
 This changes the turbulent Prandtl number of the fluid being modelled.
 
-In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, :math:`\mu_t` accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additiional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this. 
+In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, :math:`\mu_t` accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this. 
 
 In an eddy viscosity based simulation, :math:`Pr_t = \frac{ c_p \mu_t }{k_t}`
 

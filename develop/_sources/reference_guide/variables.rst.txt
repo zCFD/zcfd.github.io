@@ -18,7 +18,7 @@ Output Variables
     velocity                  V, v                  Velocity vector (:math:`m/s`)
     velocitygradient                                Velocity gradient tensor
     cp                                              `Pressure coefficient <https://en.wikipedia.org/wiki/Pressure_coefficient>`_
-    totalcp                                         Total presure coefficient
+    totalcp                                         Total pressure coefficient
     mach                      m                     `Mach number <https://en.wikipedia.org/wiki/Mach_number>`_
     viscosity                 mu                    Dynamic viscosity (:math:`Pa/s`)
     kinematicviscosity        nu                    Kinematic viscosity (:math:`m^2/s`)
@@ -62,7 +62,7 @@ Surface Only Quantities
     frictionmomenty                                 Component of skin friction moment around y axis
     frictionmomentz                                 Component of skin friction moment around z axis
     roughness                                       Wall roughness height
-    yplus                                           Non-dinemsional wall distance
+    yplus                                           Non-dimensional wall distance
     zone                                            Boundary zone number
     cf                                              Skin friction coefficient
     facecentre                                      Face centre location

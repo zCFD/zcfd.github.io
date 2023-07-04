@@ -339,7 +339,7 @@ It is undesirable to have acoustic sources appearing to vanish within the CAA so
 
 frpm monitor points
 ===================
-Contiguous list of X,Y,Z locations specifiying monitor points where data such as velocity and source fluctuations should be output from the FRPM solver.
+Contiguous list of X,Y,Z locations specifying monitor points where data such as velocity and source fluctuations should be output from the FRPM solver.
 
 It may be useful to the user to interrogate the data being produced by the FRPM solver to monitor statistics such as mean turbulence kinetic energy, turbulence spectra (using the frozen turbulence approximation), etc.
 
@@ -407,7 +407,7 @@ List of booleans defining the Cartesian FRPM domain boundaries in which deleted 
 
 If an FRPM particle exits the domain, it is reseeded at one of the FRPM domain boundaries.  This list of booleans allows the user to set which boundaries particles can be reseeded.  By default, reseeding can happen at all boundaries, however some can be turned off if desired.  The booleans are ordered XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX.
 
-For example, `[True, False, True, False, False, False]` will have partices reseeded at only the XMIN and YMIN boundaries.
+For example, `[True, False, True, False, False, False]` will have particles reseeded at only the XMIN and YMIN boundaries.
 
 frpm minimum turbulence integral length scale
 =============================================

@@ -30,7 +30,7 @@ zCFD has the capability to output certain parameters to a <casename>_report.csv 
      - --
      - Dictionary of massflow configs (MF\_?)
 
-**'frequency'** sets how frequently a new line is appended to the <casename>_report.csv dictionary. If frequency = x, the solver will output to the <casename>_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (psuedo-time), not outer, cycles.
+**'frequency'** sets how frequently a new line is appended to the <casename>_report.csv dictionary. If frequency = x, the solver will output to the <casename>_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (pseudo-time), not outer, cycles.
 
 **'monitor'**, **'forces'** and **'massflow'** should be dictionaries of the required format. The dictionary's keys should be consecutively numbered blocks prefixed with the correct string:
 
@@ -126,7 +126,7 @@ Monitor points report the specified variable at fixed mesh locations.
 
 Example usage:
 
-Tracking pressure and velocity is useful for determining shedding cycle behaviour, or in the case of a scale resolving simulation, to determine the turbulence spectrum which is being resolved. It may be important to track other variables (e.g. turbulence intensity) may also be appropriate depnding on the simulation setup.
+Tracking pressure and velocity is useful for determining shedding cycle behaviour, or in the case of a scale resolving simulation, to determine the turbulence spectrum which is being resolved. It may be important to track other variables (e.g. turbulence intensity) may also be appropriate depending on the simulation setup.
 
 .. code-block:: python
 

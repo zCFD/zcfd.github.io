@@ -61,7 +61,7 @@ In order to access your Linux filesystem on Windows it can be useful to add a qu
 
 This will show you show you the root folders for your installed Linux distributions.
 
-The installer is available for download from the `zCFD website <https://zcfd.zenotech.com>`_. For WSL, download the standard linux distribution. Once the zCFD installer has been downloaded run the install script from within the WSL2 environment and follow the prompts.
+The installer is available for download from the `zCFD website <https://zcfd.zenotech.com>`_. For WSL, download the standard Linux distribution. Once the zCFD installer has been downloaded run the install script from within the WSL2 environment and follow the prompts.
 
 .. code-block:: bash
 

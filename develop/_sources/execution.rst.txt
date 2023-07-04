@@ -137,7 +137,7 @@ Example Slurm submission script “run_zcfd.sub”:
     run_zcfd -n 4 -d gpu -p <mesh_name> -c <case_name>
 
 
-In this system we have 2 nodes, each with 2 GPUs.  We allocate one task per GPU, giving a total of 4 tasks.  Note that num_tasks, in this case 4, on the last line should match Slurm “ntasks” on line 5.  The case is, optionally, run in “exclusive” mode which means that zCFD has uncontended use of the devices.  In this case we have a 64-core CPU, giving 16 CPU cores for each of the 4 tasks.  The “gres” line tells zCFD that there are 2 GPUs available on each node.  
+In this system we have 2 nodes, each with 2 GPUs.  We allocate one task per GPU, giving a total of 4 tasks.  Note that num_tasks, in this case 4, on the last line should match Slurm “ntasks” on line 5.  The case is, optionally, run in “exclusive” mode which means that zCFD has uncontested use of the devices.  In this case we have a 64-core CPU, giving 16 CPU cores for each of the 4 tasks.  The “gres” line tells zCFD that there are 2 GPUs available on each node.  
 
 The submission script would be submitted from the command-line:
 
@@ -160,7 +160,7 @@ For larger jobs or where resource availability is limited, `EPIC <https://epic.z
   :alt: EPIC
 
 
-Using Juypter
+Using Jupyter
 -------------
 
 We also recommend the use of  `Jupyter Notebooks <https://jupyter.org/>`_ for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser. 

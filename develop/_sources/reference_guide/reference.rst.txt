@@ -60,7 +60,7 @@ Initial State
     }
 
 Sets which block :ref:`Initial Condition <initial_conditions>` block will be used to provide initial flow field conditions for the simulation.
-If **'func'** is provided it will be used to provde the initial flow field variables on a cell-by-cell basis.
+If **'func'** is provided it will be used to provide the initial flow field variables on a cell-by-cell basis.
 
 .. note::
   If the **'initial'** entry is missing then the conditions default to the :ref:`reference <reference_state>` state.

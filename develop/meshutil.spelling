@@ -1,6 +1,0 @@
-source/meshutil.rst:4: (filesystem)   file format. HDF5 provides a flexible, self describing specification supporting parallel I/O that can be tuned per filesystem type (e.g NFS, GPFS, Lustre etc).
-source/meshutil.rst:52: (propietary)   file is in a propietary format and at this stage cannot be converted.  The 
-source/meshutil.rst:63: (hexahedral)  This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS (ref) format.  The converter will handle meshes with element types (HEXA_8):
-source/meshutil.rst:76: (ascii)   of the file data (“ascii8”, “b8”, “lb8”, or “r8”) depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.
-source/meshutil.rst:76: (mapbc)   of the file data (“ascii8”, “b8”, “lb8”, or “r8”) depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.
-source/meshutil.rst:109: (strucutred)  CBA is a strucutred multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.

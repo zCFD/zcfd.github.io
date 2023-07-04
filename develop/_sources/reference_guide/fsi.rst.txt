@@ -2,7 +2,7 @@
 
 Fluid-structure interaction 
 ---------------------------
-zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
+zCFD has the capability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
 
 .. list-table:: 
    :widths: 20 5 10 20 30
@@ -86,7 +86,7 @@ zCFD has the cability of simulating Fluid Structure Interaction (FSI) using both
 
 type
 ====
-Speficies which FSI driver should be used when coupling to an FEA code, **'abaqus'** or **'generic'**.
+Specifies which FSI driver should be used when coupling to an FEA code, **'abaqus'** or **'generic'**.
 This tells zCFD which FSI python file should be used to execute the FSI coupling:
  **'generic'** will use the **genericFSI.py** interface that should be implemented to meet your requirements. Out the box **genericFSI.py** will not perform any changes.
  
@@ -103,14 +103,14 @@ For RBF, this must include any static zones, where the motion of a static zone i
 
 fixed zones
 ===========
-**fixed zones** should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetery plane, these surfaces will remain untouched by the IDW mesh motion interpolation.
+**fixed zones** should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetry plane, these surfaces will remain untouched by the IDW mesh motion interpolation.
 
 .. note::
     IDW only
 
 transform type
 ==============
-In FSI simulations the active surface defined in the 'zone' block, will move relative to the rest of the mesh. In order to maintain a conformal volume mesh, these displacements must be interpolated into the volume mesh. **transform type** defines which interplation scheme should be used. 
+In FSI simulations the active surface defined in the 'zone' block, will move relative to the rest of the mesh. In order to maintain a conformal volume mesh, these displacements must be interpolated into the volume mesh. **transform type** defines which interpolation scheme should be used. 
 
 
 .. list-table:: 
@@ -120,14 +120,14 @@ In FSI simulations the active surface defined in the 'zone' block, will move rel
    * - Setting
      - Notes
    * - **'rbf'**
-     - Radial Basis Functions require the solving of a linear system, where a continous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.
+     - Radial Basis Functions require the solving of a linear system, where a continuous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.
    * - **'rbf multiscale'**
      - RBF multiscale uses the a multiscale algorithm using a varying support radius to reduce the number of nodes in the linear system, where as RBF uses a Greedy algorithm.
    * - **'IDW'**
      - Inverse Distance Weighting does not require the solving of a linear system, and instead represents a function using a weighted sum of nearby function values. 
 
 .. note::
-    **'rbf multiscale'** has generally superceeded the greedy algorithm, used in **'rbf'**, in terms of both speed performance and accuracy, so is the preferred RBF option. 
+    **'rbf multiscale'** has generally superseded the greedy algorithm, used in **'rbf'**, in terms of both speed performance and accuracy, so is the preferred RBF option. 
 
 alpha
 =====
@@ -174,7 +174,7 @@ deformation distance
 ====================
 Only applies to **'IDW'** interpolation scheme.
 
-Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than "n" neighbours within a distance "d", then only neighours within that distance are used.
+Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than "n" neighbours within a distance "d", then only neighbours within that distance are used.
 
 blending stiffness
 ==================

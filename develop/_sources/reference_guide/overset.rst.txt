@@ -10,7 +10,7 @@ Override file
 =============
 The override file tells zCFD which combinations of mesh and control dictionary to load and overset. The first entry in the list should be the background mesh, this is typically the largest of the meshes that the other meshes overlap with. The following entries in the list are then overset onto the background mesh when the solver starts. The meshes are overlapped in the order they appear in the list, starting with the background mesh.
 
-The list should be defined in a seperate python file containing an **override** dictionary.
+The list should be defined in a separate python file containing an **override** dictionary.
 
 Example **override** dictionary (e.g. override.py):
 

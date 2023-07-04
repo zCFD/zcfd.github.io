@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Mesh Conversion &#8212; zCFD User Guide v2023.06.5001-10-gf29b1 documentation</title>
+    <title>Mesh Conversion &#8212; zCFD User Guide v2023.06.5001-12-g5c280 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -66,7 +66,7 @@
 </section>
 <section id="star-ccm-mesh-converter">
 <h2>Star CCM+ Mesh Converter<a class="headerlink" href="#star-ccm-mesh-converter" title="Permalink to this heading">¶</a></h2>
-<p>There are a number of different file formats for <a class="reference external" href="http://www.cd-adapco.com/products/star-ccm%C2%AE" target="_blank">CD-Adapco Star CCM+</a> meshes.  The <em>&lt;filename&gt;.sim</em> file is in a propietary format and at this stage cannot be converted.  The <em>&lt;filename&gt;.ccm</em> can be converted using</p>
+<p>There are a number of different file formats for <a class="reference external" href="http://www.cd-adapco.com/products/star-ccm%C2%AE" target="_blank">CD-Adapco Star CCM+</a> meshes.  The <em>&lt;filename&gt;.sim</em> file is in a proprietary format and at this stage cannot be converted.  The <em>&lt;filename&gt;.ccm</em> can be converted using</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">ccmconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">ccm</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
 </div>
@@ -106,7 +106,7 @@
 </section>
 <section id="cba-mesh-converter">
 <h2>CBA Mesh Converter<a class="headerlink" href="#cba-mesh-converter" title="Permalink to this heading">¶</a></h2>
-<p>CBA is a strucutred multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.</p>
+<p>CBA is a structured multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">cba_convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="p">[</span><span class="n">cba</span><span class="p">,</span> <span class="n">blk</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
 </pre></div>
 </div>

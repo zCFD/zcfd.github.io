@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Aero-Acoustics &#8212; zCFD User Guide v2023.06.5001-10-gf29b1 documentation</title>
+    <title>Aero-Acoustics &#8212; zCFD User Guide v2023.06.5001-12-g5c280 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -396,7 +396,7 @@ The turbulence integral length scale is specified from turbulence kinetic energy
 </section>
 <section id="frpm-monitor-points">
 <h3>frpm monitor points<a class="headerlink" href="#frpm-monitor-points" title="Permalink to this heading">¶</a></h3>
-<p>Contiguous list of X,Y,Z locations specifiying monitor points where data such as velocity and source fluctuations should be output from the FRPM solver.</p>
+<p>Contiguous list of X,Y,Z locations specifying monitor points where data such as velocity and source fluctuations should be output from the FRPM solver.</p>
 <p>It may be useful to the user to interrogate the data being produced by the FRPM solver to monitor statistics such as mean turbulence kinetic energy, turbulence spectra (using the frozen turbulence approximation), etc.</p>
 </section>
 <section id="frpm-flush-particles-cycles">
@@ -448,7 +448,7 @@ The turbulence integral length scale is specified from turbulence kinetic energy
 <h3>frpm inflow boundaries<a class="headerlink" href="#frpm-inflow-boundaries" title="Permalink to this heading">¶</a></h3>
 <p>List of booleans defining the Cartesian FRPM domain boundaries in which deleted particles can be reseeded into the domain.</p>
 <p>If an FRPM particle exits the domain, it is reseeded at one of the FRPM domain boundaries.  This list of booleans allows the user to set which boundaries particles can be reseeded.  By default, reseeding can happen at all boundaries, however some can be turned off if desired.  The booleans are ordered XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX.</p>
-<p>For example, <cite>[True, False, True, False, False, False]</cite> will have partices reseeded at only the XMIN and YMIN boundaries.</p>
+<p>For example, <cite>[True, False, True, False, False, False]</cite> will have particles reseeded at only the XMIN and YMIN boundaries.</p>
 </section>
 <section id="frpm-minimum-turbulence-integral-length-scale">
 <h3>frpm minimum turbulence integral length scale<a class="headerlink" href="#frpm-minimum-turbulence-integral-length-scale" title="Permalink to this heading">¶</a></h3>

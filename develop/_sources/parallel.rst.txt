@@ -16,7 +16,7 @@ To run in parallel you add the -n option to the run_zcfd script. The provided ar
 
 Hybrid MPI/OpenMP
 -----------------
-This is the default mode for zCFD. It will auto detect the number of sockets on each node and set the number of openmp threads appropriately. The –tpn option to run_zcfd can be used to set the number of MPI processes to launch on each node. The number of openmp threads will be set automatically by dividing the total number of cores between all processes.
+This is the default mode for zCFD. It will auto detect the number of sockets on each node and set the number of OpenMP threads appropriately. The –tpn option to run_zcfd can be used to set the number of MPI processes to launch on each node. The number of OpenMP threads will be set automatically by dividing the total number of cores between all processes.
 
 For example, if you had two hosts with 2 x 12 core CPUs per host and you wanted to run Hybrid MPI/OpenMP you would request 1 MPI rank per CPU socket and zCFD will automatically set the number of OpenMP threads per rank to match the number of cores per socket (in our case 12).
 
@@ -25,7 +25,7 @@ For example, if you had two hosts with 2 x 12 core CPUs per host and you wanted 
     (zCFD) >run_zcfd -p <mesh_name> -c <case_name> -n 4 –tpn 2
 
 
-The number of openmp threads assigned to each rank can be overridden by setting **OMP_NUM_THREADS** in the calling environment. 
+The number of OpenMP threads assigned to each rank can be overridden by setting **OMP_NUM_THREADS** in the calling environment. 
 
 Full MPI
 --------
@@ -112,12 +112,12 @@ An example use case for this is to bind a GPU to a specific network interface on
 
 OpenMP affinity
 ---------------
-By default zCFD binds its openmp threads to cores using the **OMP_PROC_BIND** and **OMP_PLACES** environment variables.
+By default zCFD binds its OpenMP threads to cores using the **OMP_PROC_BIND** and **OMP_PLACES** environment variables.
 
 
 Other MPI implementations
 -------------------------
-On platforms where Intel MPI doesn’t work then we can build zCFD against a specific implementation of MPI. This would be a custom deployment for your facility so get in touch with us if you need this.
+On platforms where Intel MPI doesn't work then we can build zCFD against a specific implementation of MPI. This would be a custom deployment for your facility so get in touch with us if you need this.
 
 Running at large scale
 ----------------------
