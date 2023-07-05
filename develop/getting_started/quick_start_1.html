@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-13-g42b9e documentation</title>
+    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-16-g1404d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -70,7 +70,7 @@
 </nav>
 <section id="what-is-in-this-tutorial">
 <h2>What is in this tutorial?<a class="headerlink" href="#what-is-in-this-tutorial" title="Permalink to this heading">¶</a></h2>
-<p>The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading &lt;this zip file&gt; and following the instructions below, you should learn to to run, postprocess and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.</p>
+<p>The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading &lt;this zip file&gt; and following the instructions below, you should learn to to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.</p>
 </section>
 <section id="what-you-need">
 <h2>What you need?<a class="headerlink" href="#what-you-need" title="Permalink to this heading">¶</a></h2>
@@ -156,8 +156,8 @@ Steady simulations assume that the flow we are simulating does not vary with tim
 </section>
 <section id="bc-1">
 <span id="tutorial-1-bc1"></span><h3>BC_1<a class="headerlink" href="#bc-1" title="Permalink to this heading">¶</a></h3>
-<p>The ‘BC_1’ dictionary assigns the ‘IC_1’ flow condition to all mesh faces contained in the mesh zone <cite>1</cite>. Mesh zones are defined during the meshing process, and in this case mesh zone <cite>1</cite> contains all the mesh faces which are on the fairfield exterior surface of the mesh. The ‘farfield’ type means that flow can pass freely through the specified mesh faces, and the ‘riemann’ kind means that flow can pass both in and out of the mesh via the specified mesh faces.</p>
-<p>THe ‘IC_1’ dictionary is, by default, also used to define the initial guess for the flow - at 0 cycles we assume that the entirety of the flow is flowing at the <a href="#id3"><span class="problematic" id="id4">`</span></a>IC_1’ conditions.</p>
+<p>The ‘BC_1’ dictionary assigns the ‘IC_1’ flow condition to all mesh faces contained in the mesh zone <cite>1</cite>. Mesh zones are defined during the meshing process, and in this case mesh zone <cite>1</cite> contains all the mesh faces which are on the farfield exterior surface of the mesh. The ‘farfield’ type means that flow can pass freely through the specified mesh faces, and the ‘riemann’ kind means that flow can pass both in and out of the mesh via the specified mesh faces.</p>
+<p>The ‘IC_1’ dictionary is, by default, also used to define the initial guess for the flow - at 0 cycles we assume that the entirety of the flow is flowing at the <a href="#id3"><span class="problematic" id="id4">`</span></a>IC_1’ conditions.</p>
 </section>
 <section id="bc-2">
 <span id="tutorial-1-bc2"></span><h3>BC_2<a class="headerlink" href="#bc-2" title="Permalink to this heading">¶</a></h3>
@@ -255,7 +255,7 @@ validate_input<span class="w"> </span>naca0012.py<span class="w"> </span>-m<span
 <section id="step-4-looking-at-residuals-with-notebook">
 <h2>Step 4. Looking at residuals with notebook<a class="headerlink" href="#step-4-looking-at-residuals-with-notebook" title="Permalink to this heading">¶</a></h2>
 <p>The naca0012_report.ipynb file can be loaded using a variety of methods, but here we will load it using a browser.
-The commands below should open Jupyter Notebook within a browser window. If the browser does not open automatically then the notebook URL should be visable in the command output.</p>
+The commands below should open Jupyter Notebook within a browser window. If the browser does not open automatically then the notebook URL should be visible in the command output.</p>
 <ol class="arabic simple">
 <li><p>Activate your environment:</p></li>
 </ol>

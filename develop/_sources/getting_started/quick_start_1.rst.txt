@@ -9,7 +9,7 @@ Tutorial 1: Simple Aerofoil
 What is in this tutorial?
 =========================
 
-The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading <this zip file> and following the instructions below, you should learn to to run, postprocess and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.
+The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading <this zip file> and following the instructions below, you should learn to to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.
 
 What you need?
 ==============
@@ -124,9 +124,9 @@ Because the RANS equations include the effect of viscosity, we also need to defi
 BC_1
 ^^^^
 
-The ‘BC_1’ dictionary assigns the ‘IC_1’ flow condition to all mesh faces contained in the mesh zone `1`. Mesh zones are defined during the meshing process, and in this case mesh zone `1` contains all the mesh faces which are on the fairfield exterior surface of the mesh. The ‘farfield’ type means that flow can pass freely through the specified mesh faces, and the ‘riemann’ kind means that flow can pass both in and out of the mesh via the specified mesh faces.
+The ‘BC_1’ dictionary assigns the ‘IC_1’ flow condition to all mesh faces contained in the mesh zone `1`. Mesh zones are defined during the meshing process, and in this case mesh zone `1` contains all the mesh faces which are on the farfield exterior surface of the mesh. The ‘farfield’ type means that flow can pass freely through the specified mesh faces, and the ‘riemann’ kind means that flow can pass both in and out of the mesh via the specified mesh faces.
 
-THe ‘IC_1’ dictionary is, by default, also used to define the initial guess for the flow - at 0 cycles we assume that the entirety of the flow is flowing at the `IC_1’ conditions.
+The ‘IC_1’ dictionary is, by default, also used to define the initial guess for the flow - at 0 cycles we assume that the entirety of the flow is flowing at the `IC_1’ conditions.
 
 .. _tutorial_1_bc2:
 
@@ -232,7 +232,7 @@ Step 4. Looking at residuals with notebook
 ==========================================
 
 The naca0012_report.ipynb file can be loaded using a variety of methods, but here we will load it using a browser. 
-The commands below should open Jupyter Notebook within a browser window. If the browser does not open automatically then the notebook URL should be visable in the command output.
+The commands below should open Jupyter Notebook within a browser window. If the browser does not open automatically then the notebook URL should be visible in the command output.
 
 1. Activate your environment:
 
