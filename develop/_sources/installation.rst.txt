@@ -9,7 +9,7 @@ System Requirements
 ===================
 zCFD is supported on the following Linux distributions:
  - RHEL 7+
- - CENTOS 7+
+ - CentOS 7+
  - Ubuntu 20.04+
  - Windows 10/11 via `WSL2 <https://learn.microsoft.com/en-us/windows/wsl/install>`_ 
 
@@ -111,12 +111,11 @@ In the case that the system running the simulation cannot access the internet a 
 Licence Error codes
 ^^^^^^^^^^^^^^^^^^^
 
+Below is a list of some of the error codes that you may encounter due to licensing errors.
+If the error code you receive is not listed, please contact us.
 
-.. list-table:: 
-   :widths: 20 80
+.. csv-table::
+   :file: ./license_error_codes.csv
+   :widths: 20 40 50
+   :class: longtable
    :header-rows: 1
-
-   * - Error code
-     - Possible Cause
-   * - 
-     -
