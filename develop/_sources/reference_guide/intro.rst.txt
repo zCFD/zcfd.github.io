@@ -45,6 +45,7 @@ This reference guide documents the parameters available in a zCFD control dictio
    fsi
    materials
    initial
+   reference_conditions
    boundary
    transforms
    overset
