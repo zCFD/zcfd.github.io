@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Material Specification &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>Material Specification &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=dcea933b"></script>
+    <script src="../_static/documentation_options.js?v=5496ed92"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="material-specification">
-<span id="materials"></span><h1>Material Specification<a class="headerlink" href="#material-specification" title="Permalink to this heading">¶</a></h1>
+<span id="materials"></span><h1>Material Specification<a class="headerlink" href="#material-specification" title="Link to this heading">¶</a></h1>
 <p>This dictionary sets the material properties of the fluid being modelled. The default values are those of air, but the dictionary can be modified to model any ideal, compressible, perfect gas.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -98,7 +98,7 @@
 </pre></div>
 </div>
 <section id="sutherlands-const">
-<h2>sutherlands const<a class="headerlink" href="#sutherlands-const" title="Permalink to this heading">¶</a></h2>
+<h2>sutherlands const<a class="headerlink" href="#sutherlands-const" title="Link to this heading">¶</a></h2>
 <p>This option controls the variation of the viscosity of the fluid with temperature.</p>
 <p>Sutherland’s law:
 <span class="math notranslate nohighlight">\(\mu = \mu_{ref} \left( \frac{T}{T_{ref}} \right) ^ {3/2} \frac{T_{ref} + S}{T+S}\)</span>, where <span class="math notranslate nohighlight">\(S\)</span> is Sutherland’s constant.</p>
@@ -108,30 +108,30 @@
 <a class="reference external" href="https://www.cfd-online.com/Wiki/Sutherland%27s_law" target="_blank">https://www.cfd-online.com/Wiki/Sutherland%27s_law</a></p>
 </section>
 <section id="prandtl-no">
-<h2>prandtl no<a class="headerlink" href="#prandtl-no" title="Permalink to this heading">¶</a></h2>
+<h2>prandtl no<a class="headerlink" href="#prandtl-no" title="Link to this heading">¶</a></h2>
 <p>This option sets the Prandtl number, a non-dimensional number which is the ratio of momentum and thermal diffusivities in a fluid. In zCFD, where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(c_p\)</span> are already set, setting the Prandtl number has the effect of setting the thermal conductivity, <span class="math notranslate nohighlight">\(k\)</span>,  of the fluid.</p>
 <p><span class="math notranslate nohighlight">\(\Pr = \frac{\mathrm{ momentum\ diffusivity}}{\mathrm{thermal\ diffusivity}} = \frac{ c_p \mu} {k}\)</span></p>
 <p>This can also be considered as <span class="math notranslate nohighlight">\(\Pr = \frac{Thickness\ of\ thermal\ boundary\ layer}{Thickness\ of\ fluid\ boundary\ layer}\)</span></p>
 </section>
 <section id="gas-constant">
-<h2>gas constant<a class="headerlink" href="#gas-constant" title="Permalink to this heading">¶</a></h2>
+<h2>gas constant<a class="headerlink" href="#gas-constant" title="Link to this heading">¶</a></h2>
 <p>This changes <span class="math notranslate nohighlight">\(R\)</span>, the gas constant of the fluid. Different fluids have different molecular masses, and therefore different gas constants. 287.1 is appropriate for air.</p>
 <p>Constant pressure and constant volume specific heats, <span class="math notranslate nohighlight">\(c_p\)</span> and <span class="math notranslate nohighlight">\(c_v\)</span>, are set by <span class="math notranslate nohighlight">\(gamma\)</span> and <span class="math notranslate nohighlight">\(R\)</span> according to the following relationships:</p>
 <p><span class="math notranslate nohighlight">\(c_p = \frac{\gamma-1}{\gamma} R\)</span></p>
 <p><span class="math notranslate nohighlight">\(\gamma = \frac{c_p}{c_v}\)</span></p>
 </section>
 <section id="gamma">
-<h2>gamma<a class="headerlink" href="#gamma" title="Permalink to this heading">¶</a></h2>
+<h2>gamma<a class="headerlink" href="#gamma" title="Link to this heading">¶</a></h2>
 <p>This changes <span class="math notranslate nohighlight">\(\gamma\)</span>, the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhaust gases.</p>
 </section>
 <section id="turbulent-prandtl-no">
-<h2>turbulent prandtl no<a class="headerlink" href="#turbulent-prandtl-no" title="Permalink to this heading">¶</a></h2>
+<h2>turbulent prandtl no<a class="headerlink" href="#turbulent-prandtl-no" title="Link to this heading">¶</a></h2>
 <p>This changes the turbulent Prandtl number of the fluid being modelled.</p>
 <p>In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, <span class="math notranslate nohighlight">\(\mu_t\)</span> accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this.</p>
 <p>In an eddy viscosity based simulation, <span class="math notranslate nohighlight">\(Pr_t = \frac{ c_p \mu_t }{k_t}\)</span></p>
 </section>
 <section id="gravity">
-<h2>gravity<a class="headerlink" href="#gravity" title="Permalink to this heading">¶</a></h2>
+<h2>gravity<a class="headerlink" href="#gravity" title="Link to this heading">¶</a></h2>
 <p>This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.</p>
 <p><strong>gravity</strong> is specified as x,y,z vector, for example “[0,0,-9.81]”</p>
 </section>

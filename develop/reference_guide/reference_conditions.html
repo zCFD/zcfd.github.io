@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Conditions &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>Reference Conditions &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=dcea933b"></script>
+    <script src="../_static/documentation_options.js?v=5496ed92"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="reference-conditions">
-<span id="id1"></span><h1>Reference Conditions<a class="headerlink" href="#reference-conditions" title="Permalink to this heading">¶</a></h1>
+<span id="id1"></span><h1>Reference Conditions<a class="headerlink" href="#reference-conditions" title="Link to this heading">¶</a></h1>
 <p>Reference Conditions enable a set of conditions to be specified relative to a base set of <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">initial conditions</span></a>. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain</p>
 <p>Reference condition properties are defined in the same way as initial conditions using consecutively numbered blocks.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -126,7 +126,7 @@
 </pre></div>
 </div>
 <section id="mass-flow">
-<span id="reference-mass-flow"></span><h2>Mass Flow<a class="headerlink" href="#mass-flow" title="Permalink to this heading">¶</a></h2>
+<span id="reference-mass-flow"></span><h2>Mass Flow<a class="headerlink" href="#mass-flow" title="Link to this heading">¶</a></h2>
 <p>Mass flow ratio is defined as:</p>
 <p><span class="math notranslate nohighlight">\(ratio = (density * area * V) / (density_{ref} * area * V_{ref}) = (density  * V) / (density_{ref}  * V_{ref})\)</span></p>
 <p>Mass flow rate is defined as:</p>
@@ -137,7 +137,7 @@
 </div>
 </section>
 <section id="using-a-file">
-<span id="reference-file"></span><h2>Using a file<a class="headerlink" href="#using-a-file" title="Permalink to this heading">¶</a></h2>
+<span id="reference-file"></span><h2>Using a file<a class="headerlink" href="#using-a-file" title="Link to this heading">¶</a></h2>
 <p>A file can be used to provide a lookup for the pressure and temperature ratios. This file should be in the Paraview/VTK VTP format. The file should contain a surface with specific values as node arrays data. zCFD then looks up the values by finding the nearest point to the mesh location.</p>
 <p>The node array data in the VTP should be named specifically for each keyword:</p>
 <table class="docutils align-default">

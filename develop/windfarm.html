@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Windfarm Modelling &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>Windfarm Modelling &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=dcea933b"></script>
+    <script src="_static/documentation_options.js?v=5496ed92"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
    
@@ -30,13 +30,13 @@
           <div class="body" role="main">
             
   <section id="windfarm-modelling">
-<h1>Windfarm Modelling<a class="headerlink" href="#windfarm-modelling" title="Permalink to this heading">¶</a></h1>
+<h1>Windfarm Modelling<a class="headerlink" href="#windfarm-modelling" title="Link to this heading">¶</a></h1>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>Windfarms consist of a set of specific turbine types at geographic locations.  zCFD allows users to specify the turbine characteristics and locations, and will automatically create turbine models within an existing mesh and update the local flow conditions to match the thrust coefficient and tip speed ratio for each turbine.</p>
 </section>
 <section id="the-locations-and-trbx-turbine-definition">
-<h2>The locations and TRBX turbine definition<a class="headerlink" href="#the-locations-and-trbx-turbine-definition" title="Permalink to this heading">¶</a></h2>
+<h2>The locations and TRBX turbine definition<a class="headerlink" href="#the-locations-and-trbx-turbine-definition" title="Link to this heading">¶</a></h2>
 <p>zCFD provides a utility function <em>create_trbx_zcfd_data</em> that can be called from within the zCFD environment and Python interactive shell. To start the zCFD command line environment, type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/INSTALL_LOCATION/zCFD-version/bin/activate
 </pre></div>
@@ -202,7 +202,7 @@ T015<span class="w"> </span><span class="m">253308</span>.0<span class="w"> </sp
 <p>When run, zCFD will include the probe data in the <em>&lt;case_name&gt;_report.csv</em> file. Note that this utility may take a few seconds to run, especially if there are large numbers of turbines, or points on the mesh boundary.</p>
 </section>
 <section id="writing-windfarmer-data-files">
-<h2>Writing WindFarmer Data Files<a class="headerlink" href="#writing-windfarmer-data-files" title="Permalink to this heading">¶</a></h2>
+<h2>Writing WindFarmer Data Files<a class="headerlink" href="#writing-windfarmer-data-files" title="Link to this heading">¶</a></h2>
 <p>In order to export the data from a zCFD run in a format that can be read by WindFarmer, we provide the utility <em>write_windfarmer_data</em>, with usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil.farm</span> <span class="k">as</span> <span class="nn">farm</span>
 <span class="n">farm</span><span class="o">.</span><span class="n">write_windfarmer_data</span><span class="p">(</span><span class="n">case_name</span><span class="o">=</span><span class="s1">&#39;windfarm_name&#39;</span><span class="p">,</span>

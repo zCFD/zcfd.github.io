@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Running zCFD &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>Running zCFD &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=dcea933b"></script>
+    <script src="_static/documentation_options.js?v=5496ed92"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Reference Guide" href="reference_guide/intro.html" />
@@ -32,10 +32,10 @@
           <div class="body" role="main">
             
   <section id="running-zcfd">
-<h1>Running zCFD<a class="headerlink" href="#running-zcfd" title="Permalink to this heading">¶</a></h1>
+<h1>Running zCFD<a class="headerlink" href="#running-zcfd" title="Link to this heading">¶</a></h1>
 <p>zCFD is designed to exploit parallelism in the target computing hardware, making use of multiple processes (MPI), multiple threads per CPU process (OpenMP) and / or many threads per GPU.   zCFD will handle most parallel functions automatically, so the user just needs to specify how much, and what type, of resource to use for a given run.</p>
 <section id="command-line-execution">
-<span id="zcfd-command"></span><h2>Command Line Execution<a class="headerlink" href="#command-line-execution" title="Permalink to this heading">¶</a></h2>
+<span id="zcfd-command"></span><h2>Command Line Execution<a class="headerlink" href="#command-line-execution" title="Link to this heading">¶</a></h2>
 <p>zCFD includes an in-built command-line environment, which should be activated either when run directly or via a cluster management and job scheduling system, such as Slurm.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;source<span class="w"> </span>/INSTALL_LOCATION/zCFD-version/bin/activate
 </pre></div>
@@ -99,7 +99,7 @@
 </div>
 </section>
 <section id="input-validation">
-<span id="id1"></span><h2>Input Validation<a class="headerlink" href="#input-validation" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Input Validation<a class="headerlink" href="#input-validation" title="Link to this heading">¶</a></h2>
 <p>zCFD provides an input validation script which can be used to check the solver control dictionary before run time reducing the likelihood of a job spending a long time queuing only to fail at start up.</p>
 <p>The script can be executed from the zCFD environment as follows:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;validate_input<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span><span class="o">[</span>-m<span class="w"> </span>&lt;mesh_name&gt;<span class="o">]</span>
@@ -116,7 +116,7 @@ zCFD<span class="w"> </span>input<span class="w"> </span>file<span class="w"> </
 <p>If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.</p>
 </section>
 <section id="overriding-mesh-and-case-names">
-<h2>Overriding Mesh and Case Names<a class="headerlink" href="#overriding-mesh-and-case-names" title="Permalink to this heading">¶</a></h2>
+<h2>Overriding Mesh and Case Names<a class="headerlink" href="#overriding-mesh-and-case-names" title="Link to this heading">¶</a></h2>
 <p>For more advanced simulations with overset meshes (see <a class="reference internal" href="reference_guide/overset.html#overset"><span class="std std-ref">overset</span></a>) an override dictionary can be supplied as an additional argument to the command-line, in interactive mode or within a batch submission script, to specify multiple meshes and associated control dictionaries:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span><span class="w"> </span>&gt;run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span>gpu<span class="w"> </span>-f<span class="w"> </span>&lt;override_file&gt;
 </pre></div>
@@ -128,7 +128,7 @@ zCFD<span class="w"> </span>input<span class="w"> </span>file<span class="w"> </
 </div>
 </section>
 <section id="batch-queue-submission">
-<h2>Batch Queue Submission<a class="headerlink" href="#batch-queue-submission" title="Permalink to this heading">¶</a></h2>
+<h2>Batch Queue Submission<a class="headerlink" href="#batch-queue-submission" title="Link to this heading">¶</a></h2>
 <p>To run zCFD on a compute cluster with a queuing system (such as Slurm), the command-line environment activation is included within the submission script:</p>
 <p>Example Slurm submission script “run_zcfd.sub”:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
@@ -157,12 +157,12 @@ run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">4</spa
 </div>
 </section>
 <section id="epic">
-<h2>EPIC<a class="headerlink" href="#epic" title="Permalink to this heading">¶</a></h2>
+<h2>EPIC<a class="headerlink" href="#epic" title="Link to this heading">¶</a></h2>
 <p>For larger jobs or where resource availability is limited, <a class="reference external" href="https://epic.zenotech.com/" target="_blank">EPIC</a> allows users to submit zCFD jobs to a range of on-demand computing resources in an intuitive and secure way.  EPIC also provides access to interactive post-processing environments without the need to download large data files.</p>
 <a class="reference internal image-reference" href="_images/epic.png"><img alt="EPIC" src="_images/epic.png" style="width: 600px;" /></a>
 </section>
 <section id="using-jupyter">
-<h2>Using Jupyter<a class="headerlink" href="#using-jupyter" title="Permalink to this heading">¶</a></h2>
+<h2>Using Jupyter<a class="headerlink" href="#using-jupyter" title="Link to this heading">¶</a></h2>
 <p>We also recommend the use of  <a class="reference external" href="https://jupyter.org/" target="_blank">Jupyter Notebooks</a> for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser.
 Jupyter is included in the zCFD distribution and notebooks for visualising the residual data will automatically be created when you run a zCFD case.</p>
 <p>To automatically start up notebook server on your computer within the zCFD environment run:</p>
@@ -171,7 +171,7 @@ Jupyter is included in the zCFD distribution and notebooks for visualising the r
 </div>
 </section>
 <section id="zcfd-environment-variables">
-<span id="environment-variables"></span><h2>zCFD Environment Variables<a class="headerlink" href="#zcfd-environment-variables" title="Permalink to this heading">¶</a></h2>
+<span id="environment-variables"></span><h2>zCFD Environment Variables<a class="headerlink" href="#zcfd-environment-variables" title="Link to this heading">¶</a></h2>
 <p>The following table gives some of the environment variables that can be set before running zCFD. These are generally for advanced users can can impact the way zCFD runs on you system.</p>
 <table class="docutils align-default">
 <colgroup>

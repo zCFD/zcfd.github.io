@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>zCFD Functions &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>zCFD Functions &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=dcea933b"></script>
+    <script src="_static/documentation_options.js?v=5496ed92"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Mesh Conversion" href="meshutil.html" />
@@ -32,10 +32,10 @@
           <div class="body" role="main">
             
   <section id="zcfd-functions">
-<h1>zCFD Functions<a class="headerlink" href="#zcfd-functions" title="Permalink to this heading">¶</a></h1>
+<h1>zCFD Functions<a class="headerlink" href="#zcfd-functions" title="Link to this heading">¶</a></h1>
 <p>Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when required. This allows you to customise &amp; tune to solver as it runs.</p>
 <section id="scale-mesh-function">
-<span id="scale-function"></span><h2>Scale Mesh Function<a class="headerlink" href="#scale-mesh-function" title="Permalink to this heading">¶</a></h2>
+<span id="scale-function"></span><h2>Scale Mesh Function<a class="headerlink" href="#scale-mesh-function" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -72,7 +72,7 @@
 </div>
 </section>
 <section id="transform-mesh-function">
-<span id="id1"></span><h2>Transform Mesh Function<a class="headerlink" href="#transform-mesh-function" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Transform Mesh Function<a class="headerlink" href="#transform-mesh-function" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -104,7 +104,7 @@
 </div>
 </section>
 <section id="ramp-cfl-function">
-<span id="ramp-function"></span><h2>Ramp CFL Function<a class="headerlink" href="#ramp-cfl-function" title="Permalink to this heading">¶</a></h2>
+<span id="ramp-function"></span><h2>Ramp CFL Function<a class="headerlink" href="#ramp-cfl-function" title="Link to this heading">¶</a></h2>
 <p>There may be cases where more detailed control of the CFL number is desired - for example in some aerodynamic simulations where a specific physical event occurs at a given time.  The CFL Ramp function lets you do this.</p>
 <p>The ramp function returns a single floating point number (the CFL number) and can also be used to update elements of the ‘cfl’ Python object such as cfl.min_cfl, cfl.max_cfl, cfl.current_cfl, cfl.coarse_cfl, cfl.transport_cfl, cfl.cfl_ramp, cfl.cfl_pmg, or cfl.transport_cfl_pmg.</p>
 <table class="docutils align-default">
@@ -163,7 +163,7 @@
 </div>
 </section>
 <section id="transform-function">
-<span id="id2"></span><h2>Transform Function<a class="headerlink" href="#transform-function" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h2>Transform Function<a class="headerlink" href="#transform-function" title="Link to this heading">¶</a></h2>
 <p>A transformation function my be supplied to the force report block to transform the force into a different coordinate system. This is particularly useful for reporting lift and drag, which are often rotated from the solver coordinate system.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -200,7 +200,7 @@
 </div>
 </section>
 <section id="initialisation-function">
-<span id="initial-function"></span><h2>Initialisation Function<a class="headerlink" href="#initialisation-function" title="Permalink to this heading">¶</a></h2>
+<span id="initial-function"></span><h2>Initialisation Function<a class="headerlink" href="#initialisation-function" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -250,7 +250,7 @@
 </div>
 </section>
 <section id="driven-initial-condition">
-<span id="driving-function"></span><h2>Driven initial condition<a class="headerlink" href="#driven-initial-condition" title="Permalink to this heading">¶</a></h2>
+<span id="driving-function"></span><h2>Driven initial condition<a class="headerlink" href="#driven-initial-condition" title="Link to this heading">¶</a></h2>
 <p>A ‘driving function’ provides another way of prescribing a farfield initial condition, which on evaluation returns an initial condition dictionary.</p>
 <p>The driving function is re-evaluated at zCFD’s reporting frequency, meaning that the condition (e.g. inlet velocity) can be programmed to change as the simulation progresses.</p>
 <p>At startup, the function is only provided with the key word arguments RealTimeStep=0, Cycle=0. However, the driving function is subsequently provided with key word arguments containing all the data in the ‘_report.csv’ file, evaluated at the previous timestep. For any driven initial condition, every value in the initial condition dictionary is also appended to the _report.csv file.</p>
@@ -341,7 +341,7 @@
 </div>
 </section>
 <section id="static-pressure-ratio">
-<span id="static-pressure-ratio-function"></span><h2>Static Pressure Ratio<a class="headerlink" href="#static-pressure-ratio" title="Permalink to this heading">¶</a></h2>
+<span id="static-pressure-ratio-function"></span><h2>Static Pressure Ratio<a class="headerlink" href="#static-pressure-ratio" title="Link to this heading">¶</a></h2>
 <p>The python function takes in three values (x, y, z) and returns the static pressure ratio.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -365,7 +365,7 @@
 </table>
 </section>
 <section id="total-pressure-ratio">
-<span id="total-pressure-ratio-function"></span><h2>Total Pressure Ratio<a class="headerlink" href="#total-pressure-ratio" title="Permalink to this heading">¶</a></h2>
+<span id="total-pressure-ratio-function"></span><h2>Total Pressure Ratio<a class="headerlink" href="#total-pressure-ratio" title="Link to this heading">¶</a></h2>
 <p>The python function takes in three values (x, y, z) and returns the total pressure ratio.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -389,7 +389,7 @@
 </table>
 </section>
 <section id="total-temperature-ratio">
-<span id="total-temperature-ratio-function"></span><h2>Total Temperature Ratio<a class="headerlink" href="#total-temperature-ratio" title="Permalink to this heading">¶</a></h2>
+<span id="total-temperature-ratio-function"></span><h2>Total Temperature Ratio<a class="headerlink" href="#total-temperature-ratio" title="Link to this heading">¶</a></h2>
 <p>The python function takes in three values (x, y, z) and returns the temperature pressure ratio.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -413,7 +413,7 @@
 </table>
 </section>
 <section id="direction-vector">
-<span id="direction-vector-function"></span><h2>Direction Vector<a class="headerlink" href="#direction-vector" title="Permalink to this heading">¶</a></h2>
+<span id="direction-vector-function"></span><h2>Direction Vector<a class="headerlink" href="#direction-vector" title="Link to this heading">¶</a></h2>
 <p>The python function takes in three values (x, y, z) and returns a tuple (x, y, z).</p>
 <table class="docutils align-default">
 <colgroup>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Initial Conditions &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>Initial Conditions &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=dcea933b"></script>
+    <script src="../_static/documentation_options.js?v=5496ed92"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="initial-conditions">
-<span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this heading">¶</a></h1>
+<span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Link to this heading">¶</a></h1>
 <p>An initial condition dictionary defines a fluid state. They are used to provide a reference initial state for the solution as well as specific conditions that can be assigned to <a class="reference internal" href="boundary.html#boundary-conditions"><span class="std std-ref">boundary conditions</span></a>.</p>
 <p>Initial condition properties are defined using consecutively numbered blocks</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
@@ -145,7 +145,7 @@
 </pre></div>
 </div>
 <section id="velocity">
-<span id="ic-v"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Permalink to this heading">¶</a></h2>
+<span id="ic-v"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading">¶</a></h2>
 <p>Velocity can be specified in two ways, either a vector or a vector and a Mach number. When Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and speed of sound at the pressure and temperature provided.</p>
 <p>For example to set a velocity of 50 mesh units/sec in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
@@ -161,7 +161,7 @@
 </div>
 </section>
 <section id="viscosity">
-<span id="ic-viscosity"></span><h2>Viscosity<a class="headerlink" href="#viscosity" title="Permalink to this heading">¶</a></h2>
+<span id="ic-viscosity"></span><h2>Viscosity<a class="headerlink" href="#viscosity" title="Link to this heading">¶</a></h2>
 <p>Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified.  This can be specified either as a dimensional quantity or by a Reynolds number and reference length</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dynamic viscosity in dimensional units</span>
 <span class="s1">&#39;viscosity&#39;</span> <span class="p">:</span> <span class="mf">1.83e-5</span><span class="p">,</span>
@@ -181,7 +181,7 @@
 </div>
 </section>
 <section id="turbulence-intensity-eddy-viscosity">
-<span id="ic-turb-intensity"></span><h2>Turbulence intensity &amp; Eddy viscosity<a class="headerlink" href="#turbulence-intensity-eddy-viscosity" title="Permalink to this heading">¶</a></h2>
+<span id="ic-turb-intensity"></span><h2>Turbulence intensity &amp; Eddy viscosity<a class="headerlink" href="#turbulence-intensity-eddy-viscosity" title="Link to this heading">¶</a></h2>
 <p>Turbulence intensity is defined as the ratio of velocity fluctuations <span class="math notranslate nohighlight">\(u^{'}\)</span> to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Turbulence intensity %</span>
 <span class="s1">&#39;turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
@@ -221,7 +221,7 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </div>
 </section>
 <section id="velocity-profile">
-<span id="ic-v-profile"></span><h2>Velocity Profile<a class="headerlink" href="#velocity-profile" title="Permalink to this heading">¶</a></h2>
+<span id="ic-v-profile"></span><h2>Velocity Profile<a class="headerlink" href="#velocity-profile" title="Link to this heading">¶</a></h2>
 <p>The user can also provide functions to specify a ‘wall-function’ - or the turbulence viscosity profile near a boundary.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -261,7 +261,7 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </tbody>
 </table>
 <section id="field">
-<span id="ic-field"></span><h3>field<a class="headerlink" href="#field" title="Permalink to this heading">¶</a></h3>
+<span id="ic-field"></span><h3>field<a class="headerlink" href="#field" title="Link to this heading">¶</a></h3>
 <p>The file specified using the ‘field’ parameter should be in the ParaView/VTK VTP format. If should contain a node array with one or more of the following array names: ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. zCFD will then look up those values in the solution by looking up the nearest point in the VTP file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
 <span class="s1">&#39;profile&#39;</span> <span class="p">:</span> <span class="p">{</span>
@@ -279,7 +279,7 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </section>
 </section>
 <section id="abl">
-<span id="ic-abl"></span><h2>ABL<a class="headerlink" href="#abl" title="Permalink to this heading">¶</a></h2>
+<span id="ic-abl"></span><h2>ABL<a class="headerlink" href="#abl" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -342,13 +342,13 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </tbody>
 </table>
 <section id="roughness-length">
-<h3>roughness length<a class="headerlink" href="#roughness-length" title="Permalink to this heading">¶</a></h3>
+<h3>roughness length<a class="headerlink" href="#roughness-length" title="Link to this heading">¶</a></h3>
 <p>Is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.</p>
 <p>The roughness length is typically denoted by the symbol “<span class="math notranslate nohighlight">\(z_o\)</span>” and is defined as the vertical distance between the Earth’s surface and the height at which the logarithmic wind profile intersects the surface. The logarithmic wind profile is a mathematical relationship that describes the variation of wind speed with height in the atmospheric boundary layer.</p>
 <p>The roughness length depends on the surface characteristics of the terrain or objects present on the Earth’s surface. Different surfaces, such as forests, urban areas, or bodies of water, have different roughness lengths. For example, a smooth surface like open water would have a small roughness length, while a densely forested area would have a larger roughness length.</p>
 </section>
 <section id="friction-velocity">
-<h3>friction velocity<a class="headerlink" href="#friction-velocity" title="Permalink to this heading">¶</a></h3>
+<h3>friction velocity<a class="headerlink" href="#friction-velocity" title="Link to this heading">¶</a></h3>
 <p>Friction velocity, often denoted as “<span class="math notranslate nohighlight">\(u\star\)</span>” (pronounced “u-star”), is another important parameter in the study of atmospheric boundary layers. It represents the characteristic velocity of turbulent motions in the surface layer of the atmosphere, generated by the shear stress between the air and the Earth’s surface.</p>
 <p>Friction velocity is defined as the square root of the shear stress divided by the air density:</p>
 <p><span class="math notranslate nohighlight">\(u\star = \sqrt{\frac{\tau}{\rho}}\)</span></p>
@@ -369,11 +369,11 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <p>The friction velocity provides a measure of the intensity of turbulence near the Earth’s surface. It influences several atmospheric processes, including heat and moisture exchange, pollutant dispersion, and the formation of atmospheric boundary layer structures. The magnitude of the friction velocity depends on surface roughness, wind speed, and atmospheric stability, among other factors.</p>
 </section>
 <section id="surface-layer-height">
-<h3>surface layer height<a class="headerlink" href="#surface-layer-height" title="Permalink to this heading">¶</a></h3>
+<h3>surface layer height<a class="headerlink" href="#surface-layer-height" title="Link to this heading">¶</a></h3>
 <p>The surface layer height, also known as the aerodynamic or boundary layer height, refers to the vertical extent of the atmospheric boundary layer near the Earth’s surface. It represents the region where the physical properties, such as wind speed, temperature, humidity, and turbulence, are influenced by the underlying surface. The height of the surface layer is often estimated based on empirical relationships or atmospheric stability conditions. It can vary from a few meters to a few hundred meters above the ground, depending on factors such as surface roughness length, wind speed, and atmospheric stability. Additionally, the surface layer height can change diurnally, with variations due to daytime heating and nighttime cooling effects.</p>
 </section>
 <section id="monin-obukhov-length">
-<h3>monin-obukhov length<a class="headerlink" href="#monin-obukhov-length" title="Permalink to this heading">¶</a></h3>
+<h3>monin-obukhov length<a class="headerlink" href="#monin-obukhov-length" title="Link to this heading">¶</a></h3>
 <p>The Monin-Obukhov length, often denoted as “L”, is a parameter used in the study of atmospheric boundary layers to characterise the stability of the air near the Earth’s surface. It is named after the Russian scientists A. S. Monin and A. M. Obukhov, who made significant contributions to the understanding of turbulence and boundary layer physics.</p>
 <p>The Monin-Obukhov length is defined as the ratio of the potential temperature difference to the buoyancy flux. It is given by the following equation:</p>
 <p><span class="math notranslate nohighlight">\(L = -\frac{u\star^3 * \theta_v} {\kappa * g * w\theta}\)</span></p>

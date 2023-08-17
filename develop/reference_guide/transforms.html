@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Mesh Transformation &#8212; zCFD User Guide v2023.06.5001-87-g5c14a8 documentation</title>
+    <title>Mesh Transformation &#8212; zCFD User Guide v2023.06.5001-88-g7b0c9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=67e0cb84" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=dcea933b"></script>
+    <script src="../_static/documentation_options.js?v=5496ed92"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="mesh-transformation">
-<span id="mesh-transform"></span><h1>Mesh Transformation<a class="headerlink" href="#mesh-transformation" title="Permalink to this heading">¶</a></h1>
+<span id="mesh-transform"></span><h1>Mesh Transformation<a class="headerlink" href="#mesh-transformation" title="Link to this heading">¶</a></h1>
 <p>This dictionary is used to setup an initial deformation of the mesh. Typically a known deformation of a surface in the mesh is propagated out into the volume using either radial basis function or inverse distance weighted interpolation. Deforming an aircraft wing or wind turbine blade to a static load shape are two uses of this functionality.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -127,7 +127,7 @@
 </tbody>
 </table>
 <section id="interpolation-method">
-<span id="transform-interpolation"></span><h2>Interpolation method<a class="headerlink" href="#interpolation-method" title="Permalink to this heading">¶</a></h2>
+<span id="transform-interpolation"></span><h2>Interpolation method<a class="headerlink" href="#interpolation-method" title="Link to this heading">¶</a></h2>
 <p>Selects the interpolation method used to propagate the surface deformation into the volume mesh. Three methods are available:</p>
 <p><strong>‘rbf’</strong> uses the ‘greedy’ method of <a class="reference external" href="https://doi.org/10.1016/j.jcp.2009.12.006" target="_blank">Allan et al</a>. where the deformation is started with a subset of points and additional points are added until the surface deformation reaches the requested tolerance.</p>
 <p><strong>‘rbf multiscale’</strong> uses the <a class="reference external" href="https://doi.org/10.1016/j.jcp.2017.05.042" target="_blank">multiscale</a> rbf method where a subset of surface points with a fixed support radius are solved implicitly and the remaining points are solved explicitly with a support radius determined as part of the solution process. The fraction of points included in the base set can be set with <strong>‘base point fraction’</strong>. The base set of points are assigned the support radius <strong>‘alpha’</strong> and hence can have a wider sphere of influence than the remaining points which are used in the multiscale process.</p>
@@ -143,9 +143,9 @@
 <p><span class="math notranslate nohighlight">\(wt = (wt1 * (1.0 - blend) + blend * wt2)\)</span></p>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
 <section id="rbf-example">
-<h3>RBF Example<a class="headerlink" href="#rbf-example" title="Permalink to this heading">¶</a></h3>
+<h3>RBF Example<a class="headerlink" href="#rbf-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil</span>
 
 <span class="n">rotation</span> <span class="o">=</span> <span class="mf">10.0</span>
@@ -172,7 +172,7 @@
 </div>
 </section>
 <section id="rbf-multiscale-example">
-<h3>RBF Multiscale Example<a class="headerlink" href="#rbf-multiscale-example" title="Permalink to this heading">¶</a></h3>
+<h3>RBF Multiscale Example<a class="headerlink" href="#rbf-multiscale-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil</span>
 
 <span class="n">rotation</span> <span class="o">=</span> <span class="mf">10.0</span>
@@ -198,7 +198,7 @@
 </div>
 </section>
 <section id="idw-example">
-<h3>IDW  Example<a class="headerlink" href="#idw-example" title="Permalink to this heading">¶</a></h3>
+<h3>IDW  Example<a class="headerlink" href="#idw-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zutil</span>
 
 <span class="n">rotation</span> <span class="o">=</span> <span class="mf">10.0</span>
