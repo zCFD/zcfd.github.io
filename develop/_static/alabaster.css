@@ -134,12 +134,12 @@ div.sphinxsidebar ul {
   color: #000;
 }
 
-div.sphinxsidebar ul li.toctree-l1>a {
+div.sphinxsidebar ul li.toctree-l1 > a {
   font-size: 120%;
   color: #e48b25;
 }
 
-div.sphinxsidebar ul li.toctree-l2>a {
+div.sphinxsidebar ul li.toctree-l2 > a {
   font-size: 110%;
   color: #e48b25;
 }
@@ -341,14 +341,11 @@ table.docutils th {
   border: 1px solid #e48b25;
   padding: 0.25em 0.7em;
   background: #e48b25;
-
 }
 
 table.docutils td {
-
   border: 1px solid #e48b25;
   padding: 0.25em 0.7em;
-
 }
 
 table.field-list,
@@ -367,7 +364,7 @@ table.footnote {
   font-size: 0.9em;
 }
 
-table.footnote+table.footnote {
+table.footnote + table.footnote {
   margin-top: -15px;
   border-top: none;
 }
@@ -612,7 +609,7 @@ a:hover code {
  * pages. Without this, docutils' magical list fuckery causes inconsisten
  * formatting between different release sub-lists.
  */
-div#changelog>div.section>ul>li>p:only-child {
+div#changelog > div.section > ul > li > p:only-child {
   margin-bottom: 0;
 }
 
