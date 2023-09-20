@@ -9,7 +9,7 @@ Tutorial 1: Simple Aerofoil
 What is in this tutorial?
 =========================
 
-The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading <this zip file> and following the instructions below, you should learn to to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.
+The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading this `zip file <https://zcfd.zenotech.com/tutorials/1/naca0012.zip>`_ and following the instructions below, you should learn to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.
 
 What you need?
 ==============
@@ -18,7 +18,7 @@ The tutorial assumes that you are running all commands using a bash shell on Lin
 
 Step 1. Download the files
 ==========================
-The tutorial zip file can be downloaded `here <https://zcfd.zenotech.com/tutorials/1/naca0012.zip>`_. The zip file contains a mesh file (naca0012.h5), a zCFD control file (naca0012.py).
+The tutorial zip file can be downloaded `here <https://zcfd.zenotech.com/tutorials/1/naca0012.zip>`_. The zip file contains a mesh file (*naca0012.h5*) and a zCFD control file (*naca0012.py*).
 
 This tutorial will assume you unzip the file in a directory called "zcfd_tutorial_1" in your users home directory.
 
@@ -34,7 +34,7 @@ This tutorial will assume you unzip the file in a directory called "zcfd_tutoria
 Step 2. Review Control file
 ===========================
 
-Naca0012.py is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the python dictionary ‘parameters’ to set the solver settings. A brief overview of the parameters dictionary for the NACA0012 simulation is given below; for a more detailed description of the control file structure, see the :ref:`reference guide <reference_guide>`.
+*naca0012.py* is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the Python dictionary :code:`parameters` to set the solver settings. A brief overview of the parameters dictionary for the  simulation is given below; for a more detailed description of the control file structure, see the :ref:`reference guide <reference_guide>`.
 
 
 .. parsed-literal::
@@ -115,7 +115,7 @@ IC_1
 
 Now that the numerical settings have been defined, the flow needs to have boundary conditions. Boundary conditions define what happens at exterior faces of the mesh. In this case, there are three boundary conditions. 
 
-The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 Kelvin, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The ‘IC_1’ dictionary defines a flow at these conditions. 
+The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 K, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The ‘IC_1’ dictionary defines a flow at these conditions. 
 
 Because the RANS equations include the effect of viscosity, we also need to define the viscosity at the ‘IC_1’ flow condition (in this case, we set it to be :math:`1.02145 {\times}10^{-5}\ \mathrm{kg\  m^{-1}\ s^{-1}}` at 300 K). This corresponds to a chord based Reynolds number of 6 million. Because the RANS equations include turbulence modelling, we also need to set the ‘turbulence intensity’ and ‘eddy viscosity ratio’ - these are used as boundary conditions for the SST turbulence model equations. The values given are sensible values for flows without significant freestream turbulence.
 
@@ -228,7 +228,7 @@ A successful zCFD run will result in the following files and directories being c
    * - naca0012_P1_OUTPUT/LOGGING/
      - Contains a separate copy of the naca0012.log file for each MPI partition. Used for debugging.
 
-Step 4. Looking at residuals with notebook
+Step 5. Looking at residuals with notebook
 ==========================================
 
 The naca0012_report.ipynb file can be loaded using a variety of methods, but here we will load it using a browser. 
@@ -295,7 +295,7 @@ Plotting performance
 
 Finally, we can plot the time used per cycle using the ``plot_performance(naca0012.log)`` method. The last cycle is particularly long because it is the only cycle where the flow solution is written to a file.
 
-Step 4. Looking at results with Paraview
+Step 6. Looking at results with Paraview
 ========================================
 Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see `ParaView.org <https://www.paraview.org>`_ for download and installation instructions.
 
@@ -372,7 +372,7 @@ Here are the same results shown using different colormaps:
   :width: 600
   :alt: Cool to warm (extended)
 
-Those simple steps allow to qualitatively inspect the solution given by our CFD simulation. More advanced analysis is also feasible. A common result in aerodynamics, especially around an airfoil, is the plot of the pressure coefficient along the plot. 
+Those simple steps allow to qualitatively inspect the solution given by our CFD simulation. More advanced analysis is also feasible. A common result in aerodynamics, especially around an airfoil, is the plot of the pressure coefficient along the chord. 
 
 Pressure Coefficient Plot
 ^^^^^^^^^^^^^^^^^^^^^^^^^

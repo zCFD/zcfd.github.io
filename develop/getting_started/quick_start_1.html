@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-182-ge9c5 documentation</title>
+    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-184-ga2d6d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=9af99248"></script>
+    <script src="../_static/documentation_options.js?v=6f94b7e8"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -52,14 +52,14 @@
 </li>
 <li><p><a class="reference internal" href="#step-3-running-zcfd" id="id21">Step 3. Running zCFD</a></p></li>
 <li><p><a class="reference internal" href="#step-4-review-the-output" id="id22">Step 4. Review the output</a></p></li>
-<li><p><a class="reference internal" href="#step-4-looking-at-residuals-with-notebook" id="id23">Step 4. Looking at residuals with notebook</a></p>
+<li><p><a class="reference internal" href="#step-5-looking-at-residuals-with-notebook" id="id23">Step 5. Looking at residuals with notebook</a></p>
 <ul>
 <li><p><a class="reference internal" href="#plotting-residuals" id="id24">Plotting residuals</a></p></li>
 <li><p><a class="reference internal" href="#plotting-forces" id="id25">Plotting forces</a></p></li>
 <li><p><a class="reference internal" href="#plotting-performance" id="id26">Plotting performance</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#step-4-looking-at-results-with-paraview" id="id27">Step 4. Looking at results with Paraview</a></p>
+<li><p><a class="reference internal" href="#step-6-looking-at-results-with-paraview" id="id27">Step 6. Looking at results with Paraview</a></p>
 <ul>
 <li><p><a class="reference internal" href="#loading-your-data" id="id28">Loading your data</a></p></li>
 <li><p><a class="reference internal" href="#visualising-variables" id="id29">Visualising Variables</a></p></li>
@@ -70,7 +70,7 @@
 </nav>
 <section id="what-is-in-this-tutorial">
 <h2>What is in this tutorial?<a class="headerlink" href="#what-is-in-this-tutorial" title="Link to this heading">¶</a></h2>
-<p>The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading &lt;this zip file&gt; and following the instructions below, you should learn to to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.</p>
+<p>The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a quick and simple simulation to run. By downloading this <a class="reference external" href="https://zcfd.zenotech.com/tutorials/1/naca0012.zip" target="_blank">zip file</a> and following the instructions below, you should learn to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most users should be able to run on a laptop in ~5 minutes.</p>
 </section>
 <section id="what-you-need">
 <h2>What you need?<a class="headerlink" href="#what-you-need" title="Link to this heading">¶</a></h2>
@@ -79,7 +79,7 @@ The tutorial assumes that you are running all commands using a bash shell on Lin
 </section>
 <section id="step-1-download-the-files">
 <h2>Step 1. Download the files<a class="headerlink" href="#step-1-download-the-files" title="Link to this heading">¶</a></h2>
-<p>The tutorial zip file can be downloaded <a class="reference external" href="https://zcfd.zenotech.com/tutorials/1/naca0012.zip" target="_blank">here</a>. The zip file contains a mesh file (naca0012.h5), a zCFD control file (naca0012.py).</p>
+<p>The tutorial zip file can be downloaded <a class="reference external" href="https://zcfd.zenotech.com/tutorials/1/naca0012.zip" target="_blank">here</a>. The zip file contains a mesh file (<em>naca0012.h5</em>) and a zCFD control file (<em>naca0012.py</em>).</p>
 <p>This tutorial will assume you unzip the file in a directory called “zcfd_tutorial_1” in your users home directory.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~
 mkdir<span class="w"> </span>zcfd_tutorial_1
@@ -90,7 +90,7 @@ unzip<span class="w"> </span>naca0012.zip
 </section>
 <section id="step-2-review-control-file">
 <h2>Step 2. Review Control file<a class="headerlink" href="#step-2-review-control-file" title="Link to this heading">¶</a></h2>
-<p>Naca0012.py is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the python dictionary ‘parameters’ to set the solver settings. A brief overview of the parameters dictionary for the NACA0012 simulation is given below; for a more detailed description of the control file structure, see the <span class="xref std std-ref">reference guide</span>.</p>
+<p><em>naca0012.py</em> is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the Python dictionary <code class="code docutils literal notranslate"><span class="pre">parameters</span></code> to set the solver settings. A brief overview of the parameters dictionary for the  simulation is given below; for a more detailed description of the control file structure, see the <span class="xref std std-ref">reference guide</span>.</p>
 <pre class="literal-block">parameters = {
     <a class="reference internal" href="#tutorial-1-time"><span class="std std-ref">&quot;time marching&quot;</span></a>: {
         &quot;unsteady&quot;: {&quot;total time&quot;: 1.0, &quot;time step&quot;: 1.0},
@@ -151,7 +151,7 @@ Steady simulations assume that the flow we are simulating does not vary with tim
 <section id="ic-1">
 <span id="tutorial-1-ic1"></span><h3>IC_1<a class="headerlink" href="#ic-1" title="Link to this heading">¶</a></h3>
 <p>Now that the numerical settings have been defined, the flow needs to have boundary conditions. Boundary conditions define what happens at exterior faces of the mesh. In this case, there are three boundary conditions.</p>
-<p>The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 Kelvin, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The ‘IC_1’ dictionary defines a flow at these conditions.</p>
+<p>The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 K, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The ‘IC_1’ dictionary defines a flow at these conditions.</p>
 <p>Because the RANS equations include the effect of viscosity, we also need to define the viscosity at the ‘IC_1’ flow condition (in this case, we set it to be <span class="math notranslate nohighlight">\(1.02145 {\times}10^{-5}\ \mathrm{kg\  m^{-1}\ s^{-1}}\)</span> at 300 K). This corresponds to a chord based Reynolds number of 6 million. Because the RANS equations include turbulence modelling, we also need to set the ‘turbulence intensity’ and ‘eddy viscosity ratio’ - these are used as boundary conditions for the SST turbulence model equations. The values given are sensible values for flows without significant freestream turbulence.</p>
 </section>
 <section id="bc-1">
@@ -252,8 +252,8 @@ validate_input<span class="w"> </span>naca0012.py<span class="w"> </span>-m<span
 </tbody>
 </table>
 </section>
-<section id="step-4-looking-at-residuals-with-notebook">
-<h2>Step 4. Looking at residuals with notebook<a class="headerlink" href="#step-4-looking-at-residuals-with-notebook" title="Link to this heading">¶</a></h2>
+<section id="step-5-looking-at-residuals-with-notebook">
+<h2>Step 5. Looking at residuals with notebook<a class="headerlink" href="#step-5-looking-at-residuals-with-notebook" title="Link to this heading">¶</a></h2>
 <p>The naca0012_report.ipynb file can be loaded using a variety of methods, but here we will load it using a browser.
 The commands below should open Jupyter Notebook within a browser window. If the browser does not open automatically then the notebook URL should be visible in the command output.</p>
 <ol class="arabic simple">
@@ -301,8 +301,8 @@ start_notebook
 <p>Finally, we can plot the time used per cycle using the <code class="docutils literal notranslate"><span class="pre">plot_performance(naca0012.log)</span></code> method. The last cycle is particularly long because it is the only cycle where the flow solution is written to a file.</p>
 </section>
 </section>
-<section id="step-4-looking-at-results-with-paraview">
-<h2>Step 4. Looking at results with Paraview<a class="headerlink" href="#step-4-looking-at-results-with-paraview" title="Link to this heading">¶</a></h2>
+<section id="step-6-looking-at-results-with-paraview">
+<h2>Step 6. Looking at results with Paraview<a class="headerlink" href="#step-6-looking-at-results-with-paraview" title="Link to this heading">¶</a></h2>
 <p>Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView.org</a> for download and installation instructions.</p>
 <section id="loading-your-data">
 <h3>Loading your data<a class="headerlink" href="#loading-your-data" title="Link to this heading">¶</a></h3>
@@ -334,7 +334,7 @@ start_notebook
 <p>Here are the same results shown using different colormaps:</p>
 <a class="reference internal image-reference" href="../_images/Figure_7.png"><img alt="Jet" src="../_images/Figure_7.png" style="width: 600px;" /></a>
 <a class="reference internal image-reference" href="../_images/Figure_8.png"><img alt="Cool to warm (extended)" src="../_images/Figure_8.png" style="width: 600px;" /></a>
-<p>Those simple steps allow to qualitatively inspect the solution given by our CFD simulation. More advanced analysis is also feasible. A common result in aerodynamics, especially around an airfoil, is the plot of the pressure coefficient along the plot.</p>
+<p>Those simple steps allow to qualitatively inspect the solution given by our CFD simulation. More advanced analysis is also feasible. A common result in aerodynamics, especially around an airfoil, is the plot of the pressure coefficient along the chord.</p>
 </section>
 <section id="pressure-coefficient-plot">
 <h3>Pressure Coefficient Plot<a class="headerlink" href="#pressure-coefficient-plot" title="Link to this heading">¶</a></h3>

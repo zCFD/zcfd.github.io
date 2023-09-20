@@ -25,7 +25,7 @@ The setup for this case is very similar to the previous NACA0012 cases, but the 
 
 Reference variables
 ^^^^^^^^^^^^^^^^^^^
-At the top of the control file, the key variables for the case- Reynolds number, mach number, temperature etc… are all hard coded, and then referred to later in the script. In cases where you might want to run many simulations with slightly different values to change, this can be an effective way to ensure consistency with variables. Additionally this allows implicit values such as the reference velocity, and freestream mach to be calculated automatically in the script.
+At the top of the control file, the key variables for the case- Reynolds number, Mach number, temperature etc… are all hard coded, and then referred to later in the script. In cases where you might want to run many simulations with slightly different values to change, this can be an effective way to ensure consistency with variables. Additionally this allows implicit values such as the reference velocity, and freestream Mach to be calculated automatically in the script.
 
 .. code-block:: python
 
@@ -60,7 +60,7 @@ In this case a scaling is applied to convert the size of the mesh. The .h5 file 
 
 Inflow vector
 ^^^^^^^^^^^^^
-In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The zutil function vector_from_angle() will automatically calculate the inflow vector given a velocity and angle of attack.
+In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The :code:`zutil function vector_from_angle()` will automatically calculate the inflow vector given a velocity and angle of attack.
 
 .. code-block:: python
 
@@ -82,7 +82,7 @@ In this case we want to simulate the aerofoil operating at an angle of attack of
 
 Transform
 ^^^^^^^^^
-The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case then where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as Ft_ terms in the report file.
+The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case, where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as Ft_ terms in the report file.
 
 .. code-block:: python
 
@@ -136,10 +136,10 @@ Opening Paraview, and loading in the `30p30n_steady_wall.pvd` results will allow
 
 To get a continuous plot of cp against x/c you need to use a plot over sorted lines filter. To do this:
 
-#. On the surface data apply a ‘cell data to point data’ filter.
-#. On the cell data to point data apply a ‘slice’ filter, ensuring the slice uses a z normal, and is centred through the middle of the aerofoil
-#. On the slice data apply a ‘plot on sorted lines’ filter and click apply. This will then bring up a new ‘line graph’ view. 
-#. Make sure to select all 3 segments in the composite data set dialogue box, then ensure only the cp variables are selected in the series parameters. Finally for the X Array name, select ‘Points_X’
+#. On the surface data apply a *‘cell data to point data’* filter.
+#. On the *cell data to point data* apply a *‘slice’* filter, ensuring the slice uses a z normal, and is centred through the middle of the aerofoil
+#. On the *slice* data apply a *‘plot on sorted lines’* filter and click apply. This will then bring up a new *‘line graph’* view. 
+#. Make sure to select all 3 segments in the composite data set dialogue box, then ensure only the cp variables are selected in the series parameters. Finally for the X Array name, select *‘Points_X’*
 #. Modify the style and markers until you are happy with the result. 
 
 
