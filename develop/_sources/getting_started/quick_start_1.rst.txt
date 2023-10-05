@@ -260,7 +260,7 @@ The commands below should open Jupyter Notebook within a browser window. If the 
 .. code-block:: bash
 
     cd ~/zcfd_tutorial_1/
-    start_notebook
+    start_lab
 
 Load the naca0012_report.ipynb in Jupyter, then click ``run all``.
 

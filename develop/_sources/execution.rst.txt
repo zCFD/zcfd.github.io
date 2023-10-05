@@ -292,7 +292,7 @@ To automatically start up notebook server on your computer within the zCFD envir
 
 .. code-block:: bash
 
-    (zCFD) >start_notebook
+    (zCFD) >start_lab
 
 .. _environment_variables:
 
