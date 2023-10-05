@@ -6,7 +6,7 @@ The getting started guide is here to teach the fundamentals of using zCFD, start
 .. toctree::
    :maxdepth: 1
 
-
    quick_start_1
    quick_start_2
+
 

@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-246-g9e58d documentation</title>
+    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.06.5001-247-g9f517 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=f095c53f"></script>
+    <script src="../_static/documentation_options.js?v=f8760735"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 2: Steady State RANS" href="quick_start_2.html" />
+    <link rel="prev" title="Getting Started" href="intro.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -74,8 +76,8 @@
 </section>
 <section id="what-you-need">
 <h2>What you need?<a class="headerlink" href="#what-you-need" title="Link to this heading">¶</a></h2>
-<p>To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for this tutorial). For instructions on installing zCFD please see <a class="reference internal" href="../installation.html#installation"><span class="std std-ref">here</span></a>.
-The tutorial assumes that you are running all commands using a bash shell on Linux.</p>
+<p>To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for this tutorial). For instructions on installing zCFD please see <a class="reference internal" href="../installation.html#installation"><span class="std std-ref">here</span></a> <em>or</em> if you are using an <strong>EPIC Desktop</strong> please see <a class="reference internal" href="../execution.html#epic-desktops"><span class="std std-ref">here</span></a></p>
+<p>The tutorial assumes that you are running all commands using a bash shell on Linux.</p>
 </section>
 <section id="step-1-download-the-files">
 <h2>Step 1. Download the files<a class="headerlink" href="#step-1-download-the-files" title="Link to this heading">¶</a></h2>
@@ -186,6 +188,11 @@ Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensiona
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
 </pre></div>
 </div>
+<p><strong>or</strong> if using an <a class="reference internal" href="../execution.html#epic-desktops"><span class="std std-ref">EPIC Desktop</span></a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>zcfd/latest
+.<span class="w"> </span>activate
+</pre></div>
+</div>
 <ol class="arabic simple" start="2">
 <li><p>Run zCFD validate input to check the control dictionary for errors:</p></li>
 </ol>
@@ -262,6 +269,11 @@ The commands below should open Jupyter Notebook within a browser window. If the 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
 </pre></div>
 </div>
+<p><strong>or</strong> if using an <a class="reference internal" href="../execution.html#epic-desktops"><span class="std std-ref">EPIC Desktop</span></a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>zcfd/latest
+.<span class="w"> </span>activate
+</pre></div>
+</div>
 <ol class="arabic simple" start="2">
 <li><p>Start the Jupyter Notebook:</p></li>
 </ol>
@@ -304,6 +316,11 @@ start_notebook
 <section id="step-6-looking-at-results-with-paraview">
 <h2>Step 6. Looking at results with Paraview<a class="headerlink" href="#step-6-looking-at-results-with-paraview" title="Link to this heading">¶</a></h2>
 <p>Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView.org</a> for download and installation instructions.</p>
+<p><strong>Or</strong> if using an <a class="reference internal" href="../execution.html#epic-desktops"><span class="std std-ref">EPIC Desktop</span></a> then Paraview is available as a module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>paraview
+paraview
+</pre></div>
+</div>
 <section id="loading-your-data">
 <h3>Loading your data<a class="headerlink" href="#loading-your-data" title="Link to this heading">¶</a></h3>
 <p>As mentioned above a “naca0012_P1_OUTPUT” folder has been generated, and contains a “.pvd” file (naca0012.pvd). This file can be seen as an of index of all the different output files, this way, your output data is imported onto Paraview using a single file, making it easier to handle.</p>
@@ -378,10 +395,15 @@ Select the “cp” variable in “Series Parameters’, and use ‘Points_X’ 
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
             </a></p><h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Getting Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 1: Simple Aerofoil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_guide/intro.html">Reference Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>

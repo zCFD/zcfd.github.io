@@ -13,7 +13,8 @@ The NACA0012 is a symmetrical aerofoil which is commonly used for code validatio
 
 What you need?
 ==============
-To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for this tutorial). For instructions on installing zCFD please see :ref:`here <installation>`.
+To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for this tutorial). For instructions on installing zCFD please see :ref:`here <installation>` *or* if you are using an **EPIC Desktop** please see :ref:`here <epic_desktops>`
+
 The tutorial assumes that you are running all commands using a bash shell on Linux.
 
 Step 1. Download the files
@@ -167,7 +168,14 @@ To run zCFD you first need to source the “activate” script and then use the 
 .. code-block:: bash
 
     . ./<ZCFD_INSTALL_PATH>/bin/activate
-    
+
+**or** if using an :ref:`EPIC Desktop <epic_desktops>`:
+
+.. code-block:: bash
+
+    module load zcfd/latest
+    . activate
+
 2. Run zCFD validate input to check the control dictionary for errors:
 
 .. code-block:: bash
@@ -239,6 +247,13 @@ The commands below should open Jupyter Notebook within a browser window. If the 
 .. code-block:: bash
 
     . ./<ZCFD_INSTALL_PATH>/bin/activate
+
+**or** if using an :ref:`EPIC Desktop <epic_desktops>`:
+
+.. code-block:: bash
+
+    module load zcfd/latest
+    . activate
     
 2. Start the Jupyter Notebook:
 
@@ -297,7 +312,14 @@ Finally, we can plot the time used per cycle using the ``plot_performance(naca00
 
 Step 6. Looking at results with Paraview
 ========================================
-Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see `ParaView.org <https://www.paraview.org>`_ for download and installation instructions.
+Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see `ParaView.org <https://www.paraview.org>`_ for download and installation instructions. 
+
+**Or** if using an :ref:`EPIC Desktop <epic_desktops>` then Paraview is available as a module:
+
+.. code-block:: bash
+
+    module load paraview
+    paraview
 
 Loading your data
 ^^^^^^^^^^^^^^^^^

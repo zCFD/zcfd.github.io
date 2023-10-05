@@ -5,15 +5,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Running zCFD &#8212; zCFD User Guide v2023.06.5001-246-g9e58d documentation</title>
+    <title>Running zCFD &#8212; zCFD User Guide v2023.06.5001-247-g9f517 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=f095c53f"></script>
+    <script src="_static/documentation_options.js?v=f8760735"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Reference Guide" href="reference_guide/intro.html" />
+    <link rel="next" title="Getting Started" href="getting_started/intro.html" />
     <link rel="prev" title="Installation" href="installation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -34,6 +34,19 @@
   <section id="running-zcfd">
 <h1>Running zCFD<a class="headerlink" href="#running-zcfd" title="Link to this heading">¶</a></h1>
 <p>zCFD is designed to exploit parallelism in the target computing hardware, making use of multiple processes (MPI), multiple threads per CPU process (OpenMP) and / or many threads per GPU.   zCFD will handle most parallel functions automatically, so the user just needs to specify how much, and what type, of resource to use for a given run.</p>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#command-line-execution" id="id7">Command Line Execution</a></p></li>
+<li><p><a class="reference internal" href="#input-validation" id="id8">Input Validation</a></p></li>
+<li><p><a class="reference internal" href="#overriding-mesh-and-case-names" id="id9">Overriding Mesh and Case Names</a></p></li>
+<li><p><a class="reference internal" href="#batch-queue-submission" id="id10">Batch Queue Submission</a></p></li>
+<li><p><a class="reference internal" href="#epic" id="id11">EPIC</a></p></li>
+<li><p><a class="reference internal" href="#epic-desktops" id="id12">EPIC Desktops</a></p></li>
+<li><p><a class="reference internal" href="#using-jupyter" id="id13">Using Jupyter</a></p></li>
+<li><p><a class="reference internal" href="#zcfd-environment-variables" id="id14">zCFD Environment Variables</a></p></li>
+</ul>
+</nav>
 <section id="command-line-execution">
 <span id="zcfd-command"></span><h2>Command Line Execution<a class="headerlink" href="#command-line-execution" title="Link to this heading">¶</a></h2>
 <p>zCFD includes an in-built command-line environment, which should be activated either when run directly or via a cluster management and job scheduling system, such as Slurm.</p>
@@ -161,6 +174,104 @@ run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">4</spa
 <p>For larger jobs or where resource availability is limited, <a class="reference external" href="https://epic.zenotech.com/" target="_blank">EPIC</a> allows users to submit zCFD jobs to a range of on-demand computing resources in an intuitive and secure way.  EPIC also provides access to interactive post-processing environments without the need to download large data files.</p>
 <a class="reference internal image-reference" href="_images/epic.png"><img alt="EPIC" src="_images/epic.png" style="width: 600px;" /></a>
 </section>
+<section id="epic-desktops">
+<span id="id3"></span><h2>EPIC Desktops<a class="headerlink" href="#epic-desktops" title="Link to this heading">¶</a></h2>
+<nav class="contents local" id="id4">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#what-are-epic-desktops" id="id15">What are EPIC Desktops?</a></p></li>
+<li><p><a class="reference internal" href="#launching-a-desktop" id="id16">Launching a desktop</a></p></li>
+<li><p><a class="reference internal" href="#managing-data" id="id17">Managing Data</a></p></li>
+<li><p><a class="reference internal" href="#modules" id="id18">Modules</a></p></li>
+<li><p><a class="reference internal" href="#loading-zcfd" id="id19">Loading zCFD</a></p></li>
+<li><p><a class="reference internal" href="#zcfd-licence" id="id20">zCFD Licence</a></p></li>
+<li><p><a class="reference internal" href="#running-paraview" id="id21">Running Paraview</a></p></li>
+<li><p><a class="reference internal" href="#using-pvserver" id="id22">Using pvserver</a></p></li>
+</ul>
+</nav>
+<section id="what-are-epic-desktops">
+<h3>What are EPIC Desktops?<a class="headerlink" href="#what-are-epic-desktops" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://epic.zenotech.com/" target="_blank">EPIC</a>  provides a way of starting an interactive Linux desktop in the Cloud, these are known as EPIC Desktops. The Desktops come with a range of preinstalled software, including zCFD. Data can automatically be synchronised between EPIC and the Desktops you launch.</p>
+</section>
+<section id="launching-a-desktop">
+<h3>Launching a desktop<a class="headerlink" href="#launching-a-desktop" title="Link to this heading">¶</a></h3>
+<p>To launch an EPIC Desktop you need an account on <a class="reference external" href="https://epic.zenotech.com/" target="_blank">EPIC</a>, you can sign up directly on the website for free. Once you have an account, navigate to Desktops on the right hand menu to launch a new Desktop. The desktops come in a variety of sizes and all have GPUs which can be used for running zCFD in GPU mode as well as for accelerated visualisation.</p>
+<p>If you organisation already uses EPIC then speak to your account manager for an invite to join the correct EPIC team.</p>
+</section>
+<section id="managing-data">
+<h3>Managing Data<a class="headerlink" href="#managing-data" title="Link to this heading">¶</a></h3>
+<p>The data you select when launching the desktop will be made available to you in the <em>/home/epic/data</em> directory on the desktop. If you selected the “Online” option when launching the desktop then any changes or new files you make in that directory will be synchronised with EPIC.</p>
+<p>Each node also has a <em>/scratch/</em> directory, this is a local high performance drive that only exists while the node is online. It is recommended to use this directory for running any zCFD jobs on the node and then copy the results back to <em>/home/epic/data</em> when you are finished.</p>
+<p><strong>Note</strong> <em>/scratch/</em> will be deleted when the node terminates.</p>
+</section>
+<section id="modules">
+<h3>Modules<a class="headerlink" href="#modules" title="Link to this heading">¶</a></h3>
+<p>The desktops use Linux <em>modules</em> to load applications. To see what applications are available launch a new terminal and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>avail
+</pre></div>
+</div>
+<p>You can then load the application using the <em>module load</em> command, for example to load the latest zCFD:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>zcfd/latest
+</pre></div>
+</div>
+<p>This will add zCFD to your path and enable you to start using it in that terminal.</p>
+</section>
+<section id="loading-zcfd">
+<h3>Loading zCFD<a class="headerlink" href="#loading-zcfd" title="Link to this heading">¶</a></h3>
+<p>The best way to load zCFD is to load the module and then run the <em>activate</em> script, this will activate the full zCFD environment.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>zcfd/latest
+.<span class="w"> </span>activate
+</pre></div>
+</div>
+<p>You can then start using zCFD:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd
+</pre></div>
+</div>
+</section>
+<section id="zcfd-licence">
+<h3>zCFD Licence<a class="headerlink" href="#zcfd-licence" title="Link to this heading">¶</a></h3>
+<p>After loading zCFD you need to specify which licence to use, you can do this by either copying your <em>zcfd.lic</em> file into your working directory, alongside your mesh and control dictionary, or by setting the <em>RLM_LICENSE_PASSWORD</em> environment variable. The password can be found inside your zcfd licence file.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>zcfd/latest
+.<span class="w"> </span>activate
+<span class="nb">export</span><span class="w"> </span><span class="nv">RLM_LICENSE_PASSWORD</span><span class="o">=</span>mypassword
+</pre></div>
+</div>
+</section>
+<section id="running-paraview">
+<h3>Running Paraview<a class="headerlink" href="#running-paraview" title="Link to this heading">¶</a></h3>
+<p>Paraview is also available on the desktops and can be loaded using <em>modules</em> and then started from the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>paraview
+paraview
+</pre></div>
+</div>
+</section>
+<section id="using-pvserver">
+<h3>Using pvserver<a class="headerlink" href="#using-pvserver" title="Link to this heading">¶</a></h3>
+<p>To load a zCFD .h5 file you can use the Paraview server that is bundled with zCFD and then connect to it using Paraview on the desktop. To start the server run the following in the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>zcfd/latest
+.<span class="w"> </span>activate
+pvserver
+</pre></div>
+</div>
+<p>You can then launch Paraview from another terminal by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>paraview
+paraview
+</pre></div>
+</div>
+<p>By default <em>pvserver</em> will be listening for a connection on port 11111. To connect to the zCFD pvserver do the following in Paraview:</p>
+<ol class="arabic simple">
+<li><p>From the <em>File</em> menu select <em>Connect</em>.</p></li>
+<li><p>Click “Add server”.</p></li>
+<li><p>Change the server Name to “zcfd” but leave all the other settings as the defaults, click “Configure”. On the next screen just click “Save”.</p></li>
+<li><p>Click “Connect”.</p></li>
+<li><p>The connection should be made and you will see a “Client connected” message output by pvserver.</p></li>
+</ol>
+<p>You can then load your zCFD .h5 files via <em>pvserver</em></p>
+<p><strong>Note</strong> The version of Paraview used to connect must match the version used in zCFD, if you get a client connection error please check the version numbers.</p>
+</section>
+</section>
 <section id="using-jupyter">
 <h2>Using Jupyter<a class="headerlink" href="#using-jupyter" title="Link to this heading">¶</a></h2>
 <p>We also recommend the use of  <a class="reference external" href="https://jupyter.org/" target="_blank">Jupyter Notebooks</a> for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser.
@@ -242,10 +353,12 @@ Jupyter is included in the zCFD distribution and notebooks for visualising the r
 <li class="toctree-l2"><a class="reference internal" href="#overriding-mesh-and-case-names">Overriding Mesh and Case Names</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batch-queue-submission">Batch Queue Submission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#epic">EPIC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#epic-desktops">EPIC Desktops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-jupyter">Using Jupyter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#zcfd-environment-variables">zCFD Environment Variables</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>

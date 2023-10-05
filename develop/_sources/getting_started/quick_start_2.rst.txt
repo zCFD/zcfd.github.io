@@ -99,7 +99,7 @@ You can run the case as you did for Tutorial 1, but with the following **run_zcf
 
 .. code-block:: bash
 
-    (zCFD) >run_zcfd -n 1 -p 30p30n_coarse.h5 c 30p30n_steady.py
+    run_zcfd -n 1 -p 30p30n_coarse.h5 c 30p30n_steady.py
 
 
 
