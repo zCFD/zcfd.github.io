@@ -5,7 +5,7 @@ Tutorial 2: Steady State RANS
     :local:
     :backlinks: none
 
-Following on from Tutorial 1, we now understand how to run a case on zCFD and visualise the results, we will begin to build up a test case to showcase some of the features of the solver. The case we will look at is the 30P30N aerofoil, which is a 2D multi element aerofoil, developed as an acoustic benchmark case. The geometry of which can be seen below:
+In Tutorial 1, we learnt how to run a case in zCFD and visualise the results. We will now use a more complex test case to showcase some of the features of the solver. The case we will look at is the 30P30N aerofoil, which is a 2D multi element aerofoil, developed as an acoustic benchmark case. The geometry of this case can be seen below:
 
 
 .. image:: ../images/tutorial2/30p30n.png
@@ -15,7 +15,7 @@ Following on from Tutorial 1, we now understand how to run a case on zCFD and vi
 
 Initially we will begin by obtaining a steady state RANS solution.
 
-The required meshes and control dictionary can be found `here <https://zcfd.zenotech.com/tutorials/2/30p30n_tutorial_2.zip>`_. The case has a 64,000 cells, and will run in less than 10 minutes on an NVIDIA RTX 3060.
+The required meshes and control dictionary can be found `here <https://zcfd.zenotech.com/tutorials/2/30p30n_tutorial_2.zip>`_. The case has 64,000 cells, and will run in less than 10 minutes on an NVIDIA RTX 3060 GPU.
 
 This case is run as a steady state simulation, using an implicit time marching scheme. The Reynolds Averaged Navier-Stokes equations are solved using Menter’s SST turbulence model with wall functions.
 
@@ -50,7 +50,7 @@ At the top of the control file, the key variables for the case- Reynolds number,
 
 Scale
 ^^^^^
-In this case a scaling is applied to convert the size of the mesh. The .h5 file has units of m, whereas the real world experiment was conducted in inches, therefore a scaling of 0.0254 is applied to convert between the two.
+In this case a scaling is applied to convert the size of the mesh. The .h5 mesh file was generated with units of inches, whereas the flow conditions are specified in SI units, therefore a scaling of 0.0254 is applied to convert the mesh into metres. The z (spanwise) direction has been scaled to be 1 metre wide. The mesh has only a single cell in the z direction so no spanwise flow is expected - making the z extent of the mesh 1 metre simply means that the forces and moments reported by zCFD will already be per unit span.
 
 .. code-block:: python
 
@@ -60,7 +60,7 @@ In this case a scaling is applied to convert the size of the mesh. The .h5 file 
 
 Inflow vector
 ^^^^^^^^^^^^^
-In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The :code:`zutil function vector_from_angle()` will automatically calculate the inflow vector given a velocity and angle of attack.
+In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The :code:`zutil` function :code:`vector_from_angle()` calculates the inflow vector given an x-z angle of attack, x-y angle of attack and flow speed.
 
 .. code-block:: python
 
@@ -99,8 +99,7 @@ You can run the case as you did for Tutorial 1, but with the following **run_zcf
 
 .. code-block:: bash
 
-    run_zcfd -n 1 -p 30p30n_coarse.h5 c 30p30n_steady.py
-
+    run_zcfd -m 30p30n_coarse.h5 -c 30p30n_steady.py
 
 
 Post processing
@@ -151,7 +150,7 @@ To get a continuous plot of cp against x/c you need to use a plot over sorted li
 
 Next steps
 ==========
-Since the cases looks as though it is an unsteady simulation, will will look at running the 30p30n case unsteady in the next tutorial. 
+Since the case looks as though it is an unsteady simulation, will will look at running the 30p30n case unsteady in the next tutorial. 
 
 Citations
 =========
