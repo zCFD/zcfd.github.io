@@ -1,0 +1,115 @@
+.. _zm3:
+
+zM3
+===
+
+zM3 or "zMesh Cubed" is a mesh generator that is included in the zCFD distribution. It is a general purpose meshing tool that can rapidly create cartesian meshes for zCFD’s acoustic solver or finite volume solver. As a user you define the domain and can then include geometry in the form of STL files to include in the domain.  Mesh refinement can be controlled in a number of ways including explicit refinement regions as well as refinement based on the size of the STL triangulation. 
+
+Execution
+---------
+
+zM3 is included in the standard zCFD installation, to run it simply activate your zCFD environment in the normal way and the *zm3* executable will be added to your path.
+
+.. code-block:: bash
+
+    zm3
+
+To see the command line options run:
+
+.. code-block:: bash
+
+    zm3 -help
+
+
+Options
+-------
+
+
+.. list-table:: 
+   :widths: 20 5 30 30
+   :header-rows: 1
+
+   * - Option
+     - Default
+     - Description
+     - Example
+   * - --meshName
+     - mesh.h5
+     - String defining the output mesh name
+     - *--meshName output.h5*
+   * - --base
+     - 0 0 0
+     - Three real numbers defining the (min_x, min_y, min_z) corner
+     - *--base 0.0 0.0 0.0*
+   * - --dims
+     - 1.0 1.0 1.0
+     - Three real numbers defining the x, y, z extent of the domain
+     - *--dims 100.0 100.0 100.0*
+   * - --globalSpacing
+     - 1.0
+     - Real number defining largest cell size in the mesh
+     - *--globalSpacing 5.0*
+   * - --stlFiles
+     - 
+     - List of STL files containing surfaces for meshing
+     - *--stlFiles file1.stl file2.stl*
+   * - --stlSpacing
+     - 
+     - Target cell size for each STL surface file loaded, the the same order as specified in *stlFiles*
+     - *--stlSpacing 1.0 0.5*
+   * - --relativeSpacings
+     - 0 (for each STL)
+     - Integer for each STL file specified, 1 = True, 0 = False. If True then the spacings defined in *stlSpacing* are treated as a factor multiplying the local STL size to get the spacing value at that location.
+     - *--relativeSpacings 0 1*
+   * - --minSurfaceSpacing
+     - 
+     - Minimum surface spacing when using *relativeSpacings*
+     - *--minSurfaceSpacing 0.5*
+   * - --maxSurfaceSpacing
+     - 
+     - Maximum surface spacing when using *relativeSpacings*
+     - *--maxSurfaceSpacing 0.5*
+   * - --includeProximitySpacings
+     - 0 (for each STL)
+     -  Integer for each STL file specified, 1 = True, 0 = False. If True reduce cell sizes to account for the proximity of other triangles nearby.
+     - *--includeProximitySpacings 0 1*
+   * - --refineAnisotropicSTLTris
+     - 0 (for each STL)
+     -  Integer for each STL file specified, 1 = True, 0 = False. If True triangles will be sub-divided until all edges approach the smallest edge length for that STL.
+     - *--refineAnisotropicSTLTris 0 1*
+   * - --includeCutCells
+     - 0 
+     - Integer specifying if cells intersected by STL are to remain in mesh, 1 = True, 0 = False
+     - *--includeCutCells 1*
+   * - --seedPoints
+     - 
+     - List of three real numbers defining a point in the mesh to be kept, from which flood filling occurs. Multiple seed points can be defined.
+     - *--seedPoints 50.0 50.0 50.0*
+   * - --solidPoints
+     - 
+     - Three real numbers defining a point in the mesh, within a region which must be deleted. Defines non-fluid regions. Multiple solid points can be defined.
+     - *--solidPoints 10.0 5.0 3.0*
+   * - --boxRefinement
+     - 
+     - Lists of 7 real numbers defining a refinement box in the order x_min y_min z_min x_max y_max z_max spacing.
+     - *--boxRefinement 20.0 20.0 20.0 50.0 50.0 50.0 7.5*
+   * - --surfaceBoxRefinement
+     - 
+     - Similar to *boxRefinement* but only STL elements within the box will be given the target refinement.
+     - *--surfaceBoxRefinement 20.0 20.0 20.0 50.0 50.0 50.0 7.5*
+   * - --rotatedTranslatedRefinement
+     - 
+     - A rotated and translated box refinement region. The box is rotated around 0,0,0 and then translated. The rotated/translated box is represented as a group of cartesian aligned boxes with the resolution of those boxes controlled by *refinement_resolution*. Defined as *x_dim y_dim z_dim rot_x rot_y rot_z trans_x trans_y trans_z spacing refinement_resolution*
+     - *--rotatedTranslatedRefinement 10.0 10.0 10.0 0.0 0.0 1.0 10.0 10.0 10.0 7.5 75*
+   * - --cylinderRefinement
+     - 
+     -  Similar to *rotatedTranslatedRefinement* but defines a cylinder region of refinement between pt1 and pt2 with radius r1 at pt1 and r2 at pt2. Defined as *x_pt1 y_pt1 z_pt1 x_pt2 y_pt2 z_pt2 r1 r2 spacing refinement_resolution*
+     - *--cylinderRefinement 10.0 10.0 10.0 80.0 80.0 80.0 5.0 15.0 7.5 75*
+   * - --finiteVolumeOutput
+     - 0
+     - Write mesh for the finite volume solver, 1 = True, 0 = False
+     - *--finiteVolumeOutput 1*
+   * - --writeImmersedData
+     - 0
+     - Compute and write out immersed boundary data, 1 = True, 0 = False
+     - *--writeImmersedData 1*
