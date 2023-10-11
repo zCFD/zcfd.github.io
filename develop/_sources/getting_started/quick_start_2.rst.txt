@@ -102,15 +102,57 @@ You can run the case as you did for Tutorial 1, but with the following **run_zcf
     run_zcfd -m 30p30n_coarse.h5 -c 30p30n_steady.py
 
 
-Post processing
-================
+Monitoring convergence
+======================
+
 Start by launching a Jupyter server to examine the residuals in the 30p30n_steady_report.csv file. Running the first cell from the 30p30n_steady_report.ipynb notebook will plot the residuals for the continuity, momentum, and energy equations, as well as the residuals from the turbulence model. 
 
-You will notice that the density residuals for this stop converging at approximately 0.1 and continue to oscillate thereafter. This is a good indication that the simulation has unsteady effects, and needs to be run unsteady.
+If the case is still running you can update the plot by rerunning the cell, this provides a way to monitor the progress of a running simulation.
 
 .. image:: ../images/tutorial2/Figure_1.png
   :width: 600
   :alt: Convergence
+
+You will notice that case is set to run for 1000 cycles but looking at the plots, it looks like the residuals are still converging. So we will now restart the solver from where we finished and run on for another 1000 cycles.
+
+Performing a restart
+^^^^^^^^^^^^^^^^^^^^
+
+To restart the solver we need to update the *'restart'* parameter in the control dictionary. If this is set to *False* the solver will always perform a fresh start, if it is *True* then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit *30p30n_steady.py* and change restart to *True*. You will also need to update *'cycles'* to 2000.
+
+.. code-block:: python
+
+    "restart": True,
+
+    'time marching' : { 
+        ...
+        'cycles' : 2000,
+        ...
+    }
+
+
+By default zCFD will look for a results file with the same name as the current case file, appended with '_results.h5'. So in our case it will look for "30p30n_steady_results.h5". When you have edited the control dictionary go ahead and restart the simulation again using the same **run_zcfd** command:
+
+.. code-block:: bash
+
+    run_zcfd -m 30p30n_coarse.h5 -c 30p30n_steady.py
+
+Once the solver has finished rerun the cell in the notebook to examine the residuals again. The residuals now look like they have converged:
+
+.. image:: ../images/tutorial2/Figure_1a.png
+  :width: 600
+  :alt: Convergence
+
+.. If we wanted to restart from a differently named case, we can supply a path to the case in the *"restart casename"* argument. This should be the path to the `casename.py` file, with the `.py` extension removed. For example if we were restarting from a case called "30p30n_run", we could add the below to the dictionary. The solver would then look for *30p30n_run_results.h5* to restart from.
+
+.. .. code-block:: python
+
+..     "restart": True,
+..     "restart casename": "30p30n_run",
+
+
+Plotting force convergence
+==========================
 
 Examining the force convergence history next, we are interested in the x and y forces, but transformed by the inflow vector, therefore the wall_Ftx and wall_Fty plots are of interest.
 
@@ -147,10 +189,6 @@ To get a continuous plot of cp against x/c you need to use a plot over sorted li
   :width: 600
   :alt: cp against x/c
 
-
-Next steps
-==========
-Since the case looks as though it is an unsteady simulation, will will look at running the 30p30n case unsteady in the next tutorial. 
 
 Citations
 =========
