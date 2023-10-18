@@ -80,7 +80,7 @@ Step 2. Review Control file
         :ref:`"report" <tutorial_1_report>`: {
             "frequency": 10,
             "forces" : {
-              "FR_1" : {"name" : "wall", "zone" : [1]},
+              "FR_1" : {"name" : "wall", "zone" : [4]},
             }
         },
         "reference": "IC_1",
@@ -297,7 +297,7 @@ Next, we can use the Jupyter notebook to plot the variation of the force coeffic
 
     r.plot_forces()
 
-Check the `wall_Fx` and `wall_Fy` tickboxes  - given this is a symmetrical aerofoil run at 0 angle of attack, the x force corresponds to drag and the y force corresponds to lift. We would expect zero lift and a non-zero, positive drag.
+Check the `wall_Fx` and `wall_Fz` tickboxes  - given this is a symmetrical aerofoil run at 0 angle of attack, the x force corresponds to drag and the z force corresponds to lift. We would expect zero lift and a non-zero, positive drag.
 
 .. image:: ../images/tutorial_1_plot_2.png
   :width: 600
@@ -382,7 +382,14 @@ This gives the following (you will need to zoom in substantially to the centre o
   :width: 600
   :alt: Pressure around airfoil
 
-Note that you can change the colormap used by Paraview by clicking on the “Choose Preset” icon:
+Note that you can change the colormap used by Paraview by clicking on the "Edit Color Map" icon: 
+
+.. image:: ../images/tutorial1/Figure_6a.png
+  :width: 200
+  :alt: Edit Color Map
+  :align: center
+
+and then the “Choose Preset” icon:
 
 .. image:: ../images/tutorial1/Figure_6.png
   :width: 500
@@ -412,7 +419,7 @@ Open the “naca0012_wall.pvd” file . Naturally, the resulting image looks dif
 
 It is usually of interest to have a plot showing the pressure coefficient on the upper and the lower surface, therefore it is necessary to extract the data separately for each face of the airfoil. The upper and lower surfaces of the airfoil then need to be separated.
 
-To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -> Alphabetical -> Clip. The properties of the “Clip” filter are displayed on the left. You should set them to the following combination:
+To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -> Alphabetical -> Clip. The properties of the “Clip” filter are displayed on the left. Firstly, untick the "Invert" option and then you should set them to the following combination:
 
 .. image:: ../images/tutorial1/Figure_10.png
   :width: 500

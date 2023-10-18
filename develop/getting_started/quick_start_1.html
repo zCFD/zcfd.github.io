@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.10.5890-12-g190a5 documentation</title>
+    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2023.10.5890-13-g254d9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=7d1057d0"></script>
+    <script src="../_static/documentation_options.js?v=ef533bf4"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -133,7 +133,7 @@ unzip<span class="w"> </span>naca0012.zip
     <a class="reference internal" href="#tutorial-1-report"><span class="std std-ref">&quot;report&quot;</span></a>: {
         &quot;frequency&quot;: 10,
         &quot;forces&quot; : {
-          &quot;FR_1&quot; : {&quot;name&quot; : &quot;wall&quot;, &quot;zone&quot; : [1]},
+          &quot;FR_1&quot; : {&quot;name&quot; : &quot;wall&quot;, &quot;zone&quot; : [4]},
         }
     },
     &quot;reference&quot;: &quot;IC_1&quot;,
@@ -306,7 +306,7 @@ start_lab
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="o">.</span><span class="n">plot_forces</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Check the <cite>wall_Fx</cite> and <cite>wall_Fy</cite> tickboxes  - given this is a symmetrical aerofoil run at 0 angle of attack, the x force corresponds to drag and the y force corresponds to lift. We would expect zero lift and a non-zero, positive drag.</p>
+<p>Check the <cite>wall_Fx</cite> and <cite>wall_Fz</cite> tickboxes  - given this is a symmetrical aerofoil run at 0 angle of attack, the x force corresponds to drag and the z force corresponds to lift. We would expect zero lift and a non-zero, positive drag.</p>
 <a class="reference internal image-reference" href="../_images/tutorial_1_plot_2.png"><img alt="zCFD Output" src="../_images/tutorial_1_plot_2.png" style="width: 600px;" /></a>
 <p>The force plots tell a similar story to the residuals - there are initially large oscillations as the flow settles down, before the force traces essentially flatline from 1200 cycles onwards.</p>
 </section>
@@ -351,7 +351,9 @@ paraview
 </div>
 <p>This gives the following (you will need to zoom in substantially to the centre of the mesh before you can clearly see the airfoil):</p>
 <a class="reference internal image-reference" href="../_images/Figure_5.png"><img alt="Pressure around airfoil" src="../_images/Figure_5.png" style="width: 600px;" /></a>
-<p>Note that you can change the colormap used by Paraview by clicking on the “Choose Preset” icon:</p>
+<p>Note that you can change the colormap used by Paraview by clicking on the “Edit Color Map” icon:</p>
+<a class="reference internal image-reference" href="../_images/Figure_6a.png"><img alt="Edit Color Map" class="align-center" src="../_images/Figure_6a.png" style="width: 200px;" /></a>
+<p>and then the “Choose Preset” icon:</p>
 <a class="reference internal image-reference" href="../_images/Figure_6.png"><img alt="Colour map icon" class="align-center" src="../_images/Figure_6.png" style="width: 500px;" /></a>
 <p>Here are the same results shown using different colormaps:</p>
 <a class="reference internal image-reference" href="../_images/Figure_7.png"><img alt="Jet" src="../_images/Figure_7.png" style="width: 600px;" /></a>
@@ -363,7 +365,7 @@ paraview
 <p>Open the “naca0012_wall.pvd” file . Naturally, the resulting image looks different from the previous as this only contains the zones where a “wall” boundary condition has been defined, which in this case happens to just be the airfoil itself.</p>
 <a class="reference internal image-reference" href="../_images/Figure_9.png"><img alt="Wall.pvd" src="../_images/Figure_9.png" style="width: 600px;" /></a>
 <p>It is usually of interest to have a plot showing the pressure coefficient on the upper and the lower surface, therefore it is necessary to extract the data separately for each face of the airfoil. The upper and lower surfaces of the airfoil then need to be separated.</p>
-<p>To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the “Clip” filter are displayed on the left. You should set them to the following combination:</p>
+<p>To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the “Clip” filter are displayed on the left. Firstly, untick the “Invert” option and then you should set them to the following combination:</p>
 <a class="reference internal image-reference" href="../_images/Figure_10.png"><img alt="Clip parameters" class="align-center" src="../_images/Figure_10.png" style="width: 500px;" /></a>
 <p>By default, this will “remove” the lower surface of the airfoil, leaving the following shape:</p>
 <a class="reference internal image-reference" href="../_images/Figure_11.png"><img alt="Airfoil upper surface" src="../_images/Figure_11.png" style="width: 600px;" /></a>
