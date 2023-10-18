@@ -374,7 +374,7 @@ Let’s observe the pressure coefficient around the airfoil. To do so, use the s
 .. note::
 
     The pressure coefficient is given by the following formula
-    :math:`C_p = \frac{p-p_{\infty }}{0.5\rho _{\infty }V_{\infty }}`
+    :math:`C_p = \frac{p-p_{\infty }}{\frac{1}{2}\rho _{\infty }V_{\infty }^2}`
 
 This gives the following (you will need to zoom in substantially to the centre of the mesh before you can clearly see the airfoil):
 
