@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Control Dictionary (old) &#8212; zCFD User Guide v2023.10.5890-67-gd3298b documentation</title>
+    <title>Control Dictionary (old) &#8212; zCFD User Guide v2023.10.5890-78-g2bc68 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=cd64bfdd"></script>
+    <script src="_static/documentation_options.js?v=2097f06c"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -1631,115 +1631,127 @@ The transforms specified should map each zone onto each other.</p>
 <td><p>p</p></td>
 <td><p>Pressure (<span class="math notranslate nohighlight">\(Pa\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>gauge_pressure</p></td>
+<tr class="row-even"><td><p>pressuregrad</p></td>
+<td></td>
+<td><p>Pressure gradient vector</p></td>
+</tr>
+<tr class="row-odd"><td><p>gauge_pressure</p></td>
 <td></td>
 <td><p>Pressure relative to the reference value (<span class="math notranslate nohighlight">\(Pa\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td><p>density</p></td>
+<tr class="row-even"><td><p>density</p></td>
 <td><p>rho</p></td>
 <td><p>Density (<span class="math notranslate nohighlight">\(kg/m^3\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>velocity</p></td>
+<tr class="row-odd"><td><p>velocity</p></td>
 <td><p>V, v</p></td>
 <td><p>Velocity vector (<span class="math notranslate nohighlight">\(m/s\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td><p>velocitygradient</p></td>
+<tr class="row-even"><td><p>velocitygrad</p></td>
 <td></td>
 <td><p>Velocity gradient tensor</p></td>
 </tr>
-<tr class="row-even"><td><p>cp</p></td>
+<tr class="row-odd"><td><p>cp</p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Pressure_coefficient" target="_blank">Pressure coefficient</a></p></td>
 </tr>
-<tr class="row-odd"><td><p>totalcp</p></td>
+<tr class="row-even"><td><p>totalcp</p></td>
 <td></td>
 <td><p>Total pressure coefficient</p></td>
 </tr>
-<tr class="row-even"><td><p>mach</p></td>
+<tr class="row-odd"><td><p>mach</p></td>
 <td><p>m</p></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Mach_number" target="_blank">Mach number</a></p></td>
 </tr>
-<tr class="row-odd"><td><p>viscosity</p></td>
+<tr class="row-even"><td><p>viscosity</p></td>
 <td><p>mu</p></td>
 <td><p>Dynamic viscosity (<span class="math notranslate nohighlight">\(Pa/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>kinematicviscosity</p></td>
+<tr class="row-odd"><td><p>kinematicviscosity</p></td>
 <td><p>nu</p></td>
 <td><p>Kinematic viscosity (<span class="math notranslate nohighlight">\(m^2/s\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td><p>vorticity</p></td>
+<tr class="row-even"><td><p>vorticity</p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Vorticity" target="_blank">Vorticity vector</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>Qcriterion</p></td>
+<tr class="row-odd"><td><p>Qcriterion</p></td>
 <td></td>
 <td><p>Q criterion</p></td>
 </tr>
-<tr class="row-odd"><td><p>reynoldstress</p></td>
+<tr class="row-even"><td><p>reynoldstress</p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Reynolds_stress" target="_blank">Reynolds stress tensor</a></p></td>
 </tr>
-<tr class="row-even"><td><p>helicity</p></td>
+<tr class="row-odd"><td><p>helicity</p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Hydrodynamical_helicity" target="_blank">Helicity</a></p></td>
 </tr>
-<tr class="row-odd"><td><p>enstrophy</p></td>
+<tr class="row-even"><td><p>enstrophy</p></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>ek</p></td>
+<tr class="row-odd"><td><p>ek</p></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>lesregion</p></td>
+<tr class="row-even"><td><p>lesregion</p></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>turbulenceintensity</p></td>
+<tr class="row-odd"><td><p>turbulenceintensity</p></td>
 <td><p>ti</p></td>
 <td><p>Turbulence intensity</p></td>
 </tr>
-<tr class="row-odd"><td><p>turbulencekineticenergy</p></td>
+<tr class="row-even"><td><p>turbulencekineticenergy</p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Turbulence_kinetic_energy" target="_blank">Turbulence kinetic energy</a> (<span class="math notranslate nohighlight">\(J/kg\)</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>turbulencekineticenergygrad</p></td>
+<td></td>
+<td><p>Turbulence kinetic energy gradient vector</p></td>
 </tr>
 <tr class="row-even"><td><p>turbulenceeddyfrequency</p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure" target="_blank">Turbulence eddy frequency</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td><p>eddy</p></td>
+<tr class="row-odd"><td><p>turbulenceeddyfrequencygrad</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>eddy</p></td>
 <td></td>
 <td><p>Eddy viscosity (<span class="math notranslate nohighlight">\(Pa/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>cell_velocity</p></td>
+<tr class="row-odd"><td><p>cell_velocity</p></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>cellzone</p></td>
+<tr class="row-even"><td><p>cellzone</p></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>cellorder</p></td>
+<tr class="row-odd"><td><p>cellorder</p></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>centre</p></td>
+<tr class="row-even"><td><p>centre</p></td>
 <td></td>
 <td><p>Cell centre location</p></td>
 </tr>
-<tr class="row-even"><td><p>viscouslengthscale</p></td>
+<tr class="row-odd"><td><p>viscouslengthscale</p></td>
 <td></td>
 <td><p>Minimum distance between cell and its neighbours</p></td>
 </tr>
-<tr class="row-odd"><td><p>walldistance</p></td>
+<tr class="row-even"><td><p>walldistance</p></td>
 <td></td>
 <td><p>Wall distance (<span class="math notranslate nohighlight">\(m\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p>sponge</p></td>
+<tr class="row-odd"><td><p>sponge</p></td>
 <td></td>
 <td><p>Sponge layer damping coefficient</p></td>
 </tr>
-<tr class="row-odd"><td><p>menterf1</p></td>
+<tr class="row-even"><td><p>menterf1</p></td>
 <td></td>
 <td><p>Menter SST blending function</p></td>
 </tr>
