@@ -89,7 +89,7 @@ On the previous page asked for 4 parallel processes, on the Cluster page we can 
 
 For our example we will select the "CFMS - GPU" cluster from the list by clicking **"Select"** next to it. EPIC will then show us the cost breakdown for the job, click **"Submit Job"** to continue.
 
-You job will now be submitted to the selected cluster. EPIC will transfer the data, submit the job to the cluster and montior the progress.
+You job will now be submitted to the selected cluster. EPIC will transfer the data, submit the job to the cluster and monitor the progress.
 
 .. image:: ../images/epic_tutorial/Image_7.png
   :width: 600

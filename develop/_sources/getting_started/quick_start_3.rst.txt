@@ -54,7 +54,7 @@ total unsteady timesteps to perform.
    },
   
 
-zCFD uses dual time stepping to advance in real time by first iterating to convergence on an inner steady state 'pseudo time' loop, before advancing the real time cycle. In this case the inner loop is performed using implicit euler time marching, the number of cycles this inner loop performs is controlled by *'cycles'*. So the in the example abve the inner loop runs at a CFL of 200 for 5 cycles. 
+zCFD uses dual time stepping to advance in real time by first iterating to convergence on an inner steady state 'pseudo time' loop, before advancing the real time cycle. In this case the inner loop is performed using implicit euler time marching, the number of cycles this inner loop performs is controlled by *'cycles'*. So the in the example above the inner loop runs at a CFL of 200 for 5 cycles. 
 
 The choice of timestep size, and number of cycles per inner loop will have a significant effect on the quality and cost of the final solution. Using too large of a real time step will mean higher frequency unsteady effects are lost, similarly too few inner cycles will result in unsteady effects being lost. A rule of thumb is to ensure the residuals converge by at least two orders of magnitude over an inner cycle. On the other hand if too many cycles or timesteps are performed, the cost of the simulation will quickly increase. Finally the number of cycles to reach convergence in a pseudo time loop also depends on the step size. Meaning in some cases it is actually beneficial to run a smaller timestep, in order to require fewer inner loop iterations.
 
@@ -105,7 +105,7 @@ Post Processing
 Output report
 ^^^^^^^^^^^^^
 
-Start and connect to a jupyter server, using **'start_lab'** as outlined in the previous sections. Go ahead and run all cells.
+Start and connect to a Jupyter server, using **'start_lab'** as outlined in the previous sections. Go ahead and run all cells.
 
 
 .. image:: ../images/tutorial3/residuals.png
@@ -123,7 +123,7 @@ In the “plot_forces” cell, you should notice additional data points availabl
 
 
 
-Flowfield
+Flow field
 ^^^^^^^^^
 
 We set the output frequency to 5 when running the case and so the solver will have written visualisation VTK files every 5 real time steps. If you look in the *'cylinder_P1_OUTPUT/VISUALISATION'* directory you will see a series of .vtp and .pvtp files, one for every written timestep. 

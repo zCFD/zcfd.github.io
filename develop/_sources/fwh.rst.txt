@@ -1,0 +1,290 @@
+.. _fwh:
+
+FWH solver
+==========
+
+A Ffowcs-Williams Hawkings (FWH) solver, which is used for prediction of farfield noise, is included in the zCFD distribution. The zCFD FWH solver uses the `Farrasat 1A formulation <https://ntrs.nasa.gov/citations/20070010579>`_, and can accept both permeable and impermeable FWH surfaces.
+
+.. _fwhWhatFor:
+What is an FWH solver for?
+--------------------------
+
+A common problem in CFD is the prediction of the farfield aerodynamic noise which results from a particular airflow.
+Two issues make prediction of farfield aerodynamic noise challenging. First of all, many of the sources of aerodynamic noise (turbulence, vortex shedding etc.) require high fidelity, time accurate simulations and fine CFD meshes to be properly captured. Secondly, a mesh must be very fine and the simulation must have very low numerical dissipation in order to propagate aerodynamic noise any distance within a CFD mesh.
+
+The first issue of noise simulation can be made tractable by the use of techniques like FRPM, but the second issue of far-field mesh requirements for noise propagation means that e.g. predicting the noise from a helicopter main rotor a kilometre away is simply not feasible using a conventional CFD simulation.
+
+This issue of noise propagation in the far-field is solved by the use of the Ffowcs-Williams Hawkings (FWH) equations. These equations allow us to propagate sound to an observer an arbitrary distance away without the use of a mesh which extends all the way to the observer.
+
+.. _fwhHowWorks:
+How does an FWH solver work?
+----------------------------
+
+In order to use the FWH equations to propagate noise to a far-field observer, we first run a CFD simulation and record the flow variables (:math:`p(\mathbf{x},t)`, :math:`\rho(\mathbf{x},t)` and :math:`\mathbf{u}(\mathbf{x},t)`) on an 'FWH surface' in the near-field, noise generating region. :ref:`Fig. 1 <fwhfig1>` shows an FWH surface enclosing the nearfield for a simulation of an aerofoil in a wind tunnel. 
+
+.. _fwhfig1:
+.. figure:: images/fwhdiagram_1.*
+  :width: 600
+  :alt: CFD simulation of an aerofoil, including an FWH surface
+
+  CFD simulation of an aerofoil, including an FWH surface
+
+The FWH surface should encloses the noise generating region, and the CFD mesh should be sufficiently fine in the near-field region to propagate noise to the FWH surface without excessive dissipation. Ideally, the FWH surface should not intersect the nearfield region of any wakes. 
+
+In some situations, it is sufficient to collect FWH surface data on the wall instead of using a separate FWH surface inside the fluid domain. FWH surfaces coincident with  the wall are called `impermeable` (as opposed to `permeable`) FWH surfaces, and only require :math:`p` (not :math:`p`, :math:`\rho` and :math:`\mathbf{u}`) to be recorded.
+
+Once the flow variables have been recorded on the FWH surface, we can propagate the noise to our observers using an FWH solver. In order to do so we must define the motion of our FWH surface and our observers in the FWH simulation. The FWH equations assume a quiescent medium (i.e. still air, with a free-stream velocity of zero), which means that the FWH surface and observer motions are frequently different to the motions used in the CFD simulation used to produce the FWH surface data. 
+
+In our example of an aerofoil in a wind tunnel, the CFD simulation has a freestream velocity, which does not satisfy the 'quiescent medium' condition. When using an FWH simulation to calculate the noise at the farfield observer microphone in :ref:`Fig. 1 <fwhfig1>`,  we therefore have to perform a co-ordinate transformation and 'fly' both the FWH surface and the observer microphone forwards through the quiescent medium, as in :ref:`Fig. 2 <fwhfig2>`.
+
+.. _fwhfig2:
+.. figure:: ./images/fwhdiagram_2.*
+  :width: 600
+  :alt: FWH simulation of an aerofoil, with quiescent medium co-ordinate transformation applied
+
+  FWH simulation of an aerofoil, with quiescent medium co-ordinate transformation applied
+
+Once we have collected the FWH surface data from a CFD simulation and correctly defined the FWH surface and observer microphone settings, we simply use the FWH equations to propagate the pressure and velocity signals from the FWH surface to the our farfield observer locations. The equations used in the zCFD FWH solver are the `Farrasat 1A equations <https://ntrs.nasa.gov/citations/20070010579>`_, with a retarded time formulation and a Newton-Raphson algorithm for calculating the retarded time. The retarded time is the time :math:`\tau_*` at which a sound wave must be emitted by a point on the FWH surface in order for it to reach an observer at time :math:`t`, given the prescribed motions of both surface and observer.
+
+.. _fwhRunning:
+Using the zCFD FWH solver
+-------------------------
+
+To use the zCFD FWH solver, we must first generate FWH surface data during a zCFD simulation (see :ref:`write output <write_output>` for more details). The FWH surface data is stored in a HDF5 format. While no mesh conversion tools are provided, the zCFD FWH file format can easily be interrogated and replicated with tools like `h5ls` and `h5py` should you wish to convert data from other simulation tools to this format.
+
+The zCFD FWH solver consists of a series of python modules, which are accessible from within the :ref:`zCFD command-line environment <zcfd-command>`. Three python dictionaries, controlling the surface, observer, and solver settings, are required as inputs to the `fwh.solve` function. This function then returns time histories of the pressures at the specified observer points, in the nested dictionaries `pOut` and `tOut`. 
+
+.. parsed-literal:: 
+
+    from solvers import fwh, motions
+
+    mySurfaces = { :ref:`surfaces <fwhSurfaces>`}
+    myObservers = { :ref:`observers <fwhObservers>`}
+    mySolverSettings = { :ref:`solverSettings <fwhSolverSettings>`}
+
+    pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)
+
+
+For an aerofoil in a wind tunnel (as in :ref:`Fig. 1 <fwhfig1>` and :ref:`Fig. 2 <fwhfig1>`), an appropriate python script (including a small amount of post-processing) might look like this:
+
+.. _fwhRunningExample:
+.. code-block:: python
+
+    from solvers import fwh, motions
+    from matplotlib import pyplot as plt
+    import json
+
+    v = [50,0,0]
+    surfaceCentreMotion = motion.ConstantVelocityPoint([0,0,0],v)
+    surfaceMotion = motion.NonrotatingSurface(surfaceCentreMotion)
+    obs1Motion = motion.ConstantVelocityPoint([10,1,0],v)
+    obs2Motion = motion.ConstantVelocityPoint([20,1,0],v)
+
+    mySurfaces = {
+        "fwhSurf1": {
+            "motion": surfaceMotion, 
+            "fileName": "./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1.h5"
+        }
+    }
+    myObservers = {"Obs1": obs1Motion, "Ob2": obs2Motion}
+    mySolverSettings = { "c": 340, "rho0": 1.2, "p0": 1e5}
+
+    pOut,tOut = fwh.solve(mySurfaces,myObservers,solverSettings)
+
+    fig,ax = plt.subplot()
+    ax.plot(tOut["fwhSurf1"]["Obs1"],pOut["fwhSurf1"]["Obs1"],label="Obs1")
+    ax.plot(tOut["fwhSurf1"]["Obs2"],pOut["fwhSurf1"]["Obs2"],lable="Obs2")
+    ax.set_xlabel("t (s)")
+    ax.set_ylabel("p (Pa)")
+    fig.savefig("./FWH_figure.pdf")
+
+    dataForJson = {"p": pOut, "t": tOut}
+    
+    with open("./FWH_data.json","w") as f:
+        json.dump(dataForJson,f)
+
+
+
+.. _fwhSurfaces:
+Surfaces dictionary
+~~~~~~~~~~~~~~~~~~~
+
+The zCFD FWH solver is capable of using multiple FWH surfaces in the same FWH calculation. The Surfaces dictionary therefore contains a key-value pair for each FWH surface to be used, where the key is the surface's name (to be used in the FWH solver) and the value is an :ref:`individual surface definition dictionary <fwhIndividualSurface>`.
+
+Example usage:
+
+.. code-block::  python
+
+    from solvers import motion 
+    v = [50,0,0]
+    surfaceCentreMotion = motion.ConstantVelocityPoint([0,0,0],v)
+    surfaceMotion = motion.NonrotatingSurface(surfaceCentreMotion)
+
+    mySurfaces = {
+        "fwhSurf1": {
+            "motion": surfaceMotion, 
+            "fileName": "./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1.h5"
+        }
+    }
+
+
+.. _fwhIndividualSurface:
+Individual surface definition dictionary
+````````````````````````````````````````
+
+
+.. list-table:: 
+   :widths: 15 10 10 15 40 
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'motion'
+     - Yes
+     - 
+     - A :ref:`surface motion class <fwhSurfMotions>`
+     - The motion of the surface through the FWH medium
+   * - 'fileName'
+     - Yes
+     - 
+     - A readable file path
+     - The FWH surface data, in the FWH HDF5 format outputted by the zCFD solver
+   * - 'permeable'
+     - No
+     - True
+     - True | False
+     - Whether or not the surface is permeable or not (see :ref:`above <fwhHowWorks>`). Set to False for FWH wall data.
+   * - 'flipSurfaceNormals'
+     - No
+     - False
+     - True | False
+     - Whether or not to invert the FWH surface normals before running the FWH solver. The surface normals should always point outwards towards the farfield. For FWH surface data generated using the :ref:`fwh interpolate <write_output>` keyword in the zCFD solver, the surface normal direction depends on the .stl file used to define the FWH surface, and can be checked using a visualisation tool (e.g. Paraview). 
+   * - 'transformSurfaceVelocity'
+     - No
+     - True
+     - True | False
+     - Relevant for permeable surfaces only, and should normally be kept `True`. Setting this to `False` means that the FWH surface fluid velocity used in the FWH solver does not include the velocity resulting from the motion of the surface (as defined my the 'motion' keyword above). This option may be required when using data from other solvers, in the case where the FWH surface moves through a quiescent medium during the simulation used to create the FWH surface data.
+
+
+
+.. _fwhObservers:
+Observers dictionary
+~~~~~~~~~~~~~~~~~~~~
+
+The Observers dictionary defines a list of observer microphones at which farfield noise should be calculated. In the observers dictionary, keys are used to set the observer's name in the FWH solver output, and the value sets the motion of the observer. Observer motions must be defined using the :ref:`point motion classes <fwhObsMotions>`.
+
+Example usage:
+
+.. code-block:: python 
+
+    from solvers import motion
+    v = [50,0,0]
+    obs1Motion = motion.ConstantVelocityPoint([10,1,0],v)
+    obs2Motion = motion.ConstantVelocityPoint([20,1,0],v)    
+
+    myObservers = {"Obs1": obs1Motion, "Ob2": obs2Motion}
+
+
+
+.. _fwhSolverSettings:
+Solver settings dictionary
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The solver settings dictionary sets the properties of the FWH medium, and the numerical settings used in the FWH solver.
+
+Example usage:
+
+.. code-block:: python
+
+    mySolverSettings = { "c": 340, "rho0": 1.2, "p0": 1e5}
+
+.. list-table:: 
+   :widths: 12 12 12 15 40 
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'c'
+     - Yes
+     - 
+     - Positive number    
+     - speed of sound in the far-field medium, m/s
+   * - 'rho0'
+     - Yes
+     - 
+     - Positive number    
+     - density of the far-field medium, kg/s
+   * - 'p0'
+     - Yes
+     - 
+     - Positive number    
+     - static pressure of the far-field medium, Pa
+   * - 'dt'
+     - Yes
+     - 
+     - Positive number    
+     - timestep between observer microphone recording times, s
+   * - 'breakTolAbs'
+     - No
+     - 1.0e-5
+     - Positive number    
+     - the time accuracy (s) with which we would like to predict the retarded time :math:`\tau_*` in the retarded time calculation.
+   * - 'maxIts'
+     - No
+     - 50
+     - Positive integer   
+     - The maximum number of iterations to use in the Newton Raphson algorithm used to predict retarded time
+
+
+.. _fwhObsMotions:
+Point (observer) motion classes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+FWH Observers are points which move through the FWH quiescent medium according to the function :math:`x=f(t)`. In the zCFD FWH solver, we define the motion of observers using one of the following classes, which are available inside the `solvers.motion` module inside the zCFD command line environment (see :ref:`above <fwhRunning>`).
+
+.. list-table:: 
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Motion Class
+     - Inputs
+     - Description
+   * - `OriginPoint()`
+     - 
+     - A point which is always on the origin, i.e. :math:`f(t)=[0,0,0]`.
+   * - `StationaryPoint(X0)`
+     - X0: a 3-d vector :math:`[x0,y0,z0]`
+     - A point which is stationary, i.e. :math:`f(t)=[x0,y0,z0]`.
+   * - `ConstantVelocityPoint(X0,dXdt)`
+     - | X0: a 3-d vector :math:`[x0,y0,z0]` 
+       | dXdt: a 3-d vector :math:`[dxdt,dydt,dzdt]`
+     - A point with constant velocity, i.e. :math:`f(t) = [x0+t*dxdt, y0+t*dydt,z0+t*dzdt]`
+
+
+.. _fwhSurfMotions:
+Surface motion classes
+~~~~~~~~~~~~~~~~~~~~~~
+
+Just like FWH Observers, FWH Surfaces require their motion to be defined. There are two surface motion classes - NonrotatingSurface and RotatingSurface. Both use a :ref:`point motion class <fwhObsMotions>` to define the motion of their 'centre point'. In this way, complex motions like that of a propellor which is both rotating and translating through the FWH medium can be defined.
+
+.. list-table:: 
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Motion Class
+     - Inputs
+     - Description
+   * - `NonrotatingSurface(centrePoint)`
+     - centrePoint: a :ref:`point motion class <fwhObsMotions>`
+     - A surface which does not rotate, and translates at the same velocity as the 'centrePoint'.
+   * - `RotatingSurface(centrePoint,axis, omega)`
+     - | centrePoint: a :ref:`point motion class <fwhObsMotions>`
+       | axis: a 3-d vector `[ax_x,ax_y,ax_z]`
+       | omega: a number.
+     - A surface which translates at the same velocity as the `centrePoint`, and also rotates about the centrePoint with rotation axis `axis` and rotation angular velocity (rad / s) `omega`

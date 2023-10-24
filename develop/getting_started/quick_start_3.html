@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2023.10.5890-139-ga0fbe3 documentation</title>
+    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2023.10.5890-140-gc275e documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=a4d4293d"></script>
+    <script src="../_static/documentation_options.js?v=739a3d19"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -74,7 +74,7 @@ total unsteady timesteps to perform.</p>
 <span class="p">},</span>
 </pre></div>
 </div>
-<p>zCFD uses dual time stepping to advance in real time by first iterating to convergence on an inner steady state ‘pseudo time’ loop, before advancing the real time cycle. In this case the inner loop is performed using implicit euler time marching, the number of cycles this inner loop performs is controlled by <em>‘cycles’</em>. So the in the example abve the inner loop runs at a CFL of 200 for 5 cycles.</p>
+<p>zCFD uses dual time stepping to advance in real time by first iterating to convergence on an inner steady state ‘pseudo time’ loop, before advancing the real time cycle. In this case the inner loop is performed using implicit euler time marching, the number of cycles this inner loop performs is controlled by <em>‘cycles’</em>. So the in the example above the inner loop runs at a CFL of 200 for 5 cycles.</p>
 <p>The choice of timestep size, and number of cycles per inner loop will have a significant effect on the quality and cost of the final solution. Using too large of a real time step will mean higher frequency unsteady effects are lost, similarly too few inner cycles will result in unsteady effects being lost. A rule of thumb is to ensure the residuals converge by at least two orders of magnitude over an inner cycle. On the other hand if too many cycles or timesteps are performed, the cost of the simulation will quickly increase. Finally the number of cycles to reach convergence in a pseudo time loop also depends on the step size. Meaning in some cases it is actually beneficial to run a smaller timestep, in order to require fewer inner loop iterations.</p>
 </section>
 <section id="output">
@@ -115,13 +115,13 @@ total unsteady timesteps to perform.</p>
 <h2>Post Processing<a class="headerlink" href="#post-processing" title="Link to this heading">¶</a></h2>
 <section id="output-report">
 <h3>Output report<a class="headerlink" href="#output-report" title="Link to this heading">¶</a></h3>
-<p>Start and connect to a jupyter server, using <strong>‘start_lab’</strong> as outlined in the previous sections. Go ahead and run all cells.</p>
+<p>Start and connect to a Jupyter server, using <strong>‘start_lab’</strong> as outlined in the previous sections. Go ahead and run all cells.</p>
 <a class="reference internal image-reference" href="../_images/residuals.png"><img alt="Residuals" class="align-center" src="../_images/residuals.png" style="width: 600px;" /></a>
 <p>In the “plot_forces” cell, you should notice additional data points available provided by the monitor point. Visualising the pressure trace [<cite>probe_cp</cite>] should reveal an oscillatory pattern, indicating that the predicted vortex shedding is indeed occurring. This trace can then be used to calculate the corresponding shedding frequency.</p>
 <a class="reference internal image-reference" href="../_images/probe_cp.png"><img alt="Probe location" class="align-center" src="../_images/probe_cp.png" style="width: 600px;" /></a>
 </section>
-<section id="flowfield">
-<h3>Flowfield<a class="headerlink" href="#flowfield" title="Link to this heading">¶</a></h3>
+<section id="flow-field">
+<h3>Flow field<a class="headerlink" href="#flow-field" title="Link to this heading">¶</a></h3>
 <p>We set the output frequency to 5 when running the case and so the solver will have written visualisation VTK files every 5 real time steps. If you look in the <em>‘cylinder_P1_OUTPUT/VISUALISATION’</em> directory you will see a series of .vtp and .pvtp files, one for every written timestep.</p>
 <p>You could load these individually but the easier method is to load the <em>‘cylinder.pvd’</em> in <em>‘cylinder_P1_OUTPUT/’</em>. This .pvd file links to all of the timesteps.</p>
 <p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>. Paraview will render a single solution time step at a time, and time series data can be navigated using the icons at the top of the screen:</p>
@@ -170,6 +170,7 @@ Since this case is quite small we will export an mp4 video directly from Paravie
 <li class="toctree-l1"><a class="reference internal" href="../reference_guide/intro.html">Reference Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
