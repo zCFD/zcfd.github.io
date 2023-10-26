@@ -1,0 +1,105 @@
+.. _linear_solver:
+
+Linear Solver Settings
+----------------------
+
+There are several situations where the options selected in zCFD require the solution of a linear system. These are:
+
+* When the :ref:`time` scheme is set to euler implicit.
+* When RBFs are used for mesh motion.
+* When the incompressible solver is selected.
+
+When running on CPUs zCFD uses `Petsc <https://petsc.org>`_ linear solver library and when running on NVidia GPUs zCFD uses the `AMGX <https://developer.nvidia.com/amgx>`_ linear solver library. Both libraries offer a wide array of solver and preconditioner choices and altering the settings can have a significant impact on the performance and convergence of the solver. Options can be passed to Petsc via the control dictionary and AMGX options are set using a json file which is read at runtime.
+
+Petsc
+^^^^^
+Details of the available options for the Petsc KSP linear system solvers used by zCFD are given `here <https://petsc.org/release/manual/ksp/>`_. these options can be passed through to Petsc via the zCFD control dictionary using the "linear solver options" key. The default values are given below:
+
+.. code-block:: python
+
+   "linear solver options": {"flow": { "-ksp_type": "fgmres",
+                                       "-ksp_rtol": "1.0e-3",
+                                       "-ksp_monitor": "",
+                                       "-ksp_converged_reason": "" },
+                             "turbulence":  { "-ksp_type": "fgmres",
+                                              "-ksp_rtol": "1.0e-5",
+                                              "-ksp_monitor": "",
+                                              "-ksp_converged_reason": "" },
+                             "rbf": { "-ksp_type": "fgmres",
+                                      "-ksp_rtol": "1.0e-5",
+                                      "-ksp_monitor": "" }
+                            }
+
+Settings are provided for the mean flow, turbulence and RBF linear systems. Most of the settings detailed in the `Petsc documentation <https://petsc.org>`_ can be passed through by adding them as key, value pairs to the appropriate dictionary. Where an option doesn't take a value an empty string needs to be provided.
+
+The `Hypre <https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods>`_ library of algebraic multigrid methods is available via `Petsc PCHYPRE <https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre>`_ and the associated settings can be supplied via the "linear solver options" dictionary. Using Hypre's booomeramg package as a preconditioner has shown good performance with the incompressible solver:
+
+.. code-block:: python
+                
+   "linear solver options": {"flow": { "-ksp_type": "fgmres",
+                                       "-ksp_rtol": "1.0e-3",
+                                       "-ksp_monitor": "",
+                                       "-ksp_converged_reason": "",
+                                       "-pc_type": "hypre",
+                                       "-pc_hypre_type": "boomeramg"},
+                                       ...
+
+Further Hypre options are detailed in the `Petsc PCHYPRE <https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre>`_ documentation.
+
+
+AMGX
+^^^^
+
+The AMGX settings for the mean flow, turbulence and RBF linear systems can be found in ZCFD_HOME/amgx.json, ZCFD_HOME/turbamgx.json and ZCFD_HOME/RBF_amgx.json. The mean flow settings are shown below:
+
+.. code-block:: json
+
+  "config_version": 2,
+  "determinism_flag": 1,
+  "solver": {
+    "preconditioner": {
+      "error_scaling": 0,
+      "print_grid_stats": 0,
+      "max_uncolored_percentage": 0.05,
+      "algorithm": "AGGREGATION",
+      "solver": "AMG",
+      "smoother": "MULTICOLOR_GS",
+      "presweeps": 0,
+      "selector": "SIZE_8",
+      "coarse_solver": "NOSOLVER",
+      "max_iters": 1,
+      "postsweeps": 3,
+      "min_coarse_rows": 32,
+      "relaxation_factor": 0.75,
+      "scope": "amg",
+      "max_levels": 40,
+      "matrix_coloring_scheme": "PARALLEL_GREEDY",
+      "cycle": "V"
+    },
+    "use_scalar_norm": 1,
+    "solver": "FGMRES",
+    "print_solve_stats": 1,
+    "obtain_timings": 1,
+    "max_iters": 10,
+    "monitor_residual": 1,
+    "gmres_n_restart": 5,
+    "convergence": "RELATIVE_INI_CORE",
+    "scope": "main",
+    "tolerance": 1e-3,
+    "norm": "L2"
+  }
+
+
+In general these settings provide good performance for most cases. If issues are encountered converging the linear system reducing the "tolerance" may help. Otherwise altering the multigrid aggregation selection algorithm "selector": "SIZE_8" to "SIZE_4" or "SIZE_2" will build smaller aggregates and hence increase the number of coarse levels - improving convergence at the expense of memory use. Increasing the number of "gmres_n_restart" may also improve convergence at the expense of increased memory use.
+
+There are too many AMGX options to detail here but example configurations for different solvers are given `here <https://github.com/NVIDIA/AMGX/tree/main/src/configs>`_.
+
+When running on NVidia GPUs and using AMGX there is only one option available in the "linear solver options" dictionary:
+
+.. code-block:: python
+
+   "linear solver options": {"double precision": False}                             
+
+The "double precision" option controls whether the mean flow linear system is solved in single or double precision. Solving in single precision brings a reduction in memory use and a speed up to the solver. However, double precision may be required for more challenging cases.
+                                               
+            

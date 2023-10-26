@@ -17,13 +17,14 @@ This reference guide documents the parameters available in a zCFD control dictio
 
     parameters = {
         'reference': :ref:`IC_1 <reference_state>`,
-        'initial': { :ref:`initial_state` },
+        'initial': {:ref:`initial_state`},
         'restart': :ref:`False <restart>`,
         'partitioner': 'metis',
         'scale': :ref:`[1,1,1] <scale_mesh>`,
-        'time marching': { :ref:`time` },
-        'equations': { :ref:`equations` },
-        'material': { :ref:`materials` },
+        'time marching': {:ref:`time`},
+        'linear solver settings': {:ref:`linear_solver`},
+        'equations': {:ref:`equations`},
+        'material': {:ref:`materials`},
         'IC_1': {:ref:`initial_conditions`}
         'BC_1': {:ref:`boundary_conditions`}
         'TR_1': {:ref:`mesh_transform`}
@@ -40,6 +41,7 @@ This reference guide documents the parameters available in a zCFD control dictio
    reference
    boundary
    time
+   linear_solver
    equations
    caa
    fsi

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Linear Solver Settings &#8212; zCFD User Guide v2023.10.5890-233-g7502b0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=e43a658c"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Equations" href="equations.html" />
+    <link rel="prev" title="Time Marching" href="time.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="linear-solver-settings">
+<span id="linear-solver"></span><h1>Linear Solver Settings<a class="headerlink" href="#linear-solver-settings" title="Link to this heading">¶</a></h1>
+<p>There are several situations where the options selected in zCFD require the solution of a linear system. These are:</p>
+<ul class="simple">
+<li><p>When the <a class="reference internal" href="time.html#time"><span class="std std-ref">Time Marching</span></a> scheme is set to euler implicit.</p></li>
+<li><p>When RBFs are used for mesh motion.</p></li>
+<li><p>When the incompressible solver is selected.</p></li>
+</ul>
+<p>When running on CPUs zCFD uses <a class="reference external" href="https://petsc.org" target="_blank">Petsc</a> linear solver library and when running on NVidia GPUs zCFD uses the <a class="reference external" href="https://developer.nvidia.com/amgx" target="_blank">AMGX</a> linear solver library. Both libraries offer a wide array of solver and preconditioner choices and altering the settings can have a significant impact on the performance and convergence of the solver. Options can be passed to Petsc via the control dictionary and AMGX options are set using a json file which is read at runtime.</p>
+<section id="id1">
+<h2>Petsc<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>Details of the available options for the Petsc KSP linear system solvers used by zCFD are given <a class="reference external" href="https://petsc.org/release/manual/ksp/" target="_blank">here</a>. these options can be passed through to Petsc via the zCFD control dictionary using the “linear solver options” key. The default values are given below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;linear solver options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;flow&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-3&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-ksp_converged_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="p">},</span>
+                          <span class="s2">&quot;turbulence&quot;</span><span class="p">:</span>  <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-5&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;-ksp_converged_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="p">},</span>
+                          <span class="s2">&quot;rbf&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-5&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="p">}</span>
+                         <span class="p">}</span>
+</pre></div>
+</div>
+<p>Settings are provided for the mean flow, turbulence and RBF linear systems. Most of the settings detailed in the <a class="reference external" href="https://petsc.org" target="_blank">Petsc documentation</a> can be passed through by adding them as key, value pairs to the appropriate dictionary. Where an option doesn’t take a value an empty string needs to be provided.</p>
+<p>The <a class="reference external" href="https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods" target="_blank">Hypre</a> library of algebraic multigrid methods is available via <a class="reference external" href="https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre" target="_blank">Petsc PCHYPRE</a> and the associated settings can be supplied via the “linear solver options” dictionary. Using Hypre’s booomeramg package as a preconditioner has shown good performance with the incompressible solver:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;linear solver options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;flow&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-3&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-ksp_converged_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;hypre&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;-pc_hypre_type&quot;</span><span class="p">:</span> <span class="s2">&quot;boomeramg&quot;</span><span class="p">},</span>
+                                    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Further Hypre options are detailed in the <a class="reference external" href="https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre" target="_blank">Petsc PCHYPRE</a> documentation.</p>
+</section>
+<section id="id3">
+<h2>AMGX<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p>The AMGX settings for the mean flow, turbulence and RBF linear systems can be found in ZCFD_HOME/amgx.json, ZCFD_HOME/turbamgx.json and ZCFD_HOME/RBF_amgx.json. The mean flow settings are shown below:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;config_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="nt">&quot;determinism_flag&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;preconditioner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;error_scaling&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;print_grid_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_uncolored_percentage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;algorithm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AGGREGATION&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AMG&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;smoother&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MULTICOLOR_GS&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;presweeps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;selector&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SIZE_8&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;coarse_solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NOSOLVER&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_iters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;postsweeps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;min_coarse_rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;relaxation_factor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.75</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;amg&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_levels&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;matrix_coloring_scheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PARALLEL_GREEDY&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;cycle&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;V&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;use_scalar_norm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FGMRES&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;print_solve_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;obtain_timings&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;max_iters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;monitor_residual&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;gmres_n_restart&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;convergence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RELATIVE_INI_CORE&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tolerance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;norm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;L2&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In general these settings provide good performance for most cases. If issues are encountered converging the linear system reducing the “tolerance” may help. Otherwise altering the multigrid aggregation selection algorithm “selector”: “SIZE_8” to “SIZE_4” or “SIZE_2” will build smaller aggregates and hence increase the number of coarse levels - improving convergence at the expense of memory use. Increasing the number of “gmres_n_restart” may also improve convergence at the expense of increased memory use.</p>
+<p>There are too many AMGX options to detail here but example configurations for different solvers are given <a class="reference external" href="https://github.com/NVIDIA/AMGX/tree/main/src/configs" target="_blank">here</a>.</p>
+<p>When running on NVidia GPUs and using AMGX there is only one option available in the “linear solver options” dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;linear solver options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;double precision&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The “double precision” option controls whether the mean flow linear system is solved in single or double precision. Solving in single precision brings a reduction in memory use and a speed up to the solver. However, double precision may be required for more challenging cases.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Reference Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time.html">Time Marching</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Solver Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equations.html">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caa.html">Aero-Acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-structure interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Material Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_conditions.html">Reference Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms.html">Mesh Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overset.html">Overset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="write_output.html">Write Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report.html">Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Output variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/reference_guide/linear_solver.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
