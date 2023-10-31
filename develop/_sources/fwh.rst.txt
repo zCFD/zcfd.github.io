@@ -29,7 +29,7 @@ In order to use the FWH equations to propagate noise to a far-field observer, we
 
   CFD simulation of an aerofoil, including an FWH surface
 
-The FWH surface should encloses the noise generating region, and the CFD mesh should be sufficiently fine in the near-field region to propagate noise to the FWH surface without excessive dissipation. Ideally, the FWH surface should not intersect the nearfield region of any wakes. 
+The FWH surface should enclose the noise generating region, and the CFD mesh should be sufficiently fine in the near-field region to propagate noise to the FWH surface without excessive dissipation. Ideally, the FWH surface should not intersect the nearfield region of any wakes. 
 
 In some situations, it is sufficient to collect FWH surface data on the wall instead of using a separate FWH surface inside the fluid domain. FWH surfaces coincident with  the wall are called `impermeable` (as opposed to `permeable`) FWH surfaces, and only require :math:`p` (not :math:`p`, :math:`\rho` and :math:`\mathbf{u}`) to be recorded.
 
@@ -45,6 +45,11 @@ In our example of an aerofoil in a wind tunnel, the CFD simulation has a freestr
   FWH simulation of an aerofoil, with quiescent medium co-ordinate transformation applied
 
 Once we have collected the FWH surface data from a CFD simulation and correctly defined the FWH surface and observer microphone settings, we simply use the FWH equations to propagate the pressure and velocity signals from the FWH surface to the our farfield observer locations. The equations used in the zCFD FWH solver are the `Farrasat 1A equations <https://ntrs.nasa.gov/citations/20070010579>`_, with a retarded time formulation and a Newton-Raphson algorithm for calculating the retarded time. The retarded time is the time :math:`\tau_*` at which a sound wave must be emitted by a point on the FWH surface in order for it to reach an observer at time :math:`t`, given the prescribed motions of both surface and observer.
+
+
+.. note::
+    The Newton-Raphson solver which calculates retarded time in the FWH solver will struggle to converge as the closing speed between an FWH surface and an observer approaches or exceeds Mach 1.
+
 
 .. _fwhRunning:
 Using the zCFD FWH solver
@@ -74,11 +79,11 @@ For an aerofoil in a wind tunnel (as in :ref:`Fig. 1 <fwhfig1>` and :ref:`Fig. 2
     from matplotlib import pyplot as plt
     import json
 
-    v = [50,0,0]
+    v = [-50,0,0]
     surfaceCentreMotion = motion.ConstantVelocityPoint([0,0,0],v)
     surfaceMotion = motion.NonrotatingSurface(surfaceCentreMotion)
-    obs1Motion = motion.ConstantVelocityPoint([10,1,0],v)
-    obs2Motion = motion.ConstantVelocityPoint([20,1,0],v)
+    obs1Motion = motion.ConstantVelocityPoint([1,0,0],v)
+    obs2Motion = motion.ConstantVelocityPoint([2,0,0],v)
 
     mySurfaces = {
         "fwhSurf1": {
@@ -91,7 +96,7 @@ For an aerofoil in a wind tunnel (as in :ref:`Fig. 1 <fwhfig1>` and :ref:`Fig. 2
 
     pOut,tOut = fwh.solve(mySurfaces,myObservers,solverSettings)
 
-    fig,ax = plt.subplot()
+    fig,ax = plt.subplots()
     ax.plot(tOut["fwhSurf1"]["Obs1"],pOut["fwhSurf1"]["Obs1"],label="Obs1")
     ax.plot(tOut["fwhSurf1"]["Obs2"],pOut["fwhSurf1"]["Obs2"],lable="Obs2")
     ax.set_xlabel("t (s)")
@@ -99,7 +104,6 @@ For an aerofoil in a wind tunnel (as in :ref:`Fig. 1 <fwhfig1>` and :ref:`Fig. 2
     fig.savefig("./FWH_figure.pdf")
 
     dataForJson = {"p": pOut, "t": tOut}
-    
     with open("./FWH_data.json","w") as f:
         json.dump(dataForJson,f)
 
@@ -116,7 +120,7 @@ Example usage:
 .. code-block::  python
 
     from solvers import motion 
-    v = [50,0,0]
+    v = [-50,0,0]
     surfaceCentreMotion = motion.ConstantVelocityPoint([0,0,0],v)
     surfaceMotion = motion.NonrotatingSurface(surfaceCentreMotion)
 
@@ -181,9 +185,9 @@ Example usage:
 .. code-block:: python 
 
     from solvers import motion
-    v = [50,0,0]
-    obs1Motion = motion.ConstantVelocityPoint([10,1,0],v)
-    obs2Motion = motion.ConstantVelocityPoint([20,1,0],v)    
+    v = [-50,0,0]
+    obs1Motion = motion.ConstantVelocityPoint([1,0,0],v)
+    obs2Motion = motion.ConstantVelocityPoint([2,0,0],v)    
 
     myObservers = {"Obs1": obs1Motion, "Ob2": obs2Motion}
 

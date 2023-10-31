@@ -130,6 +130,7 @@ For the 'vtk' format the volume  data is written to the :ref:`output <output_dir
     
     <case_name>.pvd
 
+.. _volume_interpolate:
 volume interpolate
 ^^^^^^^^^^^^^^^^^^
 zCFD can interpolate volume data to a supplied surface. This parameter lets you list the filenames of surfaces to interpolate to. The supported file formats are VTK (vtu or vtp files) and STL. 

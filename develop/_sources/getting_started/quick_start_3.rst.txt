@@ -1,3 +1,5 @@
+.. _tutorial_3:
+
 Tutorial 3: Time accurate solution
 -----------------------------
 .. contents:: Table of Contents
@@ -18,6 +20,7 @@ Following on from executing the steady state simulation of :ref:`Tutorial 2 <tut
   :align: center
 
 
+.. _qs3_download_link:
 You can download the required files `here <https://zcfd.zenotech.com/tutorials/3/cylinder.zip>`_.
 
 
@@ -58,22 +61,34 @@ zCFD uses dual time stepping to advance in real time by first iterating to conve
 
 The choice of timestep size, and number of cycles per inner loop will have a significant effect on the quality and cost of the final solution. Using too large of a real time step will mean higher frequency unsteady effects are lost, similarly too few inner cycles will result in unsteady effects being lost. A rule of thumb is to ensure the residuals converge by at least two orders of magnitude over an inner cycle. On the other hand if too many cycles or timesteps are performed, the cost of the simulation will quickly increase. Finally the number of cycles to reach convergence in a pseudo time loop also depends on the step size. Meaning in some cases it is actually beneficial to run a smaller timestep, in order to require fewer inner loop iterations.
 
+.. _quick_start_3_output:
 Output
 ^^^^^^
 
-The *'frequency'* parameter in the *'write output'* dictionary controls how often the solver writes the solution. In a steady state simulation the solver this relates to the number of cycles between outputs. In an unsteady simulation, this value relates to the number of real time steps for when a solution should be output. 
+The *'write output'* dictionary in the control dictionary is a bit more complicated here than in :ref:`tutorial 1 <tutorial_1>` or :ref:`tutorial 2 <tutorial_2>`.
 
 .. code-block:: python
 
-   'write output' : {
-       'format' : 'vtk',
+    "write output": {
+        "format": "vtk",
         "surface variables": ["V", "p", "T", "rho", "cp"],
         "volume variables": ["V", "p", "T", "rho", "m", "cp"],
-       'frequency' : 5,
-   },   
+        "frequency": {
+            "volume data": 5,
+            "surface data": 5,
+            "checkpoint": 20,
+        },
+    },
 
-So in our case we will set this to 5, meaning the solution will be written every 5 real time steps, and so with our *'time step'* set to 0.002 seconds, the solution will be written out every 0.01 seconds of simulated time.
+First of all, the *'frequency'* parameter takes on a different meaning in a time-accurate simulation (:ref:`tutorial 1 <tutorial_1>` and :ref:`tutorial 2 <tutorial_2>` are both steady-state simulations).
 
+In a steady-state simulation, the *'frequency'* parameter controls how the number of pseudo-time *'cycles'* between solver outputs. Since we have no real interest in any data apart from the converged data at the end for a steady-state simulation, every time the solver outputs data, it over-writes the previous output data.
+
+We run time-accurate simulations when we're interested in the variation of the flow over time (e.g. due to vortex shedding), so in the time-accurate solver data outputs are not over-written, and the *'frequency'* variable relates to the number of real time steps between outputs, instead of number of pseudo-time cycles between outputs.
+
+While we can just use a single number for *'frequency'* (e.g. :code:`"frequency": 5`), we can also specify *'frequency'* as a dictionary for more fine grained control. This is especially relevant in time-accurate simulations, where frequent data output can not only slow down the simulation but also quickly use up disk space. Generally the volume data takes longest to output, so for large cases it can be a good idea to output volume data output infrequently, and instead rely on surface data, :ref:`monitor points <monitor_points>` and :ref:`volume intepolated data <volume_interpolate>` for high frequency data collection.
+
+In this, a relatively small case, we have chosen to output surface and volume data every 5 real time-steps. Since the *'time step'* was set to 0.002 seconds, the volume and surface data will therefore be written out every 0.01 seconds of simulated time. We have chosen to output *checkpoint* data (see :ref:`here <output_frequency>`) less frequently.
 
 Monitor Points
 ^^^^^^^^^^^^^^
@@ -122,7 +137,7 @@ In the “plot_forces” cell, you should notice additional data points availabl
   :align: center
 
 
-
+.. _qs3_view_flowfield:
 Flow field
 ^^^^^^^^^
 
@@ -157,5 +172,3 @@ Since this case is quite small we will export an mp4 video directly from Paravie
 5. Click OK to export the animation. This will take some time.
 
 You should now have an exported video of the unsteady simulation.
-
-

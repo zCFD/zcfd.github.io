@@ -83,7 +83,7 @@ The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step tha
 
 cfl
 ===
-Sets the CFL number used in the mass, momentum and energy equations. When using :ref:`dgcaa <equation_dgcaa>` this applies to the the 'rho', 'rhou_i' and 'rhoE' equations.
+Sets the CFL number used in the mass, momentum and energy equations. When using :ref:`dgcaa <caa>` this applies to the the 'rho', 'rhou_i' and 'rhoE' equations.
 
 Example usage:
 

@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FWH solver &#8212; zCFD User Guide v2023.10.5890-269-g9179 documentation</title>
+    <title>FWH solver &#8212; zCFD User Guide v2023.10.5890-278-g7dd5b documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=8ce6cc28"></script>
+    <script src="_static/documentation_options.js?v=5f6325c0"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -51,7 +51,7 @@ Two issues make prediction of farfield aerodynamic noise challenging. First of a
 <p><span class="caption-text">CFD simulation of an aerofoil, including an FWH surface</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>The FWH surface should encloses the noise generating region, and the CFD mesh should be sufficiently fine in the near-field region to propagate noise to the FWH surface without excessive dissipation. Ideally, the FWH surface should not intersect the nearfield region of any wakes.</p>
+<p>The FWH surface should enclose the noise generating region, and the CFD mesh should be sufficiently fine in the near-field region to propagate noise to the FWH surface without excessive dissipation. Ideally, the FWH surface should not intersect the nearfield region of any wakes.</p>
 <p>In some situations, it is sufficient to collect FWH surface data on the wall instead of using a separate FWH surface inside the fluid domain. FWH surfaces coincident with  the wall are called <cite>impermeable</cite> (as opposed to <cite>permeable</cite>) FWH surfaces, and only require <span class="math notranslate nohighlight">\(p\)</span> (not <span class="math notranslate nohighlight">\(p\)</span>, <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>) to be recorded.</p>
 <p>Once the flow variables have been recorded on the FWH surface, we can propagate the noise to our observers using an FWH solver. In order to do so we must define the motion of our FWH surface and our observers in the FWH simulation. The FWH equations assume a quiescent medium (i.e. still air, with a free-stream velocity of zero), which means that the FWH surface and observer motions are frequently different to the motions used in the CFD simulation used to produce the FWH surface data.</p>
 <p>In our example of an aerofoil in a wind tunnel, the CFD simulation has a freestream velocity, which does not satisfy the ‘quiescent medium’ condition. When using an FWH simulation to calculate the noise at the farfield observer microphone in <a class="reference internal" href="#fwhfig1"><span class="std std-ref">Fig. 1</span></a>,  we therefore have to perform a co-ordinate transformation and ‘fly’ both the FWH surface and the observer microphone forwards through the quiescent medium, as in <a class="reference internal" href="#fwhfig2"><span class="std std-ref">Fig. 2</span></a>.</p>
@@ -62,6 +62,10 @@ Two issues make prediction of farfield aerodynamic noise challenging. First of a
 </figcaption>
 </figure>
 <p>Once we have collected the FWH surface data from a CFD simulation and correctly defined the FWH surface and observer microphone settings, we simply use the FWH equations to propagate the pressure and velocity signals from the FWH surface to the our farfield observer locations. The equations used in the zCFD FWH solver are the <a class="reference external" href="https://ntrs.nasa.gov/citations/20070010579" target="_blank">Farrasat 1A equations</a>, with a retarded time formulation and a Newton-Raphson algorithm for calculating the retarded time. The retarded time is the time <span class="math notranslate nohighlight">\(\tau_*\)</span> at which a sound wave must be emitted by a point on the FWH surface in order for it to reach an observer at time <span class="math notranslate nohighlight">\(t\)</span>, given the prescribed motions of both surface and observer.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Newton-Raphson solver which calculates retarded time in the FWH solver will struggle to converge as the closing speed between an FWH surface and an observer approaches or exceeds Mach 1.</p>
+</div>
 </section>
 <section id="using-the-zcfd-fwh-solver">
 <span id="fwhrunning"></span><h2>Using the zCFD FWH solver<a class="headerlink" href="#using-the-zcfd-fwh-solver" title="Link to this heading">¶</a></h2>
@@ -79,11 +83,11 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">surfaceCentreMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 <span class="n">surfaceMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">NonrotatingSurface</span><span class="p">(</span><span class="n">surfaceCentreMotion</span><span class="p">)</span>
-<span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
-<span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 
 <span class="n">mySurfaces</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;fwhSurf1&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -96,7 +100,7 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 
 <span class="n">pOut</span><span class="p">,</span><span class="n">tOut</span> <span class="o">=</span> <span class="n">fwh</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mySurfaces</span><span class="p">,</span><span class="n">myObservers</span><span class="p">,</span><span class="n">solverSettings</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs1&quot;</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs1&quot;</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Obs1&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs2&quot;</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs2&quot;</span><span class="p">],</span><span class="n">lable</span><span class="o">=</span><span class="s2">&quot;Obs2&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;t (s)&quot;</span><span class="p">)</span>
@@ -104,7 +108,6 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;./FWH_figure.pdf&quot;</span><span class="p">)</span>
 
 <span class="n">dataForJson</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">pOut</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">tOut</span><span class="p">}</span>
-
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./FWH_data.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dataForJson</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
@@ -114,7 +117,7 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <p>The zCFD FWH solver is capable of using multiple FWH surfaces in the same FWH calculation. The Surfaces dictionary therefore contains a key-value pair for each FWH surface to be used, where the key is the surface’s name (to be used in the FWH solver) and the value is an <a class="reference internal" href="#fwhindividualsurface"><span class="std std-ref">individual surface definition dictionary</span></a>.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">motion</span>
-<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">surfaceCentreMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 <span class="n">surfaceMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">NonrotatingSurface</span><span class="p">(</span><span class="n">surfaceCentreMotion</span><span class="p">)</span>
 
@@ -184,9 +187,9 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <p>The Observers dictionary defines a list of observer microphones at which farfield noise should be calculated. In the observers dictionary, keys are used to set the observer’s name in the FWH solver output, and the value sets the motion of the observer. Observer motions must be defined using the <a class="reference internal" href="#fwhobsmotions"><span class="std std-ref">point motion classes</span></a>.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">motion</span>
-<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
-<span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 
 <span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Obs1&quot;</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">&quot;Ob2&quot;</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
 </pre></div>
