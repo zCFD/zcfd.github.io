@@ -1,1 +1,0 @@
-source/reference_guide/linear_solver.rst:35: (booomeramg) ["boomerang", "boomerangs", "boomerang's", "boomeranged", "boomeranging", "boomeramg"]  and the associated settings can be supplied via the “linear solver options” dictionary. Using Hypre’s booomeramg package as a preconditioner has shown good performance with the incompressible solver:

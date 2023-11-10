@@ -32,7 +32,7 @@ Details of the available options for the Petsc KSP linear system solvers used by
 
 Settings are provided for the mean flow, turbulence and RBF linear systems. Most of the settings detailed in the `Petsc documentation <https://petsc.org>`_ can be passed through by adding them as key, value pairs to the appropriate dictionary. Where an option doesn't take a value an empty string needs to be provided.
 
-The `Hypre <https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods>`_ library of algebraic multigrid methods is available via `Petsc PCHYPRE <https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre>`_ and the associated settings can be supplied via the "linear solver options" dictionary. Using Hypre's booomeramg package as a preconditioner has shown good performance with the incompressible solver:
+The `Hypre <https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods>`_ library of algebraic multigrid methods is available via `Petsc PCHYPRE <https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre>`_ and the associated settings can be supplied via the "linear solver options" dictionary. Using Hypre's boomeramg package as a preconditioner has shown good performance with the incompressible solver:
 
 .. code-block:: python
                 
