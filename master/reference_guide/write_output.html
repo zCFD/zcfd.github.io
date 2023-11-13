@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Write Output &#8212; zCFD User Guide v2023.10.5890 documentation</title>
+    <title>Write Output &#8212; zCFD User Guide v2023.11.6280 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=1dbae055"></script>
+    <script src="../_static/documentation_options.js?v=0a9f2a5d"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -90,6 +90,16 @@
 <td></td>
 <td><p>List of surface file filenames</p></td>
 </tr>
+<tr class="row-odd"><td><p>‘fwh interpolate’</p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>List of .stl file filenames</p></td>
+</tr>
+<tr class="row-even"><td><p>‘fwh wall data’</p></td>
+<td><p>No</p></td>
+<td><p>False</p></td>
+<td><p>True | False</p></td>
+</tr>
 <tr class="row-odd"><td><p>‘compute average and rms’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
@@ -152,8 +162,19 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 </div>
 </section>
 <section id="volume-interpolate">
-<h3>volume interpolate<a class="headerlink" href="#volume-interpolate" title="Link to this heading">¶</a></h3>
+<span id="id3"></span><h3>volume interpolate<a class="headerlink" href="#volume-interpolate" title="Link to this heading">¶</a></h3>
 <p>zCFD can interpolate volume data to a supplied surface. This parameter lets you list the filenames of surfaces to interpolate to. The supported file formats are VTK (vtu or vtp files) and STL.</p>
+</section>
+<section id="fwh-interpolate">
+<h3>fwh interpolate<a class="headerlink" href="#fwh-interpolate" title="Link to this heading">¶</a></h3>
+<p>In addition to the ‘volume interpolate’ option (which outputs VTK files), zCFD is capable of writing volume interpolated data to HDF5 files for use in the <a class="reference internal" href="../fwh.html#fwh"><span class="std std-ref">zCFD Ffowcs-Williams Hawkings (FWH) solver</span></a>.
+This parameters lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
+The data is outputted to the <em>ACOUSTIC_DATA</em> sub-directory within the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory.</p>
+</section>
+<section id="fwh-wall-data">
+<h3>fwh wall data<a class="headerlink" href="#fwh-wall-data" title="Link to this heading">¶</a></h3>
+<p>This parameter controls whether wall data is outputted to a HDF5 file for use in the <a class="reference internal" href="../fwh.html#fwh"><span class="std std-ref">zCFD FWH solver</span></a>. The outputted file contains pressure data only, and is suitable for use as an impermeable surface in the zCFD FWH solver.
+The data is outputted to the <em>ACOUSTIC_DATA</em> sub-directory within the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory.</p>
 </section>
 <section id="compute-average-and-rms">
 <h3>compute average and rms<a class="headerlink" href="#compute-average-and-rms" title="Link to this heading">¶</a></h3>
@@ -193,7 +214,17 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-even"><td><p>‘volume_interpolate’</p></td>
+<tr class="row-even"><td><p>‘volume interpolate’</p></td>
+<td><p>Yes</p></td>
+<td><p>1.00E+08</p></td>
+<td><p>Positive integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘fwh interpolate’</p></td>
+<td><p>Yes</p></td>
+<td><p>1.00E+08</p></td>
+<td><p>Positive integer</p></td>
+</tr>
+<tr class="row-even"><td><p>‘fwh wall data’</p></td>
 <td><p>Yes</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
@@ -218,6 +249,16 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
+<tr class="row-odd"><td><p>‘fwh interpolate start’</p></td>
+<td><p>Yes</p></td>
+<td><p>1</p></td>
+<td><p>Positive integer</p></td>
+</tr>
+<tr class="row-even"><td><p>‘fwh wall data start’</p></td>
+<td><p>Yes</p></td>
+<td><p>1</p></td>
+<td><p>Positive integer</p></td>
+</tr>
 <tr class="row-odd"><td><p>‘checkpoint start’</p></td>
 <td><p>Yes</p></td>
 <td><p>1</p></td>
@@ -225,8 +266,8 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 </tr>
 </tbody>
 </table>
-<p><strong>volume data</strong>, <strong>surface data</strong>, <strong>volume_interpolate</strong> and <strong>checkpoint</strong> control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The <strong>checkpoint</strong> option writes a <a class="reference internal" href="reference.html#restart"><span class="std std-ref">restartable</span></a> checkpoint of the flow solution at that point.</p>
-<p><strong>volume data start</strong>, <strong>surface data start</strong>, <strong>volume interpolate start</strong> and <strong>checkpoint start</strong> specifies the first cycle that the solver should start writing that particular output.</p>
+<p><strong>volume data</strong>, <strong>surface data</strong>, <strong>volume interpolate</strong>, <strong>fwh interpolate</strong>, <strong>fwh wall data</strong> and <strong>checkpoint</strong> control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The <strong>checkpoint</strong> option writes a <a class="reference internal" href="reference.html#restart"><span class="std std-ref">restartable</span></a> checkpoint of the flow solution at that point.</p>
+<p><strong>volume data start</strong>, <strong>surface data start</strong>, <strong>volume interpolate start</strong>, <strong>fwh interpolate start</strong>, <strong>fwh wall data start</strong> and <strong>checkpoint start</strong> specifies the first cycle that the solver should start writing that particular output.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>On systems with slower file I/O the overhead of writing data can slow the overall solve time, reducing the output frequency lets you address this.</p>
@@ -277,6 +318,7 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 <li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time.html">Time Marching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_solver.html">Linear Solver Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="equations.html">Equations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="caa.html">Aero-Acoustics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-structure interaction</a></li>
@@ -293,6 +335,7 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>

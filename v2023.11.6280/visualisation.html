@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Visualisation &#8212; zCFD User Guide v2023.11.6280 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
+    <script src="_static/documentation_options.js?v=0a9f2a5d"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Utilities" href="utilities.html" />
+    <link rel="prev" title="zM3" href="zm3.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="visualisation">
+<h1>Visualisation<a class="headerlink" href="#visualisation" title="Link to this heading">¶</a></h1>
+<p>zCFD by default will output data in <a class="reference external" href="http://www.vtk.org/" target="_blank">VTK</a> format.  This format can be read directly by many post-processing tools including <a class="reference external" href="http://www.paraview.org/" target="_blank">ParaView</a> by Kitware.</p>
+<p>Output in other formats is also possible, including <a class="reference external" href="http://www.tecplot.com/" target="_blank">TECPLOT</a> and <a class="reference external" href="https://www.ansys.com/en-gb/products/fluids/ansys-ensight" target="_blank">EnSight</a> as follows:</p>
+<section id="vtk-output">
+<h2>VTK Output<a class="headerlink" href="#vtk-output" title="Link to this heading">¶</a></h2>
+<p>By default, zCFD will output data in VTK format. To explicitly force VTK output, use the following option in the <em>‘write output’</em> part of the control dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># Output format</span>
+                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;vtk&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+</section>
+<section id="ensight-output">
+<h2>EnSight Output<a class="headerlink" href="#ensight-output" title="Link to this heading">¶</a></h2>
+<p>To output in EnSight format, use the following option in the <em>‘write output’</em> part of the control dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># Output format</span>
+                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;ensight&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+</section>
+<section id="native-hdf5-output">
+<h2>Native HDF5 Output<a class="headerlink" href="#native-hdf5-output" title="Link to this heading">¶</a></h2>
+<p>To output in HDF5 format (the native format for zCFD), use the following option in the <em>‘write output’</em> part of the control dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># Output format</span>
+                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;native&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+</section>
+<section id="paraview-catalyst-scripts">
+<h2>ParaView Catalyst Scripts<a class="headerlink" href="#paraview-catalyst-scripts" title="Link to this heading">¶</a></h2>
+<p>ParaView provides a powerful yet lightweight interface that allows parallel processing of simulation data during programme execution called <a class="reference external" href="http://www.paraview.org/in-situ/" target="_blank">ParaView Catalyst</a>. This is driven by scripts (Python files) that can be called when data is output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># Output format MUST be VTK</span>
+                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;vtk&#39;</span><span class="p">,</span>
+                    <span class="c1"># The scripts should be in the same directory as the input files</span>
+                    <span class="s1">&#39;scripts&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;paraview_catalyst1.py&#39;</span><span class="p">,</span><span class="s1">&#39;paraview_catalyst2.py&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="paraview-client">
+<h2>ParaView Client<a class="headerlink" href="#paraview-client" title="Link to this heading">¶</a></h2>
+<p>To download the free ParaView software for visualising VTK format data on the local device, just visit the <a class="reference external" href="http://paraview.org/" target="_blank">Paraview website</a>.</p>
+</section>
+<section id="paraview-client-server">
+<h2>ParaView Client-Server<a class="headerlink" href="#paraview-client-server" title="Link to this heading">¶</a></h2>
+<p>In addition to running entirely locally on a device, ParaView can interface to a remote server.  This allows users to run ParaView to access data that is held (and processed) on a different computer, potentially running larger simulation tasks that would be possible on the local machine.  This also means that there is no need to transfer the large output files back to a local machine for post-processing.  The remote machine can easily be set up to run a ParaView Server in parallel - meaning that very large post-processing jobs can be run quickly.</p>
+<section id="paraview-server">
+<h3>ParaView Server<a class="headerlink" href="#paraview-server" title="Link to this heading">¶</a></h3>
+<p>To download and install ParaView Server, you can either use the version on the main ParaView website and follow the instructions <a class="reference external" href="http://www.paraview.org/Wiki/Setting_up_a_ParaView_Server" target="_blank">here</a>.</p>
+<p>Alternatively or else use the version bundled with zCFD. The ‘pvserver’ included in the zCFD distribution includes plugins for reading the zCFD HDF5 mesh format directly.</p>
+<p>To start a ParaView Server on your computer within the zCFD environment run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span>pvserver
+</pre></div>
+</div>
+</section>
+<section id="paraviewconnect">
+<h3>ParaViewConnect<a class="headerlink" href="#paraviewconnect" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://github.com/zenotech/ParaViewConnect" target="_blank">ParaviewConnect</a> is a helper utility for connecting to remove ParaView servers. It reduces the complexity of setting up the required ssh connections and works well with zCFD. More information and installation instructions can be found on the <a class="reference external" href="https://github.com/zenotech/ParaViewConnect" target="_blank">Github page</a>.</p>
+</section>
+</section>
+<section id="jupyter-notebooks">
+<h2>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Link to this heading">¶</a></h2>
+<p>We also recommend the use of  <a class="reference external" href="https://jupyter.org/" target="_blank">Jupyter Lab</a> for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser.
+Jupyter is included in the zCFD distribution and notebooks for visualising the residual data will automatically be created when you run a zCFD case. In addition there are several example notebooks available in the <a class="reference external" href="https://github.com/zenotech/zPost" target="_blank">zPost</a>.</p>
+<p>To automatically start up notebook server on your computer within the zCFD environment run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span>start_lab
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zm3.html">zM3</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Visualisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vtk-output">VTK Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ensight-output">EnSight Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#native-hdf5-output">Native HDF5 Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paraview-catalyst-scripts">ParaView Catalyst Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paraview-client">ParaView Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paraview-client-server">ParaView Client-Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jupyter-notebooks">Jupyter Notebooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="_sources/visualisation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

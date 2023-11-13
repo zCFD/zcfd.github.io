@@ -1,0 +1,259 @@
+.. _write_output:
+
+Write Output
+------------
+
+write output
+============
+
+Controls the frequency and contents of the files output into the the **output** directory and the **VISUALISATION** subdirectory.
+
+.. _output_dir:
+
+The **output** directory will be created in the working directory from which the solver is run and is named using the following format:
+
+.. code-block:: python
+    
+    <case_name>_P<number of mpi ranks>_OUTPUT
+
+
+.. list-table:: 
+   :widths: 20 10 10 20 
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'frequency'
+     - Yes
+     - Positive integer or :ref:`{} <output_frequency>` 
+     - See :ref:`"frequency" <output_frequency>` 
+   * - 'format'
+     - Yes
+     - 'vtk'
+     - 'none' | 'vtk' 
+   * - 'scripts'
+     - No
+     - []
+     - List of catalyst script filenames
+   * - 'variable_name_alias'
+     - No
+     - {}
+     - Dict
+   * - 'surface variables'
+     - Yes
+     - ["p", "T", "rho"]
+     - List of :ref:`"variable" <output_variables>` names
+   * - 'volume variables'
+     - Yes
+     - [...]
+     - List of :ref:`"variable" <output_variables>` names
+   * - 'volume interpolate'
+     - No
+     - 
+     - List of surface file filenames
+   * - 'fwh interpolate'
+     - No
+     - 
+     - List of .stl file filenames
+   * - 'fwh wall data'
+     - No
+     - False
+     - True | False
+   * - 'compute average and rms'
+     - No
+     - False
+     - True | False
+   * - 'average start time cycle'
+     - No
+     - 
+     - Positive integer
+
+
+Example usage:
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    'write output' : {
+                  'format' : 'vtk',
+                  'surface variables': ['V','p'],
+                  'volume variables' : ['V','p'],
+                  'volume interpolate' : ['mesh.stl'],
+                  'scripts' : ['paraview_catalyst1.py'],
+                  'variable_name_alias' : { "V" : "VELOCITY", },
+                  "frequency": 500,
+                  'calculate averge and rms': True,
+                  'average start time cycle': 1000
+                },
+    ..
+    }
+
+format
+^^^^^^
+Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in legacy vtk format for reading into `ParaView <https://www.paraview.org>`_. 
+
+.. 'ensight' is EnSight Gold format. (removed ensight for now, is it tested?)
+
+scripts
+^^^^^^^
+zCFD is capable of calling ParaView catalyst scripts while running, this allows you to generate "in situ" visualisation output while the solver is running.
+
+This allows you to extract data as your simulation progresses without needing to store the full solution at every timestep. For instance a video of a slice through the dataset could be generated for an unsteady solution.
+
+For more information about Catalyst see: https://www.paraview.org/hpc-insitu/
+
+
+variable_name_alias
+^^^^^^^^^^^^^^^^^^^
+Maps the zCFD variable names to a different variable name in the output file. 
+If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied.
+
+surface variables
+^^^^^^^^^^^^^^^^^
+A list of :ref:`variables <output_variables>` to output on the boundaries of the mesh. This is useful for visualisation of the flow variables on the wall of the mesh for post processing.
+For the 'vtk' format the surface data is written to the :ref:`output <output_dir>` directory with the file name:
+
+.. code-block:: python
+    
+    <case_name>_<boundary>.pvd
+
+volume variables
+^^^^^^^^^^^^^^^^^
+A list of :ref:`variables <output_variables>` to output in a volumetric format.
+
+For the 'vtk' format the volume  data is written to the :ref:`output <output_dir>` directory with the file name:
+
+.. code-block:: python
+    
+    <case_name>.pvd
+
+.. _volume_interpolate:
+volume interpolate
+^^^^^^^^^^^^^^^^^^
+zCFD can interpolate volume data to a supplied surface. This parameter lets you list the filenames of surfaces to interpolate to. The supported file formats are VTK (vtu or vtp files) and STL. 
+
+fwh interpolate
+^^^^^^^^^^^^^^^^^^
+In addition to the 'volume interpolate' option (which outputs VTK files), zCFD is capable of writing volume interpolated data to HDF5 files for use in the :ref:`zCFD Ffowcs-Williams Hawkings (FWH) solver <fwh>`.
+This parameters lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
+The data is outputted to the *ACOUSTIC_DATA* sub-directory within the :ref:`output <output_dir>` directory.
+
+
+fwh wall data
+^^^^^^^^^^^^^
+This parameter controls whether wall data is outputted to a HDF5 file for use in the :ref:`zCFD FWH solver <fwh>`. The outputted file contains pressure data only, and is suitable for use as an impermeable surface in the zCFD FWH solver.
+The data is outputted to the *ACOUSTIC_DATA* sub-directory within the :ref:`output <output_dir>` directory.
+
+compute average and rms
+^^^^^^^^^^^^^^^^^^^^^^^
+Enables computation of time averaged and RMS values for pressure, temperature and velocity. Enabling this adds these variables to the list of variables to be output automatically.
+
+This options only applies to :ref:`unsteady <unsteady>` cases.
+
+average start time cycle
+^^^^^^^^^^^^^^^^^^^^^^^^
+If **compute average and rms** is True, this controls first real time cycle to start calculating the running average. This allows you to run the solver for a number of time cycles before you start calculating the average and RMS values.
+
+
+
+.. _output_frequency:
+
+Frequency
+=========
+
+Sets how frequently the solver should output the flow solution. A single integer value will control output of both the volume and surface data output. A dictionary value here allows for fine grained control over the frequency with which each individual output is done. If the solver is running an unsteady simulation then this is the frequency of the real time step otherwise the pseudo cycle.
+
+.. list-table:: 
+   :widths: 20 10 10 20 
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'volume data'
+     - Yes
+     - 1.00E+08
+     - Positive integer
+   * - 'surface data'
+     - Yes
+     - 1.00E+08
+     - Positive integer
+   * - 'volume interpolate'
+     - Yes
+     - 1.00E+08
+     - Positive integer  
+   * - 'fwh interpolate'
+     - Yes
+     - 1.00E+08
+     - Positive integer  
+   * - 'fwh wall data'
+     - Yes
+     - 1.00E+08
+     - Positive integer  
+   * - 'checkpoint'
+     - Yes
+     - 1.00E+08
+     - Positive integer  
+   * - 'volume data start'
+     - Yes
+     - 1
+     - Positive integer 
+   * - 'surface data start'
+     - Yes
+     - 1
+     - Positive integer 
+   * - 'volume interpolate start'
+     - Yes
+     - 1
+     - Positive integer 
+   * - 'fwh interpolate start'
+     - Yes
+     - 1
+     - Positive integer 
+   * - 'fwh wall data start'
+     - Yes
+     - 1
+     - Positive integer 
+   * - 'checkpoint start'
+     - Yes
+     - 1
+     - Positive integer 
+
+
+**volume data**, **surface data**, **volume interpolate**, **fwh interpolate**, **fwh wall data** and **checkpoint** control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The **checkpoint** option writes a :ref:`restartable <restart>` checkpoint of the flow solution at that point.  
+
+**volume data start**, **surface data start**, **volume interpolate start**, **fwh interpolate start**, **fwh wall data start** and **checkpoint start** specifies the first cycle that the solver should start writing that particular output.
+
+.. note::
+    On systems with slower file I/O the overhead of writing data can slow the overall solve time, reducing the output frequency lets you address this.
+
+
+Example usage:
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    'write output' : {
+                  'format' : 'vtk',
+                  'surface variables': ['V','p'],
+                  'volume variables' : ['V','p'],
+                  "frequency": {
+                      # Output visualisation files every 3 cycles
+                      "volume data": 3,
+                      "surface data": 3,
+                      "volume interpolate": 3,
+                      "checkpoint": 3,
+                      # Start output every 3 cycles after 1 cycle (default = 1)
+                      "volume data start": 1
+                      "surface data start": 1,
+                      "volume interpolate start": 1,
+                      "checkpoint start": 1,
+                  },
+                },
+    ..
+    }

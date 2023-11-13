@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutorial 2: Steady State RANS &#8212; zCFD User Guide v2023.11.6280 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=0a9f2a5d"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 3: Time accurate solution" href="quick_start_3.html" />
+    <link rel="prev" title="Tutorial 1: Simple Aerofoil" href="quick_start_1.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="tutorial-2-steady-state-rans">
+<span id="tutorial-2"></span><h1>Tutorial 2: Steady State RANS<a class="headerlink" href="#tutorial-2-steady-state-rans" title="Link to this heading">¶</a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#control-dictionary-breakdown" id="id1">Control Dictionary Breakdown</a></p></li>
+<li><p><a class="reference internal" href="#running-the-case" id="id2">Running the case</a></p></li>
+<li><p><a class="reference internal" href="#monitoring-convergence" id="id3">Monitoring convergence</a></p></li>
+<li><p><a class="reference internal" href="#plotting-force-convergence" id="id4">Plotting force convergence</a></p></li>
+<li><p><a class="reference internal" href="#paraview" id="id5">Paraview</a></p></li>
+<li><p><a class="reference internal" href="#citations" id="id6">Citations</a></p></li>
+</ul>
+</nav>
+<p>In Tutorial 1, we learnt how to run a case in zCFD and visualise the results. We will now use a more complex test case to showcase some of the features of the solver. The case we will look at is the 30P30N aerofoil, which is a 2D multi element aerofoil, developed as an acoustic benchmark case [<a class="reference internal" href="#tutorial-2-citations"><span class="std std-ref">1</span></a>]. The geometry of this case can be seen below:</p>
+<a class="reference internal image-reference" href="../_images/30p30n.png"><img alt="30P 30N" src="../_images/30p30n.png" style="width: 600px;" /></a>
+<p>Initially we will begin by obtaining a steady state RANS solution.</p>
+<p>The required meshes and control dictionary can be found <a class="reference external" href="https://zcfd.zenotech.com/tutorials/2/30p30n_tutorial_2.zip" target="_blank">here</a>. The case has 64,000 cells, and will run in less than 10 minutes on an NVIDIA RTX 3060 GPU.</p>
+<p>This case is run as a steady state simulation, using an implicit time marching scheme. The Reynolds Averaged Navier-Stokes equations are solved using Menter’s SST turbulence model with wall functions.</p>
+<section id="control-dictionary-breakdown">
+<h2>Control Dictionary Breakdown<a class="headerlink" href="#control-dictionary-breakdown" title="Link to this heading">¶</a></h2>
+<p>The setup for this case is very similar to the previous NACA0012 cases, but the control dictionary does feature some extra terms which can be useful for a more streamlined workflow.</p>
+<section id="reference-variables">
+<h3>Reference variables<a class="headerlink" href="#reference-variables" title="Link to this heading">¶</a></h3>
+<p>At the top of the control file, the key variables for the case- Reynolds number, Mach number, temperature etc… are all hard coded, and then referred to later in the script. In cases where you might want to run many simulations with slightly different values to change, this can be an effective way to ensure consistency with variables. Additionally this allows implicit values such as the reference velocity, and freestream Mach to be calculated automatically in the script.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create variables to assign main experimental parameters</span>
+<span class="n">reynolds</span> <span class="o">=</span> <span class="mf">1.71e6</span>
+<span class="n">mach</span> <span class="o">=</span> <span class="mf">0.17</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mf">295.56</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">101325</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">287.6</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.4</span>
+<span class="n">reference_length</span> <span class="o">=</span> <span class="mf">0.457</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">5.5</span>
+
+<span class="c1"># calculate implicit values</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="n">mach</span>
+
+<span class="c1"># assign each mesh zone to a boundary</span>
+<span class="n">wall</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">symmetry</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">farfield</span> <span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="scale">
+<h3>Scale<a class="headerlink" href="#scale" title="Link to this heading">¶</a></h3>
+<p>In this case a scaling is applied to convert the size of the mesh. The .h5 mesh file was generated with units of inches, whereas the flow conditions are specified in SI units, therefore a scaling of 0.0254 is applied to convert the mesh into metres. The z (spanwise) direction has been scaled to be 1 metre wide. The mesh has only a single cell in the z direction so no spanwise flow is expected - making the z extent of the mesh 1 metre simply means that the forces and moments reported by zCFD will already be per unit span.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># scale the mesh to match the experimental data</span>
+<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="o">/</span><span class="mf">0.127</span><span class="p">],</span>
+</pre></div>
+</div>
+</section>
+<section id="inflow-vector">
+<h3>Inflow vector<a class="headerlink" href="#inflow-vector" title="Link to this heading">¶</a></h3>
+<p>In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The <code class="code docutils literal notranslate"><span class="pre">zutil</span></code> function <code class="code docutils literal notranslate"><span class="pre">vector_from_angle()</span></code> calculates the inflow vector given an x-z angle of attack, x-y angle of attack and flow speed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+    <span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
+    <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># calculate the inflow vector based on the angle of attack</span>
+        <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">U</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Reynolds No&#39;</span> <span class="p">:</span> <span class="n">reynolds</span><span class="p">,</span>
+    <span class="s1">&#39;Reference Length&#39;</span> <span class="p">:</span> <span class="n">reference_length</span><span class="p">,</span>
+    <span class="s1">&#39;turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s1">&#39;eddy viscosity ratio&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s1">&#39;ambient turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s1">&#39;ambient eddy viscosity ratio&#39;</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</section>
+<section id="transform">
+<h3>Transform<a class="headerlink" href="#transform" title="Link to this heading">¶</a></h3>
+<p>The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case, where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as <a href="#id7"><span class="problematic" id="id8">Ft_</span></a> terms in the report file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define a function to rotate the output forces by the angle of attack</span>
+<span class="k">def</span> <span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">]</span>
+    <span class="n">v</span> <span class="o">=</span>  <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;v1&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;v2&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;v3&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="running-the-case">
+<h2>Running the case<a class="headerlink" href="#running-the-case" title="Link to this heading">¶</a></h2>
+<p>You can run the case as you did for Tutorial 1, but with the following <strong>run_zcfd</strong> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-m<span class="w"> </span>30p30n_coarse.h5<span class="w"> </span>-c<span class="w"> </span>30p30n_steady.py
+</pre></div>
+</div>
+</section>
+<section id="monitoring-convergence">
+<h2>Monitoring convergence<a class="headerlink" href="#monitoring-convergence" title="Link to this heading">¶</a></h2>
+<p>Start by launching a Jupyter server to examine the residuals in the 30p30n_steady_report.csv file. Running the first cell from the 30p30n_steady_report.ipynb notebook will plot the residuals for the continuity, momentum, and energy equations, as well as the residuals from the turbulence model.</p>
+<p>If the case is still running you can update the plot by rerunning the cell, this provides a way to monitor the progress of a running simulation.</p>
+<a class="reference internal image-reference" href="../_images/Figure_18.png"><img alt="Convergence" src="../_images/Figure_18.png" style="width: 600px;" /></a>
+<p>You will notice that case is set to run for 1000 cycles but looking at the plots, it looks like the residuals are still converging. So we will now restart the solver from where we finished and run on for another 1000 cycles.</p>
+<section id="performing-a-restart">
+<h3>Performing a restart<a class="headerlink" href="#performing-a-restart" title="Link to this heading">¶</a></h3>
+<p>To restart the solver we need to update the <em>‘restart’</em> parameter in the control dictionary. If this is set to <em>False</em> the solver will always perform a fresh start, if it is <em>True</em> then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit <em>30p30n_steady.py</em> and change restart to <em>True</em>. You will also need to update <em>‘cycles’</em> to 2000.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;restart&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+
+<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;cycles&#39;</span> <span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>By default zCFD will look for a results file with the same name as the current case file, appended with ‘_results.h5’. So in our case it will look for “30p30n_steady_results.h5”. When you have edited the control dictionary go ahead and restart the simulation again using the same <strong>run_zcfd</strong> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-m<span class="w"> </span>30p30n_coarse.h5<span class="w"> </span>-c<span class="w"> </span>30p30n_steady.py
+</pre></div>
+</div>
+<p>Once the solver has finished rerun the cell in the notebook to examine the residuals again. The residuals now look like they have converged:</p>
+<a class="reference internal image-reference" href="../_images/Figure_1a.png"><img alt="Convergence" src="../_images/Figure_1a.png" style="width: 600px;" /></a>
+</section>
+</section>
+<section id="plotting-force-convergence">
+<h2>Plotting force convergence<a class="headerlink" href="#plotting-force-convergence" title="Link to this heading">¶</a></h2>
+<p>Examining the force convergence history next, we are interested in the x and y forces, but transformed by the inflow vector, therefore the wall_Ftx and wall_Fty plots are of interest.</p>
+<a class="reference internal image-reference" href="../_images/Figure_21.png"><img alt="Forces Ftx" src="../_images/Figure_21.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Figure_31.png"><img alt="Forces Fty" src="../_images/Figure_31.png" style="width: 600px;" /></a>
+<p>Which show reasonable agreement with experimental results, and additionally that the forces are at least nearing convergence. The grid for this case is still extremely coarse, accounting for the differences in lift and drag coefficients.</p>
+</section>
+<section id="paraview">
+<h2>Paraview<a class="headerlink" href="#paraview" title="Link to this heading">¶</a></h2>
+<p>Opening Paraview, and loading in the <cite>30p30n_steady_wall.pvd</cite> results will allow you to view the aerofoil surface results:</p>
+<a class="reference internal image-reference" href="../_images/Figure_41.png"><img alt="30p30n C_p shaded" src="../_images/Figure_41.png" style="width: 600px;" /></a>
+<p>To get a continuous plot of cp against x/c you need to use a plot over sorted lines filter. To do this:</p>
+<ol class="arabic simple">
+<li><p>On the surface data apply a <em>‘cell data to point data’</em> filter.</p></li>
+<li><p>On the <em>cell data to point data</em> apply a <em>‘slice’</em> filter, ensuring the slice uses a z normal, and is centred through the middle of the aerofoil</p></li>
+<li><p>On the <em>slice</em> data apply a <em>‘plot on sorted lines’</em> filter and click apply. This will then bring up a new <em>‘line graph’</em> view.</p></li>
+<li><p>Make sure to select all 3 segments in the composite data set dialogue box, then ensure only the cp variables are selected in the series parameters. Finally for the X Array name, select <em>‘Points_X’</em></p></li>
+<li><p>Modify the style and markers until you are happy with the result.</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/Figure_51.png"><img alt="cp against x/c" src="../_images/Figure_51.png" style="width: 600px;" /></a>
+</section>
+<section id="citations">
+<span id="tutorial-2-citations"></span><h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Zhang, Yufei &amp; Chen, Haixin &amp; Wang, Kan &amp; Wang, Meng. (2017). Aeroacoustic Prediction of a Multi-Element Airfoil Using Wall-Modeled Large-Eddy Simulation. AIAA Journal. 55. 1-15. 10.2514/1.J055853.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quick_start_1.html">Tutorial 1: Simple Aerofoil</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 2: Steady State RANS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_3.html">Tutorial 3: Time accurate solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 3a: FWH Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_4.html">Tutorial 4: Aero-acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epic_tutorial.html">Running zCFD using EPIC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/getting_started/quick_start_2.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

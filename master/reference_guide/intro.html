@@ -5,16 +5,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Guide &#8212; zCFD User Guide v2023.10.5890 documentation</title>
+    <title>Reference Guide &#8212; zCFD User Guide v2023.11.6280 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=1dbae055"></script>
+    <script src="../_static/documentation_options.js?v=0a9f2a5d"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Reference Settings" href="reference.html" />
-    <link rel="prev" title="Tutorial 2: Steady State RANS" href="../getting_started/quick_start_2.html" />
+    <link rel="prev" title="Running zCFD using EPIC" href="../getting_started/epic_tutorial.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -32,7 +32,7 @@
           <div class="body" role="main">
             
   <section id="reference-guide">
-<h1>Reference Guide<a class="headerlink" href="#reference-guide" title="Link to this heading">¶</a></h1>
+<span id="id1"></span><h1>Reference Guide<a class="headerlink" href="#reference-guide" title="Link to this heading">¶</a></h1>
 <p>The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.</p>
 <p>A python dictionary called ‘parameters’ provides the main interface to controlling zCFD</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="o">....</span><span class="p">}</span>
@@ -42,13 +42,14 @@
 <p>This reference guide documents the parameters available in a zCFD control dictionary and the valid values for those keywords.</p>
 <pre class="literal-block">parameters = {
     'reference': <a class="reference internal" href="reference.html#reference-state"><span class="std std-ref">IC_1</span></a>,
-    'initial': { <a class="reference internal" href="reference.html#initial-state"><span class="std std-ref">Initial State</span></a> },
+    'initial': {<a class="reference internal" href="reference.html#initial-state"><span class="std std-ref">Initial State</span></a>},
     'restart': <a class="reference internal" href="reference.html#restart"><span class="std std-ref">False</span></a>,
     'partitioner': 'metis',
     'scale': <a class="reference internal" href="reference.html#scale-mesh"><span class="std std-ref">[1,1,1]</span></a>,
-    'time marching': { <a class="reference internal" href="time.html#time"><span class="std std-ref">Time Marching</span></a> },
-    'equations': { <a class="reference internal" href="equations.html#equations"><span class="std std-ref">Equations</span></a> },
-    'material': { <a class="reference internal" href="materials.html#materials"><span class="std std-ref">Material Specification</span></a> },
+    'time marching': {<a class="reference internal" href="time.html#time"><span class="std std-ref">Time Marching</span></a>},
+    'linear solver settings': {<a class="reference internal" href="linear_solver.html#linear-solver"><span class="std std-ref">Linear Solver Settings</span></a>},
+    'equations': {<a class="reference internal" href="equations.html#equations"><span class="std std-ref">Equations</span></a>},
+    'material': {<a class="reference internal" href="materials.html#materials"><span class="std std-ref">Material Specification</span></a>},
     'IC_1': {<a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Conditions</span></a>}
     'BC_1': {<a class="reference internal" href="boundary.html#boundary-conditions"><span class="std std-ref">Boundary Conditions</span></a>}
     'TR_1': {<a class="reference internal" href="transforms.html#mesh-transform"><span class="std std-ref">Mesh Transformation</span></a>}
@@ -79,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time.html">Time Marching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_solver.html">Linear Solver Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="equations.html">Equations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="caa.html">Aero-Acoustics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-structure interaction</a></li>
@@ -95,6 +97,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>

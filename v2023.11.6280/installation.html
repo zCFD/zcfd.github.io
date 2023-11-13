@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation &#8212; zCFD User Guide v2023.11.6280 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
+    <script src="_static/documentation_options.js?v=0a9f2a5d"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running zCFD" href="execution.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="installation">
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<section id="system-requirements">
+<span id="id2"></span><h2>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>zCFD is supported on the following Linux distributions:</dt><dd><ul class="simple">
+<li><p>RHEL 7+</p></li>
+<li><p>CentOS 7+</p></li>
+<li><p>Ubuntu 20.04+</p></li>
+<li><p>Windows 10/11 via <a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">WSL2</a></p></li>
+</ul>
+</dd>
+</dl>
+<p>By default zCFD is compiled for x86_64 but is available for ARM and IBM Power on request.</p>
+<section id="gpu-support">
+<h3>GPU support<a class="headerlink" href="#gpu-support" title="Link to this heading">¶</a></h3>
+<p>zCFD supports running on NVidia GPUs with a compute capability of 6.1 and above (See <a class="reference external" href="https://developer.nvidia.com/cuda-gpus" target="_blank">Compute Capability</a> ).</p>
+<p>An AMD GPU (HIP) based version is available on request.</p>
+</section>
+</section>
+<section id="linux-unix">
+<h2>Linux / Unix<a class="headerlink" href="#linux-unix" title="Link to this heading">¶</a></h2>
+<p>If you are running Linux/Unix zCFD is provided as a stand-alone installer containing all the packages required to get started. The installer is available for download from the <a class="reference external" href="https://zcfd.zenotech.com" target="_blank">zCFD website</a>.
+Once the zCFD installer has been downloaded run the install script and follow the prompts.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>zCFD-icx-sse-impi-&lt;INSTALL_VERSION&gt;-Linux-64bit.sh
+</pre></div>
+</div>
+<p>Then copy the license file provided over email into the lic folder in the install directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cp<span class="w"> </span>zcfd.lic<span class="w"> </span>/&lt;path<span class="w"> </span>to<span class="w"> </span>zCFD<span class="w"> </span>install&gt;/lic/
+</pre></div>
+</div>
+<p>Once zCFD has been installed the zCFD environment can be activated from a bash shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/&lt;path<span class="w"> </span>to<span class="w"> </span>zCFD<span class="w"> </span>install&gt;/bin/activate
+<span class="o">(</span>zCFD<span class="o">)</span>$
+</pre></div>
+</div>
+</section>
+<section id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h2>
+<p>zCFD can be run locally on windows machines if Windows Subsystem for Linux 2 (WSL2) is installed. To install WSL2 simply follow the Microsoft instructions which can be found <a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">here</a>.</p>
+<p>The chosen Linux distribution shouldn’t have an effect on how the code runs, but the Linux distributions listed above are supported.</p>
+<p>In order to access your Linux filesystem on Windows it can be useful to add a quick access link in file explorer. To do this, in the address in file explorer enter</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>\\wsl$\
+</pre></div>
+</div>
+<p>This will show you show you the root folders for your installed Linux distributions.</p>
+<p>The installer is available for download from the <a class="reference external" href="https://zcfd.zenotech.com" target="_blank">zCFD website</a>. For WSL, download the standard Linux distribution. Once the zCFD installer has been downloaded run the install script from within the WSL2 environment and follow the prompts.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>zCFD-icc-sse-impi-&lt;INSTALL_VERSION&gt;-Linux-64bit.sh
+</pre></div>
+</div>
+<p>Then copy the license file provided over email into the lic folder in the install directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cp<span class="w"> </span>zcfd.lic<span class="w"> </span>/&lt;path<span class="w"> </span>to<span class="w"> </span>zCFD<span class="w"> </span>install&gt;/lic/
+</pre></div>
+</div>
+<p>Once zCFD has been installed the zCFD environment can be activated:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/&lt;path<span class="w"> </span>to<span class="w"> </span>zCFD<span class="w"> </span>install&gt;/bin/activate
+<span class="o">(</span>zCFD<span class="o">)</span>$
+</pre></div>
+</div>
+</section>
+<section id="licence">
+<span id="id4"></span><h2>Licence<a class="headerlink" href="#licence" title="Link to this heading">¶</a></h2>
+<p>zCFD requires a license.  If you do not already have a license, please contact <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com" target="_blank">zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a> to obtain one.  When zCFD starts it will look in the following locations for a licence file:</p>
+<ol class="arabic simple">
+<li><p>‘zcfd.lic’ in the directory alongside the input files</p></li>
+<li><p>‘zcfd.lic’ in the lic directory of the zCFD installation. i.e. /&lt;path to zCFD install&gt;/lic/</p></li>
+<li><p>RLM_LICENSE environment variable</p></li>
+</ol>
+<p>The RLM_LICENSE environment variable can be defined as below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">RLM_LICENSE</span><span class="o">=</span>/path/to/license/file
+</pre></div>
+</div>
+<p>or, where port is the port number in the license file, and host is the hostname in the license file</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">RLM_LICENSE</span><span class="o">=</span>port@server
+</pre></div>
+</div>
+<p>In the case that the system running the simulation cannot access the internet a local license server will be required. See <a class="reference external" href="http://www.reprisesoftware.com/admin/software-licensing.php" target="_blank">http://www.reprisesoftware.com/admin/software-licensing.php</a> for details.</p>
+<section id="licence-error-codes">
+<h3>Licence Error codes<a class="headerlink" href="#licence-error-codes" title="Link to this heading">¶</a></h3>
+<p>Below is a list of some of the error codes that you may encounter due to licensing errors.
+If the error code you receive is not listed, please contact us.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 18.2%" />
+<col style="width: 36.4%" />
+<col style="width: 45.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Error Code</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Possible Remedy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>-3</p></td>
+<td><p>License has expired</p></td>
+<td><p>Contact us to renew your license</p></td>
+</tr>
+<tr class="row-odd"><td><p>-6</p></td>
+<td><p>Requested version is not supported</p></td>
+<td><p>Your license is for an older product version; contact us to upgrade</p></td>
+</tr>
+<tr class="row-even"><td><p>-8</p></td>
+<td><p>checkout request for too many licenses</p></td>
+<td><p>Reduce the number of ranks that you are running the solver on or stop any existing running processes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>-21</p></td>
+<td><p>No heartbeat</p></td>
+<td><p>The license heartbeat was not received; check that the license server is still running and that have connectivity to it</p></td>
+</tr>
+<tr class="row-even"><td><p>-22</p></td>
+<td><p>All licenses in use</p></td>
+<td><p>All licenses are currently in use; stop any running processes to free up a license.</p></td>
+</tr>
+<tr class="row-odd"><td><p>-37</p></td>
+<td><p>License start date has not been reached</p></td>
+<td><p>Your license has not yet become valid. Contact us if you believe this to be in error</p></td>
+</tr>
+<tr class="row-even"><td><p>-102</p></td>
+<td><p>Can’t read license data</p></td>
+<td><p>Check the permissions on the license file on the server</p></td>
+</tr>
+<tr class="row-odd"><td><p>-103</p></td>
+<td><p>Network error</p></td>
+<td><p>Check that you have connectivity to the license server; this may involve opening a port on your firewall or connecting to the internet</p></td>
+</tr>
+<tr class="row-even"><td><p>-104</p></td>
+<td><p>Error writing to network</p></td>
+<td><p>Check your connectivity to the license server; check firewall settings and any endpoint security software you may be running</p></td>
+</tr>
+<tr class="row-odd"><td><p>-105</p></td>
+<td><p>Error reading from network</p></td>
+<td><p>Check your connectivity to the license server; check firewall settings and any endpoint security software you may be running</p></td>
+</tr>
+<tr class="row-even"><td><p>-106</p></td>
+<td><p>Unexpected response from license server</p></td>
+<td><p>Check that your license configuration is pointing to the correct server</p></td>
+</tr>
+<tr class="row-odd"><td><p>-107</p></td>
+<td><p>HELLO message for wrong server</p></td>
+<td><p>Check that your license configuration is pointing to the correct server</p></td>
+</tr>
+<tr class="row-even"><td><p>-108</p></td>
+<td><p>Error in private key</p></td>
+<td><p>There is an issue with your server side license file - contact us to resolve this issue</p></td>
+</tr>
+<tr class="row-odd"><td><p>-109</p></td>
+<td><p>Error signing authorization</p></td>
+<td><p>There is an issue with your server side license file - contact us to resolve this issue</p></td>
+</tr>
+<tr class="row-even"><td><p>-110</p></td>
+<td><p>Internal error</p></td>
+<td><p>An error occurred in the license server - contact us if this error repeats itself</p></td>
+</tr>
+<tr class="row-odd"><td><p>-111</p></td>
+<td><p>Connection refused at server</p></td>
+<td><p>Check your firewall settings and that you are pointing at the correct license server</p></td>
+</tr>
+<tr class="row-even"><td><p>-112</p></td>
+<td><p>No server to connect to</p></td>
+<td><p>Check that the server is running and that you are pointing at the correct license server</p></td>
+</tr>
+<tr class="row-odd"><td><p>-113</p></td>
+<td><p>Bad Communication handshake</p></td>
+<td><p>Check that the server is running and that you are pointing at the correct license server</p></td>
+</tr>
+<tr class="row-even"><td><p>-114</p></td>
+<td><p>Can’t get ethernet address</p></td>
+<td><p>Check that the user that you are running as has correct permissions to query the network card</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linux-unix">Linux / Unix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#licence">Licence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="_sources/installation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

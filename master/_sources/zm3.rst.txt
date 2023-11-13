@@ -20,7 +20,7 @@ To see the command line options run:
 
     zm3 -help
 
-
+.. _zm3_options:
 Options
 -------
 

@@ -53,6 +53,14 @@ The **output** directory will be created in the working directory from which the
      - No
      - 
      - List of surface file filenames
+   * - 'fwh interpolate'
+     - No
+     - 
+     - List of .stl file filenames
+   * - 'fwh wall data'
+     - No
+     - False
+     - True | False
    * - 'compute average and rms'
      - No
      - False
@@ -122,9 +130,22 @@ For the 'vtk' format the volume  data is written to the :ref:`output <output_dir
     
     <case_name>.pvd
 
+.. _volume_interpolate:
 volume interpolate
 ^^^^^^^^^^^^^^^^^^
 zCFD can interpolate volume data to a supplied surface. This parameter lets you list the filenames of surfaces to interpolate to. The supported file formats are VTK (vtu or vtp files) and STL. 
+
+fwh interpolate
+^^^^^^^^^^^^^^^^^^
+In addition to the 'volume interpolate' option (which outputs VTK files), zCFD is capable of writing volume interpolated data to HDF5 files for use in the :ref:`zCFD Ffowcs-Williams Hawkings (FWH) solver <fwh>`.
+This parameters lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
+The data is outputted to the *ACOUSTIC_DATA* sub-directory within the :ref:`output <output_dir>` directory.
+
+
+fwh wall data
+^^^^^^^^^^^^^
+This parameter controls whether wall data is outputted to a HDF5 file for use in the :ref:`zCFD FWH solver <fwh>`. The outputted file contains pressure data only, and is suitable for use as an impermeable surface in the zCFD FWH solver.
+The data is outputted to the *ACOUSTIC_DATA* sub-directory within the :ref:`output <output_dir>` directory.
 
 compute average and rms
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -161,7 +182,15 @@ Sets how frequently the solver should output the flow solution. A single integer
      - Yes
      - 1.00E+08
      - Positive integer
-   * - 'volume_interpolate'
+   * - 'volume interpolate'
+     - Yes
+     - 1.00E+08
+     - Positive integer  
+   * - 'fwh interpolate'
+     - Yes
+     - 1.00E+08
+     - Positive integer  
+   * - 'fwh wall data'
      - Yes
      - 1.00E+08
      - Positive integer  
@@ -181,15 +210,23 @@ Sets how frequently the solver should output the flow solution. A single integer
      - Yes
      - 1
      - Positive integer 
+   * - 'fwh interpolate start'
+     - Yes
+     - 1
+     - Positive integer 
+   * - 'fwh wall data start'
+     - Yes
+     - 1
+     - Positive integer 
    * - 'checkpoint start'
      - Yes
      - 1
      - Positive integer 
 
 
-**volume data**, **surface data**, **volume_interpolate** and **checkpoint** control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The **checkpoint** option writes a :ref:`restartable <restart>` checkpoint of the flow solution at that point.  
+**volume data**, **surface data**, **volume interpolate**, **fwh interpolate**, **fwh wall data** and **checkpoint** control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The **checkpoint** option writes a :ref:`restartable <restart>` checkpoint of the flow solution at that point.  
 
-**volume data start**, **surface data start**, **volume interpolate start** and **checkpoint start** specifies the first cycle that the solver should start writing that particular output.
+**volume data start**, **surface data start**, **volume interpolate start**, **fwh interpolate start**, **fwh wall data start** and **checkpoint start** specifies the first cycle that the solver should start writing that particular output.
 
 .. note::
     On systems with slower file I/O the overhead of writing data can slow the overall solve time, reducing the output frequency lets you address this.

@@ -21,6 +21,7 @@ Version: |version|
    reference_guide/intro
    functions
    meshutil
+   fwh
    zm3
    visualisation
    utilities
