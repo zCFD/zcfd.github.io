@@ -100,6 +100,10 @@ The following parameters are common for all of the equation sets.
      - Yes
      - "HLLC"
      - "HLLC" | "Rusanov" | "Roe" | "Roe low diss"
+   * - 'reconstruction'
+     - No
+     - "muscl"
+     - "muscl" | "umuscl" | "lpumuscl"
    * - 'roe low dissipation sensor'
      - No
      - -- 
