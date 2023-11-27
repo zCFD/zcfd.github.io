@@ -1,0 +1,284 @@
+.. _boundary_conditions:
+
+Boundary Conditions
+-------------------
+
+Boundary condition properties are defined using consecutively numbered blocks
+
+.. code-block:: python
+
+    'BC_1' : {....},
+    'BC_2' : {....},
+
+zCFD will automatically detect zone types and numbers in a number of mesh formats, and assign appropriate boundary conditions. The type tags follow the Fluent convention (wall = 3, etc), and if present no further information is required.  Alternatively, the mesh format may contain explicitly numbered zones (which can be determined by inspecting the mesh).  In this case, the user can specify the list of zone numbers for each boundary condition 'type' and 'kind' (see below).
+
+.. _wall:
+
+Wall
+^^^^
+
+Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e :math:`(y^{+} \leq 1)`) otherwise automatic wall functions should be used. This behaviour is chosen by setting :code:`'kind'` in the wall specification below. Optionally it is possible to set wall velocity, roughness and temperature.
+
+.. code-block:: python
+
+    'BC_1' : {
+              # Zone type tag
+              'ref' : 3,
+              # Optional: Specific zone boundary condition override
+              'zone' : [0,1,2,3],
+              # Required: Boundary condition type
+              'type' : 'wall',
+              # Type of wall, one of 'slip', 'noslip', 'wallfunction'
+              'kind' : 'slip',
+              # Optional: Roughness specification
+              'roughness' : {
+                            # Type of roughness specification (option: height or length)
+                            'type' : 'height',
+                            # Constant roughness
+                            'scalar' : 0.001,
+                            # Roughness field specified as a VTK file
+                            'field' : 'roughness.vtp',
+                            },
+              # Optional: Wall velocity specification either 'linear' or 'rotating' dictionary supplied
+              'V' : {
+                    'linear' : {
+                               # Velocity vector
+                               'vector' : [1.0,0.0,0.0],
+                               # Optional: specifies velocity magnitude
+                               'Mach' : 0.20,
+                               },
+                    'rotating' : {
+                                 # Rotational velocity in rad/s
+                                 'omega' : 2.0,
+                                 # Rotation axis
+                                 'axis' : [1.0,0.0,0.0],
+                                 # Rotation origin
+                                 'origin' : [0.0,0.0,0.0],
+                                 },
+                    },
+              # Optional: Wall temperature specification either a constant 'scalar' value or a 'profile' from file
+              'temperature' : {
+                              # Temperature in Kelvin
+                              'scalar' : 280.0,
+                              # Temperature field specified as a VTK file
+                              'field' : 'temperate.vtp',
+                              },
+              },
+
+.. note::
+
+    The roughness at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the roughness
+    value looked up in a node based scalar array called 'Roughness'
+
+.. note::
+
+    The temperature at each boundary face is set by finding the nearest point to the face centre on the supplied VTK file with the temperature
+    value looked up in a node based scalar array called 'Temperature'
+
+Farfield
+^^^^^^^^
+
+The farfield boundary condition can automatically determine whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by referring to an :code:`'IC_'` block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.
+
+.. code-block:: python
+
+    'BC_2' : {
+             # Zone type tag
+             'ref' : 9,
+             # Optional: Specific zone boundary condition override
+             'zone' : [0,1,2,3],
+             # Required: Boundary condition type
+             'type' : 'farfield',
+             # Required: Kind of farfield options (riemann, pressure or supersonic)
+             'kind' : 'riemann',
+             # Required: Farfield conditions
+             'condition' : 'IC_1',
+             # Optional: Atmospheric Boundary Layer
+             'profile' : {
+                         'ABL' : {
+                                 # Roughness length
+                                 'roughness length' : 0.05,
+                                 # Fiction velocity
+                                 'friction velocity' : 2.0,
+                                 # Surface Layer Heigh
+                                 'surface layer height' : 1000,
+                                 'Monin-Obukhov length' : 2.0,
+                                 # Turbulent kinetic energy
+                                 'TKE' : 1.0,
+                                 # Ground Level
+                                 'z0' : 0.0,
+                                  },
+                          },
+             # Optional: Specify a turbulence profile
+             'turbulence' : {
+                            'length scale' : 'filename.vtp',
+                            'reynolds tensor' : 'filename.vtp',
+                            },
+             },
+
+
+Inflow
+^^^^^^
+
+zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
+
+.. code-block:: python
+
+    'BC_3' : {
+             # Zone type tag
+             'ref' : 4,
+             # Optional: Specific zone boundary condition override
+             'zone' : [0,1,2,3],
+             # Required: Boundary condition type
+             'type' : 'inflow',
+             # Required: Kind of inflow, either 'default' for pressure or 'massflow'
+             'kind' : 'default',
+             # Required: Reference inflow conditions
+             'condition' : 'IC_2',
+             },
+
+Example Pressure Inflow
+"""""""""""""""""""""""
+
+An example setup for a pressure inflow is given below:
+
+.. code-block:: python
+
+    'IC_1' : {
+             'temperature' : 293.0,
+             'pressure' : 101325.0,
+             'V': {
+                  'vector' : [1.0,0.0,0.0],
+                  'Mach' : 0.20,
+                  },
+             'Reynolds No' : 1.0e6,
+             'Reference Length' : 1.0,
+             'turbulence intensity' : 0.1,
+             'eddy viscosity ratio' : 1.0,
+             },
+    'IC_2' : {
+             'reference' : 'IC_1',
+             'total temperature ratio' : 1.0,
+             'total pressure ratio' : 1.0,
+             # Optional - specify mach number to set 
+             # static pressure at inflow from total pressure
+             'mach' : 0.1,
+             },
+    'BC_3' : {
+             'ref' : 4,
+             'zone' : [0,1,2,3],
+             'type' : 'inflow',
+             'kind' : 'default',
+             'condition' : 'IC_2',
+             },
+
+Example Massflow Inflow
+"""""""""""""""""""""""
+
+An example setup for a massflow inflow is given below:
+
+.. code-block:: python
+
+    def inflow_direction(x, y, z):
+        # x, y, and z are the coordinates of the face centre
+        cen = [1.0, 0.0, 0.0]
+        y1 = y - cen[1]
+        z1 = z - cen[2]
+        rad = math.sqrt(z1*z1 + y1*y1)
+        phi = math.atan2(y1,z1)
+        angle = -0.24
+        x2 = math.cos(angle)
+        y2 = math.sin(phi) * math.sin(angle)
+        z2 = math.cos(phi) * math.sin(angle)
+        return {'v1': x2, 'v2': y2, 'v3': z2}
+
+    'IC_1' : {
+             'temperature' : 293.0,
+             'pressure' : 101325.0,
+             'V': {
+                  'vector' : [1.0,0.0,0.0],
+                  'Mach' : 0.20,
+                  },
+             'Reynolds No' : 1.0e6,
+             'Reference Length' : 1.0,
+             'turbulence intensity' : 0.1,
+             'eddy viscosity ratio' : 1.0,
+             },
+    'IC_2' : {
+             'reference' : 'IC_1',
+             'total temperature ratio' : 1.0,
+             'mass flow rate' : 10.0,
+             'vector' : inflow_direction
+             },
+    'BC_3' : {
+             'ref' : 4,
+             'zone' : [0,1,2,3],
+             'type' : 'inflow',
+             'kind' : 'massflow',
+             'condition' : 'IC_2',
+             },
+
+Outflow
+^^^^^^^
+
+Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a mass flow ratio or mass flow rate must be set. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
+
+.. code-block:: python
+
+    'BC_4' : {
+             # Zone type tag
+             'ref' : 5,
+             # Optional: Specific zone boundary condition override
+             'zone' : [0,1,2,3],
+             # Boundary condition type
+             'type' : 'outflow',
+             # Kind of outflow 'pressure, 'massflow' or 'radial pressure gradient'
+             'kind' : 'pressure',
+             # Required only when using 'radial pressure gradient'
+             # Radius at which the static pressure ratio is defined
+             'reference radius' : 1.0,
+             # Outflow conditions
+             'condition' : 'IC_2',
+             },
+
+Symmetry
+^^^^^^^^
+
+.. code-block:: python
+
+    'BC_5' : {
+             # Zone type tag
+             'ref' : 7,
+             # Optional: Specific zone boundary condition override
+             'zone' : [0,1,2,3],
+             # Required: Boundary condition type
+             'type' : 'symmetry',
+             },
+
+Periodic
+^^^^^^^^
+
+This boundary condition needs to be specified in pairs with opposing transformations.
+The transforms specified should map each zone onto each other.
+
+.. code-block:: python
+
+    'BC_6' : {
+             # Required: Specific zone index
+             'zone' : [1],
+             # Required: Type of boundary condition
+             'type' : 'periodic',
+             # Required: Either 'rotated' or 'linear' periodicity
+             'kind' : {
+                      # Rotated periodic settings
+                      'rotated' : {
+                                  'theta' : math.radians(120.0),
+                                  'axis' : [1.0,0.0,0.0],
+                                  'origin' : [-1.0,0.0,0.0],
+                                  },
+                      # Linear periodic settings
+                      'linear' : {
+                                 'vector' : [1.0,0.0,0.0],
+                                 },
+                    },
+
