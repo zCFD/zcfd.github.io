@@ -98,7 +98,7 @@ The following parameters are common for all of the equation sets.
      - True | False
    * - 'inviscid flux scheme'
      - Yes
-     - "HLLC"
+     - "Roe"
      - "HLLC" | "Rusanov" | "Roe" | "Roe low diss"
    * - 'reconstruction'
      - No
