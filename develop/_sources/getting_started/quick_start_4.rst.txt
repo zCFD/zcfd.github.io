@@ -15,7 +15,6 @@ In :ref:`Tutorial 2 <tutorial_2>`, we learnt how to run a steady state RANS simu
 
 As we have already generated the full steady state RANS solution in Tutorial 2, we will begin by creating our aero-acoustic mesh, on which we will solve the *Acoustic Perturbation Equations* using a high order DG method.  To start, we will load the wall boundary solution into Paraview and export it in STL format.
 
-
 Aero-acoustic mesh generation
 =============================
 
@@ -104,7 +103,9 @@ A copy of the acoustics control dictionary can be downloaded `here <https://zcfd
 
 Nodal Locations
 ^^^^^^^^^^^^^^^
+
 As we are using the high order DG solver to solve the Acoustic Perturbation Equations (APE-4), we can specify the nodal locations to be used when constructing our Lagrange polynomials within each element.  In the current case where the equations are linear and ambient flow conditions are assumed for the acoustic medium, the main effect of this choice is where acoustic sources are sampled.  In the current case we're using Hexahedral elements and assuming Gauss Lobatto nodal locations, which means that no two nodal locations are the same.
+
 
 .. code-block:: python
 
@@ -152,6 +153,7 @@ Setting :code:`multi level` to :code:`True` allows the use of a Low Dissipation,
         "microphone output frequency": 10,
      }
 
+
 With these options, linear polynomials will be assumed within each cell of the acoustic mesh (there will be 8 solution points within each cell for order 1, 27 for order 2, and so on) making the spatial accuracy second order which will be sufficient for this test case.  The RANS mesh and case name are those of the RANS solution the FRPM acoustic simulation should be based on.  We assume a uniform background flow by not mapping the CFD solution to the CAA mesh.  Finally, we will measure the acoustic pressure every 10 time steps by setting :code:`microphone output frequency` to 10.
 
 To set the FRPM parameters we use the following block of Python code.
@@ -174,6 +176,7 @@ To set the FRPM parameters we use the following block of Python code.
 	      },
     },
 
+
 With these options, the RANS solution generated in tutorial 2 will be used to specify the turbulence parameters for the FRPM source generation.  As the turbulence kinetic energy field is differentiated to provide the acoustic sources, it may be necessary to smooth the field to prevent spurious sources.  This is achieved with the :code:`frpm mapped tke smoothing iterations` keyword.  The turbulence integral length scales will be computed automatically from the RANS solution if the :code:`use constant integral length scale` keyword is set to :code:`False` (the :code:`frpm turbulence integral length scale` value will be ignored in this case).  1 MPI rank will be used for the FRPM source generator.  The FRPM domain size, position and orientation is specified with the :code:`frpm cart num mesh cells`, :code:`frpm domain translate`, and :code:`frpm domain rotate (Deg)` keywords respectively.  It should be noted that the FRPM domain is first rotated about (0,0,0), then translated to the specified location.  In order to prevent acoustic sources vanishing instantly at the boundary of the FRPM domain, sources are blended smoothly over the distances specified by :code:`frpm blend sources from side`.  The ordering is distance from the x-min, x-max, y-min, y-max, z-min, z-max boundaries.
 
 
@@ -181,6 +184,7 @@ Running the Acoustic Solver
 ===========================
 
 Within a Linux terminal, navigate to the directory containing the acoustic.h5 mesh file and .py control dictionary. To run the acoustic solver, use the run_zcfd command in the terminal as before in previous tutorials but instead using the acoustics mesh and control dictionary as input files:
+
 
 .. code-block:: bash
 
@@ -243,3 +247,4 @@ To perform spectral analysis, ensure that you have the acoustic.ipynb file in th
   :alt: PSD plot
 
 The acoustic.ipynb uses Pandas to read in the acoustic pressure data within the _MP2 file (this file contains the acoustic pressure history at monitor point 2 as specified in the Python dictionary).  This signal is then checked to find where the acoustic waves meet the observer and is appropriately clipped, removing samples where there were no acoustic waves.  The time signal of acoustic pressure is then processed using SciPy, and in particular, Welch’s method.  Finally the PSD is plotted using Matplotlib.  All modules are available within the zCFD environment.
+
