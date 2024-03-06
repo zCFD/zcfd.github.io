@@ -330,8 +330,8 @@ As well as the :ref:`"common" <equation_common>` settings, the **'RANS'** equati
      - Activates the :math:`\tilde{\nu}` gradient limiter in the SA-neg model
    * - 'qcr'
      - No
-     - False
-     - True | False
+     - Off
+     - 2000 | 2020 | 2021
      - Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg
 
 
@@ -384,7 +384,7 @@ The value should be between 0 and 1. **0** is off and **1** is maximum limiting.
 
 qcr
 ===
-Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings.
+Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings. Three versions of the QCR model are available: `QCR 2000 <https://doi.org/10.1016/S0142-727X(00)00007-2>`_ ,  `QCR 2020 <https://doi.org/10.2514/1.J059683>`_ and `QCR 2021 <https://doi.org/10.1017/aer.2021.42>`_.
 
 
 Example RANS usage:
@@ -411,7 +411,7 @@ Example RANS usage:
                                   'les' : 'none',
                                   'rotation correction': False,
                                   'limit gradient k': 0.5
-                                  'qcr': True
+                                  'qcr': 2020
                                 },
                },
     ...

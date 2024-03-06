@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2023.11.6459-4373-g6eef2 documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2023.11.6459-4374-g6a6e7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=df3b76f9"></script>
+    <script src="../_static/documentation_options.js?v=37b0ad61"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -411,8 +411,8 @@ Run 500 cycles first order.</p>
 </tr>
 <tr class="row-odd"><td><p>‘qcr’</p></td>
 <td><p>No</p></td>
-<td><p>False</p></td>
-<td><p>True | False</p></td>
+<td><p>Off</p></td>
+<td><p>2000 | 2020 | 2021</p></td>
 <td><p>Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg</p></td>
 </tr>
 </tbody>
@@ -485,7 +485,7 @@ Run 500 cycles first order.</p>
 </section>
 <section id="qcr">
 <h3>qcr<a class="headerlink" href="#qcr" title="Link to this heading">¶</a></h3>
-<p>Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings.</p>
+<p>Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings. Three versions of the QCR model are available: <a class="reference external" href="https://doi.org/10.1016/S0142-727X(00)00007-2" target="_blank">QCR 2000</a> ,  <a class="reference external" href="https://doi.org/10.2514/1.J059683" target="_blank">QCR 2020</a> and <a class="reference external" href="https://doi.org/10.1017/aer.2021.42" target="_blank">QCR 2021</a>.</p>
 </section>
 <section id="example-rans-usage">
 <h3>Example RANS usage:<a class="headerlink" href="#example-rans-usage" title="Link to this heading">¶</a></h3>
@@ -508,7 +508,7 @@ Run 500 cycles first order.</p>
                                 <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;rotation correction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                                 <span class="s1">&#39;limit gradient k&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
-                                <span class="s1">&#39;qcr&#39;</span><span class="p">:</span> <span class="kc">True</span>
+                                <span class="s1">&#39;qcr&#39;</span><span class="p">:</span> <span class="mi">2020</span>
                               <span class="p">},</span>
              <span class="p">},</span>
   <span class="o">...</span>
