@@ -119,6 +119,11 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
      - 
      - See :ref:`temperature <bc_temperature>` 
      - Specifies the wall temperature for an isothermal wall. If not specified the wall is treated as adiabatic
+   * - 'immersed normal type'
+     - No
+     - 'STL'
+     - 'STL' or 'immersed boundary vector'
+     - Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)
 
 
 Example Wall BC with roughness and temperature set:
