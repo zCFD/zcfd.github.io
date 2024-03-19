@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reference Guide &#8212; zCFD User Guide v2024.03.11-test documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=ca5d628d"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reference Settings" href="reference.html" />
+    <link rel="prev" title="Running zCFD using EPIC" href="../getting_started/epic_tutorial.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="reference-guide">
+<span id="id1"></span><h1>Reference Guide<a class="headerlink" href="#reference-guide" title="Link to this heading">¶</a></h1>
+<p>The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.</p>
+<p>A python dictionary called ‘parameters’ provides the main interface to controlling zCFD</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="o">....</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>zCFD will validate the parameters dictionary specified at run time against a set of expected values for each key. In general, values that should be integers and floats will be coerced to the correct type. Values which should be strings, booleans, lists or dictionaries will cause an error if they are the incorrect type. The time marching scheme and solver/equation set chosen defines which dictionary keys are valid. A simple script is provided to allow the user to check the validity of their input parameters before submitting their job. See <a class="reference internal" href="../running/execution.html#input-validation"><span class="std std-ref">Input Validation</span></a>.</p>
+<p>This reference guide documents the parameters available in a zCFD control dictionary and the valid values for those keywords.</p>
+<pre class="literal-block">parameters = {
+    'reference': <a class="reference internal" href="reference.html#reference-state"><span class="std std-ref">IC_1</span></a>,
+    'initial': {<a class="reference internal" href="reference.html#initial-state"><span class="std std-ref">Initial State</span></a>},
+    'restart': <a class="reference internal" href="reference.html#restart"><span class="std std-ref">False</span></a>,
+    'partitioner': 'metis',
+    'scale': <a class="reference internal" href="reference.html#scale-mesh"><span class="std std-ref">[1,1,1]</span></a>,
+    'time marching': {<a class="reference internal" href="time.html#time"><span class="std std-ref">Time Marching</span></a>},
+    'linear solver settings': {<a class="reference internal" href="linear_solver.html#linear-solver"><span class="std std-ref">Linear Solver Settings</span></a>},
+    'equations': {<a class="reference internal" href="equations.html#equations"><span class="std std-ref">Equations</span></a>},
+    'material': {<a class="reference internal" href="materials.html#materials"><span class="std std-ref">Material Specification</span></a>},
+    'IC_1': {<a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Conditions</span></a>}
+    'BC_1': {<a class="reference internal" href="boundary.html#boundary-conditions"><span class="std std-ref">Boundary Conditions</span></a>}
+    'TR_1': {<a class="reference internal" href="transforms.html#mesh-transform"><span class="std std-ref">Mesh Transformation</span></a>}
+    'mapping': {<a class="reference internal" href="overset.html#overset"><span class="std std-ref">Overset</span></a>}
+    'write output': {<a class="reference internal" href="write_output.html#write-output"><span class="std std-ref">Write Output</span></a>}
+    'report': {<a class="reference internal" href="report.html#reporting"><span class="std std-ref">Reporting</span></a>}
+}</pre>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time.html">Time Marching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_solver.html">Linear Solver Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equations.html">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caa.html">Aero-Acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-structure interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Material Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_conditions.html">Reference Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms.html">Mesh Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overset.html">Overset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="write_output.html">Write Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report.html">Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Output variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/reference_guide/intro.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
