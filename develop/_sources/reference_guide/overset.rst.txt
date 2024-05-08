@@ -17,7 +17,7 @@ Example **override** dictionary (e.g. override.py):
 .. code-block:: python
 
     override = {
-        'problem_case_pair': [
+        'mesh_case_pair': [
             ("background_mesh.h5", "background.py"),
             ("overset_1.h5", "overset_1.py"),
             ("overset_2.h5", "overset_2.py"),

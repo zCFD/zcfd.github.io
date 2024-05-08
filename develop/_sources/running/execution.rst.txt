@@ -110,8 +110,8 @@ An example override.py file for a background domain with a single rotating turbi
 
 .. code-block:: python
 
-    override = {'problem_case_pair': [('background.h5', 'background.py'),
-                                      ('turbine.h5', 'turbine.py')]}
+    override = {'mesh_case_pair': [('background.h5', 'background.py'),
+                                   ('turbine.h5', 'turbine.py')]}
 
 
 Batch Queue Submission
