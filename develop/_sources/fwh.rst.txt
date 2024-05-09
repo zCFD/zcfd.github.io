@@ -44,7 +44,7 @@ In our example of an aerofoil in a wind tunnel, the CFD simulation has a freestr
 
   FWH simulation of an aerofoil, with quiescent medium co-ordinate transformation applied
 
-Once we have collected the FWH surface data from a CFD simulation and correctly defined the FWH surface and observer microphone settings, we simply use the FWH equations to propagate the pressure and velocity signals from the FWH surface to the our farfield observer locations. The equations used in the zCFD FWH solver are the `Farrasat 1A equations <https://ntrs.nasa.gov/citations/20070010579>`_, with a retarded time formulation and a Newton-Raphson algorithm for calculating the retarded time. The retarded time is the time :math:`\tau_*` at which a sound wave must be emitted by a point on the FWH surface in order for it to reach an observer at time :math:`t`, given the prescribed motions of both surface and observer.
+Once we have collected the FWH surface data from a CFD simulation and correctly defined the FWH surface and observer microphone settings, we simply use the FWH equations to propagate the pressure and velocity signals from the FWH surface to the our farfield observer locations. The equations used in the zCFD FWH solver are the `Farrasat 1A equations <https://ntrs.nasa.gov/citations/20070010579>`_, with a retarded time formulation. The retarded time is the time :math:`\tau_*` at which a sound wave must be emitted by a point on the FWH surface in order for it to reach an observer at time :math:`t`, given the prescribed motions of both surface and observer.
 
 
 .. note::
@@ -243,7 +243,18 @@ Example usage:
      - No
      - 50
      - Positive integer   
-     - The maximum number of iterations to use in the Newton Raphson algorithm used to predict retarded time
+     - The maximum number of iterations to use in the algorithms used to predict retarded and projected time
+   * - 'observerStartTime'
+     - No
+     - 
+     - Number
+     - The simulation time (s) at which observers start recording data. If this is not set, this will be set automatically to be the earliest time when a surface/observer pair has a valid signal.
+   * - 'observerEndTime'
+     - No
+     - 
+     - Number
+     - The simulation time (s) at which observers end recording data. If this is not set, this will be set automatically to be the last time when a surface/observer pair has a valid signal.
+
 
 
 .. _fwhObsMotions:
@@ -289,6 +300,6 @@ Just like FWH Observers, FWH Surfaces require their motion to be defined. There 
      - A surface which does not rotate, and translates at the same velocity as the 'centrePoint'.
    * - `RotatingSurface(centrePoint,axis, omega)`
      - | centrePoint: a :ref:`point motion class <fwhObsMotions>`
-       | axis: a 3-d vector `[ax_x,ax_y,ax_z]`
+       | axis: a 3-d vector :math:`[ax_x,ax_y,ax_z]`
        | omega: a number.
      - A surface which translates at the same velocity as the `centrePoint`, and also rotates about the centrePoint with rotation axis `axis` and rotation angular velocity (rad / s) `omega`
