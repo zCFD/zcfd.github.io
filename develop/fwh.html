@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FWH solver &#8212; zCFD User Guide v2024.04.8259-37-g8ad98 documentation</title>
+    <title>FWH solver &#8212; zCFD User Guide v2024.04.8259-38-g8a06c documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=7a6786a9"></script>
+    <script src="_static/documentation_options.js?v=13561262"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -246,7 +246,7 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 </tr>
 <tr class="row-even"><td><p>‘breakTolAbs’</p></td>
 <td><p>No</p></td>
-<td><p>1.0e-5</p></td>
+<td><p>‘dt’ set in the solver settings dictionary / 1000</p></td>
 <td><p>Positive number</p></td>
 <td><p>the time accuracy (s) with which we would like to predict the retarded time <span class="math notranslate nohighlight">\(\tau_*\)</span> in the retarded time calculation.</p></td>
 </tr>
@@ -254,7 +254,7 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <td><p>No</p></td>
 <td><p>50</p></td>
 <td><p>Positive integer</p></td>
-<td><p>The maximum number of iterations to use in the algorithms used to predict retarded and projected time</p></td>
+<td><p>The maximum number of iterations to use in the algorithm used to predict retarded time</p></td>
 </tr>
 <tr class="row-even"><td><p>‘observerStartTime’</p></td>
 <td><p>No</p></td>

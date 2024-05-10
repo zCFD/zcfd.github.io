@@ -236,14 +236,14 @@ Example usage:
      - timestep between observer microphone recording times, s
    * - 'breakTolAbs'
      - No
-     - 1.0e-5
+     - 'dt' set in the solver settings dictionary / 1000
      - Positive number    
      - the time accuracy (s) with which we would like to predict the retarded time :math:`\tau_*` in the retarded time calculation.
    * - 'maxIts'
      - No
      - 50
      - Positive integer   
-     - The maximum number of iterations to use in the algorithms used to predict retarded and projected time
+     - The maximum number of iterations to use in the algorithm used to predict retarded time
    * - 'observerStartTime'
      - No
      - 
