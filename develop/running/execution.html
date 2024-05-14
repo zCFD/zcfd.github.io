@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Running zCFD &#8212; zCFD User Guide v2024.04.8259-56-g4f361 documentation</title>
+    <title>Running zCFD &#8212; zCFD User Guide v2024.04.8259-57-gb7a07 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=7e65d7b7"></script>
+    <script src="../_static/documentation_options.js?v=b5bdffa7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -100,6 +100,10 @@
 </pre></div>
 </div>
 <p>By default, zCFD will use all 12 cores via OpenMP unless a specific number is required. To run the above case using only 6 cores (there will be one thread per CPU core):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-d<span class="w"> </span>cpu<span class="w"> </span>-o<span class="w"> </span><span class="m">6</span><span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
+</pre></div>
+</div>
+<p>or</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">6</span><span class="p">;</span><span class="w"> </span>run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-d<span class="w"> </span>cpu<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
 </pre></div>
 </div>

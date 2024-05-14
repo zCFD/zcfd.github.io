@@ -73,6 +73,12 @@ By default, zCFD will use all 12 cores via OpenMP unless a specific number is re
 
 .. code-block:: bash
 
+    run_zcfd -n 1 -d cpu -o 6 -p <mesh_name> -c <case_name>
+
+or
+
+.. code-block:: bash
+    
     export OMP_NUM_THREADS=6; run_zcfd -n 1 -d cpu -p <mesh_name> -c <case_name>
 
 To run zCFD on a desktop computer with a single CPU and two GPUs:
