@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Settings &#8212; zCFD User Guide v2024.04.8259-53-g6f0a4 documentation</title>
+    <title>Reference Settings &#8212; zCFD User Guide v2024.04.8259-54-ga0f6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=8199a5d3"></script>
+    <script src="../_static/documentation_options.js?v=0941fb3c"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -149,9 +149,19 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <p class="admonition-title">Note</p>
 <p>The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see <em>Tab x</em>)</p>
 </div>
-<section id="scale-function">
-<h3>Scale Function<a class="headerlink" href="#scale-function" title="Link to this heading">¶</a></h3>
-<p>As an alternative to passing a fixed scaling factor the ‘scale’ parameter will also accept a function. See the <a class="reference internal" href="../functions.html#scale-function"><span class="std std-ref">Scale Function</span></a> for details.</p>
+<section id="mesh-transform-function">
+<h3>Mesh Transform Function<a class="headerlink" href="#mesh-transform-function" title="Link to this heading">¶</a></h3>
+<p>As an alternative to passing a fixed scaling factor the ‘mesh transform function’ parameter accepts a function. This can be used to apply an arbitrary transform to the mesh. A simple example is given below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_mesh_transform</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;coord&quot;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">)}</span>
+
+<span class="s2">&quot;mesh transform function&quot;</span><span class="p">:</span> <span class="n">my_mesh_transform</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="partitioner">
