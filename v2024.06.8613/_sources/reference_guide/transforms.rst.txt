@@ -1,0 +1,189 @@
+.. _mesh_transform:
+
+Mesh Transformation
+-------------------
+
+This dictionary is used to setup an initial deformation of the mesh. Typically a known deformation of a surface in the mesh is propagated out into the volume using either radial basis function or inverse distance weighted interpolation. Deforming an aircraft wing or wind turbine blade to a static load shape are two uses of this functionality.
+
+
+.. list-table:: 
+   :widths: 20 5 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'type'
+     - Yes
+     - 
+     - 'rbf' | 'rbf multiscale' | 'idw'
+     - Selects the :ref:`interpolation<transform_interpolation>` method used.
+   * - 'base point fraction'
+     - No
+     - 
+     - Float
+     - Fraction of points included in the base set when using **'rbf multiscale'** 
+   * - 'alpha'
+     - No
+     - 
+     - Float
+     - Sets the support radius (the radius of influence) of the rbf surface points.
+   * - 'zone'
+     - Yes
+     - 
+     - List of zone ID integers
+     - Sets a list of surface zones to deform
+   * - 'fixed zones'
+     - No
+     - 
+     - List of zone ID integers
+     - Sets the surface zones which remain fixed in position when using **`idw`**, useful if you have surfaces that are within the influence of the interpolation that should remain fixed.
+   * - 'func'
+     - Yes
+     - 
+     - :ref:`Transform Function <transform_mesh_function>`
+     - A python function that describes the surface deformation to be propagated into the volume mesh. The function is called for each node on the surfaces specified in the 'zones' key.
+   * - 'basis'
+     - No
+     - 
+     - `c0` | `c2` | `tps` | `gaussian`
+     - Selects the type of radial basis function used. Can be Welland's c0 or c2 function, thin plate spline (tps) or Gaussian.
+   * - 'tol'
+     - No
+     - 
+     - Float
+     - The maximum permissible distance error between the deformed surface shape and that obtained using the greedy **'rbf'** method. No more points will be added to the system once this tolerance is reached.
+   * - 'power'
+     - No
+     - [3,5,10]
+     - List of int
+     - A list of three exponents used in the **`idw`** interpolation scheme.
+   * - 'n nearest'
+     - No
+     - 100
+     - Int
+     - The number of nodes closest to the current point used to determine the **'idw'** interpolation weight.
+   * - 'deformation distance'
+     - No
+     - 1
+     - Float
+     - The distance over which the surface deformation is blended into the volume mesh.
+   * - 'blending stiffness'
+     - No
+     - 0.5
+     - Float
+     - The stiffness of the blending function used to propagate the **'idw'** interpolation of the surface deformation into the volume mesh.
+
+.. _transform_interpolation:
+Interpolation method
+====================
+Selects the interpolation method used to propagate the surface deformation into the volume mesh. Three methods are available:
+
+**'rbf'** uses the 'greedy' method of `Allan et al <https://doi.org/10.1016/j.jcp.2009.12.006>`_. where the deformation is started with a subset of points and additional points are added until the surface deformation reaches the requested tolerance. 
+
+**'rbf multiscale'** uses the `multiscale <https://doi.org/10.1016/j.jcp.2017.05.042>`_ rbf method where a subset of surface points with a fixed support radius are solved implicitly and the remaining points are solved explicitly with a support radius determined as part of the solution process. The fraction of points included in the base set can be set with **'base point fraction'**. The base set of points are assigned the support radius **'alpha'** and hence can have a wider sphere of influence than the remaining points which are used in the multiscale process.
+
+.. note::
+
+    Increasing the number of points in the base set and/or increasing alpha generally makes the surface deformation propagate further into the volume mesh reducing the likelihood of generating poor quality cells 
+
+**'idw'** uses a simple inverse distance weighted interpolation.  The **`power`** parameter can provide a list of three exponents used in the IDW scheme. The first (p1) is applied to the interpolation weight of points close to the surface, the second (p2) to points which are the deformation distance away from the surface and the third (p3) is used to blend between the two extremes. 
+
+:math:`wt_1 = (deformation distance / distance)^{p1}`
+:math:`wt_2 = (deformation distance / distance)^{p2}` 
+:math:`blend = ((deformation distance - distance) / deformation distance)^{p3}`
+
+Then the weight is:
+
+:math:`wt = (wt1 * (1.0 - blend) + blend * wt2)`
+
+
+Examples
+========
+
+RBF Example
+^^^^^^^^^^^
+
+.. code-block:: python
+
+    import zutil
+
+    rotation = 10.0
+
+    def my_transform(x, y, z):
+        v = [x, y, z]
+        v = zutil.rotate_vector(v, rotation, 0.0)
+        return {"v1": v[0], "v2": v[1], "v3": v[2]}
+
+
+    parameters = {
+            ...
+            "TR_1": {
+                "type": "rbf",
+                "zone": [4],
+                "func": my_transform,
+                "alpha": 200.0,
+                "basis": "c2",
+                "tol": 0.01,
+            },
+            ...
+    }
+
+RBF Multiscale Example
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    import zutil
+
+    rotation = 10.0
+
+    def my_transform(x, y, z):
+        v = [x, y, z]
+        v = zutil.rotate_vector(v, rotation, 0.0)
+        return {"v1": v[0], "v2": v[1], "v3": v[2]}
+
+    parameters = {
+            ...
+            "TR_1": {
+                "type": "rbf multiscale",
+                "base point fraction": 0.1,
+                "zone": [4],
+                "func": my_transform,
+                "alpha": 200.0,
+                "basis": "c2",
+            },
+            ...
+    }
+
+
+IDW  Example
+^^^^^^^^^^^^
+
+.. code-block:: python
+
+    import zutil
+
+    rotation = 10.0
+
+    def my_transform(x, y, z):
+        v = [x, y, z]
+        v = zutil.rotate_vector(v, rotation, 0.0)
+        return {"v1": v[0], "v2": v[1], "v3": v[2]}
+
+    parameters = {
+            ...
+            "TR_1": {
+                "type": "idw",
+                "power": [4.0, 8.0, 10.0],
+                "fixed zones": [1],
+                "n nearest": 500,
+                "deformation distance": 100.0,
+                "blending stiffness": 0.5,
+                "zone": [4],
+                "func": my_transform,
+            },
+            ...
+    }
