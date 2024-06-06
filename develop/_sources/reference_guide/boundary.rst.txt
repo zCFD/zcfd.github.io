@@ -455,7 +455,8 @@ Example boundary condition for setting up a **massflow** inflow condition based 
 Outflow
 =======
 
-Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`. When either pressure boundary is set the :code:`'IC_'` conditions it refers to must set a static temperature ratio, when :code:`'massflow'` is specified a mass flow ratio or mass flow rate must be set. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
+Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code:`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`.
+When the boundary condition :code:`'kind'` is either :code:`'pressure'` or :code:`'radial pressure gradient'`, the :code:`'IC_'` conditions it refers to must set a static pressure ratio. When the boundary condition :code:`'kind'` is :code:`'massflow'`, a mass flow ratio or mass flow rate must be set in the :code:`'IC_'` conditions. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
 
 
 
@@ -485,10 +486,10 @@ Pressure or massflow outflow boundaries are specified in a similar manner to the
      - This sets the type of boundary condition to be associated with the zones.
    * - 'kind'
      - Yes
-     - 'default'
-     - 'default' or 'massflow'
+     - 
+     - 'pressure' or 'massflow' or 'radial pressure gradient'
      - This sets how the user wants to specify the outflow conditions:
-            * *default* Sets the pressure at the outflow using the user specified static pressure ratio set in the reference **condition**.
+            * *pressure* Sets the pressure at the outflow using the user specified static pressure ratio set in the reference **condition**.
             * *massflow* Scales the local velocity so that the total integrated massflow across all the zones meets the user specified value.  
    * - 'condition'
      - Yes
