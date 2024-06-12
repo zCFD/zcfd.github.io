@@ -1,0 +1,124 @@
+
+Actuator disc modelling
+------------------
+
+Overview
+^^^^^^^^
+
+When simulating the effects of an aerodynamic force device (such as a wind turbine or propellor) on flow field, it is often impractical to resolve the flow down to the scale of the blades. Instead the effects of the device on the flow can be represented using an actuator disc model, which is then superimposed into the flow as a set of additional source terms.
+
+Actuator disc definitions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Conceptually turbines and propellors behave nearly identically in terms of the actuator disc model, with the only differences being in in the coordinate systems and sign conventions typically used to define them. In zCFD an actuator disc zone is defined as a fluid zone, using the following keys:
+
+.. code-block:: python
+
+    turb_zone = {
+        "FZ_1": {
+            "type": "disc",
+            "controller": {},
+            "geometry": {},
+            "discretisation": {},
+            "model": {},
+            "name": "turbine_name",
+            "reference plane": True,
+            "def": "./turbine_vtp/turbine_def.vtp",
+            "reference point": [x, y, z],
+            "update frequency": 1,
+        }
+    }
+
+The *controller* dictionary defines how the forces generated from the disc should be controlled. Options here are *fixed* and *tsr curve*. For a fixed controller the user must specify an angular velocity and blade pitch angle, and for a tsr curve the user must specify a tip speed ratio curve, and optionally a blade pitch curve in the case of a *BET* model.
+
+.. code-block:: python
+
+    "controller": {
+        "type": "tsr curve",
+        "tip speed ratio": tsr,
+        "tip speed ratio curve": [
+            [u0, tsr0],
+            ...
+            [un, tsrn]
+        ],
+    },
+
+    "controller": {
+        "type": "fixed",
+        "omega": omega,
+        "pitch": pitch
+    },
+
+The *geometry* dictionary contains the physical description of the disc geometry, and has the following keys:
+
+.. code-block:: python
+
+    "geometry": {
+        "centre": [x, y, z],
+        "inner radius": inner_radius,
+        "normal": [x, y, z],
+        "outer radius": outer_radius,
+        "up": [x, y, z],
+    },
+
+The *discretisation* dictionary contains the information needed to create the actuator disc representation of the turbine/ propellor:
+
+.. code-block:: python
+
+    "discretisation": {"type": "disc", "number of elements": 48},
+
+The *model* dictionary contains the information needed to drive the force calculation in the actuator disc model. Here the user can specify either a *simple* turbine model, which averages the performance of the turbine over the entire disc, or *BET* to use a blade element model:
+
+.. code-block:: python
+
+    "model": {
+    "power model": "curve",
+    "thrust coefficient": thrust_coefficient,
+    "thrust coefficient curve": [
+            [u0, tc0],
+            ...
+            [un, tcn]
+        ],
+    "turbine power": turbine_power,
+    "turbine power curve": [
+            [u0, p0],
+            ...
+            [un, pn]
+        ],
+    "type": "simple",
+    },
+
+    "model": {
+        "type": "BET",
+        "kind": "propellor",
+        "blade chord": [
+            [r0/R, c0],
+            ...
+            [1.0, cn],
+        ],
+        "blade twist": [
+            [r0/R, t0],
+            ...
+            [1.0, tn],
+        ],
+        "number of sections": 24,
+        "number of blades": 2,
+        "aerofoil positions": [[0.0, "aerofoil1"], [1.0, "aerofoil1"]],
+        "aerofoils": {
+            "aerofoil1": {
+                "cd": [
+                    [a0, cd0],
+                    ...
+                    [an, cdn],
+                ],
+                "cl": [
+                    [a0, cl0],
+                    ...
+                    [an, cln],
+                ],
+            },
+            ...
+        },
+        "tip loss correction radius": 0.8,
+        "tip loss correction": "rstar",
+    },
