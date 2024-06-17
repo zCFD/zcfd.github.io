@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Actuator disc modelling &#8212; zCFD User Guide v2024.04.8259-145-g8b7fc documentation</title>
+    <title>Actuator disc modelling &#8212; zCFD User Guide v2024.04.8259-146-g2277 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=31387875"></script>
+    <script src="_static/documentation_options.js?v=9cdcfa17"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="_static/fav.png"/>
@@ -83,12 +83,15 @@
 <span class="p">},</span>
 </pre></div>
 </div>
+<p>Here the <em>normal</em> direction will determine the direction of force from the disc. The convention in zCFD is that the normal should point on the direction of the force on the fluid. i.e. for a propeller the normal should point in the direction of the flow, and on a turbine it should point towards the incoming flow.</p>
 <p>The <em>discretisation</em> dictionary contains the information needed to create the actuator disc representation of the turbine/ propellor:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;discretisation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;disc&quot;</span><span class="p">,</span> <span class="s2">&quot;number of elements&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">},</span>
 </pre></div>
 </div>
 <p>The <em>model</em> dictionary contains the information needed to drive the force calculation in the actuator disc model. Here the user can specify either a <em>simple</em> turbine model, which averages the performance of the turbine over the entire disc, or <em>BET</em> to use a blade element model:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;simple&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;turbine&quot;</span><span class="p">,</span>
 <span class="s2">&quot;power model&quot;</span><span class="p">:</span> <span class="s2">&quot;curve&quot;</span><span class="p">,</span>
 <span class="s2">&quot;thrust coefficient&quot;</span><span class="p">:</span> <span class="n">thrust_coefficient</span><span class="p">,</span>
 <span class="s2">&quot;thrust coefficient curve&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -96,13 +99,12 @@
         <span class="o">...</span>
         <span class="p">[</span><span class="n">un</span><span class="p">,</span> <span class="n">tcn</span><span class="p">]</span>
     <span class="p">],</span>
-<span class="s2">&quot;turbine power&quot;</span><span class="p">:</span> <span class="n">turbine_power</span><span class="p">,</span>
+<span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="n">turbine_power</span><span class="p">,</span>
 <span class="s2">&quot;turbine power curve&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="n">p0</span><span class="p">],</span>
         <span class="o">...</span>
         <span class="p">[</span><span class="n">un</span><span class="p">,</span> <span class="n">pn</span><span class="p">]</span>
     <span class="p">],</span>
-<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;simple&quot;</span><span class="p">,</span>
 <span class="p">},</span>
 
 <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>

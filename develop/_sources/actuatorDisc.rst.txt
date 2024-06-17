@@ -61,6 +61,8 @@ The *geometry* dictionary contains the physical description of the disc geometry
         "up": [x, y, z],
     },
 
+Here the *normal* direction will determine the direction of force from the disc. The convention in zCFD is that the normal should point on the direction of the force on the fluid. i.e. for a propeller the normal should point in the direction of the flow, and on a turbine it should point towards the incoming flow.
+
 The *discretisation* dictionary contains the information needed to create the actuator disc representation of the turbine/ propellor:
 
 .. code-block:: python
@@ -71,7 +73,9 @@ The *model* dictionary contains the information needed to drive the force calcul
 
 .. code-block:: python
 
-    "model": {
+    "model": { 
+    "type": "simple",
+    "kind": "turbine",
     "power model": "curve",
     "thrust coefficient": thrust_coefficient,
     "thrust coefficient curve": [
@@ -79,13 +83,12 @@ The *model* dictionary contains the information needed to drive the force calcul
             ...
             [un, tcn]
         ],
-    "turbine power": turbine_power,
+    "power": turbine_power,
     "turbine power curve": [
             [u0, p0],
             ...
             [un, pn]
         ],
-    "type": "simple",
     },
 
     "model": {
