@@ -5,22 +5,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 4: Aero-acoustics &#8212; zCFD User Guide v2024.04.8259-147-gefe5 documentation</title>
+    <title>Tutorial 4: Aero-acoustics &#8212; zCFD User Guide v2023.11.6459-42-g70f51f documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=e76210b0"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/documentation_options.js?v=4271a04e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tutorial 3a: FWH Solver" href="fwh_tutorial.html" />
-    <link rel="prev" title="Tutorial 3: Time accurate solution" href="quick_start_3.html" />
+    <link rel="next" title="Running zCFD using EPIC" href="epic_tutorial.html" />
+    <link rel="prev" title="Tutorial 3a: FWH Solver" href="fwh_tutorial.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -44,8 +43,7 @@
 </ul>
 </nav>
 <p>In <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">Tutorial 2</span></a>, we learnt how to run a steady state RANS simulation for the flow over the 2D 30P30N multi-element aerofoil geometry.  In this tutorial, we will use the steady state RANS simulation to perform a broadband aero-acoustic simulation using the Fast Random Particle Mesh (FRPM) stochastic noise method.  The geometry of this case is as in Tutorial 2 and can be seen below:</p>
-<a class="reference internal image-reference" href="../_images/30p30n.png"><img alt="30P 30N" src="../_images/30p30n.png" style="width: 600px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/30p30n.png"><img alt="30P 30N" src="../_images/30p30n.png" style="width: 600px;" /></a>
 <p>As we have already generated the full steady state RANS solution in Tutorial 2, we will begin by creating our aero-acoustic mesh, on which we will solve the <em>Acoustic Perturbation Equations</em> using a high order DG method.  To start, we will load the wall boundary solution into Paraview and export it in STL format.</p>
 <section id="aero-acoustic-mesh-generation">
 <h2>Aero-acoustic mesh generation<a class="headerlink" href="#aero-acoustic-mesh-generation" title="Link to this heading">¶</a></h2>
@@ -220,26 +218,20 @@ zm3<span class="w"> </span><span class="se">\</span>
 <section id="paraview">
 <h3>Paraview<a class="headerlink" href="#paraview" title="Link to this heading">¶</a></h3>
 <p>To conduct post-processing of the aeroacoustic simulation, open Paraview and load the .pvd generated in the OUTPUT folder. Since we are only interested in the acoustics, it may be useful to only have ‘var_1’ selected in the ‘Point/Cell/Column Array Status’ options as this corresponds to acoustic pressure.</p>
-<a class="reference internal image-reference" href="../_images/select_var1_paraview.png"><img alt="selection of 'var_1' in Paraview" class="align-center" src="../_images/select_var1_paraview.png" style="width: 400px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/select_var1_paraview.png"><img alt="selection of 'var_1' in Paraview" class="align-center" src="../_images/select_var1_paraview.png" style="width: 400px;" /></a>
 <p>To visualise the acoustics more clearly, click the ‘Rescale to Custom Data Range’ icon in the top left of the Paraview window:</p>
-<a class="reference internal image-reference" href="../_images/select_custom_scale_paraview_1.png"><img alt="selection of custom data range in Paraview30P 30N, pt1" class="align-center" src="../_images/select_custom_scale_paraview_1.png" style="width: 300px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/select_custom_scale_paraview_1.png"><img alt="selection of custom data range in Paraview30P 30N, pt1" class="align-center" src="../_images/select_custom_scale_paraview_1.png" style="width: 300px;" /></a>
 <p>and change to values -10 to 10 before clicking ‘Rescale and disable automatic rescaling’:</p>
-<a class="reference internal image-reference" href="../_images/select_custom_scale_paraview_2.png"><img alt="selection of custom data range in Paraview30P 30N, pt2" class="align-center" src="../_images/select_custom_scale_paraview_2.png" style="width: 300px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/select_custom_scale_paraview_2.png"><img alt="selection of custom data range in Paraview30P 30N, pt2" class="align-center" src="../_images/select_custom_scale_paraview_2.png" style="width: 300px;" /></a>
 <p>You can now zoom in towards the aerofoil slat region to clearly view the acoustics.</p>
-<a class="reference internal image-reference" href="../_images/var1_paraview.png"><img alt="'var_1' plot in Paraview" class="align-center" src="../_images/var1_paraview.png" style="width: 600px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/var1_paraview.png"><img alt="'var_1' plot in Paraview" class="align-center" src="../_images/var1_paraview.png" style="width: 600px;" /></a>
 <p>Zoomed in view:</p>
-<a class="reference internal image-reference" href="../_images/var1_paraview_zoomedin.png"><img alt="'var_1' plot in Paraview, zoomed in" class="align-center" src="../_images/var1_paraview_zoomedin.png" style="width: 600px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/var1_paraview_zoomedin.png"><img alt="'var_1' plot in Paraview, zoomed in" class="align-center" src="../_images/var1_paraview_zoomedin.png" style="width: 600px;" /></a>
 </section>
 <section id="performing-spectral-analysis">
 <h3>Performing Spectral Analysis<a class="headerlink" href="#performing-spectral-analysis" title="Link to this heading">¶</a></h3>
 <p>To perform spectral analysis, ensure that you have the acoustic.ipynb file in the working directory.  Launch a Jupyter server and load the acoustic.ipynb file. Once opened, run all the cells and the following plot should be produced of Power Spectral Density (PSD).</p>
-<a class="reference internal image-reference" href="../_images/psd_plot.png"><img alt="PSD plot" src="../_images/psd_plot.png" style="width: 600px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/psd_plot.png"><img alt="PSD plot" src="../_images/psd_plot.png" style="width: 600px;" /></a>
 <p>The acoustic.ipynb uses Pandas to read in the acoustic pressure data within the _MP2 file (this file contains the acoustic pressure history at monitor point 2 as specified in the Python dictionary).  This signal is then checked to find where the acoustic waves meet the observer and is appropriately clipped, removing samples where there were no acoustic waves.  The time signal of acoustic pressure is then processed using SciPy, and in particular, Welch’s method.  Finally the PSD is plotted using Matplotlib.  All modules are available within the zCFD environment.</p>
 </section>
 </section>
@@ -258,13 +250,13 @@ zm3<span class="w"> </span><span class="se">\</span>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="intro.html">Getting Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="quick_start_1.html">Tutorial 1: Simple Aerofoil</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_3.html">Tutorial 3: Time accurate solution</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 4: Aero-acoustics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 3a: FWH Solver</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 4: Aero-acoustics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="epic_tutorial.html">Running zCFD using EPIC</a></li>
 </ul>
 </li>
@@ -275,12 +267,11 @@ zm3<span class="w"> </span><span class="se">\</span>
 <li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
 </ul>
 
 
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -288,14 +279,14 @@ zm3<span class="w"> </span><span class="se">\</span>
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2016-23, Zenotech Ltd.
+      &copy;2016-23, Zenotech Ltd.
       
       |
       <a href="../_sources/getting_started/quick_start_4.rst.txt"
@@ -305,7 +296,7 @@ zm3<span class="w"> </span><span class="se">\</span>
     
 
     
-    <script>
+    <script type="text/javascript">
 
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-32675146-1']);
@@ -314,8 +305,8 @@ zm3<span class="w"> </span><span class="se">\</span>
       _gaq.push(['_trackPageview']);
 
       (function() {
-        var ga = document.createElement('script'); ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
 

@@ -86,19 +86,16 @@ Example usage:
                   'variable_name_alias' : { "V" : "VELOCITY", },
                   "frequency": 500,
                   'calculate averge and rms': True,
-                  'average start time cycle': 1000,
-                  "immersed boundary surface": [{"zone": 7, "stl": "body.stl"},
-                                                {"zone": 9, "stl": "hub.stl"}],
-
+                  'average start time cycle': 1000
                 },
     ..
     }
 
 format
 ^^^^^^
-Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in vtk format for reading into `ParaView <https://www.paraview.org>`_. 
+Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in legacy vtk format for reading into `ParaView <https://www.paraview.org>`_. 
 
-.. 'ensight' is EnSight Gold format.
+.. 'ensight' is EnSight Gold format. (removed ensight for now, is it tested?)
 
 scripts
 ^^^^^^^
@@ -160,9 +157,7 @@ average start time cycle
 ^^^^^^^^^^^^^^^^^^^^^^^^
 If **compute average and rms** is True, this controls first real time cycle to start calculating the running average. This allows you to run the solver for a number of time cycles before you start calculating the average and RMS values.
 
-immersed boundary surface
-^^^^^^^^^^^^^^^^^^^^^^^^^
-If the case uses immersed wall boundary conditions then force reporting on those surfaces requires stl files to be provided per immersed wall zone. The solution is interpolated onto the points in the stl so the mesh needs to be at least as fine as the boundary otherwise the accuracy of the reported forces will be affected. The interpolated solution on the stl is also output at the same frequency as other surface data.
+
 
 .. _output_frequency:
 
@@ -254,7 +249,7 @@ Example usage:
                       "volume interpolate": 3,
                       "checkpoint": 3,
                       # Start output every 3 cycles after 1 cycle (default = 1)
-                      "volume data start": 1,
+                      "volume data start": 1
                       "surface data start": 1,
                       "volume interpolate start": 1,
                       "checkpoint start": 1,

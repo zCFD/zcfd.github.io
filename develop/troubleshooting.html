@@ -5,22 +5,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Troubleshooting &#8212; zCFD User Guide v2024.04.8259-147-gefe5 documentation</title>
+    <title>Troubleshooting &#8212; zCFD User Guide v2023.11.6459-42-g70f51f documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=e76210b0"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/documentation_options.js?v=4271a04e"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="_static/fav.png"/>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="PDF copy" href="pdf.html" />
-    <link rel="prev" title="Utilities" href="utilities.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -50,8 +47,7 @@
 <p>There are formal criteria for the CFL number for given schemes, however these typically only apply to idealised (orthogonal or structured meshes with very gradual variation in cell-to-cell volume ratios).  For complex meshes or where cell quality may be poor (even in only a few cells), the limit for stability may be significantly less.  In explicit mode, the theoretical CFL limit is formally approximately 1.0 for most schemes - though in many cases a higher value (1.5 to 2.0) will actually work.  In implicit mode the CFL limit is theoretically 1000 or more, with values between 10 and 100 quite common.</p>
 <p>The solver will provide some feedback as it is running that can be helpful in diagnosing stability issues.</p>
 <figure class="align-default" id="id1">
-<a class="reference internal image-reference" href="_images/diverge.png"><img alt="Diverging residuals" src="_images/diverge.png" style="width: 600px;" />
-</a>
+<a class="reference internal image-reference" href="_images/diverge.png"><img alt="Diverging residuals" src="_images/diverge.png" style="width: 600px;" /></a>
 <figcaption>
 <p><span class="caption-text">The typical form of a divergent set of residuals.  Rather than decreasing, the values all start increasing significantly from cycle 45 onwards.  In this case the NACA0012 case was deliberately set with an unstable explicit CFL number of 6.0.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
@@ -121,8 +117,7 @@
 <h2>Convergence stall<a class="headerlink" href="#convergence-stall" title="Link to this heading">¶</a></h2>
 <p>More common than crashing is convergence stall - where the reported residuals initially reduce and then plateau.</p>
 <figure class="align-default" id="id3">
-<a class="reference internal image-reference" href="_images/stall.png"><img alt="Stalling residuals" src="_images/stall.png" style="width: 600px;" />
-</a>
+<a class="reference internal image-reference" href="_images/stall.png"><img alt="Stalling residuals" src="_images/stall.png" style="width: 600px;" /></a>
 <figcaption>
 <p><span class="caption-text">The convergence of the steady-state explicit solver has achieved an average residual reduction of 5 orders of magnitude and then stalled.  The noise in the solution from 40k cycles onwards suggests that either the flow is not fundamentally steady-state or that multigrid is adding an error to the solution.  The user must determine whether the level of convergence is sufficient for their purposes and if not whether to run an unsteady simulation or degrade the spatial accuracy.</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
@@ -156,10 +151,10 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
             </a></p><h3>Navigation</h3>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Running zCFD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
@@ -168,16 +163,11 @@
 <li class="toctree-l1"><a class="reference internal" href="zm3.html">zM3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#crashing">Crashing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#convergence-stall">Convergence stall</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
 </ul>
 
 
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -185,14 +175,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2016-23, Zenotech Ltd.
+      &copy;2016-23, Zenotech Ltd.
       
       |
       <a href="_sources/troubleshooting.rst.txt"
@@ -202,7 +192,7 @@
     
 
     
-    <script>
+    <script type="text/javascript">
 
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-32675146-1']);
@@ -211,8 +201,8 @@
       _gaq.push(['_trackPageview']);
 
       (function() {
-        var ga = document.createElement('script'); ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
 

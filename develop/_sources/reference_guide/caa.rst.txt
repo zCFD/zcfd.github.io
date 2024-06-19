@@ -439,10 +439,6 @@ This option can be used to permit non reflecting farfield boundaries.  When set,
      - No
      - --
      - Number
-   * - 'condition'
-     - No
-     - --
-     - String reference to IC
 
 **'distance'** specifies the distance from farfield boundaries in which the solution should be damped towards freestream values. **'damping factor'** specifies the amount of damping to be applied at cells close to farfield boundaries.
 
