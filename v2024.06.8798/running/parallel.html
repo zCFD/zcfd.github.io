@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Parallel Guide &#8212; zCFD User Guide v2024.06.8798 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=0beca76c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="EPIC" href="epic.html" />
+    <link rel="prev" title="Running zCFD" href="execution.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="parallel-guide">
+<h1>Parallel Guide<a class="headerlink" href="#parallel-guide" title="Link to this heading">¶</a></h1>
+<section id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Link to this heading">¶</a></h2>
+<p>zCFD uses Intel MPI (Message Passing Interface) to enable running over multiple machines or multiple GPUs, either in one machine or across multiple. A paid license is required for this functionality. This is achieved by decomposing the domain into parallel regions that are distributed to each MPI rank. MPI can leverage high bandwidth network interconnects such as infiniband or AWS’ Elastic Fabric adaptor,</p>
+<p>There are two main strategies for running the code in parallel:</p>
+<p><strong>Hybrid MPI/OpenMP</strong> runs one MPI process per socket, reducing the number of MPI ranks at larger core counts. Running in hybrid mode assigns multiple cores to each MPI rank, allowing it to reduce the communication overheads associated with running in parallel.</p>
+<p><strong>Full MPI</strong> runs one MPI process per core and is typically the best strategy for low core count runs or GPU based runs where you would run 1 MPI rank per GPU available on the node.</p>
+<p>To run in parallel you add the -n option to the run_zcfd script. The provided argument is the number of MPI processes to launch.</p>
+</section>
+<section id="hybrid-mpi-openmp">
+<h2>Hybrid MPI/OpenMP<a class="headerlink" href="#hybrid-mpi-openmp" title="Link to this heading">¶</a></h2>
+<p>This is the default mode for zCFD. It will auto detect the number of sockets on each node and set the number of OpenMP threads appropriately. The –tpn option to run_zcfd can be used to set the number of MPI processes to launch on each node. The number of OpenMP threads will be set automatically by dividing the total number of cores between all processes.</p>
+<p>For example, if you had two hosts with 2 x 12 core CPUs per host and you wanted to run Hybrid MPI/OpenMP you would request 1 MPI rank per CPU socket and zCFD will automatically set the number of OpenMP threads per rank to match the number of cores per socket (in our case 12).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-m<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>–tpn<span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+<p>The number of OpenMP threads assigned to each rank can be overridden by setting <strong>OMP_NUM_THREADS</strong> in the calling environment.</p>
+</section>
+<section id="full-mpi">
+<h2>Full MPI<a class="headerlink" href="#full-mpi" title="Link to this heading">¶</a></h2>
+<p>This is achieved by running zCFD with <strong>OMP_NUM_THREADS</strong> set to 1 and passing -n &lt;tasks&gt; where tasks is the number of MPI ranks.</p>
+<p>For example, if you had two hosts with 2 x 12 core CPUs per host and wanted to run full MPI with 1 MPI rank per core you could do the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+run_zcfd<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">48</span><span class="w"> </span>–tpn<span class="w"> </span><span class="m">24</span>
+</pre></div>
+</div>
+</section>
+<section id="running-across-multiple-machines-with-a-cluster-scheduler">
+<h2>Running across multiple machines with a cluster scheduler<a class="headerlink" href="#running-across-multiple-machines-with-a-cluster-scheduler" title="Link to this heading">¶</a></h2>
+<p>There are many cluster scheduling systems but commonly used ones are Slurm, PBS Pro or GridEngine. Please refer to either the cluster scheduling software or your local HPC systems’ documentation for how to submit jobs to the appropriate nodes on your system as configuration varies between machines.</p>
+<p>Intel MPI has tight integration to most commonly used scheduling systems and so will typically autodetect the nodes to run on.</p>
+</section>
+<section id="running-across-multiple-machines-without-a-cluster-scheduler">
+<h2>Running across multiple machines without a cluster scheduler<a class="headerlink" href="#running-across-multiple-machines-without-a-cluster-scheduler" title="Link to this heading">¶</a></h2>
+<p>If your cluster does not have a scheduling system then <strong>I_MPI_HYDRA_HOST_FILE</strong> can be set in the environment to point at a file containing the list of hostnames that zCFD will launch on. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">I_MPI_HYDRA_HOST_FILE</span><span class="o">=</span>~/hosts.file
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For this to run you need to be able to ssh without a password to each of the machines listed.</p>
+</div>
+<p>An example contents of a hosts file is shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Compute01:2
+compute02:2
+Compute03:1
+</pre></div>
+</div>
+<p>This file specifies three hosts, compute01, compute02, compute03 where 2 ranks will be launched on each of compute01 and compute02 and 1 rank will be launched on compute03.</p>
+<p>Alternatively this could be specified as which would launch processes round robin through the list of machines listed in the file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Compute01
+compute02
+Compute03
+</pre></div>
+</div>
+</section>
+<section id="libfabric-provider-selection">
+<h2>Libfabric provider selection<a class="headerlink" href="#libfabric-provider-selection" title="Link to this heading">¶</a></h2>
+<p>zCFD will attempt to autodetect the correct provider to use for MPI communication. It tries the following providers in order:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>efa
+psm2
+mlx
+verbs
+tcp
+sockets
+</pre></div>
+</div>
+<p>If FI_PROVIDER is set then the autodetection is skipped.</p>
+</section>
+<section id="using-cluster-provided-libfabric">
+<h2>Using cluster provided libfabric<a class="headerlink" href="#using-cluster-provided-libfabric" title="Link to this heading">¶</a></h2>
+<p>By default zCFD will use the version of libfabric that ships with Intel MPI. For some advanced use cases you may wish to make use of preinstalled libfabric. This may be if you have a custom network driver or a specific configuration on your cluster.
+To enable this then set the <strong>I_MPI_OFI_LIBRARY_INTERNAL</strong> environment variable to 0</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">I_MPI_OFI_LIBRARY_INTERNAL</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+</section>
+<section id="pre-launch-script">
+<h2>Pre launch script<a class="headerlink" href="#pre-launch-script" title="Link to this heading">¶</a></h2>
+<p>On some systems the defaults setup by zcfd may not be optimal and so a custom script to modify the environment can be injected by setting the environment variable <strong>ZCFD_PRE_LAUNCH</strong> to the path to a script. This script will be sourced from within a bash environment just before the solver is launched.</p>
+<p>An example use case for this is to bind a GPU to a specific network interface on a multi-homed network system.</p>
+</section>
+<section id="openmp-affinity">
+<h2>OpenMP affinity<a class="headerlink" href="#openmp-affinity" title="Link to this heading">¶</a></h2>
+<p>By default zCFD binds its OpenMP threads to cores using the <strong>OMP_PROC_BIND</strong> and <strong>OMP_PLACES</strong> environment variables.</p>
+</section>
+<section id="other-mpi-implementations">
+<h2>Other MPI implementations<a class="headerlink" href="#other-mpi-implementations" title="Link to this heading">¶</a></h2>
+<p>On platforms where Intel MPI doesn’t work then we can build zCFD against a specific implementation of MPI. This would be a custom deployment for your facility so get in touch with us if you need this.</p>
+</section>
+<section id="running-at-large-scale">
+<h2>Running at large scale<a class="headerlink" href="#running-at-large-scale" title="Link to this heading">¶</a></h2>
+<p>As zCFD is partly written in python, the install consists of a large quantity of small files, which on a large scale cluster can have a negative impact on the cluster filesystem during startup. In order to mitigate this it is possible to stage the code into either local storage or memory on the compute nodes using MPI to broadcast the data.</p>
+<p>Contact us if you want to run in this mode.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Running zCFD</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="execution.html">Running zCFD</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Parallel Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epic.html">EPIC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epic.html#epic-desktops">EPIC Desktops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jupyter.html">Using Jupyter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env.html">zCFD Environment Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/running/parallel.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script>
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

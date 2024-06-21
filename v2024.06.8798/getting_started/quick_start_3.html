@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2024.06.8798 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=0beca76c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 4: Aero-acoustics" href="quick_start_4.html" />
+    <link rel="prev" title="Tutorial 2: Steady State RANS" href="quick_start_2.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="tutorial-3-time-accurate-solution">
+<span id="tutorial-3"></span><h1>Tutorial 3: Time accurate solution<a class="headerlink" href="#tutorial-3-time-accurate-solution" title="Link to this heading">¶</a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#introduction" id="id1">Introduction</a></p></li>
+<li><p><a class="reference internal" href="#control-dictionary-breakdown" id="id2">Control Dictionary Breakdown</a></p></li>
+<li><p><a class="reference internal" href="#running-the-case" id="id3">Running the case</a></p></li>
+<li><p><a class="reference internal" href="#post-processing" id="id4">Post Processing</a></p></li>
+</ul>
+</nav>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>Following on from executing the steady state simulation of <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">Tutorial 2</span></a>, this tutorial will explore the generation of a time accurate result for the unsteady laminar shedding from a 2D cylinder.</p>
+<a class="reference internal image-reference" href="../_images/cylinder.png"><img alt="2D Cylinder" class="align-center" src="../_images/cylinder.png" style="width: 600px;" />
+</a>
+<p id="qs3-download-link">You can download the required files <a class="reference external" href="https://zcfd.zenotech.com/tutorials/3/cylinder.zip" target="_blank">here</a>.</p>
+</section>
+<section id="control-dictionary-breakdown">
+<h2>Control Dictionary Breakdown<a class="headerlink" href="#control-dictionary-breakdown" title="Link to this heading">¶</a></h2>
+<p>This case uses a similar control dictionary as the previous 30p30n steady state simulation, with the main difference being the time marching, and output regions of the file.</p>
+<section id="time-marching">
+<h3>Time Marching<a class="headerlink" href="#time-marching" title="Link to this heading">¶</a></h3>
+<p>To switch to a time accurate simulation we need to update the <em>“time marching”</em> dictionary. In the steady state <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a> case the <em>‘total time’</em> and <em>‘time step’</em> parameters were both set to 1.0, this causes the solver to run a single steady state timestep for the number of cycles defined by the <em>‘cycles’</em> parameter.</p>
+<p>We will now update these to run the time accurate simulation. To do this we set <em>‘total time’</em> to be 1.2, which means the simulation will be run for a total of 1.2 seconds. <em>‘time step’</em> is set to 0.002 seconds, this is the interval at which the solver will step time forwards. Which means we will have a total of 1.2 / 0.002 = 600
+total unsteady timesteps to perform.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;unsteady&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;total time&#39;</span> <span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
+        <span class="s1">&#39;time step&#39;</span> <span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
+        <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;start&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;scheme&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;implicit euler&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;stage&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">},</span>
+     <span class="s2">&quot;cfl&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+     <span class="s2">&quot;cfl viscous factor&quot;</span><span class="p">:</span> <span class="mf">1.0E-6</span><span class="p">,</span>
+     <span class="s2">&quot;cfl ramp factor&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;initial&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;growth&quot;</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">},</span>
+     <span class="s2">&quot;cycles&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>zCFD uses dual time stepping to advance in real time by first iterating to convergence on an inner steady state ‘pseudo time’ loop, before advancing the real time cycle. In this case the inner loop is performed using implicit euler time marching, the number of cycles this inner loop performs is controlled by <em>‘cycles’</em>. So the in the example above the inner loop runs at a CFL of 200 for 5 cycles.</p>
+<p>The choice of timestep size, and number of cycles per inner loop will have a significant effect on the quality and cost of the final solution. Using too large of a real time step will mean higher frequency unsteady effects are lost, similarly too few inner cycles will result in unsteady effects being lost. A rule of thumb is to ensure the residuals converge by at least two orders of magnitude over an inner cycle. On the other hand if too many cycles or timesteps are performed, the cost of the simulation will quickly increase. Finally the number of cycles to reach convergence in a pseudo time loop also depends on the step size. Meaning in some cases it is actually beneficial to run a smaller timestep, in order to require fewer inner loop iterations.</p>
+</section>
+<section id="output">
+<span id="quick-start-3-output"></span><h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
+<p>The <em>‘write output’</em> dictionary in the control dictionary is a bit more complicated here than in <a class="reference internal" href="quick_start_1.html#tutorial-1"><span class="std std-ref">tutorial 1</span></a> or <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;write output&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;vtk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;surface variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;rho&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;volume variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;rho&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;volume data&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;surface data&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;checkpoint&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>First of all, the <em>‘frequency’</em> parameter takes on a different meaning in a time-accurate simulation (<a class="reference internal" href="quick_start_1.html#tutorial-1"><span class="std std-ref">tutorial 1</span></a> and <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a> are both steady-state simulations).</p>
+<p>In a steady-state simulation, the <em>‘frequency’</em> parameter controls how the number of pseudo-time <em>‘cycles’</em> between solver outputs. Since we have no real interest in any data apart from the converged data at the end for a steady-state simulation, every time the solver outputs data, it over-writes the previous output data.</p>
+<p>We run time-accurate simulations when we’re interested in the variation of the flow over time (e.g. due to vortex shedding), so in the time-accurate solver data outputs are not over-written, and the <em>‘frequency’</em> variable relates to the number of real time steps between outputs, instead of number of pseudo-time cycles between outputs.</p>
+<p>While we can just use a single number for <em>‘frequency’</em> (e.g. <code class="code docutils literal notranslate"><span class="pre">&quot;frequency&quot;:</span> <span class="pre">5</span></code>), we can also specify <em>‘frequency’</em> as a dictionary for more fine grained control. This is especially relevant in time-accurate simulations, where frequent data output can not only slow down the simulation but also quickly use up disk space. Generally the volume data takes longest to output, so for large cases it can be a good idea to output volume data output infrequently, and instead rely on surface data, <a class="reference internal" href="../reference_guide/report.html#monitor-points"><span class="std std-ref">monitor points</span></a> and <a class="reference internal" href="../reference_guide/write_output.html#volume-interpolate"><span class="std std-ref">volume intepolated data</span></a> for high frequency data collection.</p>
+<p>In this, a relatively small case, we have chosen to output surface and volume data every 5 real time-steps. Since the <em>‘time step’</em> was set to 0.002 seconds, the volume and surface data will therefore be written out every 0.01 seconds of simulated time. We have chosen to output <em>checkpoint</em> data (see <a class="reference internal" href="../reference_guide/write_output.html#output-frequency"><span class="std std-ref">here</span></a>) less frequently.</p>
+</section>
+<section id="monitor-points">
+<h3>Monitor Points<a class="headerlink" href="#monitor-points" title="Link to this heading">¶</a></h3>
+<p>In order to capture the shedding frequencies of vortices behind the cylinder, we will place a monitor point in this region to append data to the report file. A monitor point will simply report the requested output variables, at the point defined within the flow. These results can be visualised alongside the force report in the output notebook.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;monitor&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;MR_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;probe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;point&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span> <span class="mf">0.313</span><span class="p">],</span>
+        <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cp&quot;</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="running-the-case">
+<h2>Running the case<a class="headerlink" href="#running-the-case" title="Link to this heading">¶</a></h2>
+<p>You can run the case as you did for Tutorial 1, but with the following <strong>run_zcfd</strong> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-m<span class="w"> </span>cylinder.h5<span class="w"> </span>-c<span class="w"> </span>cylinder.py
+</pre></div>
+</div>
+</section>
+<section id="post-processing">
+<h2>Post Processing<a class="headerlink" href="#post-processing" title="Link to this heading">¶</a></h2>
+<section id="output-report">
+<h3>Output report<a class="headerlink" href="#output-report" title="Link to this heading">¶</a></h3>
+<p>Start and connect to a Jupyter server, using <strong>‘start_lab’</strong> as outlined in the previous sections. Go ahead and run all cells.</p>
+<a class="reference internal image-reference" href="../_images/residuals.png"><img alt="Residuals" class="align-center" src="../_images/residuals.png" style="width: 600px;" />
+</a>
+<p>In the “plot_forces” cell, you should notice additional data points available provided by the monitor point. Visualising the pressure trace [<cite>probe_cp</cite>] should reveal an oscillatory pattern, indicating that the predicted vortex shedding is indeed occurring. This trace can then be used to calculate the corresponding shedding frequency.</p>
+<a class="reference internal image-reference" href="../_images/probe_cp.png"><img alt="Probe location" class="align-center" src="../_images/probe_cp.png" style="width: 600px;" />
+</a>
+</section>
+<section id="flow-field">
+<span id="qs3-view-flowfield"></span><h3>Flow field<a class="headerlink" href="#flow-field" title="Link to this heading">¶</a></h3>
+<p>We set the output frequency to 5 when running the case and so the solver will have written visualisation VTK files every 5 real time steps. If you look in the <em>‘cylinder_P1_OUTPUT/VISUALISATION’</em> directory you will see a series of .vtp and .pvtp files, one for every written timestep.</p>
+<p>You could load these individually but the easier method is to load the <em>‘cylinder.pvd’</em> in <em>‘cylinder_P1_OUTPUT/’</em>. This .pvd file links to all of the timesteps.</p>
+<p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>. Paraview will render a single solution time step at a time, and time series data can be navigated using the icons at the top of the screen:</p>
+<a class="reference internal image-reference" href="../_images/paraview_time.png"><img alt="Probe location" class="align-center" src="../_images/paraview_time.png" style="width: 600px;" />
+</a>
+</section>
+<section id="animation">
+<h3>Animation<a class="headerlink" href="#animation" title="Link to this heading">¶</a></h3>
+<p>For unsteady data it is often useful to output an animation of the solution. This can be done in Paraview by either exporting an image per timestep and then using a third party tool to stitch the images into a video or by saving the animation directly. The advantage of the first approach is that it can easily be scripted and is more suitable for large cases.
+Since this case is quite small we will export an mp4 video directly from Paraview. The steps to do this are:</p>
+<ol class="arabic simple">
+<li><p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>.</p></li>
+<li><p>Set the view up to shade the output by <em>“cp”</em> and zoom/move the image until you are happy with the view:</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/paraview.png"><img alt="Cp shaded" class="align-center" src="../_images/paraview.png" style="width: 600px;" />
+</a>
+<ol class="arabic simple" start="3">
+<li><p>Select <em>‘File-&gt;Save Animation’</em> in Paraview. To export as video select your preferred format, the format will depend on your Operating System but for Windows you should be able to select “MP4 files” and on Linux “FFMPEG AVI”. Give the file a name and click OK.</p></li>
+<li><p>On the next screen you can set the target resolution, frame rate and the timesteps to export. Set the Image resolution to 1920x1080 (FHD) and the frame rate to 24. If you just want to export the end of the simulation (where the oscillation is established) you can set the Frame Window from 300 to 600.</p></li>
+<li><p>Click OK to export the animation. This will take some time.</p></li>
+</ol>
+<p>You should now have an exported video of the unsteady simulation.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quick_start_1.html">Tutorial 1: Simple Aerofoil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 3: Time accurate solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_4.html">Tutorial 4: Aero-acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 3a: FWH Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epic_tutorial.html">Running zCFD using EPIC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/getting_started/quick_start_3.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script>
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
