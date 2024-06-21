@@ -105,11 +105,21 @@ Example usage:
 .. note::
     The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see *Tab x*)
 
-Scale Function
+Mesh Transform Function
 **************
 
-As an alternative to passing a fixed scaling factor the 'scale' parameter will also accept a function. See the :ref:`Scale Function <scale_function>` for details.
+As an alternative to passing a fixed scaling factor the 'mesh transform function' parameter accepts a function. This can be used to apply an arbitrary transform to the mesh. A simple example is given below:
 
+.. code-block:: python
+
+    def my_mesh_transform(**kwargs):
+        x = list(kwargs["coord"])
+
+        x[2] = x[2] - 0.5
+
+        return {"coord": tuple(x)}
+
+    "mesh transform function": my_mesh_transform
 
 
 Partitioner

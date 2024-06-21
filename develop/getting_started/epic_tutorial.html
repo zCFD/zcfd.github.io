@@ -5,21 +5,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Running zCFD using EPIC &#8212; zCFD User Guide v2023.11.6459-42-g70f51f documentation</title>
+    <title>Running zCFD using EPIC &#8212; zCFD User Guide v2024.04.8259-148-ge8d0b documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=4271a04e"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=662d05a4"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Reference Guide" href="../reference_guide/intro.html" />
-    <link rel="prev" title="Tutorial 4: Aero-acoustics" href="quick_start_4.html" />
+    <link rel="prev" title="Tutorial 3a: FWH Solver" href="fwh_tutorial.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -48,7 +49,7 @@
 <section id="what-is-in-this-tutorial">
 <h2>What is in this tutorial?<a class="headerlink" href="#what-is-in-this-tutorial" title="Link to this heading">¶</a></h2>
 <p>This tutorial will show how to run zCFD using <a class="reference external" href="https://epic.zenotech.com" target="_blank">EPIC</a>. EPIC provides access to a range of High Performance Computing systems allowing you to run your zCFD jobs at a large scale. This enables you to run your simulations faster or do larger simulations.
-EPIC also enables you to start  <strong>EPIC Desktops</strong> please see <a class="reference internal" href="../execution.html#epic-desktops"><span class="std std-ref">here</span></a>, that are Linux desktop nodes running in the cloud and are great for pre or post processing simulations or even running zCFD jobs.</p>
+EPIC also enables you to start  <strong>EPIC Desktops</strong> please see <a class="reference internal" href="../running/epic.html#epic-desktops"><span class="std std-ref">here</span></a>, that are Linux desktop nodes running in the cloud and are great for pre or post processing simulations or even running zCFD jobs.</p>
 </section>
 <section id="what-you-need">
 <h2>What you need?<a class="headerlink" href="#what-you-need" title="Link to this heading">¶</a></h2>
@@ -70,41 +71,50 @@ EPIC also enables you to start  <strong>EPIC Desktops</strong> please see <a cla
 <p>Since the input files are small in our case we will upload them via the browser, if the files were larger than 500MB then the other methods are recommended.</p>
 <p>To upload the files, log in to EPIC and the select Data-&gt;Manage on the left hand menu bar. This will show the <a class="reference external" href="https://epic.zenotech.com/data/" target="_blank">Your Data</a> view. This lists all of the data you have stored in EPIC.</p>
 <p>Click on the <strong>“Add folder”</strong> button, shown below, to create a new folder, and name it “30p30n”.</p>
-<a class="reference internal image-reference" href="../_images/Image_1.png"><img alt="Add folder" src="../_images/Image_1.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_1.png"><img alt="Add folder" src="../_images/Image_1.png" style="width: 600px;" />
+</a>
 <p>This will create a new folder and change your view to show you the contents, it should currently be empty. To upload some data click on the <strong>“Upload Files”</strong> button, shown below.</p>
-<a class="reference internal image-reference" href="../_images/Image_2.png"><img alt="Upload Files" src="../_images/Image_2.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_2.png"><img alt="Upload Files" src="../_images/Image_2.png" style="width: 600px;" />
+</a>
 <p>Drag and drop the mesh and control files from your local computer into the dialog box that shows, this will trigger the upload from your local machine to the EPIC data store. Once the upload is complete the dialog should look like this:</p>
-<a class="reference internal image-reference" href="../_images/Image_3.png"><img alt="Upload complete" src="../_images/Image_3.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_3.png"><img alt="Upload complete" src="../_images/Image_3.png" style="width: 600px;" />
+</a>
 <p>Click <strong>“Done”</strong> and you will go back to the data view, you should now be able to see your input files in EPIC.</p>
 </section>
 <section id="step-3-submit-a-zcfd-job">
 <h2>Step 3. Submit a zCFD job<a class="headerlink" href="#step-3-submit-a-zcfd-job" title="Link to this heading">¶</a></h2>
 <p>The next step is to create a new zCFD job. Click on <strong>“New Job”</strong> on the left hand menu bar. This will take you to the application selection screen. Select the most recent version of zCFD from the options available.</p>
 <p>On the next screen select the folder containing the data you have just uploaded by checking the checkbox next to it:</p>
-<a class="reference internal image-reference" href="../_images/Image_4.png"><img alt="New zCFD job" src="../_images/Image_4.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_4.png"><img alt="New zCFD job" src="../_images/Image_4.png" style="width: 600px;" />
+</a>
 <p>This tells EPIC where the job inputs are. You can leave the rest of the settings as they are, or update the job name if you want to.</p>
 <p>When you click <strong>“Next”</strong> EPIC will start the zCFD Input Checker, this validates the input folder you have selected and presents you with zCFD specific choices.</p>
 <p>Here you can set the python control dictionary, the mesh and set the number of cycles to run. You can also change the number of parallel processes to use when executing zCFD.</p>
 <p>For our example update the cycles to 2000 and the number of parallel processes to 4. The fields should now look like this:</p>
-<a class="reference internal image-reference" href="../_images/Image_5.png"><img alt="zCFD EPIC options" src="../_images/Image_5.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_5.png"><img alt="zCFD EPIC options" src="../_images/Image_5.png" style="width: 600px;" />
+</a>
 <p>You will then see the cluster selection page, this lists all of the high performance computing resources available to run your job.
 On the previous page asked for 4 parallel processes, on the Cluster page we can say how we want these distributed and what the maximum runtime of our job will be.  For zCFD lets leave the <strong>“Tasks per node”</strong> as “1 per device”, this will put one parallel process per CPU socket or GPU. Our job is quite small and should complete easily within 1 hour, so we can leave the Maximum Runtime as 1.</p>
-<a class="reference internal image-reference" href="../_images/Image_6.png"><img alt="zCFD EPIC options" src="../_images/Image_6.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_6.png"><img alt="zCFD EPIC options" src="../_images/Image_6.png" style="width: 600px;" />
+</a>
 <p>For our example we will select the “CFMS - GPU” cluster from the list by clicking <strong>“Select”</strong> next to it. EPIC will then show us the cost breakdown for the job, click <strong>“Submit Job”</strong> to continue.</p>
 <p>You job will now be submitted to the selected cluster. EPIC will transfer the data, submit the job to the cluster and monitor the progress.</p>
-<a class="reference internal image-reference" href="../_images/Image_7.png"><img alt="zCFD EPIC options" src="../_images/Image_7.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_7.png"><img alt="zCFD EPIC options" src="../_images/Image_7.png" style="width: 600px;" />
+</a>
 </section>
 <section id="step-4-monitor-the-job">
 <h2>Step 4. Monitor the job<a class="headerlink" href="#step-4-monitor-the-job" title="Link to this heading">¶</a></h2>
 <p>You can see your active and recent jobs by clicking on <strong>“Active Jobs”</strong> on the left hand side bar. Click on the <strong>“&gt;&gt;”</strong> next to the job to see the detailed job status.</p>
 <p>Here you can see the current status of the job, view the job logs, view the residual plots of the job while it is running and cancel or update the job.</p>
-<a class="reference internal image-reference" href="../_images/Image_8.png"><img alt="Monitor running job" src="../_images/Image_8.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_8.png"><img alt="Monitor running job" src="../_images/Image_8.png" style="width: 600px;" />
+</a>
 </section>
 <section id="step-5-look-at-the-results">
 <h2>Step 5. Look at the results<a class="headerlink" href="#step-5-look-at-the-results" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="../_images/Image_10.png"><img alt="Completed job" src="../_images/Image_10.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Image_10.png"><img alt="Completed job" src="../_images/Image_10.png" style="width: 600px;" />
+</a>
 <p>Once the job is complete EPIC will upload the results from the cluster back to EPIC, you can click on the <strong>“Goto data folder”</strong> link at the top of the job status page to view the files and download them to your local machine using the browser.</p>
-<p>An alternative method is to start an EPIC desktop node by clicking on <strong>“New Desktop”</strong> on the left hand tool bar. For more information about using the Desktop see <a class="reference internal" href="../execution.html#epic-desktops"><span class="std std-ref">here</span></a>.</p>
+<p>An alternative method is to start an EPIC desktop node by clicking on <strong>“New Desktop”</strong> on the left hand tool bar. For more information about using the Desktop see <a class="reference internal" href="../running/epic.html#epic-desktops"><span class="std std-ref">here</span></a>.</p>
 </section>
 </section>
 
@@ -121,13 +131,13 @@ On the previous page asked for 4 parallel processes, on the Cluster page we can 
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../execution.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running/intro.html">Running zCFD</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="intro.html">Getting Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="quick_start_1.html">Tutorial 1: Simple Aerofoil</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_3.html">Tutorial 3: Time accurate solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 3a: FWH Solver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_4.html">Tutorial 4: Aero-acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 3a: FWH Solver</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Running zCFD using EPIC</a></li>
 </ul>
 </li>
@@ -138,11 +148,12 @@ On the previous page asked for 4 parallel processes, on the Cluster page we can 
 <li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
 </ul>
 
 
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -150,14 +161,14 @@ On the previous page asked for 4 parallel processes, on the Cluster page we can 
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2016-23, Zenotech Ltd.
+      &#169;2016-23, Zenotech Ltd.
       
       |
       <a href="../_sources/getting_started/epic_tutorial.rst.txt"
@@ -167,7 +178,7 @@ On the previous page asked for 4 parallel processes, on the Cluster page we can 
     
 
     
-    <script type="text/javascript">
+    <script>
 
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-32675146-1']);
@@ -176,8 +187,8 @@ On the previous page asked for 4 parallel processes, on the Cluster page we can 
       _gaq.push(['_trackPageview']);
 
       (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
 

@@ -9,6 +9,6 @@ The getting started guide is here to teach the fundamentals of using zCFD, start
    quick_start_1
    quick_start_2
    quick_start_3
-   fwh_tutorial
    quick_start_4
+   fwh_tutorial
    epic_tutorial

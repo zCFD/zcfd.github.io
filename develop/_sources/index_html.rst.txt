@@ -16,7 +16,7 @@ Version: |version|
 
    overview
    installation
-   execution
+   running/intro
    getting_started/intro
    reference_guide/intro
    functions
@@ -25,4 +25,6 @@ Version: |version|
    zm3
    visualisation
    utilities
+   troubleshooting
    pdf
+
