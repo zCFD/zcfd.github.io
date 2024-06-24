@@ -54,7 +54,7 @@ Initial State
 
 .. code-block:: python
 
-    # set initital state to IC_1
+    # set initial state to IC_1
     "initial": {
       "name": "IC_1"
     }
@@ -120,6 +120,42 @@ As an alternative to passing a fixed scaling factor the 'mesh transform function
         return {"coord": tuple(x)}
 
     "mesh transform function": my_mesh_transform
+
+Mesh Transform Matrix
+**************
+
+As well as the transform function above the mesh can be transformed using an `affine transform<https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia<https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a row major (flattened) numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:
+
+.. code-block:: python
+
+     import pytransform3d.rotations as pyrot
+     import pytransform3d.transformations as pytr
+
+     def mesh_transform():
+         a = np.array([1.0, 0.0, 0.0, 90.0 * np.pi / 180.0])
+         A2B = np.zeros((4,4))
+         A2B[3, 3] = 1
+         rot_mtx_a = pyrot.matrix_from_axis_angle(a)
+         A2B = pytr.rotate_transform(A2B, rot_mtx_a, check=False)
+         
+         b = np.array([1.0, 0.0, 0.0, 90.0 * np.pi / 180.0])
+         B2C = np.zeros((4,4))
+         B2C[3, 3] = 1
+         rot_mtx_b = pyrot.matrix_from_axis_angle(b)
+         B2C = pytr.rotate_transform(B2C, rot_mtx_b, check=False)
+         
+         c = np.array([0.0, 1.0, 0.0, 10.0 * np.pi / 180.0])
+         C2D = np.zeros((4,4))
+         C2D[3, 3] = 1
+         rot_mtx_c = pyrot.matrix_from_axis_angle(c)
+         C2D = pytr.rotate_transform(C2D, rot_mtx_c, check=False)
+        
+         A2C = pytr.concat(A2B, B2C)
+         A2D = pytr.concat(A2C, C2D)
+      
+         return A2D.flatten()
+
+     "mesh transform matrix": mesh_transform
 
 
 Partitioner
