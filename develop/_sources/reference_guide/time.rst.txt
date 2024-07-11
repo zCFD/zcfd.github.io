@@ -280,7 +280,7 @@ Example usage:
 
 .. code-block:: python
 
-    # Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds
+    # Run an steady state simulation
    'time marching' : {
             ...
             "unsteady": {
