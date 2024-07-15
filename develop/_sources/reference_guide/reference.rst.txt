@@ -24,7 +24,7 @@ Reference state
 .. code-block:: python
 
     # set reference state to IC_1
-    'reference' : 'IC_1',
+    'reference': 'IC_1',
 
 Sets the :ref:`Initial Condition <initial_conditions>` which provides the reference quantities when non-dimensionalisation is applied to :ref:`force reporting. <reporting>`
 "IC\_?" must be a valid :ref:`initial conditions <initial_conditions>` dictionary  defined in the parameters file
@@ -90,12 +90,12 @@ Example usage:
 .. code-block:: python
 
     # Scale from mm to metres
-    'scale' : [0.001,0.001,0.001]
+    'scale': [0.001,0.001,0.001]
 
 .. code-block:: python
 
     # Scale from inches to metres
-    'scale' : [0.0254,0.0254,0.0254]
+    'scale': [0.0254,0.0254,0.0254]
 
 .. code-block:: python
 
@@ -202,7 +202,11 @@ Restart
    * - 'restart casename'
      - No
      - 
-     - Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used..
+     - Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used.
+   * - 'restart ignore history'
+     - No
+     - False
+     - True/False: True to ignore the cycle history from restart file and begin the solve as sepcified in current control file.
    * - 'interpolate restart'
      - No
      - False
@@ -216,7 +220,7 @@ Restart
      - 0
      - Number of Laplace smoothing cycles to smooth initial mapped solution
 
-Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a <casename>_results.h5 file to load the restart, this can be overridden with the 'restart casename' parameter.
+Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a <casename>_results.h5 file to load the restart, this can be overridden with the 'restart casename' parameter. The cycle history from the restart case can be ignored through the 'restart ignore history' option. To begin the current simulation using the <casename>_results.h5 specified in the current control dictionary but ignore the previous cycle history set this option to True.
 
 The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped on to a new mesh using the 'interpolate restart' parameter.
 
@@ -225,9 +229,10 @@ Example usage:
 .. code-block:: python
 
     # Restart from previous solution
-    'restart' : True,
+    'restart': True,
     # Load solution from case name 'my_case'
-    'restart casename' : 'my_case',
+    'restart casename': 'my_case',
+    'restart ignore history': False,
 
 
 .. code-block:: python
@@ -246,7 +251,7 @@ It is possible to restart the SA-neg solver from results generated using the Men
 .. code-block:: python
 
     # Generate approximate initial field for SA-neg
-    'approximate sa from sst results' : True,
+    'approximate sa from sst results': True,
 
 Safe Mode
 ^^^^^^^^^
@@ -271,4 +276,4 @@ Example usage:
 .. code-block:: python
 
     # Enable safe mode
-    'safe' : True,
+    'safe': True,

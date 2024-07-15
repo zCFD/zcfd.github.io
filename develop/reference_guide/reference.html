@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Settings &#8212; zCFD User Guide v2024.04.8259-180-g6312c documentation</title>
+    <title>Reference Settings &#8212; zCFD User Guide v2024.04.8259-181-gd62ef documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=6fd2a93b"></script>
+    <script src="../_static/documentation_options.js?v=df40775f"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -59,7 +59,7 @@
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set reference state to IC_1</span>
-<span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
+<span class="s1">&#39;reference&#39;</span><span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>Sets the <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Condition</span></a> which provides the reference quantities when non-dimensionalisation is applied to <a class="reference internal" href="report.html#reporting"><span class="std std-ref">force reporting.</span></a>
@@ -134,11 +134,11 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <p>Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from mm to metres</span>
-<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">]</span>
+<span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from inches to metres</span>
-<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">]</span>
+<span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale the mesh to be 10 times larger in y axis</span>
@@ -249,32 +249,38 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <tr class="row-odd"><td><p>‘restart casename’</p></td>
 <td><p>No</p></td>
 <td></td>
-<td><p>Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used..</p></td>
+<td><p>Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘interpolate restart’</p></td>
+<tr class="row-even"><td><p>‘restart ignore history’</p></td>
+<td><p>No</p></td>
+<td><p>False</p></td>
+<td><p>True/False: True to ignore the cycle history from restart file and begin the solve as sepcified in current control file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘interpolate restart’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
 <td><p>True/False: True to interpolate restart results from a different mesh.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘restart meshname’</p></td>
+<tr class="row-even"><td><p>‘restart meshname’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
 <td><p>The name of the mesh to interpolate the restart from.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘solution smooth cycles’</p></td>
+<tr class="row-odd"><td><p>‘solution smooth cycles’</p></td>
 <td><p>No</p></td>
 <td><p>0</p></td>
 <td><p>Number of Laplace smoothing cycles to smooth initial mapped solution</p></td>
 </tr>
 </tbody>
 </table>
-<p>Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a &lt;casename&gt;_results.h5 file to load the restart, this can be overridden with the ‘restart casename’ parameter.</p>
+<p>Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a &lt;casename&gt;_results.h5 file to load the restart, this can be overridden with the ‘restart casename’ parameter. The cycle history from the restart case can be ignored through the ‘restart ignore history’ option. To begin the current simulation using the &lt;casename&gt;_results.h5 specified in the current control dictionary but ignore the previous cycle history set this option to True.</p>
 <p>The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped on to a new mesh using the ‘interpolate restart’ parameter.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from previous solution</span>
-<span class="s1">&#39;restart&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="s1">&#39;restart&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="c1"># Load solution from case name &#39;my_case&#39;</span>
-<span class="s1">&#39;restart casename&#39;</span> <span class="p">:</span> <span class="s1">&#39;my_case&#39;</span><span class="p">,</span>
+<span class="s1">&#39;restart casename&#39;</span><span class="p">:</span> <span class="s1">&#39;my_case&#39;</span><span class="p">,</span>
+<span class="s1">&#39;restart ignore history&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from previous solution on a different mesh</span>
@@ -289,7 +295,7 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <h3>Advanced Restart<a class="headerlink" href="#advanced-restart" title="Link to this heading">¶</a></h3>
 <p>It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate approximate initial field for SA-neg</span>
-<span class="s1">&#39;approximate sa from sst results&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="s1">&#39;approximate sa from sst results&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
@@ -321,7 +327,7 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <p>Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Enable safe mode</span>
-<span class="s1">&#39;safe&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="s1">&#39;safe&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
