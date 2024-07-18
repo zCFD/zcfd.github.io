@@ -157,7 +157,26 @@ As well as the transform function above the mesh can be transformed using an `af
 
      "mesh transform matrix": mesh_transform
 
+     
+Mesh Quality Remediation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'mesh quality remediation angle threshold'
+     - No
+     - 'not set'
+     - 0 - 180
+
+zCFD has the ability to detect poor quality cells in the mesh and fix them as first order in space. A poor quality cell is defined as one which has a face where the angle between the cell centre to cell centre vector and the face centre to cell centre vector is greater than that set using the :code:`'mesh quality remediation angle threshold'` key. When convergence issues are encountered due to mesh quality setting the angle threshold to around 75 degrees initially may allow the solver to run on the mesh. Ideally the mesh should be improved so the solution can be fully second order over the entire domain.
+
+     
 Partitioner
 ^^^^^^^^^^^
 
