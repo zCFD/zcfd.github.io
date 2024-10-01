@@ -1,0 +1,351 @@
+.. _initial_conditions:
+
+Initial Conditions
+^^^^^^^^^^^^^^^^^^
+
+An initial condition dictionary defines a fluid state. They are used to provide a reference initial state for the solution as well as specific conditions that can be assigned to :ref:`boundary conditions <boundary_conditions>`.
+
+Initial condition properties are defined using consecutively numbered blocks
+
+.. code-block:: python
+
+    'IC_1' : {....},
+    'IC_2' : {....},
+
+By default zCFD will use the "IC_1" block  to provide initial flow field conditions for the simulation but this can be changed with the :ref:`'initial' <initial_state>` parameter.
+
+In addition to fully describing a set of conditions, zCFD allows you to specify :ref:`'reference conditions' <reference_conditions>` to be specified relative to a base set. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain.
+
+
+Another way of prescribing an initial condition is by defining a dynamic :ref:`'driving function' <driving_function>`, which on evaluation returns an initial condition dictionary. 
+
+.. list-table:: 
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'pressure'
+     - Yes
+     - 
+     - Float
+     - Static pressure in Pascals. Used to compute density and set Total Energy in the Compressible solver.
+   * - 'temperature'
+     - Yes
+     - 
+     - Float
+     - Static temperature in Kelvin. Used to compute density and for dynamic viscosity scaling using Sutherlands law.
+   * - 'V'
+     - No
+     - 
+     - Dict
+     - See :ref:`Velocity <ic_v>` 
+   * - 'reynolds no'
+     - When 'viscosity' not set.
+     - 
+     - Float
+     - Used to calculate viscosity at supplied temperature
+   * - 'reference length'
+     - No
+     - 1
+     - Float
+     - Reference length to be used to calculate viscosity from the Reynolds number
+   * - 'viscosity'
+     - When 'reynolds no' not set.
+     - 
+     - Float
+     - Sets the dynamic viscosity at the temperature with scaling provided by Sutherlands law defined in :ref:`material <materials>` section.
+   * - :ref:`'turbulence intensity' <ic_turb_intensity>`
+     - No
+     - 
+     - Float
+     - Turbulence intensity (%)
+   * - :ref:`'eddy viscosity ratio' <ic_turb_intensity>`
+     - No
+     - 
+     - Float
+     - Ratio of dynamic viscosity to turbulent viscosity used to set the turbulence quantities
+   * - :ref:`'ambient turbulence intensity' <ic_turb_intensity>`
+     - No
+     - 
+     - Float
+     - Value of background turbulence intensity (%) to maintain in fluid 
+   * - :ref:`'ambient eddy viscosity ratio' <ic_turb_intensity>`
+     - No
+     - 
+     - Float
+     - Value of background turbulence eddy viscosity ratio to maintain in fluid
+   * - 'profile'
+     - No
+     - 
+     - Dict
+     - See :ref:`Velocity Profile <ic_v_profile>` 
+
+Example usage:
+
+.. code-block:: python
+
+    parameters = {
+    ..
+    "IC_1": {
+        "V": {"vector": [0.0, 2.5, 0.0] },
+        "ambient eddy viscosity ratio": 1e-20,
+        "ambient turbulence intensity": 1e-20,
+        "eddy viscosity ratio": 0.1,
+        "pressure": 101325.0,
+        "temperature": 273.15,
+        "turbulence intensity": 0.01,
+        "viscosity": 1.79e-05,
+    ..
+    },
+
+.. _ic_v:
+
+Velocity
+--------
+Velocity can be specified in two ways, either a vector or a vector and a Mach number. When Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and speed of sound at the pressure and temperature provided.
+
+For example to set a velocity of 50 mesh units/sec in the X direction:
+
+.. code-block:: python
+
+    ..
+    "V" : {[50.0,0.0,0.0],}  
+    ..
+
+
+Or to set a velocity of mach 0.2 in the X direction:
+
+.. code-block:: python
+
+    ..
+    "V" : {[1.0,0.0,0.0], "mach": 0.2}  
+    ..
+
+
+.. _ic_viscosity:
+
+Viscosity
+---------
+
+Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified.  This can be specified either as a dimensional quantity or by a Reynolds number and reference length
+
+.. code-block:: python
+
+    # Dynamic viscosity in dimensional units
+    'viscosity' : 1.83e-5,
+
+or
+
+.. code-block:: python
+
+    # Reynolds number
+    'reynolds No' : 5.0e6,
+    # Reference length
+    'reference length' : 1.0,
+
+.. note::
+
+     Reynolds number is defined as:
+     :math:`Re=\frac{density * V * reference length}{viscosity}`
+
+
+.. _ic_turb_intensity:
+
+Turbulence intensity & Eddy viscosity
+-------------------------------------
+
+Turbulence intensity is defined as the ratio of velocity fluctuations :math:`u^{'}` to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high.
+
+.. code-block:: python
+
+    # Turbulence intensity %
+    'turbulence intensity': 0.01,
+    # Turbulence intensity for sustainment %
+    'ambient turbulence intensity': 0.01,
+
+The eddy viscosity ratio :math:`(\mu_t/\mu)` varies depending type of flow.
+For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)
+
+For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
+by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:
+
+======= ======= ====== ======== ======== ======== ===========
+  Re      3000   5000   10,000   15,000   20,000   > 100,000
+  eddy    11.6   16.5   26.7     34.0     50.1      100
+======= ======= ====== ======== ======== ======== ===========
+
+.. code-block:: python
+
+    # Eddy viscosity ratio
+    'eddy viscosity ratio': 0.1,
+    # Eddy viscosity ratio for sustainment
+    'ambient eddy viscosity ratio': 0.1,
+
+.. _ic_v_profile:
+
+Velocity Profile
+----------------
+The user can also provide functions to specify a ‘wall-function’ - or the turbulence viscosity profile near a boundary.
+
+.. list-table:: 
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'abl'
+     - No
+     - 
+     - Dict
+     - Specify an :ref:`ABL <ic_abl>`  (Atmospheric Boundary Layer)
+   * - :ref:`'field' <ic_field>`
+     - No
+     - 
+     - File name
+     - Specify a field of data that is used as a lookup for setting the flow conditions.
+   * - 'use wall distance'
+     - No
+     - False
+     - True/False
+     - Use wall distance in place of z coordinate in field during interpolation process. This can be used in setting the profile of flows on a terrain mesh with a variable ground location at the boundary
+
+
+.. _ic_field:
+
+field
+=====
+The file specified using the 'field' parameter should be in the ParaView/VTK VTP format. If should contain a node array with one or more of the following array names: ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. zCFD will then look up those values in the solution by looking up the nearest point in the VTP file.
+
+.. code-block:: python
+
+    ..
+    'profile' : {
+             'field' : 'inflow_field.vtp',
+             # Localise field using wall distance rather that z coordinate
+             'use wall distance' : True,
+            },
+    ..
+
+.. note::
+
+ Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.
+
+
+.. _ic_abl:
+
+ABL
+---
+
+.. list-table:: 
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'roughness length'
+     - Yes
+     - 
+     - Float
+     - It is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.
+   * - 'friction velocity'
+     - Yes
+     - 
+     - Float
+     - Specify a field of data that is used as a lookup for setting the flow conditions.
+   * - 'surface layer height'
+     - No
+     - 
+     - Float
+     - The surface layer height, also known as the aerodynamic or boundary layer height.
+   * - 'monin-obukhov length'
+     - No
+     - 
+     - Float
+     - The Monin-Obukhov length.
+   * - 'tke'
+     - No
+     - 
+     - Float
+     - Set the turbulent kinetic energy.
+   * - 'z0'
+     - No
+     - 
+     - Float
+     - Set the z location of the ground rather than using the z coordinate in the mesh.
+   * - 'up'
+     - No
+     - [0,0,1]
+     - Vector
+     - Direction of gravity
+
+roughness length
+================
+
+Is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.
+
+The roughness length is typically denoted by the symbol ":math:`z_o`" and is defined as the vertical distance between the Earth's surface and the height at which the logarithmic wind profile intersects the surface. The logarithmic wind profile is a mathematical relationship that describes the variation of wind speed with height in the atmospheric boundary layer.
+
+The roughness length depends on the surface characteristics of the terrain or objects present on the Earth's surface. Different surfaces, such as forests, urban areas, or bodies of water, have different roughness lengths. For example, a smooth surface like open water would have a small roughness length, while a densely forested area would have a larger roughness length.
+
+friction velocity
+=================
+
+Friction velocity, often denoted as ":math:`u\star`" (pronounced "u-star"), is another important parameter in the study of atmospheric boundary layers. It represents the characteristic velocity of turbulent motions in the surface layer of the atmosphere, generated by the shear stress between the air and the Earth's surface.
+
+Friction velocity is defined as the square root of the shear stress divided by the air density:
+
+:math:`u\star = \sqrt{\frac{\tau}{\rho}}`
+
+where:
+
+* :math:`u\star` is the friction velocity,
+* :math:`\tau` is the shear stress between the air and the surface, and
+* :math:`\rho` is the density of the air.
+
+The shear stress, :math:`\tau`, arises from the momentum transfer between the moving air and the surface roughness elements. It is related to the wind speed and the roughness length through a logarithmic wind profile, described by the following equation:
+
+:math:`u(z) = (\frac{u\star}{\kappa}) * \ln{\frac{z}{z_o}}`
+
+where:
+
+* :math:`u(z)` is the wind speed at height z above the surface,
+* :math:`\kappa` is the von Kármán constant (approximately 0.4), and
+* :math:`z_o` is the roughness length.
+
+The friction velocity provides a measure of the intensity of turbulence near the Earth's surface. It influences several atmospheric processes, including heat and moisture exchange, pollutant dispersion, and the formation of atmospheric boundary layer structures. The magnitude of the friction velocity depends on surface roughness, wind speed, and atmospheric stability, among other factors.
+
+surface layer height
+====================
+The surface layer height, also known as the aerodynamic or boundary layer height, refers to the vertical extent of the atmospheric boundary layer near the Earth's surface. It represents the region where the physical properties, such as wind speed, temperature, humidity, and turbulence, are influenced by the underlying surface. The height of the surface layer is often estimated based on empirical relationships or atmospheric stability conditions. It can vary from a few meters to a few hundred meters above the ground, depending on factors such as surface roughness length, wind speed, and atmospheric stability. Additionally, the surface layer height can change diurnally, with variations due to daytime heating and nighttime cooling effects.
+
+monin-obukhov length
+====================
+The Monin-Obukhov length, often denoted as "L", is a parameter used in the study of atmospheric boundary layers to characterise the stability of the air near the Earth's surface. It is named after the Russian scientists A. S. Monin and A. M. Obukhov, who made significant contributions to the understanding of turbulence and boundary layer physics.
+
+The Monin-Obukhov length is defined as the ratio of the potential temperature difference to the buoyancy flux. It is given by the following equation:
+
+:math:`L = -\frac{u\star^3 * \theta_v} {\kappa * g * w\theta}`
+
+where:
+
+* :math:`L` is the Monin-Obukhov length,
+* :math:`u\star` is the friction velocity,
+* :math:`\theta_v` is the virtual potential temperature,
+* :math:`\kappa` is the von Kármán constant (approximately 0.4),
+* :math:`g` is the acceleration due to gravity, and
+* :math:`w\theta` is the vertical flux of virtual potential temperature.
+
+The Monin-Obukhov length is an indicator of atmospheric stability. It quantifies the relationship between the mechanical production of turbulence due to wind shear and the buoyancy effects caused by vertical temperature gradients. Positive values of L indicate stable atmospheric conditions, while negative values indicate unstable conditions. A neutral atmosphere corresponds to L = 0.
+
+The Monin-Obukhov length influences various atmospheric processes, such as turbulence structure, heat and moisture exchange, and dispersion of pollutants. It plays a significant role in determining the behaviour of the atmospheric boundary layer, including the vertical mixing of air masses and the development of turbulence. The value of L is influenced by factors such as surface properties, wind speed, temperature, and humidity gradients.
+
