@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2024.06.8798-110-g3334e documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2024.06.8798-111-g1c37e documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=e07e474b"></script>
+    <script src="../_static/documentation_options.js?v=8dc83122"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -102,7 +102,15 @@
 </div>
 <section id="wall">
 <span id="id2"></span><h3>Wall<a class="headerlink" href="#wall" title="Link to this heading">¶</a></h3>
-<p>Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e <span class="math notranslate nohighlight">\((y^{+} \leq 1)\)</span>) otherwise automatic wall functions should be used. This behaviour is chosen by setting <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> in the wall specification below. Optionally it is possible to set wall velocity, roughness and temperature.</p>
+<p>Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e <span class="math notranslate nohighlight">\((y^{+} \leq 1)\)</span>) otherwise automatic wall functions should be used. This behaviour is chosen by setting <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> in the wall specification below.  Optionally it is possible to set wall velocity, roughness and temperature.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">'type'</span></code> allows you to choose between a standard <code class="code docutils literal notranslate"><span class="pre">'wall'</span></code> definition or <code class="code docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">wall'</span></code> boundaries. Immersed wall boundaries are <em>only</em> supported with meshes created by the using <a class="reference internal" href="../zm3.html#zm3"><span class="std std-ref">zM3</span></a> mesh generator.  The zM3 mesh generator will determine vectors to represent the underlying geometry within the 3D Cartesian mesh. It will also generate additional information such as locations where data is to be sampled in order to define conditions at the geometry surface, and the subsequent halo boundary values.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Immersed wall boundaries</strong> supports <code class="code docutils literal notranslate"><span class="pre">'type'</span></code> of <code class="code docutils literal notranslate"><span class="pre">'slip'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'noslip'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'wallfunction'</span></code>.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">'slip'</span></code> conditions are chosen, there will be zero momentum normal to the underlying geometry.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">'noslip'</span></code> conditions are chosen, any values computed near the wall will linearly extrapolated from the donor (sample) point location associated with that point.  This can potentially cause sensitivity and early flow separation in strong pressure gradients.  Again, this can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">'wallfunction'</span></code> conditions are chosen, any values computed near the wall will be based on the Musker wall model, which closely represents the flow along a flat plate in zero pressure gradient.  As such, there are fundamental limitations on the accuracy of this model with highly curved surfaces and strong pressure gradients.  This can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.</p>
+</div>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -132,47 +140,46 @@
 <td><p>List of integers</p></td>
 <td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
 </tr>
-<tr class="row-even"><td><p>‘kind’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>‘slip’, ‘noslip’, ‘wallfunction’</p></td>
-<td><p>Specifies the type of wall boundary condition. Slip - zero viscosity wall boundary. noslip - viscous wall with y+ ~ 1 mesh resolution, wallfunction - viscous wall with automatic handling of mesh resolution between y+~1 to y+ &gt; 100</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘type’</p></td>
+<tr class="row-even"><td><p>‘type’</p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>‘wall’ or ‘immersed wall’</p></td>
 <td><p>Specifies a solid wall boundary which defaults to adiabatic unless a temperature is specified</p></td>
 </tr>
-<tr class="row-even"><td><p>‘roughness’</p></td>
+<tr class="row-odd"><td><p>‘kind’</p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>‘slip’, ‘noslip’, ‘wallfunction’</p></td>
+<td><p>Specifies the type of wall boundary condition. Slip - zero viscosity wall boundary. noslip - viscous wall with y+ ~ 1 mesh resolution, wallfunction - viscous wall with automatic handling of mesh resolution between y+~1 to y+ &gt; 100</p></td>
+</tr>
+<tr class="row-even"><td><p>‘immersed normal type’</p></td>
+<td><p>No</p></td>
+<td><p>‘STL’</p></td>
+<td><p>‘STL’ or ‘immersed boundary vector’</p></td>
+<td><p>For ‘immersed wall’ types. Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘roughness’</p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>See  <a class="reference internal" href="#bc-roughness"><span class="std std-ref">roughness</span></a></p></td>
 <td><p>Specifies the surface roughness. If not specified the wall is specified as perfectly smooth. This requires the wall boundary condition kind to be set to <strong>wallfunction</strong>.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘v’</p></td>
+<tr class="row-even"><td><p>‘v’</p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>See <a class="reference internal" href="#bc-velocity"><span class="std std-ref">velocity</span></a></p></td>
 <td><p>Wall velocity specification.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘temperature’</p></td>
+<tr class="row-odd"><td><p>‘temperature’</p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>See <a class="reference internal" href="#bc-temperature"><span class="std std-ref">temperature</span></a></p></td>
 <td><p>Specifies the wall temperature for an isothermal wall. If not specified the wall is treated as adiabatic</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘immersed normal type’</p></td>
-<td><p>No</p></td>
-<td><p>‘STL’</p></td>
-<td><p>‘STL’ or ‘immersed boundary vector’</p></td>
-<td><p>Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)</p></td>
-</tr>
 </tbody>
 </table>
 <p>Example Wall BC with roughness and temperature set:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="c1"># Zone type tag</span>
           <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
           <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;wall&#39;</span><span class="p">,</span>
           <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;slip&#39;</span><span class="p">,</span>
@@ -185,6 +192,15 @@
                           <span class="s1">&#39;scalar&#39;</span> <span class="p">:</span> <span class="mf">280.0</span><span class="p">,</span>
                           <span class="p">},</span>
           <span class="p">},</span>
+</pre></div>
+</div>
+<p>Example Immersed Boundary Wall BC:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+          <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;immersed wall&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;wallfunction&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;immersed normal type&#39;</span> <span class="p">:</span> <span class="s1">&#39;STL&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
 </pre></div>
 </div>
 </section>

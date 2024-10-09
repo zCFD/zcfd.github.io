@@ -71,7 +71,23 @@ Or to apply BC_1 to boundaries to zones with IDs 0,1,2 & 3:
 Wall
 ====
 
-Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e :math:`(y^{+} \leq 1)`) otherwise automatic wall functions should be used. This behaviour is chosen by setting :code:`'kind'` in the wall specification below. Optionally it is possible to set wall velocity, roughness and temperature.
+Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e :math:`(y^{+} \leq 1)`) otherwise automatic wall functions should be used. This behaviour is chosen by setting :code:`'kind'` in the wall specification below.  Optionally it is possible to set wall velocity, roughness and temperature.
+
+:code:`'type'` allows you to choose between a standard :code:`'wall'` definition or :code:`'immersed wall'` boundaries. Immersed wall boundaries are *only* supported with meshes created by the using :ref:`zM3 <zm3>` mesh generator.  The zM3 mesh generator will determine vectors to represent the underlying geometry within the 3D Cartesian mesh. It will also generate additional information such as locations where data is to be sampled in order to define conditions at the geometry surface, and the subsequent halo boundary values.
+
+
+.. note::
+
+    **Immersed wall boundaries** supports :code:`'type'` of :code:`'slip'`, :code:`'noslip'` or :code:`'wallfunction'`.
+
+    If :code:`'slip'` conditions are chosen, there will be zero momentum normal to the underlying geometry.
+
+    If :code:`'noslip'` conditions are chosen, any values computed near the wall will linearly extrapolated from the donor (sample) point location associated with that point.  This can potentially cause sensitivity and early flow separation in strong pressure gradients.  Again, this can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.
+
+
+    If :code:`'wallfunction'` conditions are chosen, any values computed near the wall will be based on the Musker wall model, which closely represents the flow along a flat plate in zero pressure gradient.  As such, there are fundamental limitations on the accuracy of this model with highly curved surfaces and strong pressure gradients.  This can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.
+
+
 
 
 
@@ -94,16 +110,21 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
      - 
      - List of integers
      - Specifies list of mesh zones defined by this boundary condition 
-   * - 'kind'
-     - Yes
-     - 
-     - 'slip', 'noslip', 'wallfunction'
-     - Specifies the type of wall boundary condition. Slip - zero viscosity wall boundary. noslip - viscous wall with y+ ~ 1 mesh resolution, wallfunction - viscous wall with automatic handling of mesh resolution between y+~1 to y+ > 100
    * - 'type'
      - No
      - 
      - 'wall' or 'immersed wall'
      - Specifies a solid wall boundary which defaults to adiabatic unless a temperature is specified
+   * - 'kind'
+     - Yes
+     - 
+     - 'slip', 'noslip', 'wallfunction'
+     - Specifies the type of wall boundary condition. Slip - zero viscosity wall boundary. noslip - viscous wall with y+ ~ 1 mesh resolution, wallfunction - viscous wall with automatic handling of mesh resolution between y+~1 to y+ > 100
+   * - 'immersed normal type'
+     - No
+     - 'STL'
+     - 'STL' or 'immersed boundary vector'
+     - For 'immersed wall' types. Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)
    * - 'roughness'
      - No
      - 
@@ -119,11 +140,6 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
      - 
      - See :ref:`temperature <bc_temperature>` 
      - Specifies the wall temperature for an isothermal wall. If not specified the wall is treated as adiabatic
-   * - 'immersed normal type'
-     - No
-     - 'STL'
-     - 'STL' or 'immersed boundary vector'
-     - Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)
 
 
 Example Wall BC with roughness and temperature set:
@@ -131,7 +147,6 @@ Example Wall BC with roughness and temperature set:
 .. code-block:: python
 
     'BC_1' : {
-              # Zone type tag
               'ref' : 3,
               'type' : 'wall',
               'kind' : 'slip',
@@ -144,6 +159,17 @@ Example Wall BC with roughness and temperature set:
                               'scalar' : 280.0,
                               },
               },
+
+Example Immersed Boundary Wall BC:
+
+.. code-block:: python
+
+    'BC_1' : {
+              'ref' : 3,
+              'type' : 'immersed wall',
+              'kind' : 'wallfunction',
+              'immersed normal type' : 'STL',
+            },
 
 .. _bc_roughness:
 
