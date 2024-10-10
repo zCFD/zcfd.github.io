@@ -1,0 +1,292 @@
+
+.. _reference:
+
+Reference Settings
+------------------
+.. _reference_state:
+
+Reference state
+^^^^^^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'reference'
+     - No
+     - 'IC_1'
+     - "IC\_?" where ? is an integer. 
+
+.. code-block:: python
+
+    # set reference state to IC_1
+    'reference': 'IC_1',
+
+Sets the :ref:`Initial Condition <initial_conditions>` which provides the reference quantities when non-dimensionalisation is applied to :ref:`force reporting. <reporting>`
+"IC\_?" must be a valid :ref:`initial conditions <initial_conditions>` dictionary  defined in the parameters file
+
+
+.. _initial_state:
+
+Initial State
+^^^^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'name'
+     - No
+     - 'IC_1'
+     - "IC\_?" where ? is an integer. 
+   * - 'func'
+     - No
+     - --
+     - An (optional) :ref:`initial conditions function <initial_function>`.
+
+.. code-block:: python
+
+    # set initial state to IC_1
+    "initial": {
+      "name": "IC_1"
+    }
+
+Sets which block :ref:`Initial Condition <initial_conditions>` block will be used to provide initial flow field conditions for the simulation.
+If **'func'** is provided it will be used to provide the initial flow field variables on a cell-by-cell basis.
+
+.. note::
+  If the **'initial'** entry is missing then the conditions default to the :ref:`reference <reference_state>` state.
+
+.. _scale_mesh:
+
+Scale mesh
+^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'scale'
+     - No
+     - [1,1,1]
+     - [scaleX,scaleY,scaleZ] : Any list of positive floats with length 3
+
+Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.
+
+Example usage:
+
+.. code-block:: python
+
+    # Scale from mm to metres
+    'scale': [0.001,0.001,0.001]
+
+.. code-block:: python
+
+    # Scale from inches to metres
+    'scale': [0.0254,0.0254,0.0254]
+
+.. code-block:: python
+
+    # Scale the mesh to be 10 times larger in y axis
+    'scale' : [1,10,1]
+
+.. note::
+    The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see *Tab x*)
+
+Mesh Transform Function
+**************
+
+As an alternative to passing a fixed scaling factor the 'mesh transform function' parameter accepts a function. This can be used to apply an arbitrary transform to the mesh. A simple example is given below:
+
+.. code-block:: python
+
+    def my_mesh_transform(**kwargs):
+        x = list(kwargs["coord"])
+
+        x[2] = x[2] - 0.5
+
+        return {"coord": tuple(x)}
+
+    "mesh transform function": my_mesh_transform
+
+Mesh Transform Matrix
+**************
+
+As well as the transform function above the mesh can be transformed using an `affine transform<https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia<https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:
+
+.. code-block:: python
+
+     import pytransform3d.rotations as pyrot
+     import pytransform3d.transformations as pytr
+
+     a = np.array([1.0, 0.0, 0.0, 90.0 * np.pi / 180.0])
+     A2B = np.identity(4)
+     rot_mtx_a = pyrot.matrix_from_axis_angle(a)
+     A2B = pytr.rotate_transform(A2B, rot_mtx_a)
+
+     b = np.array([1.0, 0.0, 0.0, 90.0 * np.pi / 180.0])
+     B2C = np.identity(4)
+     rot_mtx_b = pyrot.matrix_from_axis_angle(b)
+     B2C = pytr.rotate_transform(B2C, rot_mtx_b)
+
+     c = np.array([0.0, 1.0, 0.0, 10.0 * np.pi / 180.0])
+     C2D = np.identity(4)
+     rot_mtx_c = pyrot.matrix_from_axis_angle(c)
+     C2D = pytr.rotate_transform(C2D, rot_mtx_c)
+
+     A2C = pytr.concat(A2B, B2C)
+     A2D = pytr.concat(A2C, C2D)
+
+     "mesh transform matrix": A2D
+
+     
+Mesh Quality Remediation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'mesh quality remediation angle threshold'
+     - No
+     - 'not set'
+     - 0 - 180
+
+zCFD has the ability to detect poor quality cells in the mesh and fix them as first order in space. A poor quality cell is defined as one which has a face where the angle between the cell centre to cell centre vector and the face centre to cell centre vector is greater than that set using the :code:`'mesh quality remediation angle threshold'` key. When convergence issues are encountered due to mesh quality setting the angle threshold to around 75 degrees initially may allow the solver to run on the mesh. Ideally the mesh should be improved so the solution can be fully second order over the entire domain.
+
+     
+Partitioner
+^^^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'partitioner'
+     - No
+     - 'metis'
+     - ['metis']. The name of the partitioner to use.
+
+The 'metis' partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases
+
+.. .. code-block:: python
+
+..     # Optional (default 'metis'):
+..     # partitioner type
+..     'partitioner' : 'metis',
+
+.. _restart:
+
+Restart
+^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'restart'
+     - No
+     - False
+     - True/False
+   * - 'restart casename'
+     - No
+     - 
+     - Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used.
+   * - 'restart ignore history'
+     - No
+     - False
+     - True/False: True to ignore the cycle history from restart file and begin the solve as sepcified in current control file.
+   * - 'interpolate restart'
+     - No
+     - False
+     - True/False: True to interpolate restart results from a different mesh.
+   * - 'restart meshname'
+     - No
+     - False
+     - The name of the mesh to interpolate the restart from.
+   * - 'solution smooth cycles'
+     - No
+     - 0
+     - Number of Laplace smoothing cycles to smooth initial mapped solution
+
+Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a <casename>_results.h5 file to load the restart, this can be overridden with the 'restart casename' parameter. The cycle history from the restart case can be ignored through the 'restart ignore history' option. To begin the current simulation using the <casename>_results.h5 specified in the current control dictionary but ignore the previous cycle history set this option to True.
+
+The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped on to a new mesh using the 'interpolate restart' parameter.
+
+Example usage:
+
+.. code-block:: python
+
+    # Restart from previous solution
+    'restart': True,
+    # Load solution from case name 'my_case'
+    'restart casename': 'my_case',
+    'restart ignore history': False,
+
+
+.. code-block:: python
+
+    # Restart from previous solution on a different mesh
+    "interpolate restart": True,
+    # Interpolate restart from "different_mesh.h5" 
+    "restart meshname": "different_mesh",
+    # Do not smooth initial solution
+    "solution smooth cycles": 0,
+
+Advanced Restart
+****************
+It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key
+
+.. code-block:: python
+
+    # Generate approximate initial field for SA-neg
+    'approximate sa from sst results': True,
+
+Safe Mode
+^^^^^^^^^
+
+.. list-table:: 
+   :widths: 25 10 25 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+   * - 'safe'
+     - No
+     - False
+     - True/False
+
+Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues
+
+Example usage:
+
+.. code-block:: python
+
+    # Enable safe mode
+    'safe': True,
