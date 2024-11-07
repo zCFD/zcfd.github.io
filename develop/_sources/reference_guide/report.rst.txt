@@ -176,25 +176,29 @@ The force and moment coefficients resulting exclusively from viscous forces and 
      
    * - 'reference area'
      - No
-     - --
+     - 1
      - Positive number
      - Sets the dimensional reference area which is used to non-dimensionalise the reported force and moment coefficients
    * - 'reference length'
      - No
-     - --
+     - 1
      - Positive number
      - Sets the dimensional reference length which is used to non-dimensionalise the moment coefficients
    * - 'reference point'
      - No
-     - --
+     - [0,0,0]
      - [x,y,z] position vector
-     - Sets the reference point which is which is used to non-dimensionalise the moment coefficients
+     - Sets the reference point which is used to non-dimensionalise the moment coefficients
    * - 'reference pressure'
      - No
-     - --
+     - 0.0
      - Positive number
      - For a wetted surface, this sets the pressure on the non-wetted side of the surface. Pressure forces on the surface are calculated by integrating (p - pRef) over the surface
-
+   * - 'dimensional'
+     - No
+     - False
+     - Boolean
+     - Reports the forces in dimensonal units
 
 Example usage:
 
