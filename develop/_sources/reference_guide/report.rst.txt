@@ -199,6 +199,11 @@ The force and moment coefficients resulting exclusively from viscous forces and 
      - False
      - Boolean
      - Reports the forces in dimensonal units
+   * - 'inertial frame'
+     - No
+     - True
+     - Boolean
+     - Transforms the forces for rotating components into the inertial frame rather than fixed frame of original position 
 
 Example usage:
 
