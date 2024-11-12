@@ -57,7 +57,13 @@ Using the zCFD FWH solver
 
 To use the zCFD FWH solver, we must first generate FWH surface data during a zCFD simulation (see :ref:`write output <write_output>` for more details). The FWH surface data is stored in a HDF5 format. While no mesh conversion tools are provided, the zCFD FWH file format can easily be interrogated and replicated with tools like `h5ls` and `h5py` should you wish to convert data from other simulation tools to this format.
 
-The zCFD FWH solver consists of a series of python modules, which are accessible from within the :ref:`zCFD command-line environment <zcfd-command>`. Three python dictionaries, controlling the surface, observer, and solver settings, are required as inputs to the `fwh.solve` function. This function then returns time histories of the pressures at the specified observer points, in the nested dictionaries `pOut` and `tOut`. 
+The zCFD FWH solver consists of a series of python modules, which are accessible from within the :ref:`zCFD command-line environment <zcfd-command>`.
+Three python dictionaries, controlling the surface, observer, and solver settings, are required as inputs to the `fwh.solve` function.
+This function then returns time histories of the pressures at the specified observer points, in the nested dictionaries `pOut` and `tOut`.
+
+When there is more than one surface, the `pOut` and `tOut` dictionaries will contain a `Surface Summation` entry in addition to the entries for each surface.
+This contains, for each observer, a sum of the contributions from each surface. This is useful  when noise originates from several distinct regions, each covered by separate FWH surfaces (e.g. UAVs with several propellors).
+The `Surface Summation` entry will likely cover a shorter time period than the individual surface entries, because it only covers the time period when the observer is receiving valid noise signals from all of the FWH surfaces.
 
 .. parsed-literal:: 
 
@@ -114,6 +120,7 @@ Surfaces dictionary
 ~~~~~~~~~~~~~~~~~~~
 
 The zCFD FWH solver is capable of using multiple FWH surfaces in the same FWH calculation. The Surfaces dictionary therefore contains a key-value pair for each FWH surface to be used, where the key is the surface's name (to be used in the FWH solver) and the value is an :ref:`individual surface definition dictionary <fwhIndividualSurface>`.
+The surface name must be a string, and cannot be 'Surface Summation'.
 
 Example usage:
 
