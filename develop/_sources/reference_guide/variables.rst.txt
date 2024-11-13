@@ -38,7 +38,7 @@ Output Variables
     cellorder
     centre                                          Cell centre location
     viscouslengthscale                              Minimum distance between cell and its neighbours
-    walldistance                                    Wall distance (:math:`m`)
+    walldist                                        Wall distance (:math:`m`)
     sponge                                          Sponge layer damping coefficient
     menterf1                                        Menter SST blending function
     badcells                                        Cells tagged as first order when using mesh quality remediation
