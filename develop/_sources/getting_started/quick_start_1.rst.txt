@@ -272,13 +272,13 @@ Load the naca0012_report.ipynb in Jupyter, then click ``run all``.
 
 Plotting residuals
 ^^^^^^^^^^^^^^^^^^
-The naca0012_report.ipynb makes use of the `zutil.plot.Report` class to read and plot the zCFD report data. Calling the `plot(‘naca0012_report.csv’)` method reads the naca0012_report.csv file and prints a graph of solution variable residuals against cycle number .
+The naca0012_report.ipynb makes use of the `zutil.plot.zcfd_plots` function to read and plot the zCFD report data. Calling the `zcfd_plots('naca0012.py')` function reads the zcfd control file, finds all the output files, and returns a `zutil.post.Report` object, which provides plotting functionality . To plot the covergence of residuals, use the `plot_residuals()` method:
 
 .. code-block:: python
 
-    from zutil.plot import *
-    r = Report()
-    r.plot('naca0012_report.csv')
+    from zutil.plot import zcfd_plots
+    r = zcfd_plots('naca0012.py')
+    r.plot_residuals()
 
 The residual variables essentially measure how close to a stable solution of the chosen flow equations (e.g. the RANS equations) the simulation is. There is a residual for each flow variable, and the lower the residual, the more converged  the flow solution is.
 
@@ -312,9 +312,9 @@ Plotting performance
 
 .. code-block:: python
 
-    r.plot_performance('naca0012.log')
+    r.plot_performance()
 
-Finally, we can plot the time used per cycle using the ``plot_performance(naca0012.log)`` method. The last cycle is particularly long because it is the only cycle where the flow solution is written to a file.
+Finally, we can plot the time used per cycle using the ``plot_performance()`` method. The last cycle is particularly long because it is the only cycle where the flow solution is written to a file. If an implicit solver is used, `plot_performance()` will also attempt to plot the memory usage per cycle.
 
 Step 6. Looking at results with Paraview
 ========================================
