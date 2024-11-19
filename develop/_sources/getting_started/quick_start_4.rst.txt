@@ -124,6 +124,7 @@ In order to absorb acoustic waves and minimise reflections off farfield boundari
     "Sponge Layer Damping": {
         "Distance": 0.25, # Should be sufficiently large to prevent reflections from the sponge layer
         "Damping Factor": 2.0, # Typically of order 1 to 10
+        "condition": "IC_1"
     },
 
 DGCAA
