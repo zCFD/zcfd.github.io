@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Settings &#8212; zCFD User Guide v2024.10.9337-78-g6486 documentation</title>
+    <title>Reference Settings &#8212; zCFD User Guide v2024.11.9510-31-g3076e documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=6d5eb0f3"></script>
+    <script src="../_static/documentation_options.js?v=b34e0356"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -165,7 +165,7 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 </section>
 <section id="mesh-transform-matrix">
 <h3>Mesh Transform Matrix<a class="headerlink" href="#mesh-transform-matrix" title="Link to this heading">¶</a></h3>
-<p>As well as the transform function above the mesh can be transformed using an <a href="#id5"><span class="problematic" id="id6">`affine transform&lt;https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html&gt;`_</span></a> (<a href="#id7"><span class="problematic" id="id8">`Wikipedia&lt;https://en.wikipedia.org/wiki/Affine_transformation&gt;`_</span></a>). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:</p>
+<p>As well as the transform function above the mesh can be transformed using an <a class="reference external" href="https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html" target="_blank">affine transform</a> (<a class="reference external" href="https://en.wikipedia.org/wiki/Affine_transformation" target="_blank">Wikipedia</a>). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytransform3d.rotations</span> <span class="k">as</span> <span class="nn">pyrot</span>
 <span class="kn">import</span> <span class="nn">pytransform3d.transformations</span> <span class="k">as</span> <span class="nn">pytr</span>
 

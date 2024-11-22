@@ -124,7 +124,7 @@ As an alternative to passing a fixed scaling factor the 'mesh transform function
 Mesh Transform Matrix
 **************
 
-As well as the transform function above the mesh can be transformed using an `affine transform<https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia<https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:
+As well as the transform function above the mesh can be transformed using an `affine transform <https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia <https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:
 
 .. code-block:: python
 
