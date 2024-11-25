@@ -253,15 +253,15 @@ ABL
      - Valid values
      - Description
    * - 'roughness length'
-     - Yes
+     - No
      - 
      - Float
      - It is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.
    * - 'friction velocity'
-     - Yes
+     - No
      - 
      - Float
-     - Specify a field of data that is used as a lookup for setting the flow conditions.
+     - Specity the fricton velocity at the surface.
    * - 'surface layer height'
      - No
      - 
@@ -296,6 +296,8 @@ Is a measure of the height at which the mean velocity of the wind becomes zero, 
 The roughness length is typically denoted by the symbol ":math:`z_o`" and is defined as the vertical distance between the Earth's surface and the height at which the logarithmic wind profile intersects the surface. The logarithmic wind profile is a mathematical relationship that describes the variation of wind speed with height in the atmospheric boundary layer.
 
 The roughness length depends on the surface characteristics of the terrain or objects present on the Earth's surface. Different surfaces, such as forests, urban areas, or bodies of water, have different roughness lengths. For example, a smooth surface like open water would have a small roughness length, while a densely forested area would have a larger roughness length.
+
+The wall boundary mesh is assumed to be at the height of the rounghness length rather than ground level and therefore the first cell height should not be smaller than the roughness length.
 
 friction velocity
 =================
