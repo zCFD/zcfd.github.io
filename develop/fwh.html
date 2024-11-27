@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FWH solver &#8212; zCFD User Guide v2024.10.9337-89-g0de7c documentation</title>
+    <title>FWH solver &#8212; zCFD User Guide v2024.10.9337-90-gd70a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=c7e9b794"></script>
+    <script src="_static/documentation_options.js?v=72befd41"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -345,6 +345,50 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="fwh-file-utilities">
+<h3>FWH file utilities<a class="headerlink" href="#fwh-file-utilities" title="Link to this heading">¶</a></h3>
+<p>As well as the FWH solver itself, two FWH file utilities are provided - <cite>writeFWHSurfaceFrequenciesFile</cite> and <cite>writeBlankedOffFWHSurfaceFile</cite>
+Users may find these utilities useful for investigating the sources of noise within their CFD simulation.</p>
+<section id="writefwhsurfacefrequenciesfile">
+<h4>writeFWHSurfaceFrequenciesFile<a class="headerlink" href="#writefwhsurfacefrequenciesfile" title="Link to this heading">¶</a></h4>
+<p>This python function takes an FWH surface file as input, and creates a file where the FWH surface data can be viewed in the frequency, instead of time, domain.</p>
+<p>This can be useful for visually indicating where particular frequencies originate from in an FWH observer pressure signal.
+To generate the FWH surface frequencies file, an FFT (using a Hann window) of the FWH data is calculated at each surface face.
+The data stored in the surface frequencies file at a particular surface face and chosen frequency is then the magnitude of that FFT’s amplitude, at the chosen frequency.
+The data can be viewed by opening the <cite>.xdmf`</cite> file corresponding to the output file in Paraview - the ‘time’ chosen in Paraview corresponds to the frequency being viewed.
+The data at frequency = 0 corresponds to the time average of the FWH surface data.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">fileManipulation</span>
+<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeFWHSurfaceFrequenciesFile</span><span class="p">(</span><span class="s2">&quot;./myFWHSurface.h5&quot;</span><span class="p">,</span><span class="s2">&quot;./myFWHSurface_Frequencies.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="writeblankedofffwhsurfacefile">
+<h4>writeBlankedOffFWHSurfaceFile<a class="headerlink" href="#writeblankedofffwhsurfacefile" title="Link to this heading">¶</a></h4>
+<p>This python function writes a copy of an FWH surface file where specified faces are ignored by the FWH solver.</p>
+<p>Sometimes it is useful to ‘blank off’ certain areas from an FWH surface output file
+before the FWH solver is run - for example, if CFD setup constraints mean the noise from that region of the
+FWH surface is non-physical and should therefore be ignored when calculating FWH noise data.
+This function takes an input FWH surface  file, copies it to an output FWH surface file,
+then sets to zero the face area of any face in the output file where the python function
+shouldBlankOff(x,y,z) returns ‘True’ for the face’s (x,y,z) co-ordinates.
+When the face area of a face has been artificially set to 0, that face will not contribute to the observer location pressures
+calculated by the FWH solver.
+The region which has been set to have 0 face area can be inspected visually by opening the <cite>.xdmf</cite> corresponding to the output file in Paraview</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">fileManipulation</span>
+
+<span class="k">def</span> <span class="nf">isPositiveX</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeBlankedOffFWHSurfaceFile</span><span class="p">(</span><span class="s2">&quot;./myFWHSurface.h5&quot;</span><span class="p">,</span><span class="s2">&quot;./myFWHSurface_IgnorePositiveX.h5&quot;</span><span class="p">,</span> <span class="n">isPositiveX</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>

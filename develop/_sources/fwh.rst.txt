@@ -310,3 +310,62 @@ Just like FWH Observers, FWH Surfaces require their motion to be defined. There 
        | axis: a 3-d vector :math:`[ax_x,ax_y,ax_z]`
        | omega: a number.
      - A surface which translates at the same velocity as the `centrePoint`, and also rotates about the centrePoint with rotation axis `axis` and rotation angular velocity (rad / s) `omega`
+
+
+FWH file utilities
+~~~~~~~~~~~~~~~~~~~
+
+As well as the FWH solver itself, two FWH file utilities are provided - `writeFWHSurfaceFrequenciesFile` and `writeBlankedOffFWHSurfaceFile`
+Users may find these utilities useful for investigating the sources of noise within their CFD simulation.
+
+writeFWHSurfaceFrequenciesFile
+``````````````````````````````
+..
+  Basically just a copy of the docstring
+This python function takes an FWH surface file as input, and creates a file where the FWH surface data can be viewed in the frequency, instead of time, domain.
+
+This can be useful for visually indicating where particular frequencies originate from in an FWH observer pressure signal.
+To generate the FWH surface frequencies file, an FFT (using a Hann window) of the FWH data is calculated at each surface face.
+The data stored in the surface frequencies file at a particular surface face and chosen frequency is then the magnitude of that FFT's amplitude, at the chosen frequency.
+The data can be viewed by opening the `.xdmf`` file corresponding to the output file in Paraview - the 'time' chosen in Paraview corresponds to the frequency being viewed.
+The data at frequency = 0 corresponds to the time average of the FWH surface data.
+
+Example usage:
+
+.. code-block::  python
+
+    from solvers import fileManipulation
+    fileManipulation.writeFWHSurfaceFrequenciesFile("./myFWHSurface.h5","./myFWHSurface_Frequencies.h5")
+
+
+writeBlankedOffFWHSurfaceFile
+``````````````````````````````
+..
+  Basically just a copy of the docstring
+
+This python function writes a copy of an FWH surface file where specified faces are ignored by the FWH solver.
+
+Sometimes it is useful to 'blank off' certain areas from an FWH surface output file
+before the FWH solver is run - for example, if CFD setup constraints mean the noise from that region of the
+FWH surface is non-physical and should therefore be ignored when calculating FWH noise data.
+This function takes an input FWH surface  file, copies it to an output FWH surface file,
+then sets to zero the face area of any face in the output file where the python function
+shouldBlankOff(x,y,z) returns 'True' for the face's (x,y,z) co-ordinates.
+When the face area of a face has been artificially set to 0, that face will not contribute to the observer location pressures
+calculated by the FWH solver.
+The region which has been set to have 0 face area can be inspected visually by opening the `.xdmf` corresponding to the output file in Paraview
+
+Example usage:
+
+.. code-block::  python
+
+    from solvers import fileManipulation
+
+    def isPositiveX(x: float, y: float, z: float):
+        if x > 0:
+            return True
+        else:
+            return False
+    
+    fileManipulation.writeBlankedOffFWHSurfaceFile("./myFWHSurface.h5","./myFWHSurface_IgnorePositiveX.h5", isPositiveX)
+
