@@ -237,8 +237,8 @@ Example usage:
      - Positive number    
      - static pressure of the far-field medium, Pa
    * - 'dt'
-     - Yes
-     - 
+     - No
+     - set equal to the smallest timestep between outputs in all the FWH surface data files specified in the :ref:`surfaces dictionary <fwhSurfaces>`
      - Positive number    
      - timestep between observer microphone recording times, s
    * - 'breakTolAbs'
