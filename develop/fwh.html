@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FWH solver &#8212; zCFD User Guide v2024.10.9337-90-gd70a1 documentation</title>
+    <title>FWH solver &#8212; zCFD User Guide v2024.11.9510-43-g44feb documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=7ede516a" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=72befd41"></script>
+    <script src="_static/documentation_options.js?v=ec38317f"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -79,7 +79,7 @@ This function then returns time histories of the pressures at the specified obse
 <p>When there is more than one surface, the <cite>pOut</cite> and <cite>tOut</cite> dictionaries will contain a <cite>Surface Summation</cite> entry in addition to the entries for each surface.
 This contains, for each observer, a sum of the contributions from each surface. This is useful  when noise originates from several distinct regions, each covered by separate FWH surfaces (e.g. UAVs with several propellors).
 The <cite>Surface Summation</cite> entry will likely cover a shorter time period than the individual surface entries, because it only covers the time period when the observer is receiving valid noise signals from all of the FWH surfaces.</p>
-<pre class="literal-block">from solvers import fwh, motions
+<pre class="literal-block">from solvers import fwh, motion
 
 mySurfaces = { <a class="reference internal" href="#fwhsurfaces"><span class="std std-ref">surfaces</span></a>}
 myObservers = { <a class="reference internal" href="#fwhobservers"><span class="std std-ref">observers</span></a>}
@@ -87,7 +87,7 @@ mySolverSettings = { <a class="reference internal" href="#fwhsolversettings"><sp
 
 pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <p>For an aerofoil in a wind tunnel (as in <a class="reference internal" href="#fwhfig1"><span class="std std-ref">Fig. 1</span></a> and <a class="reference internal" href="#fwhfig1"><span class="std std-ref">Fig. 2</span></a>), an appropriate python script (including a small amount of post-processing) might look like this:</p>
-<div class="highlight-python notranslate" id="fwhrunningexample"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motions</span>
+<div class="highlight-python notranslate" id="fwhrunningexample"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motion</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
@@ -171,9 +171,9 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 </tr>
 <tr class="row-even"><td><p>‘permeable’</p></td>
 <td><p>No</p></td>
-<td><p>True</p></td>
+<td><p>Automatically deduced from the FWH surface data file</p></td>
 <td><p>True | False</p></td>
-<td><p>Whether or not the surface is permeable or not (see <a class="reference internal" href="#fwhhowworks"><span class="std std-ref">above</span></a>). Set to False for FWH wall data.</p></td>
+<td><p>Whether or not the surface is permeable or not (see <a class="reference internal" href="#fwhhowworks"><span class="std std-ref">above</span></a>).</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘flipSurfaceNormals’</p></td>
 <td><p>No</p></td>

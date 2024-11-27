@@ -67,7 +67,7 @@ The `Surface Summation` entry will likely cover a shorter time period than the i
 
 .. parsed-literal:: 
 
-    from solvers import fwh, motions
+    from solvers import fwh, motion
 
     mySurfaces = { :ref:`surfaces <fwhSurfaces>`}
     myObservers = { :ref:`observers <fwhObservers>`}
@@ -81,7 +81,7 @@ For an aerofoil in a wind tunnel (as in :ref:`Fig. 1 <fwhfig1>` and :ref:`Fig. 2
 .. _fwhRunningExample:
 .. code-block:: python
 
-    from solvers import fwh, motions
+    from solvers import fwh, motion
     from matplotlib import pyplot as plt
     import json
 
@@ -165,9 +165,9 @@ Individual surface definition dictionary
      - The FWH surface data, in the FWH HDF5 format outputted by the zCFD solver
    * - 'permeable'
      - No
-     - True
+     - Automatically deduced from the FWH surface data file
      - True | False
-     - Whether or not the surface is permeable or not (see :ref:`above <fwhHowWorks>`). Set to False for FWH wall data.
+     - Whether or not the surface is permeable or not (see :ref:`above <fwhHowWorks>`).
    * - 'flipSurfaceNormals'
      - No
      - False
