@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 3a: FWH Solver &#8212; zCFD User Guide v2024.11.9510-55-g244e documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=7ede516a" />
+    <title>Tutorial 3a: FWH Solver &#8212; zCFD User Guide v2024.11.9510-56-g26504 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=e91dc37f"></script>
+    <script src="../_static/documentation_options.js?v=1f1b02ee"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -87,9 +87,9 @@
 <section id="setting-up-the-fwh-solver-inputs">
 <h2>Setting up the FWH solver inputs<a class="headerlink" href="#setting-up-the-fwh-solver-inputs" title="Link to this heading">¶</a></h2>
 <p>Now that we know the motions of our observers and surface, we can run the FWH solver. The python code required to run the FWH solver is in the file <em>‘run_fwh_solver.py</em>’, and also written out below. We define the surfaces, observers and the solver settings, then use <code class="code docutils literal notranslate"><span class="pre">fwh.solve()</span></code> to actually run the FWH solver.</p>
-<div class="highlight-python notranslate" id="qs3-fwh-run-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">solvers</span> <span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motion</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">math</span>
+<div class="highlight-python notranslate" id="qs3-fwh-run-code"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motion</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <span class="c1"># FWH surface motion</span>
 <span class="n">c</span>  <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.4</span> <span class="o">*</span> <span class="mf">277.7777</span> <span class="o">*</span> <span class="mi">287</span><span class="p">)</span>
