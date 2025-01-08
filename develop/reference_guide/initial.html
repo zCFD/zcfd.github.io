@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Initial Conditions &#8212; zCFD User Guide v2024.11.9510-59-g2184f6 documentation</title>
+    <title>Initial Conditions &#8212; zCFD User Guide v2024.11.9510-60-gb9eab7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=8756c223"></script>
+    <script src="../_static/documentation_options.js?v=4eb9c67c"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -74,7 +74,7 @@
 <td><p>Static temperature in Kelvin. Used to compute density and for dynamic viscosity scaling using Sutherlands law.</p></td>
 </tr>
 <tr class="row-even"><td><p>‘V’</p></td>
-<td><p>No</p></td>
+<td><p>Yes</p></td>
 <td></td>
 <td><p>Dict</p></td>
 <td><p>See <a class="reference internal" href="#ic-v"><span class="std std-ref">Velocity</span></a></p></td>
@@ -150,13 +150,13 @@
 <p>Velocity can be specified in two ways, either a vector or a vector and a Mach number. When Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and speed of sound at the pressure and temperature provided.</p>
 <p>For example to set a velocity of 50 mesh units/sec in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="p">{[</span><span class="mf">50.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],}</span>
+<span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">]}</span>
 <span class="o">..</span>
 </pre></div>
 </div>
 <p>Or to set a velocity of mach 0.2 in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="p">{[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="s2">&quot;mach&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="s2">&quot;mach&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="o">..</span>
 </pre></div>
 </div>

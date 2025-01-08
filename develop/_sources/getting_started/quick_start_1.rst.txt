@@ -272,7 +272,7 @@ Load the naca0012_report.ipynb in Jupyter, then click ``run all``.
 
 Plotting residuals
 ^^^^^^^^^^^^^^^^^^
-The naca0012_report.ipynb makes use of the `zutil.plot.zcfd_plots` function to read and plot the zCFD report data. Calling the `zcfd_plots('naca0012.py')` function reads the zcfd control file, finds all the output files, and returns a `zutil.post.Report` object, which provides plotting functionality . To plot the covergence of residuals, use the `plot_residuals()` method:
+The naca0012_report.ipynb makes use of the `zutil.plot.zcfd_plots` function to read and plot the zCFD report data. Calling the `zcfd_plots('naca0012.py')` function reads the zcfd control file, finds all the output files, and returns a `zutil.post.Report` object, which provides plotting functionality . To plot the convergence of residuals, use the `plot_residuals()` method:
 
 .. code-block:: python
 

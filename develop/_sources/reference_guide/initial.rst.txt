@@ -39,7 +39,7 @@ Another way of prescribing an initial condition is by defining a dynamic :ref:`'
      - Float
      - Static temperature in Kelvin. Used to compute density and for dynamic viscosity scaling using Sutherlands law.
    * - 'V'
-     - No
+     - Yes
      - 
      - Dict
      - See :ref:`Velocity <ic_v>` 
@@ -113,7 +113,7 @@ For example to set a velocity of 50 mesh units/sec in the X direction:
 .. code-block:: python
 
     ..
-    "V" : {[50.0,0.0,0.0],}  
+    "V" : {"vector": [50.0,0.0,0.0]}  
     ..
 
 
@@ -122,7 +122,7 @@ Or to set a velocity of mach 0.2 in the X direction:
 .. code-block:: python
 
     ..
-    "V" : {[1.0,0.0,0.0], "mach": 0.2}  
+    "V" : {"vector": [1.0,0.0,0.0], "mach": 0.2}  
     ..
 
 
