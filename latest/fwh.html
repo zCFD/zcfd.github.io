@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>FWH solver &#8212; zCFD User Guide v2025.01.9869 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d9aafeaa" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
+    <script src="_static/documentation_options.js?v=6997b88b"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="_static/fav.png"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="zM3" href="zm3.html" />
+    <link rel="prev" title="Mesh Conversion" href="meshutil.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="fwh-solver">
+<span id="fwh"></span><h1>FWH solver<a class="headerlink" href="#fwh-solver" title="Link to this heading">¶</a></h1>
+<p>A Ffowcs-Williams Hawkings (FWH) solver, which is used for prediction of farfield noise, is included in the zCFD distribution. The zCFD FWH solver uses the <a class="reference external" href="https://ntrs.nasa.gov/citations/20070010579" target="_blank">Farrasat 1A formulation</a>, and can accept both permeable and impermeable FWH surfaces.</p>
+<section id="what-is-an-fwh-solver-for">
+<span id="fwhwhatfor"></span><h2>What is an FWH solver for?<a class="headerlink" href="#what-is-an-fwh-solver-for" title="Link to this heading">¶</a></h2>
+<p>A common problem in CFD is the prediction of the farfield aerodynamic noise which results from a particular airflow.
+Two issues make prediction of farfield aerodynamic noise challenging. First of all, many of the sources of aerodynamic noise (turbulence, vortex shedding etc.) require high fidelity, time accurate simulations and fine CFD meshes to be properly captured. Secondly, a mesh must be very fine and the simulation must have very low numerical dissipation in order to propagate aerodynamic noise any distance within a CFD mesh.</p>
+<p>The first issue of noise simulation can be made tractable by the use of techniques like FRPM, but the second issue of far-field mesh requirements for noise propagation means that e.g. predicting the noise from a helicopter main rotor a kilometre away is simply not feasible using a conventional CFD simulation.</p>
+<p>This issue of noise propagation in the far-field is solved by the use of the Ffowcs-Williams Hawkings (FWH) equations. These equations allow us to propagate sound to an observer an arbitrary distance away without the use of a mesh which extends all the way to the observer.</p>
+</section>
+<section id="how-does-an-fwh-solver-work">
+<span id="fwhhowworks"></span><h2>How does an FWH solver work?<a class="headerlink" href="#how-does-an-fwh-solver-work" title="Link to this heading">¶</a></h2>
+<p>In order to use the FWH equations to propagate noise to a far-field observer, we first run a CFD simulation and record the flow variables (<span class="math notranslate nohighlight">\(p(\mathbf{x},t)\)</span>, <span class="math notranslate nohighlight">\(\rho(\mathbf{x},t)\)</span> and <span class="math notranslate nohighlight">\(\mathbf{u}(\mathbf{x},t)\)</span>) on an ‘FWH surface’ in the near-field, noise generating region. <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> shows an FWH surface enclosing the nearfield for a simulation of an aerofoil in a wind tunnel.</p>
+<figure class="align-default" id="id2">
+<span id="fwhfig1"></span><a class="reference internal image-reference" href="_images/fwhdiagram_1.svg"><img alt="CFD simulation of an aerofoil, including an FWH surface" src="_images/fwhdiagram_1.svg" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">CFD simulation of an aerofoil, including an FWH surface</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The FWH surface should enclose the noise generating region, and the CFD mesh should be sufficiently fine in the near-field region to propagate noise to the FWH surface without excessive dissipation. Ideally, the FWH surface should not intersect the nearfield region of any wakes.</p>
+<p>In some situations, it is sufficient to collect FWH surface data on the wall instead of using a separate FWH surface inside the fluid domain. FWH surfaces coincident with  the wall are called <cite>impermeable</cite> (as opposed to <cite>permeable</cite>) FWH surfaces, and only require <span class="math notranslate nohighlight">\(p\)</span> (not <span class="math notranslate nohighlight">\(p\)</span>, <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>) to be recorded.</p>
+<p>Once the flow variables have been recorded on the FWH surface, we can propagate the noise to our observers using an FWH solver. In order to do so we must define the motion of our FWH surface and our observers in the FWH simulation. The FWH equations assume a quiescent medium (i.e. still air, with a free-stream velocity of zero), which means that the FWH surface and observer motions are frequently different to the motions used in the CFD simulation used to produce the FWH surface data.</p>
+<p>In our example of an aerofoil in a wind tunnel, the CFD simulation has a freestream velocity, which does not satisfy the ‘quiescent medium’ condition. When using an FWH simulation to calculate the noise at the farfield observer microphone in <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a>,  we therefore have to perform a co-ordinate transformation and ‘fly’ both the FWH surface and the observer microphone forwards through the quiescent medium, as in <a class="reference internal" href="#fwhfig2"><span class="std std-numref">Fig. 5</span></a>.</p>
+<figure class="align-default" id="id3">
+<span id="fwhfig2"></span><a class="reference internal image-reference" href="_images/fwhdiagram_2.svg"><img alt="FWH simulation of an aerofoil, with quiescent medium co-ordinate transformation applied" src="_images/fwhdiagram_2.svg" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">FWH simulation of an aerofoil, with quiescent medium co-ordinate transformation applied</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Once we have collected the FWH surface data from a CFD simulation and correctly defined the FWH surface and observer microphone settings, we simply use the FWH equations to propagate the pressure and velocity signals from the FWH surface to the our farfield observer locations. The equations used in the zCFD FWH solver are the <a class="reference external" href="https://ntrs.nasa.gov/citations/20070010579" target="_blank">Farrasat 1A equations</a>, with a retarded time formulation. The retarded time is the time <span class="math notranslate nohighlight">\(\tau_*\)</span> at which a sound wave must be emitted by a point on the FWH surface in order for it to reach an observer at time <span class="math notranslate nohighlight">\(t\)</span>, given the prescribed motions of both surface and observer.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference external" href="https://ntrs.nasa.gov/citations/20070010579" target="_blank">Farrasat 1A equations</a> used by the zCFD FWH solver are only valid when the FWH surface moves through the quiescent medium subsonically. The retarded time algorithm in the FWH solver will also struggle to converge as the closing speed between an FWH surface and an observer approaches the speed of sound.</p>
+</div>
+</section>
+<section id="running-the-zcfd-fwh-solver">
+<span id="fwhrunning"></span><h2>Running the zCFD FWH solver<a class="headerlink" href="#running-the-zcfd-fwh-solver" title="Link to this heading">¶</a></h2>
+<p>There are two ways of running the zCFD FWH solver - the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module</span></a> and the <a class="reference internal" href="#fwhrunningrunfwh"><span class="std std-ref">run_fwh utility</span></a>. The <em>fwh python module</em> is flexible and intended for advanced users with knowledge of the python programming language. The <em>run_fwh utility</em> is a simpler interface which requires no knowledge of the python programming language and is intended for FWH data generated using <em>zCFD</em>.</p>
+<p>This documentation actually introduces the <em>fwh python module</em> first, since doing so illustrates some mechanics of FWH solvers which all users should be aware of. The simpler <em>run_fwh utility</em> method is subsequently introduced as an alternative, more automated method to get the same results. For a quick introduction to the zCFD FWH solver which starts with the <em>run_fwh utility</em>, see the <a class="reference internal" href="getting_started/fwh_tutorial.html#fwhtutorial"><span class="std std-ref">FWH tutorial</span></a>.</p>
+<p>To use the zCFD FWH solver in either format, we must first generate FWH surface data during a zCFD simulation (see <a class="reference internal" href="reference_guide/write_output.html#write-output"><span class="std std-ref">write output</span></a> for more details). The FWH surface data is stored in a HDF5 format. While no mesh conversion tools are provided, the zCFD FWH file format can easily be interrogated and replicated with tools like <cite>h5ls</cite> and <cite>h5py</cite> should you wish to convert data from other simulation tools to this format.</p>
+<section id="using-the-zcfd-fwh-python-module">
+<span id="fwhrunningpython"></span><h3>Using the zCFD FWH python module<a class="headerlink" href="#using-the-zcfd-fwh-python-module" title="Link to this heading">¶</a></h3>
+<p>The zCFD FWH solver consists of a series of python modules, which are accessible from within the <a class="reference internal" href="running/execution.html#zcfd-command"><span class="std std-ref">zCFD command-line environment</span></a>.
+Three python dictionaries, controlling the surface, observer, and solver settings, are required as inputs to the <cite>fwh.solve</cite> function.
+This function then returns time histories of the pressures at the specified observer points, in the nested dictionaries <cite>pOut</cite> and <cite>tOut</cite>.</p>
+<pre class="literal-block">from solvers import fwh, motion
+
+mySurfaces = { <a class="reference internal" href="#fwhsurfaces"><span class="std std-ref">surfaces</span></a>}
+myObservers = { <a class="reference internal" href="#fwhobservers"><span class="std std-ref">observers</span></a>}
+mySolverSettings = { <a class="reference internal" href="#fwhsolversettings"><span class="std std-ref">solverSettings</span></a>}
+
+pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
+<p>For an aerofoil in a wind tunnel (as in <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> and <a class="reference internal" href="#fwhfig2"><span class="std std-numref">Fig. 5</span></a>), an appropriate python script (including a small amount of post-processing) might look like this:</p>
+<div class="highlight-python notranslate" id="fwhrunningexample"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">surfaceCentreMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">surfaceMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">NonrotatingSurface</span><span class="p">(</span><span class="n">surfaceCentreMotion</span><span class="p">)</span>
+<span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+
+<span class="n">mySurfaces</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;fwhSurf1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;motion&quot;</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
+        <span class="s2">&quot;fileName&quot;</span><span class="p">:</span> <span class="s2">&quot;./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Obs1&quot;</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">&quot;Ob2&quot;</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
+<span class="n">mySolverSettings</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">&quot;rho0&quot;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">}</span>
+
+<span class="n">pOut</span><span class="p">,</span><span class="n">tOut</span> <span class="o">=</span> <span class="n">fwh</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mySurfaces</span><span class="p">,</span><span class="n">myObservers</span><span class="p">,</span><span class="n">solverSettings</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs1&quot;</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs1&quot;</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Obs1&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs2&quot;</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs2&quot;</span><span class="p">],</span><span class="n">lable</span><span class="o">=</span><span class="s2">&quot;Obs2&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;t (s)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;p (Pa)&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;./FWH_figure.pdf&quot;</span><span class="p">)</span>
+
+<span class="n">dataForJson</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">pOut</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">tOut</span><span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./FWH_data.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dataForJson</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When there is more than one surface, the <cite>pOut</cite> and <cite>tOut</cite> dictionaries will contain a <cite>Surface Summation</cite> entry in addition to the entries for each surface.
+This contains, for each observer, a sum of the contributions from each surface. This is useful  when noise originates from several distinct regions, each covered by separate FWH surfaces (e.g. UAVs with several propellors).
+The <cite>Surface Summation</cite> entry will likely cover a shorter time period than the individual surface entries, because it only covers the time period when the observer is receiving valid noise signals from all of the FWH surfaces.</p>
+<section id="surfaces-dictionary">
+<span id="fwhsurfaces"></span><h4>Surfaces dictionary<a class="headerlink" href="#surfaces-dictionary" title="Link to this heading">¶</a></h4>
+<p>The zCFD FWH solver is capable of using multiple FWH surfaces in the same FWH calculation. The Surfaces dictionary therefore contains a key-value pair for each FWH surface to be used, where the key is the surface’s name (to be used in the FWH solver) and the value is an <a class="reference internal" href="#fwhindividualsurface"><span class="std std-ref">individual surface definition dictionary</span></a>.
+The surface name must be a string, and cannot be ‘Surface Summation’.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">motion</span>
+<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">surfaceCentreMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">surfaceMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">NonrotatingSurface</span><span class="p">(</span><span class="n">surfaceCentreMotion</span><span class="p">)</span>
+
+<span class="n">mySurfaces</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;fwhSurf1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;motion&quot;</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
+        <span class="s2">&quot;fileName&quot;</span><span class="p">:</span> <span class="s2">&quot;./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="individual-surface-definition-dictionary">
+<span id="fwhindividualsurface"></span><h5>Individual surface definition dictionary<a class="headerlink" href="#individual-surface-definition-dictionary" title="Link to this heading">¶</a></h5>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 16.7%" />
+<col style="width: 44.4%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘motion’</p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>A <a class="reference internal" href="#fwhsurfmotions"><span class="std std-ref">surface motion class</span></a></p></td>
+<td><p>The motion of the surface through the FWH medium</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘fileName’</p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>A readable file path</p></td>
+<td><p>The FWH surface data, in the FWH HDF5 format outputted by the zCFD solver</p></td>
+</tr>
+<tr class="row-even"><td><p>‘permeable’</p></td>
+<td><p>No</p></td>
+<td><p>Automatically deduced from the FWH surface data file</p></td>
+<td><p>True | False</p></td>
+<td><p>Whether or not the surface is permeable or not (see <a class="reference internal" href="#fwhhowworks"><span class="std std-ref">above</span></a>).</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘flipSurfaceNormals’</p></td>
+<td><p>No</p></td>
+<td><p>False</p></td>
+<td><p>True | False</p></td>
+<td><p>Whether or not to invert the FWH surface normals before running the FWH solver. The surface normals should always point outwards towards the farfield. For FWH surface data generated using the <a class="reference internal" href="reference_guide/write_output.html#write-output"><span class="std std-ref">fwh interpolate</span></a> keyword in the zCFD solver, the surface normal direction depends on the .stl file used to define the FWH surface, and can be checked using a visualisation tool (e.g. Paraview).</p></td>
+</tr>
+<tr class="row-even"><td><p>‘transformSurfaceVelocity’</p></td>
+<td><p>No</p></td>
+<td><p>True</p></td>
+<td><p>True | False</p></td>
+<td><p>Relevant for permeable surfaces only, and should normally be kept <cite>True</cite>. Setting this to <cite>False</cite> means that the FWH surface fluid velocity used in the FWH solver does not include the velocity resulting from the motion of the surface (as defined my the ‘motion’ keyword above). This option may be required when using data from other solvers, in the case where the FWH surface moves through a quiescent medium during the simulation used to create the FWH surface data.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="observers-dictionary">
+<span id="fwhobservers"></span><h4>Observers dictionary<a class="headerlink" href="#observers-dictionary" title="Link to this heading">¶</a></h4>
+<p>The Observers dictionary defines a list of observer microphones at which farfield noise should be calculated. In the observers dictionary, keys are used to set the observer’s name in the FWH solver output, and the value sets the motion of the observer. Observer motions must be defined using the <a class="reference internal" href="#fwhobsmotions"><span class="std std-ref">point motion classes</span></a>.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">motion</span>
+<span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+<span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
+
+<span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Obs1&quot;</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">&quot;Ob2&quot;</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="solver-settings-dictionary">
+<span id="fwhsolversettings"></span><h4>Solver settings dictionary<a class="headerlink" href="#solver-settings-dictionary" title="Link to this heading">¶</a></h4>
+<p>The solver settings dictionary sets the properties of the FWH medium, and the numerical settings used in the FWH solver.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mySolverSettings</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">&quot;rho0&quot;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13.2%" />
+<col style="width: 13.2%" />
+<col style="width: 13.2%" />
+<col style="width: 16.5%" />
+<col style="width: 44.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘c’</p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Positive number</p></td>
+<td><p>speed of sound in the far-field medium, m/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘rho0’</p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Positive number</p></td>
+<td><p>density of the far-field medium, kg/s</p></td>
+</tr>
+<tr class="row-even"><td><p>‘p0’</p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Positive number</p></td>
+<td><p>static pressure of the far-field medium, Pa</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘dt’</p></td>
+<td><p>No</p></td>
+<td><p>set equal to the smallest timestep between outputs in all the FWH surface data files specified in the <a class="reference internal" href="#fwhsurfaces"><span class="std std-ref">surfaces dictionary</span></a></p></td>
+<td><p>Positive number</p></td>
+<td><p>timestep between observer microphone recording times, s</p></td>
+</tr>
+<tr class="row-even"><td><p>‘breakTolAbs’</p></td>
+<td><p>No</p></td>
+<td><p>‘dt’ set in the solver settings dictionary / 1000</p></td>
+<td><p>Positive number</p></td>
+<td><p>the time accuracy (s) with which we would like to predict the retarded time <span class="math notranslate nohighlight">\(\tau_*\)</span> in the retarded time calculation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘maxIts’</p></td>
+<td><p>No</p></td>
+<td><p>50</p></td>
+<td><p>Positive integer</p></td>
+<td><p>The maximum number of iterations to use in the algorithm used to predict retarded time</p></td>
+</tr>
+<tr class="row-even"><td><p>‘observerStartTime’</p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>The simulation time (s) at which observers start recording data. If this is not set, this will be set automatically to be the earliest time when a surface/observer pair has a valid signal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘observerEndTime’</p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>The simulation time (s) at which observers end recording data. If this is not set, this will be set automatically to be the last time when a surface/observer pair has a valid signal.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="point-observer-motion-classes">
+<span id="fwhobsmotions"></span><h4>Point (observer) motion classes<a class="headerlink" href="#point-observer-motion-classes" title="Link to this heading">¶</a></h4>
+<p>FWH Observers are points which move through the FWH quiescent medium according to the function <span class="math notranslate nohighlight">\(x=f(t)\)</span>. In the zCFD FWH solver, we define the motion of observers using one of the following classes, which are available inside the <cite>solvers.motion</cite> module inside the zCFD command line environment (see <a class="reference internal" href="#fwhrunning"><span class="std std-ref">above</span></a>).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motion Class</p></th>
+<th class="head"><p>Inputs</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>OriginPoint()</cite></p></td>
+<td></td>
+<td><p>A point which is always on the origin, i.e. <span class="math notranslate nohighlight">\(f(t)=[0,0,0]\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>StationaryPoint(X0)</cite></p></td>
+<td><p>X0: a 3-d vector <span class="math notranslate nohighlight">\([x0,y0,z0]\)</span></p></td>
+<td><p>A point which is stationary, i.e. <span class="math notranslate nohighlight">\(f(t)=[x0,y0,z0]\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>ConstantVelocityPoint(X0,dXdt)</cite></p></td>
+<td><div class="line-block">
+<div class="line">X0: a 3-d vector <span class="math notranslate nohighlight">\([x0,y0,z0]\)</span></div>
+<div class="line">dXdt: a 3-d vector <span class="math notranslate nohighlight">\([dxdt,dydt,dzdt]\)</span></div>
+</div>
+</td>
+<td><p>A point with constant velocity, i.e. <span class="math notranslate nohighlight">\(f(t) = [x0+t*dxdt, y0+t*dydt,z0+t*dzdt]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="surface-motion-classes">
+<span id="fwhsurfmotions"></span><h4>Surface motion classes<a class="headerlink" href="#surface-motion-classes" title="Link to this heading">¶</a></h4>
+<p>Just like FWH Observers, FWH Surfaces require their motion to be defined. There are two surface motion classes - NonrotatingSurface and RotatingSurface. Both use a <a class="reference internal" href="#fwhobsmotions"><span class="std std-ref">point motion class</span></a> to define the motion of their ‘centre point’. In this way, complex motions like that of a propellor which is both rotating and translating through the FWH medium can be defined.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motion Class</p></th>
+<th class="head"><p>Inputs</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>NonrotatingSurface(centrePoint)</cite></p></td>
+<td><p>centrePoint: a <a class="reference internal" href="#fwhobsmotions"><span class="std std-ref">point motion class</span></a></p></td>
+<td><p>A surface which does not rotate, and translates at the same velocity as the ‘centrePoint’.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>RotatingSurface(centrePoint,axis, omega)</cite></p></td>
+<td><div class="line-block">
+<div class="line">centrePoint: a <a class="reference internal" href="#fwhobsmotions"><span class="std std-ref">point motion class</span></a></div>
+<div class="line">axis: a 3-d vector <span class="math notranslate nohighlight">\([ax_x,ax_y,ax_z]\)</span></div>
+<div class="line">omega: a number.</div>
+</div>
+</td>
+<td><p>A surface which translates at the same velocity as the <cite>centrePoint</cite>, and also rotates about the centrePoint with rotation axis <cite>axis</cite> and rotation angular velocity (rad / s) <cite>omega</cite></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="using-the-zcfd-run-fwh-utility">
+<span id="fwhrunningrunfwh"></span><h3>Using the zCFD run_fwh utility<a class="headerlink" href="#using-the-zcfd-run-fwh-utility" title="Link to this heading">¶</a></h3>
+<p>When using the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module</span></a> defined above, we manually define FWH <a class="reference internal" href="#fwhsurfaces"><span class="std std-ref">surface</span></a>, <a class="reference internal" href="#fwhobservers"><span class="std std-ref">observer</span></a> and <a class="reference internal" href="#fwhsolversettings"><span class="std std-ref">solver settings</span></a> dictionaries which are used in <cite>fwh.solve()</cite>. This gives us fine grained control, but for most FWH simulations which are based on zCFD CFD simulations, the input dictionaries to <cite>fwh.solve()</cite> can actually be generated automatically by reading the <a class="reference internal" href="reference_guide/intro.html#reference-guide"><span class="std std-ref">zCFD input parameters file</span></a>. This is what the <cite>run_fwh</cite> utility does. Within the <a class="reference internal" href="running/execution.html#zcfd-command"><span class="std std-ref">zCFD command-line environment</span></a>, the <cite>run_fwh</cite> utility can be called as below:</p>
+<pre class="literal-block">run_fwh -c <a class="reference internal" href="#runfwhzcfdparameters"><span class="std std-ref">&lt;zcfd control file&gt;</span></a> --reference_condition <a class="reference internal" href="#runfwhrefcond"><span class="std std-ref">&lt;reference condition&gt;</span></a> --observer_locations <a class="reference internal" href="#runfwhobserverscsv"><span class="std std-ref">&lt;observers .csv file&gt;</span></a></pre>
+<p>The <cite>run_fwh</cite> utility reads the <a class="reference internal" href="#runfwhzcfdparameters"><span class="std std-ref">zcfd control file</span></a> and the <a class="reference internal" href="#runfwhobserverscsv"><span class="std std-ref">observers .csv file</span></a>, and based on these, automatically runs the FWH solver. Assuming the <cite>zcfd control file</cite> input was <code class="code docutils literal notranslate"><span class="pre">zcfdSim.py</span></code> and the <cite>observers .csv file</cite> specified the observers <cite>Obs1</cite> and <cite>Obs2</cite>, the <cite>run_fwh</cite> utility would:</p>
+<ol class="arabic simple">
+<li><p>automatically generate the inputs to the <cite>fwh.solve()</cite> function, setting the observer and surface motions based on the <a class="reference internal" href="#runfwhrefcond"><span class="std std-ref">reference condition</span></a> and using all FWH surfaces that the CFD simulation defined by <code class="code docutils literal notranslate"><span class="pre">zcfdSim.py</span></code> outputs</p></li>
+<li><p>Run the <cite>fwh.solve()</cite> function, saving the screen output to <code class="code docutils literal notranslate"><span class="pre">zcfdSim.fwh.log</span></code></p></li>
+<li><p>Save the sum of the contributions of all FWH surfaces at the observers <cite>Obs1</cite> and <cite>Obs2</cite> to the <cite>.csv</cite>  files <code class="code docutils literal notranslate"><span class="pre">zcfdSim.fwh.Obs1.csv</span></code> and <code class="code docutils literal notranslate"><span class="pre">zcfdSim.fwh.Obs2.csv</span></code> respectively.</p></li>
+</ol>
+<p>For the example outlined in the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module example</span></a>, the <cite>run_fwh</cite> command would look something like this:</p>
+<div class="highlight-bash notranslate" id="runfwhbash"><div class="highlight"><pre><span></span>run_fwh<span class="w"> </span>-c<span class="w"> </span>zcfdSim.py<span class="w"> </span>--reference_condition<span class="w"> </span>IC_1<span class="w"> </span>--observer_locations<span class="w"> </span>observers.csv
+</pre></div>
+</div>
+<section id="zcfd-control-file">
+<span id="runfwhzcfdparameters"></span><h4>zCFD control file<a class="headerlink" href="#zcfd-control-file" title="Link to this heading">¶</a></h4>
+<p>The first input to the <cite>run_fwh</cite> utility is the <cite>zCFD control file</cite>. This is the control file for the zCFD simulation which generated the FWH surface data files which are to be used. For the example outlined in <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> and the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module example</span></a>, the <cite>zCFD control file</cite> would be called <code class="code docutils literal notranslate"><span class="pre">zcfdSim.py</span></code> and would look something like the example below.</p>
+<div class="highlight-python notranslate" id="runfwhzcfdparameterscode"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="o">...</span>
+  <span class="s2">&quot;IC_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">288</span><span class="p">,</span>
+      <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">,</span>
+      <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+      <span class="o">...</span>
+  <span class="p">},</span>
+  <span class="o">...</span>
+  <span class="s2">&quot;write output&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="o">...</span>
+      <span class="s2">&quot;fwh interpolate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;fwhsurf1.stl&quot;</span><span class="p">],</span>
+      <span class="o">...</span>
+  <span class="p">},</span>
+  <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <cite>run_fwh</cite> utility reads the zCFD parameter file and finds the paths to all the FWH surface output files which were generated by the zCFD CFD simulation defined by <code class="code docutils literal notranslate"><span class="pre">zcfdSim.py</span></code>. In this case, it would find the file <code class="code docutils literal notranslate"><span class="pre">./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5</span></code>.</p>
+</section>
+<section id="reference-condition">
+<span id="runfwhrefcond"></span><h4>Reference condition<a class="headerlink" href="#reference-condition" title="Link to this heading">¶</a></h4>
+<p>In the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module example</span></a>, we have to manually define the solver settings and the motions of the observers and surfaces through the FWH quiescent medium manually. However, if all the surfaces and observers are in the same <cite>translational reference frame</cite>, we can set the motions and solver settings directly from a zCFD <a class="reference internal" href="reference_guide/initial.html#initial-conditions"><span class="std std-ref">IC block</span></a>.</p>
+<p>Being in the same <cite>translational reference frame</cite> means that all the surfaces and observers translate through the FWH quiescent medium at the same velocity. In practice, this means that all observers are <em>static</em> in the ‘mesh’ frame of reference, i.e. do not ‘fly by’. <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> and <a class="reference internal" href="#fwhfig2"><span class="std std-numref">Fig. 5</span></a> show that for the example, <cite>Obs1</cite>, <cite>Obs2</cite> and the FWH surface are in the same translational reference frame, hence can be used in the <cite>run_fwh</cite> utility.</p>
+<p>In the example case, we would set our reference frame to be <cite>IC_1</cite>. This is the freestream conditions in the <a class="reference internal" href="#runfwhzcfdparameterscode"><span class="std std-ref">zcfdSim.py</span></a> CFD simulation. The pressure and temperature in <cite>IC_1</cite> set the <code class="code docutils literal notranslate"><span class="pre">c</span></code>, <code class="code docutils literal notranslate"><span class="pre">p0</span></code> and <code class="code docutils literal notranslate"><span class="pre">rho0</span></code> in the <a class="reference internal" href="#fwhsolversettings"><span class="std std-ref">solverSettings dictionary</span></a>. The velocity in <cite>IC_1</cite> sets the motion of our surfaces and observers through the FWH quiescent medium. Since <cite>IC_1</cite> defines a freestream velocity of <cite>[50,0,0]</cite>, our surface and observers move through the FWH quiescent medium at a velocity of <cite>[-50,0,0]</cite>, just as in <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> and <a class="reference internal" href="#fwhfig2"><span class="std std-numref">Fig. 5</span></a>.</p>
+<p>In most cases, a zCFD simulation control file will already contain an IC block suitable for use as the <cite>run_fwh</cite> reference condition. Since zCFD control files can contain unused <cite>IC</cite> blocks, simply add a suitable <cite>IC</cite> block to the zCFD control file if one does not already exist.</p>
+<p>Which <cite>translational reference frame</cite> an FWH surface is in is independent of whether the FWH surface is rotating or not - see <a class="reference internal" href="#runfwhadvanced"><span class="std std-ref">below</span></a> for more details.</p>
+</section>
+<section id="observer-csv-file">
+<span id="runfwhobserverscsv"></span><h4>Observer .csv file<a class="headerlink" href="#observer-csv-file" title="Link to this heading">¶</a></h4>
+<p>In the Observers .csv file, we define the locations of the observers (in the ‘mesh fixed’ frame of reference). To match the observers shown in <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> and <a class="reference internal" href="#fwhfig2"><span class="std std-numref">Fig. 5</span></a>, the <cite>observers .csv file</cite> should contain the following:</p>
+<div class="highlight-default notranslate" id="runfwhobserverscsvcode"><div class="highlight"><pre><span></span><span class="n">Obs1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">,</span>  <span class="mf">0.0</span>
+<span class="n">Obs2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">,</span>  <span class="mf">0.0</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-use">
+<span id="runfwhadvanced"></span><h4>Advanced use<a class="headerlink" href="#advanced-use" title="Link to this heading">¶</a></h4>
+<p>The <cite>run_fwh</cite> utility allows and accounts for <a class="reference internal" href="reference_guide/overset.html#overset"><span class="std std-ref">overset</span></a> zCFD simulations and FWH surfaces which exist in zCFD <cite>rotating fluid zones</cite>. This means that even complex simulations like drones with multiple rotating propellors can be simulated with the <cite>run_fwh</cite> utility.</p>
+<p>Where the input <a class="reference internal" href="#runfwhzcfdparameters"><span class="std std-ref">zCFD control file</span></a> is an overset <a class="reference internal" href="reference_guide/overset.html#overset"><span class="std std-ref">‘override’ file</span></a>, FWH surfaces from all control files specified in the override dictionary are used and the reference condition (e.g. <cite>IC_1</cite>) is taken from the first control file specified in the override dictionary. Where FWH surfaces exist in <cite>rotating fluid zones</cite>, the surfaces remain in the same <a class="reference internal" href="#runfwhrefcond"><span class="std std-ref">translational reference frame</span></a> as the observers, but also rotate as specified in the rotating fluid zone specification.</p>
+<p>The <cite>run_fwh</cite> utility does not allow translating meshes or translational boundary conditions, since both would introduce ambiguity into what the correct <a class="reference internal" href="#runfwhrefcond"><span class="std std-ref">translational reference frame</span></a> for the FWH surfaces and observers should be. As explained <a class="reference internal" href="#runfwhrefcond"><span class="std std-ref">above</span></a>, ‘fly-by’ observers are also not possible in the <cite>run_fwh</cite> utility.</p>
+<p>In the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module</span></a>, <cite>fwh.solve()</cite> outputs the contribution from each individual FWH surfaces to each observer pressure history, as well as the sum of all contributions. The <cite>run_fwh</cite> utility only records the sum of contributions from all FWH surfaces in the output <cite>.csv</cite> files. This means that in the <cite>run_fwh</cite> utility, all noise generating noises in the zCFD simulation are implicitly assumed to be enclosed by single FWH surfaces. This means that, for instance, including both <cite>fwh interpolate</cite> and <cite>fwh wall data</cite> FWH surface data output in a zCFD control file is likely to lead to double accounting in the <cite>run_fwh</cite> utility.</p>
+<p>Where the <cite>run_fwh</cite> utility is not suitable, it is still possible to use components of the <cite>run_fwh</cite> utility to automate parts of a <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module</span></a> workflow. A simplified summary of what happens within the <cite>run_fwh</cite> executable is detailed below, showing the use of the <cite>fwh_helper_functions</cite> which can be used in the <cite>fwh python module</cite> to automate workflows.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fwh_helper_functions</span>
+<span class="n">rho0</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freestreamV</span> <span class="o">=</span> <span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">get_zcfd_ref_conditions</span><span class="p">(</span>
+    <span class="s2">&quot;zcfdSim.py&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_1&quot;</span>
+<span class="p">)</span>
+<span class="n">surfaces</span> <span class="o">=</span> <span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">get_zcfd_surfaces</span><span class="p">(</span>
+    <span class="s2">&quot;zcfdSim.py&quot;</span><span class="p">,</span> <span class="n">freestreamV</span>
+<span class="p">)</span>
+<span class="n">observers</span> <span class="o">=</span> <span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">get_csv_observers</span><span class="p">(</span>
+    <span class="s2">&quot;observers.csv&quot;</span><span class="p">,</span> <span class="n">freestreamV</span>
+<span class="p">)</span>
+<span class="n">solverSettings</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rho&quot;</span><span class="p">:</span> <span class="n">rho0</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">:</span> <span class="n">p0</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">}</span>
+<span class="n">pOut</span><span class="p">,</span> <span class="n">tOut</span> <span class="o">=</span> <span class="n">fwh</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">observers</span><span class="p">,</span> <span class="n">solverSettings</span><span class="p">)</span>
+<span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">write_fwh_data_to_zcfd_csv</span><span class="p">(</span><span class="s2">&quot;zcfdSim.py&quot;</span><span class="p">,</span> <span class="n">tOut</span><span class="p">,</span> <span class="n">pOut</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="fwh-file-utilities">
+<h2>FWH file utilities<a class="headerlink" href="#fwh-file-utilities" title="Link to this heading">¶</a></h2>
+<p>As well as the FWH solver itself, two FWH file utilities are provided - <cite>writeFWHSurfaceFrequenciesFile</cite> and <cite>writeBlankedOffFWHSurfaceFile</cite>.
+Users may find these utilities useful for investigating the sources of noise within their CFD simulation.</p>
+<section id="writefwhsurfacefrequenciesfile">
+<span id="fwhfrequenciesutility"></span><h3>writeFWHSurfaceFrequenciesFile<a class="headerlink" href="#writefwhsurfacefrequenciesfile" title="Link to this heading">¶</a></h3>
+<p>This python function takes an FWH surface file as input, and creates a file where the FWH surface data can be viewed in the frequency, instead of time, domain.</p>
+<p>This can be useful for visually indicating where particular frequencies originate from in an FWH observer pressure signal.
+To generate the FWH surface frequencies file, an FFT (using a Hann window) of the FWH data is calculated at each surface face.
+The data stored in the surface frequencies file at a particular surface face and chosen frequency is then the magnitude of that FFT’s amplitude, at the chosen frequency.
+The data can be viewed by opening the <cite>.xdmf`</cite> file corresponding to the output file in Paraview - the ‘time’ chosen in Paraview corresponds to the frequency being viewed.
+The data at frequency = 0 corresponds to the time average of the FWH surface data.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fileManipulation</span>
+<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeFWHSurfaceFrequenciesFile</span><span class="p">(</span><span class="s2">&quot;./myFWHSurface.h5&quot;</span><span class="p">,</span><span class="s2">&quot;./myFWHSurface_Frequencies.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="writeblankedofffwhsurfacefile">
+<span id="fwhblankingutility"></span><h3>writeBlankedOffFWHSurfaceFile<a class="headerlink" href="#writeblankedofffwhsurfacefile" title="Link to this heading">¶</a></h3>
+<p>This python function writes a copy of an FWH surface file where specified faces are ignored by the FWH solver.</p>
+<p>Sometimes it is useful to ‘blank off’ certain areas from an FWH surface output file
+before the FWH solver is run - for example, if CFD setup constraints mean the noise from that region of the
+FWH surface is non-physical and should therefore be ignored when calculating FWH noise data.
+This function takes an input FWH surface  file, copies it to an output FWH surface file,
+then sets to zero the face area of any face in the output file where the python function
+shouldBlankOff(x,y,z) returns ‘True’ for the face’s (x,y,z) co-ordinates.
+When the face area of a face has been artificially set to 0, that face will not contribute to the observer location pressures
+calculated by the FWH solver.
+The region which has been set to have 0 face area can be inspected visually by opening the <cite>.xdmf</cite> corresponding to the output file in Paraview</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fileManipulation</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">isPositiveX</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeBlankedOffFWHSurfaceFile</span><span class="p">(</span><span class="s2">&quot;./myFWHSurface.h5&quot;</span><span class="p">,</span><span class="s2">&quot;./myFWHSurface_IgnorePositiveX.h5&quot;</span><span class="p">,</span> <span class="n">isPositiveX</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo of zCFD User Guide"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FWH solver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-an-fwh-solver-for">What is an FWH solver for?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-does-an-fwh-solver-work">How does an FWH solver work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-zcfd-fwh-solver">Running the zCFD FWH solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fwh-file-utilities">FWH file utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2016-23, Zenotech Ltd.
+      
+      |
+      <a href="_sources/fwh.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script>
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,431 @@
+zCFD Functions
+==============
+
+Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when required. This allows you to customise & tune to solver as it runs.
+
+.. _scale_function:
+
+Scale Mesh Function
+-------------------
+
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Transform the location of a supplied point. 
+   * - **Valid for parameter**
+     - :ref:`scale_mesh <scale_mesh>`
+   * - **Parameters**
+     - [x, y, z]: Point to transform
+   * - **Returns**
+     - {'coord': [x, y, z]}: Transformed coordinates
+
+
+Example:
+
+.. code-block:: python
+
+   # Custom function to scale z coordinate by 100
+   def my_scale_func(point):
+       point[2] = point[2] * 100.0
+       return {'coord' : point}
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'scale': my_scale_func
+    ...
+   }
+
+.. _transform_mesh_function:
+
+Transform Mesh Function
+-----------------------
+
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Transform the location of a supplied point. 
+   * - **Valid for parameter**
+     - :ref:`mesh transform func <mesh_transform>`
+   * - **Parameters**
+     - [x, y, z]: Point to transform
+   * - **Returns**
+     - {"v1": x, "v2": y, "v3": z}: Transformed coordinates
+
+
+Example:
+
+.. code-block:: python
+
+    rotation = 10.0
+    
+    def my_transform(x, y, z):
+      v = [x, y, z]
+      v = zutil.rotate_vector(v, rotation, 0.0)
+      return {"v1": v[0], "v2": v[1], "v3": v[2]}
+
+
+.. _ramp_function:
+
+Ramp CFL Function
+-----------------
+
+There may be cases where more detailed control of the CFL number is desired - for example in some aerodynamic simulations where a specific physical event occurs at a given time.  The CFL Ramp function lets you do this.
+
+The ramp function returns a single floating point number (the CFL number) and can also be used to update elements of the 'cfl' Python object such as cfl.min_cfl, cfl.max_cfl, cfl.current_cfl, cfl.coarse_cfl, cfl.transport_cfl, cfl.cfl_ramp, cfl.cfl_pmg, or cfl.transport_cfl_pmg. 
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Provide a dynamic CFL number 
+   * - **Valid for parameter**
+     - :ref:`ramp func <cfl_control>`
+   * - **Parameters**
+     - solve_cycle, real_time_cycle, cfl
+   * - **Returns**
+     - cfl: float
+     
+
+
+Example:
+
+.. code-block:: python
+
+  # Custom function to ramp CFL based on cycle, updates the cfl object variables and returns a CFL
+  def my_cfl_ramp(solve_cycle, real_time_cycle, cfl):
+    cfl.min_cfl = 1.0
+    cfl.max_cfl = 10.0
+    cfl.cfl_ramp = 1.005
+    cfl_transport = 5.0
+    if solve_cycle < 500:
+        cfl_new = min(cfl.min_cfl * cfl.cfl_ramp ** (max(0, solve_cycle - 1)), cfl.max_cfl)
+        cfl.transport_cfl = cfl_transport * cfl_new / cfl.max_cfl
+        return cfl_new
+
+    elif solve_cycle < 1000:
+        cfl.trasport_cfl = 7.5
+        cfl.max_cfl = 15.0
+        return 15.0
+
+    else:
+        cfl.transport_cfl = 10.0
+        cfl.max_cfl = 30.0
+        return 30.0
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'time marching': {
+      ...
+      'ramp func': my_cfl_ramp,
+      ...
+      }
+    ...
+   }
+
+.. _transform_function:
+
+Transform Function
+------------------
+
+A transformation function my be supplied to the force report block to transform the force into a different coordinate system. This is particularly useful for reporting lift and drag, which are often rotated from the solver coordinate system.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Transform a supplied point - rotate, scale or translate.
+   * - **Valid for parameter**
+     - :ref:`Forces transform <forces>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - (x, y, z): floats
+     
+
+Example:
+
+.. code-block:: python
+
+  #zutil is a Zenotech python library providing various utilities, available within a zCFD installation
+  import zutil 
+  
+  # Angle of attack
+  alpha = 10.0
+  # Transform into wind axis
+  def my_transform(x,y,z):
+      v = [x,y,z]
+      v =  zutil.rotate_vector(v,alpha,0.0)
+      return  {v[0], v[1], v[2]}
+
+
+.. _initial_function:
+
+Initialisation Function
+-----------------------
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+   
+   * - **Description**
+     - Provide the initial flow field variables on a cell-by-cell basis
+   * - **Valid for parameter**
+     - :ref:`initial <initial_state>`
+   * - **Parameters**
+     - kwargs dictionary containing "pressure", "temperature", "velocity", "wall_distance", "location"
+   * - **Returns**
+     - dictionary containing one or more of "pressure", "temperature" or "velocity"
+
+
+.. code-block:: python
+    
+    def my_initialisation(**kwargs):
+      # Dimensional primitive variables
+      pressure = kwargs['pressure']
+      temperature = kwargs['temperature']
+      velocity = kwargs['velocity']
+      wall_distance = kwargs['wall_distance']
+      # Cell centre localtion [X, Y, Z]
+      location = kwargs['location'] 
+
+      if location[0] > 10.0:
+        velocity[0] *= 2.0
+
+      # Return a dictionary with user defined quantity.
+      return { 'velocity' : velocity }
+
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'initial': {
+      ...
+      'func': my_initialisation,
+      ...
+      }
+    ...
+   }
+
+.. _driving_function:
+
+Driven initial condition
+------------------------
+
+A ‘driving function’ provides another way of prescribing a farfield initial condition, which on evaluation returns an initial condition dictionary. 
+
+The driving function is re-evaluated at zCFD's reporting frequency, meaning that the condition (e.g. inlet velocity) can be programmed to change as the simulation progresses.
+
+At startup, the function is only provided with the key word arguments RealTimeStep=0, Cycle=0. However, the driving function is subsequently provided with key word arguments containing all the data in the ‘_report.csv’ file, evaluated at the previous timestep. For any driven initial condition, every value in the initial condition dictionary is also appended to the _report.csv file.
+
+This means that the initial condition can be programmed to respond to the flow. An example is shown below, where the driven IC will continually adjust inlet angle of attack until a specified lift coefficient is achieved.
+
+If the driven initial condition has been programmed to respond to changes in the flow, it is important to ensure that the flow has had enough time to propagate from the farfield through to the region of interest and settle before readjusting the driven initial condition. For simulations where the farfield is distant from the geometry, local and implicit time-stepping will likely give the fastest propagation of adjusted farfield conditions through the domain.
+
+.. note::
+
+    Driven initial conditions **cannot** be used as reference conditions, to initialise the flow (e.g 'IC_1') or within a restarted simulation.
+
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+   
+   * - **Description**
+     - Provides a farfield initial condition that can respond to changes in the flow.
+   * - **Valid for parameter**
+     - :ref:`initial condition <initial_conditions>`
+   * - **Parameters**
+     - kwargs dictionary containing "RealTimeStep", "Cycle" and all reporting variables
+   * - **Returns**
+     - dictionary containing valid keys for an :ref:`initial condition <initial_conditions>`
+
+
+.. code-block:: python
+    
+    def example_ic_func(**kwargs):
+      """
+      Example driver function to target a lift coefficient by varying
+      angle of attack
+      """
+      alpha_init = 0 # Initial angle of attack
+      lift_target= 0.5 # Targeted lift coefficient
+      update_period = 1000 # How often alpha should be updated
+      flow_settling_period = 1500
+
+      assumed_d_cL_d_alpha = 0.1 # Used to estimate alpha which would give required lift
+      relaxation_factor = 1.15 # <1: under-relaxation, >1: over-relaxation
+
+
+      if 'lift_target_alpha' in kwargs.keys(): # If timestep > 1
+          alpha_current = kwargs['lift_target_alpha']
+          F_xyz = [kwargs['wall_Fx'], kwargs['wall_Fy'], kwargs['wall_Fz']]
+          F_LDS = zutil.rotate_vector(F_xyz, alpha_current, 0.0)
+          lift_current = F_LDS[2] # Lift coefficient, having rotated to account for alpha
+      else:
+          lift_current = 0 # placeholder value
+
+      if kwargs['Cycle'] < flow_settling_period:
+          alpha_new = alpha_init
+      else:
+          if (kwargs['Cycle'] % update_period) == 0:
+              d_cL_required = lift_target - lift_current
+              d_alpha = relaxation_factor / assumed_d_cL_d_alpha *  d_cL_required
+              alpha_new = alpha_current + d_alpha
+              print("Alpha updated from {} to {}".format(alpha_current, alpha_new), flush = True)
+          else:
+              alpha_new = alpha_current
+
+      dict_out = {
+          "temperature": 300,
+          "pressure": 101325.0,
+          'v': {
+              'mach' : 0.15,
+              'vector' : zutil.vector_from_angle(alpha_new, 0.0)
+              },
+          "reynolds no": 6.0e6,
+          "eddy viscosity ratio": 1.0,
+          "monitor": { # Monitor entries can be floats or lists of floats
+                        "prefix": "lift_target",
+                        "alpha": alpha_new,   # Extra keys can be added to a driven IC dictionary,
+                        "lift": lift_current,  # allowing monitoring of key parameters flow in the _report.csv
+                      },
+      }
+
+      return dict_out
+
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'IC_2' : example_ic_func
+    ...
+   }
+
+
+.. _static_pressure_ratio_function:
+
+Static Pressure Ratio
+---------------------
+
+The python function takes in three values (x, y, z) and returns the static pressure ratio.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Returns a static pressure ratio for a given point.
+   * - **Valid for parameter**
+     - :ref:`Static Pressure Ratio <reference_conditions>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - float
+    
+
+.. _total_pressure_ratio_function:
+
+Total Pressure Ratio
+--------------------
+
+The python function takes in three values (x, y, z) and returns the total pressure ratio.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Returns a total pressure ratio for a given point.
+   * - **Valid for parameter**
+     - :ref:`Total Pressure Ratio <reference_conditions>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - float
+
+
+.. _total_temperature_ratio_function:
+
+Total Temperature Ratio
+-----------------------
+
+The python function takes in three values (x, y, z) and returns the temperature pressure ratio.
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Returns a total temperature ratio for a given point.
+   * - **Valid for parameter**
+     - :ref:`Total Temperature Ratio <reference_conditions>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - float
+
+.. _direction_vector_function:
+
+Direction Vector
+----------------
+
+The python function takes in three values (x, y, z) and returns a tuple (x, y, z).
+
+.. list-table:: 
+   :widths: 30 70
+   :header-rows: 0
+
+   * - **Description**
+     - Returns a direction vector for a given point.
+   * - **Valid for parameter**
+     - :ref:`vector <reference_conditions>`
+   * - **Parameters**
+     - (x, y, z): floats
+   * - **Returns**
+     - (x, y, z): floats
+
+
+.. code-block:: python
+
+  def inflow_direction(x, y, z):
+    # x, y, and z are the coordinates of the face centre
+    cen = [1.0, 0.0, 0.0]
+    y1 = y - cen[1]
+    z1 = z - cen[2]
+    rad = math.sqrt(z1*z1 + y1*y1)
+    phi = math.atan2(y1,z1)
+    angle = -0.24
+    x2 = math.cos(angle)
+    y2 = math.sin(phi) * math.sin(angle)
+    z2 = math.cos(phi) * math.sin(angle)
+    return (x2, y2, z2)
+
+
+.. code-block:: python
+
+   parameters = { 
+    ...
+    'IC_2' : {
+         'reference' : 'IC_1',
+         'vector' : inflow_direction
+         },
+    ...
+   }
+
+
+
+
