@@ -131,7 +131,7 @@ Sets the order of the spatial discretisation. **'euler_second'** is second order
 
 first order cycles
 ==================
-Specifies the number of cycles the solver will run with first order spatial discretisation. This can be used to improve stability at start up.
+Specifies the number of cycles the solver will run with first order spatial discretisation. This can be used to improve stability at start up. If the solver is dual time stepping then the number of first order cycles is taken as the total number from the start of the simulation.
 
 Example usage:
 Run 500 cycles first order.
