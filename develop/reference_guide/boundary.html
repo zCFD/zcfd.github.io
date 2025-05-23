@@ -439,6 +439,11 @@
 <section id="inflow">
 <span id="bc-inflow"></span><h3>Inflow<a class="headerlink" href="#inflow" title="Link to this heading">¶</a></h3>
 <p>zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
+Massflow ratio is nondimensional where <span class="math notranslate nohighlight">\(A_{in}\)</span> is defined in mesh units. Given <span class="math notranslate nohighlight">\(massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})\)</span></p>
+</div>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21.1%" />
@@ -555,6 +560,11 @@
 <span id="bc-outflow"></span><h3>Outflow<a class="headerlink" href="#outflow" title="Link to this heading">¶</a></h3>
 <p>Pressure or massflow outflow boundaries are specified in a similar manner to the <a class="reference internal" href="#inflow">Inflow</a> boundary. They can be of <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>.
 When the boundary condition <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> is either <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code>, the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions it refers to must set a static pressure ratio. When the boundary condition <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> is <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>, a mass flow ratio or mass flow rate must be set in the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
+Massflow ratio is nondimensional where <span class="math notranslate nohighlight">\(A_{out}\)</span> is defined in mesh units. Given <span class="math notranslate nohighlight">\(massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})\)</span></p>
+</div>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21.1%" />

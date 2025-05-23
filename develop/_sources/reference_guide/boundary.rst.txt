@@ -375,6 +375,10 @@ Inflow
 
 zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
 
+.. note::
+    
+    The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
+    Massflow ratio is nondimensional where :math:`A_{in}` is defined in mesh units. Given :math:`massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})`
 
 .. list-table:: 
    :widths: 20 10 10 20 35
@@ -484,7 +488,10 @@ Outflow
 Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code:`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`.
 When the boundary condition :code:`'kind'` is either :code:`'pressure'` or :code:`'radial pressure gradient'`, the :code:`'IC_'` conditions it refers to must set a static pressure ratio. When the boundary condition :code:`'kind'` is :code:`'massflow'`, a mass flow ratio or mass flow rate must be set in the :code:`'IC_'` conditions. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
 
-
+.. note::
+    
+    The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
+    Massflow ratio is nondimensional where :math:`A_{out}` is defined in mesh units. Given :math:`massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})`
 
 .. list-table:: 
    :widths: 20 10 10 20 35
