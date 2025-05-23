@@ -65,22 +65,22 @@ Another way of prescribing an initial condition is by defining a dynamic :ref:`'
      - Turbulence intensity (%)
    * - :ref:`'eddy viscosity ratio' <ic_turb_intensity>`
      - No
-     - 
+     - 0.01
      - Float
      - Ratio of dynamic viscosity to turbulent viscosity used to set the turbulence quantities
    * - :ref:`'ambient turbulence intensity' <ic_turb_intensity>`
      - No
-     - 
+     - 0.1
      - Float
      - Value of background turbulence intensity (%) to maintain in fluid 
    * - :ref:`'ambient eddy viscosity ratio' <ic_turb_intensity>`
      - No
-     - 
+     - 1e-20
      - Float
      - Value of background turbulence eddy viscosity ratio to maintain in fluid
    * - 'profile'
      - No
-     - 
+     - 1e-20
      - Dict
      - See :ref:`Velocity Profile <ic_v_profile>` 
 

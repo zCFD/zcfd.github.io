@@ -1,0 +1,128 @@
+.. _reference_conditions:
+
+Reference Conditions
+^^^^^^^^^^^^^^^^^^
+
+Reference Conditions enable a set of conditions to be specified relative to a base set of :ref:`initial conditions <initial_conditions>`. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain
+
+Reference condition properties are defined in the same way as initial conditions using consecutively numbered blocks. 
+
+.. code-block:: python
+
+    'IC_2' : {....},
+    'IC_3' : {....},
+
+
+.. note::
+
+ Reference conditions can not be used for "IC_1"
+
+
+.. list-table:: 
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'reference'
+     - Yes
+     - 
+     - Float
+     - Specify the base condition as the reference for this set of conditions
+   * - 'static pressure ratio'
+     - No
+     - 
+     - Float or :ref:`Function <static_pressure_ratio_function>` or :ref:`File <reference_file>`
+     - Set the static pressure using a ratio relative to the reference static pressure. Where static pressure = reference static pressure * static pressure ratio
+   * - 'total pressure ratio'
+     - No
+     - 
+     - Float or :ref:`Function <total_pressure_ratio_function>` or :ref:`File <reference_file>`
+     - Set the total pressure using a ratio relative to the reference total pressure. Where total pressure = reference total pressure * total pressure ratio
+   * - 'total temperature ratio'
+     - No
+     - 
+     - Float or :ref:`Function <total_temperature_ratio_function>` or :ref:`File <reference_file>`
+     - Set the total temperature using a ratio relative to the reference total temperature. Where total temperature = reference total temperature * total temperature ratio
+   * - 'mass flow ratio'
+     - No
+     - 
+     - Float 
+     - Specify a :ref:`mass flow<reference_mass_flow>` ratio.
+   * - 'mass flow rate'
+     - No
+     - 
+     - Float 
+     - Specify a :ref:`mass flow<reference_mass_flow>` rate.
+   * - 'vector'
+     - No
+     - 
+     - [X, Y, Z] or :ref:`Function <direction_vector_function>`
+     - Specify direction vector used to specify the direction of the flow for specific boundary conditions.
+   * - 'mach'
+     - No
+     - 
+     - Float
+     - Specify a mach number used for specific boundary conditions like inflows/jets.
+
+Example usage:
+
+.. code-block:: python
+
+    parameters = {
+    ..
+    'IC_2' : {
+         'reference' : 'IC_1',
+         'total temperature ratio' : 1.0,
+         'mass flow rate' : 10.0,
+         'vector' : [1,0,0],
+         'mach' : 0.5,
+         },
+    ..
+    },
+
+
+
+.. _reference_mass_flow:
+
+Mass Flow
+---------
+
+Mass flow ratio is defined as:
+
+:math:`ratio = (density * area * V) / (density_{ref} * area * V_{ref}) = (density  * V) / (density_{ref}  * V_{ref})`
+
+Mass flow rate is defined as:
+
+:math:`\dot{m}=density * area * V`
+
+.. note::
+  
+  Note area is in mesh units squared
+
+
+.. _reference_file:
+
+Using a file
+------------
+A file can be used to provide a lookup for the pressure and temperature ratios. This file should be in the Paraview/VTK VTP format. The file should contain a surface with specific values as node arrays data. zCFD then looks up the values by finding the nearest point to the mesh location.
+
+The node array data in the VTP should be named specifically for each keyword:
+
+.. list-table:: 
+   :widths: 30 30
+   :header-rows: 1
+
+   * - Keyword
+     - Node Array Name
+   * - 'static pressure ratio'
+     - StaticPressureRatio
+   * - 'total pressure ratio'
+     - TotalPressureRatio
+   * - ‘total temperature ratio’	
+     - TotalTemperatureRatio
+
+

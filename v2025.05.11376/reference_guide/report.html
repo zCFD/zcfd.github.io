@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reporting &#8212; zCFD User Guide unknown documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=3f1b9271"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Output variables" href="variables.html" />
+    <link rel="prev" title="Write Output" href="write_output.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="reporting">
+<span id="id1"></span><h1>Reporting<a class="headerlink" href="#reporting" title="Link to this heading">¶</a></h1>
+<p>zCFD has the capability to output certain parameters to a &lt;casename&gt;_report.csv file as the solver progresses. These can be used to monitor the solver’s convergence, By default, the solver outputs volume integrated residuals for each solution variable to the &lt;casename&gt;_report.csv file, but adding to the report dictionary means other quantities of interest can also be monitored as the simulation progresses.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26.3%" />
+<col style="width: 10.5%" />
+<col style="width: 26.3%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘frequency’</p></td>
+<td><p>Yes</p></td>
+<td><p>1</p></td>
+<td><p>Positive integer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#monitor-points"><span class="std std-ref">‘monitor’</span></a></p></td>
+<td><p>No</p></td>
+<td><p>–</p></td>
+<td><p>Dictionary of monitor point configs (MR_?)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#forces"><span class="std std-ref">‘forces’</span></a></p></td>
+<td><p>No</p></td>
+<td><p>–</p></td>
+<td><p>Dictionary of force configs (FR_?)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#massflow"><span class="std std-ref">‘massflow’</span></a></p></td>
+<td><p>No</p></td>
+<td><p>–</p></td>
+<td><p>Dictionary of massflow configs (MF_?)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>‘frequency’</strong> sets how frequently a new line is appended to the &lt;casename&gt;_report.csv dictionary. If frequency = x, the solver will output to the &lt;casename&gt;_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (pseudo-time), not outer, cycles.</p>
+<p><strong>‘monitor’</strong>, <strong>‘forces’</strong> and <strong>‘massflow’</strong> should be dictionaries of the required format. The dictionary’s keys should be consecutively numbered blocks prefixed with the correct string:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reporting on</p></th>
+<th class="head"><p>Key name</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>‘monitor’</strong></p></td>
+<td><p>MR_?</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>‘forces’</strong></p></td>
+<td><p>FR_?</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>‘massflow’</strong></p></td>
+<td><p>MF_?</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example usage:</p>
+<p>For a simulation with 1000’s of cycles, it can be unnecessary to report every time cycle, which slows the solver down. For a dual timestepping simulation with 20 inner time cycles, outputting every 10 cycles generally gives enough information without substantially slowing the solver down</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Report every 10 cycles</span>
+<span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="a-simulation-with-two-monitor-points-and-one-forces-block">
+<h2>A simulation with two monitor points and one forces block.<a class="headerlink" href="#a-simulation-with-two-monitor-points-and-one-forces-block" title="Link to this heading">¶</a></h2>
+<p>In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of <code class="code docutils literal notranslate"><span class="pre">'MR_'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'FR_'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'MF_'</span></code> blocks may be specified.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Report every 10 cycles</span>
+<span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="s1">&#39;monitor&#39;</span> <span class="p">{</span>
+      <span class="s1">&#39;MR_1&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="o">...</span>
+       <span class="p">},</span>
+       <span class="s1">&#39;MR_2&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="o">...</span>
+       <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="s1">&#39;forces&#39;</span> <span class="p">{</span>
+      <span class="s1">&#39;FR_1&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="o">...</span>
+       <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="monitor-points">
+<span id="id2"></span><h3>Monitor Points<a class="headerlink" href="#monitor-points" title="Link to this heading">¶</a></h3>
+<p>Monitor points report the specified variable at fixed mesh locations.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26.3%" />
+<col style="width: 10.5%" />
+<col style="width: 26.3%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘name’</p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>String; Name of the monitor point</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘point’</p></td>
+<td><p>No</p></td>
+<td><p>–</p></td>
+<td><p>[x,y,z] position vector specifying a valid location in the mesh</p></td>
+</tr>
+<tr class="row-even"><td><p>‘variables’</p></td>
+<td><p>No</p></td>
+<td><p>–</p></td>
+<td><p>List of variables to report (see Output Variables)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>‘name’</strong> sets the name that appears in the &lt;casename&gt;_report.csv column heading for variables from this monitor point.</p>
+<p><strong>‘point’</strong> should be the x,y,z location of the point of interest in the mesh as it appears in the solver (i.e. after any mesh scaling due to parameters <a class="reference internal" href="reference.html#scale-mesh"><span class="std std-ref">scaling</span></a> parameters)</p>
+<p><strong>‘variables’</strong> controls which variables are reported at this point. In the &lt;casename&gt;_report.csv the column name will be a combination of the <strong>‘name’</strong> and the variable name.</p>
+<p>Example usage:</p>
+<p>Tracking pressure and velocity is useful for determining shedding cycle behaviour, or in the case of a scale resolving simulation, to determine the turbulence spectrum which is being resolved. It may be important to track other variables (e.g. turbulence intensity) may also be appropriate depending on the simulation setup.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s1">&#39;monitor&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;MR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;monitor_1&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">],</span>
+                <span class="s1">&#39;variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="s2">&quot;Ti&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</section>
+<section id="forces">
+<span id="id3"></span><h3>Forces<a class="headerlink" href="#forces" title="Link to this heading">¶</a></h3>
+<p>Force reporting outputs the x,y,z total forces and moments on a surface or set of surfaces. These are presented as force coefficients (using the non-dimensionalisation convention used for aerofoil lift, drag and moment coefficients), as opposed to dimensional values.
+The force and moment coefficients resulting exclusively from viscous forces and exclusively from pressure forces are also given.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 22.2%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘name’</p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>String</p></td>
+<td><p>Sets the name that appears in the &lt;casename&gt;_report.csv column headings for variables from this force monitor.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘zone’</p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>List of valid mesh zone IDs (integers)</p></td>
+<td><p>All the mesh zone IDs for the surfaces used in this force report. The forces and moments over all the zones are summed to give the forces and moments outputted in the force report.</p></td>
+</tr>
+<tr class="row-even"><td><p>‘transform’</p></td>
+<td><p>No</p></td>
+<td><p>–</p></td>
+<td><p>An (optional) transform function.</p></td>
+<td><p>See <a class="reference internal" href="../functions.html#transform-function"><span class="std std-ref">Transform function</span></a>. A transformation function my be supplied to the force report block to transform the force into a different coordinate system.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘reference area’</p></td>
+<td><p>No</p></td>
+<td><p>1</p></td>
+<td><p>Positive number</p></td>
+<td><p>Sets the dimensional reference area which is used to non-dimensionalise the reported force and moment coefficients</p></td>
+</tr>
+<tr class="row-even"><td><p>‘reference length’</p></td>
+<td><p>No</p></td>
+<td><p>1</p></td>
+<td><p>Positive number</p></td>
+<td><p>Sets the dimensional reference length which is used to non-dimensionalise the moment coefficients</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘reference point’</p></td>
+<td><p>No</p></td>
+<td><p>[0,0,0]</p></td>
+<td><p>[x,y,z] position vector</p></td>
+<td><p>Sets the reference point which is used to non-dimensionalise the moment coefficients</p></td>
+</tr>
+<tr class="row-even"><td><p>‘reference pressure’</p></td>
+<td><p>No</p></td>
+<td><p>0.0</p></td>
+<td><p>Positive number</p></td>
+<td><p>For a wetted surface, this sets the pressure on the non-wetted side of the surface. Pressure forces on the surface are calculated by integrating (p - pRef) over the surface</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘dimensional’</p></td>
+<td><p>No</p></td>
+<td><p>False</p></td>
+<td><p>Boolean</p></td>
+<td><p>Reports the forces in dimensonal units</p></td>
+</tr>
+<tr class="row-even"><td><p>‘inertial frame’</p></td>
+<td><p>No</p></td>
+<td><p>True</p></td>
+<td><p>Boolean</p></td>
+<td><p>Transforms the forces for rotating components into the inertial frame rather than fixed frame of original position</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="c1"># Report force coefficient in grid axis as well as using user defined transform</span>
+        <span class="s1">&#39;forces&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;FR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;force_1&#39;</span><span class="p">,</span>
+                            <span class="c1"># Required: Zones to be included</span>
+                            <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                            <span class="c1"># Transformation function</span>
+                            <span class="s1">&#39;transform&#39;</span> <span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+                            <span class="s1">&#39;reference area&#39;</span> <span class="p">:</span> <span class="mf">0.112032</span><span class="p">,</span>
+                            <span class="s1">&#39;reference length&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                            <span class="s1">&#39;reference point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                            <span class="c1"># Calculate forces using a specified reference pressure rather than absolute</span>
+                            <span class="s1">&#39;reference pressure&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+                            <span class="p">},</span>
+                    <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</section>
+<section id="output-names">
+<h3>Output names<a class="headerlink" href="#output-names" title="Link to this heading">¶</a></h3>
+<p>The forces will be written into the &lt;casename&gt;_report.csv prefixed with the supplied <strong>‘name’</strong>. The forces will be written with the following names:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Item</p></th>
+<th class="head"><p>Reporting output name</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Total forces and moments</p></td>
+<td><p><strong>‘name’</strong>_F[x,y,z] and <strong>‘name’</strong>_M[x,y,z]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Forces and moments due only to pressure forces</p></td>
+<td><p><strong>‘name’</strong>_Fp[x,y,z] and <strong>‘name’</strong>_Mp[x,y,z]</p></td>
+</tr>
+<tr class="row-even"><td><p>Forces and moments due only to viscous forces</p></td>
+<td><p><strong>‘name’</strong>_Fv[x,y,z] and <strong>‘name’</strong>_Mv[x,y,z]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Transformed total forces and moments (if transform function is set)</p></td>
+<td><p><strong>‘name’</strong>_Ft[x,y,z] and <strong>‘name’</strong>_Mt[x,y,z]</p></td>
+</tr>
+<tr class="row-even"><td><p>Transformed forces and moments due only to pressure forces (if transform function is set)</p></td>
+<td><p><strong>‘name’</strong>_Ftp[x,y,z] and <strong>‘name’</strong>_Mtp[x,y,z]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Transformed Forces and moments due only to viscous forces (if transform function is set)</p></td>
+<td><p><strong>‘name’</strong>_Ftv[x,y,z] and <strong>‘name’</strong>_Mtv[x,y,z]</p></td>
+</tr>
+<tr class="row-even"><td><p>Total forces and moments in static frame of reference (if specified zone is rotating)</p></td>
+<td><p><strong>‘name’</strong>_Fif[x,y,z] and <strong>‘name’</strong>_Mif[x,y,z]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Forces and moments due only to pressure forces in static frame of reference (if specified zone is rotating)</p></td>
+<td><p><strong>‘name’</strong>_Fifp[x,y,z] and <strong>‘name’</strong>_Mifp[x,y,z]</p></td>
+</tr>
+<tr class="row-even"><td><p>Forces and moments due only to viscous forces in static frame of reference (if specified zone is rotating)</p></td>
+<td><p><strong>‘name’</strong>_Fifv[x,y,z] and <strong>‘name’</strong>_Mifv[x,y,z]</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="additional-information">
+<h3>Additional information<a class="headerlink" href="#additional-information" title="Link to this heading">¶</a></h3>
+<section id="total-force">
+<h4>Total force<a class="headerlink" href="#total-force" title="Link to this heading">¶</a></h4>
+<p>Total force, <span class="math notranslate nohighlight">\(\mathbf{F}\)</span>, is simply , <span class="math notranslate nohighlight">\(\mathbf{F}_p +  \mathbf{F}_v\)</span>, and likewise for moments.</p>
+</section>
+<section id="non-dimensionalisation">
+<span id="report-nondimensionalisation"></span><h4>Non-dimensionalisation<a class="headerlink" href="#non-dimensionalisation" title="Link to this heading">¶</a></h4>
+<p>Forces are non-dimensionalised into force coefficients as <span class="math notranslate nohighlight">\(C_{x} = \frac{ \mathbf{F}_x  }{ q_{\inf} S }\)</span>
+Where <span class="math notranslate nohighlight">\(q_{\inf}\)</span> = reference dynamic pressure and <span class="math notranslate nohighlight">\(S\)</span> = reference area</p>
+<p>Moments are non-dimensionalised into force coefficients as <span class="math notranslate nohighlight">\(C_{Mx} = \frac{\mathbf{M}_x  }{ q_{\inf} S c}\)</span>
+Where <span class="math notranslate nohighlight">\(c\)</span> = reference length</p>
+</section>
+<section id="dimensional-pressure-force">
+<h4>Dimensional pressure force<a class="headerlink" href="#dimensional-pressure-force" title="Link to this heading">¶</a></h4>
+<p><span class="math notranslate nohighlight">\(\mathbf{F_p} = \oint - (p-p_{ref}) \ \hat{\mathbf{n}} \ \textrm d A\)</span></p>
+<p>Where <span class="math notranslate nohighlight">\(p\)</span> is surface pressure and  <span class="math notranslate nohighlight">\(\hat{\mathbf{n}}\)</span> is the surface normal (pointing towards the wetted area).</p>
+</section>
+<section id="dimensional-viscous-force">
+<h4>Dimensional viscous force<a class="headerlink" href="#dimensional-viscous-force" title="Link to this heading">¶</a></h4>
+<p><span class="math notranslate nohighlight">\(\mathbf{F}_v = \oint \mu \nabla . V \  \textrm d A\)</span></p>
+<p>Where <span class="math notranslate nohighlight">\(\mu\)</span> is dynamic viscosity and <span class="math notranslate nohighlight">\(V\)</span> is the velocity vector at the wall.</p>
+</section>
+<section id="dimensional-pressure-moment">
+<h4>Dimensional pressure moment<a class="headerlink" href="#dimensional-pressure-moment" title="Link to this heading">¶</a></h4>
+<p><span class="math notranslate nohighlight">\(\mathbf{M}_p = \oint -(p-p_{ref}) \hat{\textbf{n}} \ (x - x_{ref}) \ \mathrm d A\)</span></p>
+</section>
+<section id="dimensional-viscous-moment">
+<h4>Dimensional viscous moment<a class="headerlink" href="#dimensional-viscous-moment" title="Link to this heading">¶</a></h4>
+<p><span class="math notranslate nohighlight">\(\mathbf{M}_p = \oint  \mu \nabla V \ (x - x_{ref}) \ \mathrm d A\)</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reference pressure <span class="math notranslate nohighlight">\(p_{ref}\)</span> is dynamic pressure (<span class="math notranslate nohighlight">\(\frac{1}{2} \rho V^2\)</span>), taken from the <a class="reference internal" href="reference.html#reference-state"><span class="std std-ref">reference state</span></a>.</p>
+</div>
+</section>
+</section>
+<section id="mass-flow">
+<span id="massflow"></span><h3>Mass flow<a class="headerlink" href="#mass-flow" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 22.2%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘name’</p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>String</p></td>
+<td><p>Sets the name that appears in the &lt;casename&gt;_report.csv column headings for variables from this force monitor.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘zone’</p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>List of valid mesh zone IDs (integers)</p></td>
+<td><p>All the mesh zone IDs used in this mass flow monitor</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>`name`</strong> Sets the name that appears in the &lt;casename&gt;_report.csv column heading for variables from this mass flow monitor. For example, setting this to ‘pipe_outflow’ would mean the massflow would appear as ‘pipe_outflow_massflow in the &lt;casename&gt;_report.csv file</p>
+<p><strong>‘zones’</strong> The mass flows through all the zones are summed to give a single output value for the mass flow monitor. Flow out of the domain is considered positive massflow, flow into the domain is considered positive massflow and the massflows are dimensional (typically kg per second).</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="c1"># Report massflow ratio</span>
+        <span class="s1">&#39;massflow&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;MF_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># Output name</span>
+                    <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;massflow_1&#39;</span><span class="p">,</span>
+                    <span class="c1"># Zones to be included</span>
+                    <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="p">},</span>
+            <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo of zCFD User Guide"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/intro.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Reference Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference.html">Reference Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time.html">Time Marching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_solver.html">Linear Solver Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equations.html">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caa.html">Aero-Acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-structure interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Material Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_conditions.html">Reference Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms.html">Mesh Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overset.html">Overset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="write_output.html">Write Output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Output variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2016-25, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/reference_guide/report.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script>
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
