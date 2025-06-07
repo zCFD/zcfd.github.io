@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutorial 6: Overset Meshes &#8212; zCFD User Guide unknown documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
+    <script src="../_static/documentation_options.js?v=3f1b9271"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/fav.png"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Running zCFD using EPIC" href="epic_tutorial.html" />
+    <link rel="prev" title="Tutorial 5: FWH Solver" href="fwh_tutorial.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="tutorial-6-overset-meshes">
+<span id="oversettutorial"></span><h1>Tutorial 6: Overset Meshes<a class="headerlink" href="#tutorial-6-overset-meshes" title="Link to this heading">¶</a></h1>
+<p>There are various situations in CFD modelling when it is useful to be able to place one mesh over the top of another one, effectively blanking out the cells in the lower level mesh in favour of the mesh on top, while maintaining solution accuracy across the interface.</p>
+<ul class="simple">
+<li><p>We may want a higher order of solution accuracy in a region of the original finite volume mesh.  The overset mesh would be designed for a higher order simulation than elsewhere in the flow domain.</p></li>
+<li><p>We may want to include a component in a simulation that is not part of the original mesh.  For example, we may want to add a rotating component to a static mesh.  The overset mesh would be designed for the rotating component, and would be placed over the static mesh.</p></li>
+<li><p>A specific mesh may already exist for a rotating component (such as a propeller) that we want to be able to easily add to models of different aircraft without having to re-create the propeller mesh.  The propeller meshes (there may be several) are overset on the aircraft mesh, allowing for a fully coupled solution.</p></li>
+<li><p>There may be components in relative motion, such as a train entering a tunnel.  In this case the mesh for the train can overset the background mesh for the tunnel, and the train can move into the tunnel without the need for any new mesh generation.  The solver takes care of the changing mesh mapping across the boundary as the train moves, including preservation of the solution accuracy with a region of overlapping meshes.</p></li>
+<li><p>There may already be a high quality mesh for an aircraft or a cityscape, and we want to include a new component or a new building without regenerating the entire mesh. It may be simpler to include any changes into a new mesh of a small region, and apply it like a patch as an overset mesh.</p></li>
+</ul>
+<p>This is called an overset mesh technique, and is supported by zCFD.  In all cases, the flow solutions are calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy.  zCFD will support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large numbers of overset meshes in each simulation.  The order of the sequence of meshes specified by the user determines which mesh is active in each part of the flow domain.  zCFD automatically manages the data exchange between all meshes, including parallel partitions.</p>
+<section id="example-1-multiple-overset-cylinder-test-case">
+<h2>Example 1 - Multiple Overset Cylinder Test Case<a class="headerlink" href="#example-1-multiple-overset-cylinder-test-case" title="Link to this heading">¶</a></h2>
+<p id="overset-multi-pic">There are 4 (mesh, control dictionary) pairs of input files.  These are listed in a special “override” file called “oversetmulticylinder.py” used for overset cases:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">override</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mesh_case_pair&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s1">&#39;back1.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;back1&#39;</span><span class="p">),</span>
+                               <span class="p">(</span><span class="s1">&#39;back2.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;back2&#39;</span><span class="p">),</span>
+                               <span class="p">(</span><span class="s1">&#39;back3.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;back3&#39;</span><span class="p">),</span>
+                               <span class="p">(</span><span class="s1">&#39;back3.h5&#39;</span><span class="p">,</span> <span class="s1">&#39;back4&#39;</span><span class="p">)]}</span>
+</pre></div>
+</div>
+<p>Note that in this case, the “back3.h5” mesh defining a cylinder has been used twice.  This is OK, because the “back3.py” and “back4.py” control dictionaries each apply a different transformation (down and up along the y-axis respectively).  The solver knows that the meshes are used for different solutions, in different parts of the flow domain.  Also note that the translated mesh for “back4” overlaps the translated mesh for “back3” (the mesh between the two cylinders). This is also OK because the solver knows that “back4” oversets “back3”, which oversets “back2” and “back1”.  In each case, the active solution is the one on the top-level oversetting mesh.</p>
+<p>The files for running the case are available for download <a class="reference external" href="https://zcfd.zenotech.com/tutorials/5/oversetmulticylinder.zip" target="_blank">here</a>.</p>
+<p>For each of the meshes, a transformation has been defined in the corresponding control file, for example the “back1.h5” mesh is moved according to the transformation defined by the following lines in the “back1.py” control dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;mesh transform matrix&quot;</span><span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">]</span>
+<span class="p">),</span>
+</pre></div>
+</div>
+<p>This tells the solver to use the inbuilt transformation function in zutil to translate the mesh down in the z-axis by 1.5 units.  The lowest level mesh (i.e. that does not overset any other meshes) does not require any other modification, providing that the order of solution spatial accuracy supported by the meshes that overset it are that same as its own accuracy.  For all of the meshes that overset at least one other mesh, a special boundary condition must be applied to any zone (boundary) where information is to be exchanged between meshes.  For example, in “back3.py” the following line is used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;BC_2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;overset&quot;</span><span class="p">},</span>
+</pre></div>
+</div>
+<p>For the “back3.h5” mesh, zone 13 (comprising boundary faces excluding symmetry planes and the cylinder surface) is designated as an overset boundary. This means the solver will interpolate and exchange data between this zone and the background mesh (“back2.h5”). The software automatically calculates the necessary mapping and interpolation coefficients to preserve the spatial accuracy of the overset solution.</p>
+<p>The “Multiple Overset Cylinder” test case runs in a few minutes on a GPU, with the simple command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-f<span class="w"> </span>oversetmulticylinder.py
+</pre></div>
+</div>
+<p>The usual command line arguments specifying the mesh and the case name are not required as they are replaced with the list in the “override” dictionary specified within the “oversetmulticylinder.py” file.</p>
+<p>When complete, the following outputs should be produced:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_P1_OUTPUT
+back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_report.csv
+back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_results.h5
+back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_status.txt
+oversetmulticylinder.log
+oversetmulticylinder_report.ipynb
+</pre></div>
+</div>
+<p>Where the [1,2,3,4] indicates that the file or directory exists for each overset solution separately.   From a post-processing perspective, overset grids offer a significant advantage: independent solutions that only exchange boundary data during computation. This independence can save post-processing time and memory, as not all solution files are needed to analyze specific regions. However, a separate step is necessary to combine these independent solutions for domain-wide processing, such as extracting cross-sections. ParaView can be used to illustrate this combination process.</p>
+</section>
+<section id="post-processing-using-paraview">
+<h2>Post-processing using ParaView<a class="headerlink" href="#post-processing-using-paraview" title="Link to this heading">¶</a></h2>
+<p>To combine the 4 overset meshes into a single solution that can be operated on as though it were a single object, we use the “Append Datasets” filter in ParaView.</p>
+<ul class="simple">
+<li><p>Launch ParaView so that you can load the solution files (locally or remotely).</p></li>
+<li><p>Load the 4 files “back*_P1_OUTPUT/back*.pvd” for * = 1,2,3 and 4.</p></li>
+<li><p>Highlight all 4 files on the navigation tree (on the left) and select “Filters &gt; Append Datasets”.  This will create a new item in the navigation tree called “AppendDatasets1” that acts on all four datasets at once.</p></li>
+<li><p>The volumetric data output for this case contains a variable called “overset” which is 0 or 1 for any cell in the meshes. 0 means that the cell has been overset by another mesh, and 1 means that the cell is the active cell in that location.  Use the “Filters &gt; Threshold” filter to select only the cells in the “AppendDatasets1” combined dataset that have an “overset” value of 1 (do this by changing the lower threshold value from 0 to 1).  This will create a new item in the navigation tree called “Threshold1” excluding any cells that have been overset by cells in another mesh.</p></li>
+<li><p>Use the “Filters &gt; Cell Data to Point Data” filter to interpolate the cell data from “Threshold1” to the mesh nodes.  This makes subsequent interpolation operations in ParaView more accurate.  This will create a new item in the navigation tree called “CellDatatoPointData1”.</p></li>
+<li><p>Use the “Filters &gt; Slice” filter to extract the solution from “CellDatatoPointData1” onto a plane with normal in the “Z” direction.  Note that this contains data from all 4 meshes.</p></li>
+<li><p>Colour the new “Slice1” object by “V” “Magnitude”, selecting “Surface With Edges” in the visualisation toolbar.</p></li>
+</ul>
+<p>Other post-processing steps such as streamlines or animations will also work with overset meshes in the same manner.   If the meshes are in relative motion throughout an unsteady simulation, ParaView will automatically update their positions.</p>
+<ul class="simple">
+<li><p>[Optional] The “back2” solution will show through behind the “back3” and “back4” overset solutions because of the holes where the cylinders are.  Any solution is non-physical, and an easy way to mask this effect is to insert some simple geometry to show the location of the cylinders.  Use “Sources &gt; Cylinder” to create a unit diameter cylinder at [0,0,0] and rotate it 90 degrees about the x-axis, then translate it in the y-axis by -0.8 in y to put it into place.  Repeat, but with a translation of +0.8 for the other cylinder.</p></li>
+<li><p>[Optional] The above steps will produce the image below:</p></li>
+</ul>
+<p>To create the image in the validation page, you can force ParaView to bring the overset meshes to the foreground by treating each of the overset meshes independently, and adding a small incremental offset normal to the slice plane to each cylinder mesh (0.0, 0.001, 0.0015, 0.002). This will better reflect what the solver will actually see, as the overset cells in the background meshes will not be active.</p>
+</section>
+<section id="example-2-train-tunnel-test-case">
+<h2>Example 2 - Train Tunnel Test Case<a class="headerlink" href="#example-2-train-tunnel-test-case" title="Link to this heading">¶</a></h2>
+<p id="train-tunnel-test-case-pic">This test case demonstrates the zCFD overset capabilities to predict the micro pressure wave generated as a train enters a tunnel, and is a good example of a practical application of overset meshing.
+The simulation set up follows that described in Section 7.6 of Railway applications — Aerodynamics — Part 5: Requirements and test procedures for aerodynamics in tunnels.  In order to avoid transients, the train is linearly accelerated from 0 to 250 km/hr over 1.5 seconds.</p>
+<p>For the reference train entering the reference tunnel at 250 km/hr, the maximum entry pressure gradient dp/dt should be in the range of 8800 Pa/s to 9500 Pa/s. These values are used to validate the simulation.</p>
+<p>The input control dictionary for the train in this case also shows how to programmatically define the motion of a mesh in time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">linear_accel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;time step&quot;</span><span class="p">]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">69.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">1.5</span><span class="p">:</span>
+        <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">69.4</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;velocity&quot;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">u</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>This function returns the velocity to be applied to a fluid zone, which is then defined by:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;translating&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+        <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;mach&#39;</span><span class="p">:</span> <span class="mf">69.4</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.4</span> <span class="o">*</span> <span class="mi">287</span> <span class="o">*</span> <span class="p">(</span><span class="mf">277.7777</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)),</span>
+        <span class="s1">&#39;translation function&#39;</span><span class="p">:</span> <span class="n">linear_accel</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>The motion is applied to the mesh because of the keyword ‘moving mesh’ in the ‘time marching’ section of the control dictionary.  This will force a recalculation of the physical location of the mesh, including the recalculation of any overset mappings, every real time step.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;time marching&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;unsteady&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;total time&quot;</span><span class="p">:</span> <span class="mf">3.6</span><span class="p">,</span>
+                  <span class="s2">&quot;time step&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+                  <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+     <span class="s2">&quot;scheme&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;implicit euler&quot;</span><span class="p">,</span> <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+     <span class="s2">&quot;cfl&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+     <span class="s2">&quot;cycles&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+     <span class="s2">&quot;moving mesh&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="p">},</span>
+</pre></div>
+</div>
+<p>The meshes and control files for the train and the tunnel can be downloaded from <a class="reference external" href="https://zcfd.zenotech.com/tutorials/5/traintunnel.zip" target="_blank">here</a>.</p>
+<p>The train tunnel case is larger than the previous case in this tutorial: the train mesh has 1.31m cells and the tunnel has 7.35m cells.  To run this case in implicit mode on a GPU will require approximately 48GB RAM.  If this is not available locally, a range of computing resources are available via EPIC.</p>
+<p>The case can be run with the command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-f<span class="w"> </span>override_roe.py
+</pre></div>
+</div>
+</section>
+<section id="post-processing">
+<h2>Post-processing<a class="headerlink" href="#post-processing" title="Link to this heading">¶</a></h2>
+<p>To plot the entry pressure gradient over time, copy the following Python code into a file ‘create_plot.py’:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute maximum entry pressure gradient dp/dt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;tunnel_roe_report.csv&quot;</span>
+<span class="n">p_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+                <span class="n">p_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="n">p_grad_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_data</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+       <span class="k">if</span> <span class="n">ts</span><span class="o">*</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">p_grad_data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p_data</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p_data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">ts</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ts</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Maximum entry pressure gradient = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">p_grad_data</span><span class="p">),</span><span class="mi">6</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39; Pa/s&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time [s]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;dPdt [Pa/s]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">12000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">p_grad_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;250km/hr @ 15oC&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],[</span><span class="mi">8800</span><span class="p">,</span><span class="mi">8800</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;min valid dP/dT&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],[</span><span class="mi">9700</span><span class="p">,</span><span class="mi">9700</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;max valid dP/dT&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;EntryPressureGradient.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Then run the code in the same directory as the solution files with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>create_plot.py
+</pre></div>
+</div>
+<p>This will create the following plot, showing the maximum entry pressure gradient as a function of time.  The maximum entry pressure gradient is 9656.0 Pa/s, which is within the range of values specified [8800.0, 9700.0] in the standard.</p>
+<span class="target" id="postprocessing-pic"></span></section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>EN 14067-5:2006 - Railway applications - Aerodynamics - Part 5: Requirements and test procedures for aerodynamics in tunnels”, url: <a class="reference external" href="https://standards.iteh.ai/catalog/standards/cen/ea6cb49e-c40a-4b8b-a059-c6debdb91dc7/en-14067-5-2006" target="_blank">https://standards.iteh.ai/catalog/standards/cen/ea6cb49e-c40a-4b8b-a059-c6debdb91dc7/en-14067-5-2006</a>”</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/ZCFD_Mark_CMYK.png" alt="Logo of zCFD User Guide"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running/intro.html">Running zCFD</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="intro.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quick_start_1.html">Tutorial 1: Simple Aerofoil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_3.html">Tutorial 3: Time accurate solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_4.html">Tutorial 4: Aero-acoustics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 5: FWH Solver</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 6: Overset Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epic_tutorial.html">Running zCFD using EPIC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_guide/intro.html">Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions.html">zCFD Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../meshutil.html">Mesh Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fwh.html">FWH solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zm3.html">zM3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">PDF copy</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2016-25, Zenotech Ltd.
+      
+      |
+      <a href="../_sources/getting_started/overset_tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <script>
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-32675146-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
