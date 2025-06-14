@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fluid Zones &#8212; zCFD User Guide unknown documentation</title>
+    <title>Fluid Zones &#8212; zCFD User Guide v2025.05.11605 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=3f1b9271"></script>
+    <script src="../_static/documentation_options.js?v=eec199d3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -41,7 +41,7 @@
 <span class="s1">&#39;FZ_3&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
 </pre></div>
 </div>
-<p>Each block corresponds to a specific fluid zone within the simulation domain and is identified by a unique key (e.g., ‘FZ_1’). The properties within each block specify the type of zone (such as translating, rotating, porous, disc, or canopy) and the relevant parameters required for that zone type. These parameters control the physical behavior and characteristics of the fluid zone, such as velocity vectors, resistance factors, geometric definitions, and other model-specific settings.</p>
+<p>Each block corresponds to a specific fluid zone within the simulation domain and is identified by a unique key (e.g., ‘FZ_1’). The properties within each block specify the type of zone (such as translating, rotating, porous, disc, or canopy) and the relevant parameters required for that zone type. These parameters control the physical behaviour and characteristics of the fluid zone, such as velocity vectors, resistance factors, geometric definitions, and other model-specific settings.</p>
 <p>The configuration allows for flexible definition of multiple fluid zones, each with its own set of properties, to accurately represent complex flow regions within the computational mesh.</p>
 <p>For translating regions</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
@@ -93,6 +93,47 @@
 <div class="math notranslate nohighlight">
 \[\Delta P = \frac{\mu}{\alpha} V\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Delta P\)</span> is the pressure drop, <span class="math notranslate nohighlight">\(\mu\)</span> is the dynamic viscosity, <span class="math notranslate nohighlight">\(\alpha\)</span> is the permeability, and <span class="math notranslate nohighlight">\(V\)</span> is the velocity.</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Example Permeability Values</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Material</p></th>
+<th class="head"><p>Permeability <span class="math notranslate nohighlight">\(\alpha\)</span> (m<sup>2</sup>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fence</p></td>
+<td><p><span class="math notranslate nohighlight">\(1 \times 10^{-7}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Car radiator</p></td>
+<td><p><span class="math notranslate nohighlight">\(1 \times 10^{-9}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Sand</p></td>
+<td><p><span class="math notranslate nohighlight">\(1 \times 10^{-11}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Example Inertial Resistance Factor (C2) Values</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Material
+- C2 (1/m)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Open cell foam
+- 1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gravel
+- 500</p></td>
+</tr>
+<tr class="row-even"><td><p>Sand
+- 100</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fine mesh
+- 10000</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For actuator disk zones</p>
 <div class="admonition note">

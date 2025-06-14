@@ -20,9 +20,9 @@ To see the command line options run:
     zm3 -help
 
 .. _zm3_options:
+
 Options
 -------
-
 
 .. list-table:: 
    :widths: 20 5 30 30
@@ -68,11 +68,10 @@ Options
      - 
      - Maximum surface spacing when using *relativeSpacings*
      - *--maxSurfaceSpacing 0.5*
-
-    * - --generateSurrogateSTL
-      - 
-      - Integer list specifying which STL files should be have a surrogate STL generated on them. Indexing begins at 0.
-      - *--generateSurrogateSTL 0 2*
+   * - --generateSurrogateSTL
+     - 
+     - Integer list specifying which STL files should be have a surrogate STL generated on them. Indexing begins at 0.
+     - *--generateSurrogateSTL 0 2*
    * - --includeProximitySpacings
      - 0 (for each STL)
      -  Integer for each STL file specified, 1 = True, 0 = False. If True reduce cell sizes to account for the proximity of other triangles nearby.
@@ -117,3 +116,4 @@ Options
      - 0
      - Compute and write out immersed boundary data, 1 = True, 0 = False
      - *--writeImmersedData 1*
+
