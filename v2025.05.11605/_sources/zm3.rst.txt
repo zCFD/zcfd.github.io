@@ -4,6 +4,7 @@ zM3
 ===
 
 zM3 or "zMesh Cubed" is a mesh generator that is included in the zCFD distribution. It is a general purpose meshing tool that can rapidly create cartesian meshes for zCFD’s acoustic solver or finite volume solver. As a user you define the domain and can then include geometry in the form of STL files to include in the domain.  Mesh refinement can be controlled in a number of ways including explicit refinement regions as well as refinement based on the size of the STL triangulation. 
+
 Execution
 ---------
 
