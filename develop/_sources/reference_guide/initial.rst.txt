@@ -261,7 +261,7 @@ ABL
      - No
      - 
      - Float
-     - Specity the fricton velocity at the surface.
+     - Specify the friction velocity at the surface.
    * - 'surface layer height'
      - No
      - 
@@ -297,7 +297,7 @@ The roughness length is typically denoted by the symbol ":math:`z_o`" and is def
 
 The roughness length depends on the surface characteristics of the terrain or objects present on the Earth's surface. Different surfaces, such as forests, urban areas, or bodies of water, have different roughness lengths. For example, a smooth surface like open water would have a small roughness length, while a densely forested area would have a larger roughness length.
 
-The wall boundary mesh is assumed to be at the height of the rounghness length rather than ground level and therefore the first cell height should not be smaller than the roughness length.
+The wall boundary mesh is assumed to be at the height of the roughness length rather than ground level and therefore the first cell height should not be smaller than the roughness length.
 
 friction velocity
 =================

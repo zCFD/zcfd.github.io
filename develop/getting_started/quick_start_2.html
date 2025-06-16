@@ -108,7 +108,7 @@
 </section>
 <section id="transform">
 <h3>Transform<a class="headerlink" href="#transform" title="Link to this heading">¶</a></h3>
-<p>The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case, where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as <a href="#id7"><span class="problematic" id="id8">Ft_</span></a> terms in the report file.</p>
+<p>The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case, where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as Ft_ terms in the report file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define a function to rotate the output forces by the angle of attack</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">]</span>

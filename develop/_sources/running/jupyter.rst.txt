@@ -11,5 +11,5 @@ To automatically start up notebook server on your computer within the zCFD envir
 
     start_lab
 
-The output of the command will include the URL to Juypter is running on, simply copy and paste this into your browser to connect to Juypter.
-To stop Juypter use *Ctrl + c* in the terminal where Juypter is running.
+The output of the command will include the URL to Jupyter is running on, simply copy and paste this into your browser to connect to Jupyter.
+To stop Jupyter use *Ctrl + c* in the terminal where Jupyter is running.

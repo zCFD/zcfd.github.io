@@ -95,7 +95,7 @@ Using the fwh python module
 ===========================
 As can be seen above, the *run_fwh* utility is very easy to use and is applicable in most simple FWH calculations. However, it has limitations - namely the fact that all observers and surfaces must be in the same :ref:`translational reference frame<runFwhRefCond>`, and that using it when more than one FWH surface encloses a noise generating region will :ref:`lead to double accounting<runFwhAdvanced>`.
 
-Where the *run_fwh* utility is not applicable, the :ref:`fwh python module<fwhRunningPython>` can be used instead. In this section, we wil use the *fwh python module* to calculate observer pressure histories at both *Obs1* and *Obs2*, where *Obs2* is a 'flyby' observer whose pressure history cannot be calculated using the *run_fwh* utility.
+Where the *run_fwh* utility is not applicable, the :ref:`fwh python module<fwhRunningPython>` can be used instead. In this section, we will use the *fwh python module* to calculate observer pressure histories at both *Obs1* and *Obs2*, where *Obs2* is a 'flyby' observer whose pressure history cannot be calculated using the *run_fwh* utility.
 
 .. _qs3_fwhfig1:
 .. figure:: ../images/tutorial3/fwhdiagram_cyl1.*
