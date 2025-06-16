@@ -198,7 +198,7 @@ The force and moment coefficients resulting exclusively from viscous forces and 
      - No
      - False
      - Boolean
-     - Reports the forces in dimensional units
+     - Reports the forces in dimensonal units
    * - 'inertial frame'
      - No
      - True

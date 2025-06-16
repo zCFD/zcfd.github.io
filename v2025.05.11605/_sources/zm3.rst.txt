@@ -4,7 +4,6 @@ zM3
 ===
 
 zM3 or "zMesh Cubed" is a mesh generator that is included in the zCFD distribution. It is a general purpose meshing tool that can rapidly create cartesian meshes for zCFD’s acoustic solver or finite volume solver. As a user you define the domain and can then include geometry in the form of STL files to include in the domain.  Mesh refinement can be controlled in a number of ways including explicit refinement regions as well as refinement based on the size of the STL triangulation. 
-
 Execution
 ---------
 
@@ -21,9 +20,9 @@ To see the command line options run:
     zm3 -help
 
 .. _zm3_options:
-
 Options
 -------
+
 
 .. list-table:: 
    :widths: 20 5 30 30
@@ -69,10 +68,11 @@ Options
      - 
      - Maximum surface spacing when using *relativeSpacings*
      - *--maxSurfaceSpacing 0.5*
-   * - --generateSurrogateSTL
-     - 
-     - Integer list specifying which STL files should be have a surrogate STL generated on them. Indexing begins at 0.
-     - *--generateSurrogateSTL 0 2*
+
+    * - --generateSurrogateSTL
+      - 
+      - Integer list specifying which STL files should be have a surrogate STL generated on them. Indexing begins at 0.
+      - *--generateSurrogateSTL 0 2*
    * - --includeProximitySpacings
      - 0 (for each STL)
      -  Integer for each STL file specified, 1 = True, 0 = False. If True reduce cell sizes to account for the proximity of other triangles nearby.
@@ -117,4 +117,3 @@ Options
      - 0
      - Compute and write out immersed boundary data, 1 = True, 0 = False
      - *--writeImmersedData 1*
-

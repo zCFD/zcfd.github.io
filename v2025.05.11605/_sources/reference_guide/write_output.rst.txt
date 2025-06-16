@@ -72,7 +72,7 @@ The **output** directory will be created in the working directory from which the
    * - 'immersed boundary surface'
      - No
      - []
-     - List of dictionaries with "zone" and "stl" keys, specifying which immersed boundary zones will be mapped onto specified STL surfaces
+     - List of dictionaries with "zone" and "stl" keys, specifying which immersed boundary zones will be mapped onto specifed STL surfaces
 
 
 Example usage:

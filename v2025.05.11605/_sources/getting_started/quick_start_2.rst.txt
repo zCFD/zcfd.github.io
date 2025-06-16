@@ -82,7 +82,7 @@ In this case we want to simulate the aerofoil operating at an angle of attack of
 
 Transform
 ^^^^^^^^^
-The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case, where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as Ft\_ terms in the report file.
+The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag parallel. In this case, where we have rotated the relative inflow vector to a specific angle of attack, it is also useful to rotate the force report by the same vector. The transformed forces will appear as Ft_ terms in the report file.
 
 .. code-block:: python
 
