@@ -41,7 +41,7 @@
 <p>zCFD uses a single control dictionary to specify all the parameters. This is a Python file containing a python dictionary with certain mandatory keys. The use of Python for the control dictionary enables the user to add custom functions that populate the dictionary at runtime.</p>
 <p>The zCFD distribution includes a GPU-accelerated high performance Computational Aero-Acoustics solver (CAA), primarily aimed at broadband, aerodynamically generated noise.  This is based on the high order Discontinuous Galerkin (DG) method which solves the Acoustic Perturbation Equations (APE) to predict noise based on aerodynamic sources.  zCFD is a time domain solver therefore noise signals can be post-processed to provide narrowband and broadband spectra.</p>
 <p>In order to generate aeroacoustic noise predictions, acoustic sources can be specified using a stochastic noise generation technique based on the Fast Random Particle Mesh (FRPM) method, alternatively, acoustic sources from high fidelity CFD simulations can be used.</p>
-<p>To improve ease of use, the included zMesh mesh generator will generate appropriate acoustics meshes, permitting optimum time steps, using the CFD surface mesh, thus eliminating further CAD clean up and meshing effort by the user.</p>
+<p>The zCFD distribution also ships with zm3 or zMesh-Cubed, our cartesian cut cell immersed boundary mesh generator. This allows users to rapidly generate meshes for CFD and CAA purposed from STL files, with minimal user cleanup effort required.</p>
 </section>
 
 
