@@ -110,11 +110,11 @@ Options
      -  Similar to *rotatedTranslatedRefinement* but defines a cylinder region of refinement between pt1 and pt2 with radius r1 at pt1 and r2 at pt2. Defined as *x_pt1 y_pt1 z_pt1 x_pt2 y_pt2 z_pt2 r1 r2 spacing refinement_resolution*
      - *--cylinderRefinement 10.0 10.0 10.0 80.0 80.0 80.0 5.0 15.0 7.5 75*
    * - --finiteVolumeOutput
-     - 0
+     - 1
      - Write mesh for the finite volume solver, 1 = True, 0 = False
      - *--finiteVolumeOutput 1*
    * - --writeImmersedData
-     - 0
+     - 1
      - Compute and write out immersed boundary data, 1 = True, 0 = False
      - *--writeImmersedData 1*
 
