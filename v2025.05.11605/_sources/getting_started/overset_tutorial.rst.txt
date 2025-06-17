@@ -17,17 +17,17 @@ There are various situations in CFD modelling when it is useful to be able to pl
 
 This is called an overset mesh technique, and is supported by zCFD.  In all cases, the flow solutions are calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy.  zCFD will support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large numbers of overset meshes in each simulation.  The order of the sequence of meshes specified by the user determines which mesh is active in each part of the flow domain.  zCFD automatically manages the data exchange between all meshes, including parallel partitions.  
 
-.. _example1MultipleOversetCylinderTestCase
+.. _example1MultipleOversetCylinderTestCase:
+
 Example 1 - Multiple Overset Cylinder Test Case
 ===============================================
 
 .. _overset_multi_pic:
+
 .. image:: ../images/overset_tutorial/oversetmulticylinder_meshes.png
   :width: 600
   :alt: Two cylinders, with overlapping near-field overset conformal meshes (Back 3 and Back 4), where both near-field meshes overset the regular Cartesian Back 2 mesh, which in turn oversets the coarse Back 1 mesh. 
   :align: center
-  :caption: Two cylinders, with overlapping near-field overset conformal meshes (Back 3 and Back 4), where both near-field meshes overset the regular Cartesian Back 2 mesh, which in turn oversets the coarse Back 1 mesh.
-  :name: overset_multi_pic
 
 There are 4 (mesh, control dictionary) pairs of input files.  These are listed in a special “override” file called “oversetmulticylinder.py” used for overset cases:
 
@@ -77,9 +77,10 @@ When complete, the following outputs should be produced:
     oversetmulticylinder.log
     oversetmulticylinder_report.ipynb
 
-Where the [1,2,3,4] indicates that the file or directory exists for each overset solution separately.   From a post-processing perspective, overset grids offer a significant advantage: independent solutions that only exchange boundary data during computation. This independence can save post-processing time and memory, as not all solution files are needed to analyze specific regions. However, a separate step is necessary to combine these independent solutions for domain-wide processing, such as extracting cross-sections. ParaView can be used to illustrate this combination process.
+Where the [1,2,3,4] indicates that the file or directory exists for each overset solution separately.   From a post-processing perspective, overset grids offer a significant advantage: independent solutions that only exchange boundary data during computation. This independence can save post-processing time and memory, as not all solution files are needed to analyse specific regions. However, a separate step is necessary to combine these independent solutions for domain-wide processing, such as extracting cross-sections. ParaView can be used to illustrate this combination process.
 
-.. _postProcessingUsingParaView
+.. _postProcessingUsingParaView:
+
 Post-processing using ParaView
 ===============================
 
@@ -108,28 +109,24 @@ Other post-processing steps such as streamlines or animations will also work wit
 .. image:: ../images/overset_tutorial/postprocessing_using_paraview_raw.png
   :width: 600
   :align: center
-  :caption: ParaView post-processing with multiple overset meshes raw.
-  :name: postprocessing_using_paraview_pic_raw
 
 To create the image in the validation page, you can force ParaView to bring the overset meshes to the foreground by treating each of the overset meshes independently, and adding a small incremental offset normal to the slice plane to each cylinder mesh (0.0, 0.001, 0.0015, 0.002). This will better reflect what the solver will actually see, as the overset cells in the background meshes will not be active.     
 
 .. image:: ../images/overset_tutorial/postprocessing_using_paraview_notebook.png
   :width: 600
   :align: center
-  :caption: ParaView post-processing with multiple overset meshes as per validation logo.
-  :name: postprocessing_using_paraview_pic_notebook
 
-.. _example2TrainTunnelTestCase
+.. _example2TrainTunnelTestCase:
+
 Example 2 - Train Tunnel Test Case
 ==================================
 
 .. _train_tunnel_test_case_pic:
+
 .. image:: ../images/overset_tutorial/tunnel_mesh.png
   :width: 600
   :alt: The (white) mesh around the train is “overset” on a (yellow) background mesh for the tunnel.  By moving the train mesh through the tunnel mesh, we can simulate the unsteady motion of the train without needing to re-create a new mesh at each physical time step.
   :align: center
-  :caption: The (white) mesh around the train is “overset” on a (yellow) background mesh for the tunnel.  By moving the train mesh through the tunnel mesh, we can simulate the unsteady motion of the train without needing to re-create a new mesh at each physical time step.
-  :name: train_tunnel_test_case_pic
 
 This test case demonstrates the zCFD overset capabilities to predict the micro pressure wave generated as a train enters a tunnel, and is a good example of a practical application of overset meshing. 
 The simulation set up follows that described in Section 7.6 of Railway applications — Aerodynamics — Part 5: Requirements and test procedures for aerodynamics in tunnels.  In order to avoid transients, the train is linearly accelerated from 0 to 250 km/hr over 1.5 seconds. 
@@ -184,7 +181,8 @@ The case can be run with the command
 
   run_zcfd -f override_roe.py
 
-.. _postProcessing
+.. _postProcessing:
+
 Post-processing
 ===============
 
@@ -241,16 +239,17 @@ Then run the code in the same directory as the solution files with the command:
 This will create the following plot, showing the maximum entry pressure gradient as a function of time.  The maximum entry pressure gradient is 9656.0 Pa/s, which is within the range of values specified [8800.0, 9700.0] in the standard.
 
 .. _postprocessing_pic:
+
 .. image:: ../images/overset_tutorial/EntryPressureGradient.png
   :width: 600
   :alt: Entry Pressure Gradient.
   :align: center
-  :caption: Entry Pressure Gradient.
-  :name: postprocessing_pic
 
-.. _fwhTutorialCitations
+.. _fwhTutorialCitations:
+
 Citations
 =========
 
-1. EN 14067-5:2006 - Railway applications - Aerodynamics - Part 5: Requirements and test procedures for aerodynamics in tunnels", url: https://standards.iteh.ai/catalog/standards/cen/ea6cb49e-c40a-4b8b-a059-c6debdb91dc7/en-14067-5-2006" 
+1. EN 14067-5:2006 - Railway applications - Aerodynamics - Part 5: Requirements and test procedures for aerodynamics in tunnels, `See <https://standards.iteh.ai/catalog/standards/cen/ea6cb49e-c40a-4b8b-a059-c6debdb91dc7/en-14067-5-2006>`
+
 
