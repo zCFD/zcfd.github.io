@@ -112,7 +112,7 @@ Licence Error codes
 ^^^^^^^^^^^^^^^^^^^
 
 Below is a list of some of the error codes that you may encounter due to licensing errors.
-If the error code you receive is not listed, please contact us.
+If the error code you receive is not listed, please see RLM's documentation a https://reprisesoftware.com/docs/isv/appendix/appendix-b-rlm-status-values.html or contact us.
 
 .. csv-table::
    :file: ./license_error_codes.csv

@@ -104,6 +104,10 @@ The following parameters are common for all of the equation sets.
      - No
      - "muscl"
      - "muscl" | "umuscl" | "lpumuscl"
+   * - 'entropy fix'
+     - No
+     - "0.0"
+     - Float between 0.0 and 0.2
    * - 'roe low dissipation sensor'
      - No
      - -- 

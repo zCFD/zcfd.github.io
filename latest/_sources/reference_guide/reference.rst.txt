@@ -103,53 +103,26 @@ Example usage:
     'scale' : [1,10,1]
 
 .. note::
-    The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see *Tab x*)
+    The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see *Tab x*). When a mesh transform matrix is supplied as well as a scaling the scale is applied after the mesh transformation.
 
-Mesh Transform Function
-**************
-
-As an alternative to passing a fixed scaling factor the 'mesh transform function' parameter accepts a function. This can be used to apply an arbitrary transform to the mesh. A simple example is given below:
-
-.. code-block:: python
-
-    def my_mesh_transform(**kwargs):
-        x = list(kwargs["coord"])
-
-        x[2] = x[2] - 0.5
-
-        return {"coord": tuple(x)}
-
-    "mesh transform function": my_mesh_transform
 
 Mesh Transform Matrix
 **************
 
-As well as the transform function above the mesh can be transformed using an `affine transform <https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia <https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. An example is given below:
+The mesh can be transformed using an `affine transform <https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia <https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. Helper functions for rotations, translations and scalings are provided in zutil.transform. An example is given below:
 
 .. code-block:: python
 
-     import pytransform3d.rotations as pyrot
-     import pytransform3d.transformations as pytr
+     import zutil.transform
 
-     a = np.array([1.0, 0.0, 0.0, 90.0 * np.pi / 180.0])
-     A2B = np.identity(4)
-     rot_mtx_a = pyrot.matrix_from_axis_angle(a)
-     A2B = pytr.rotate_transform(A2B, rot_mtx_a)
+     A2B = zutil.transform.rotate([0.0, 1.0, 0.0], 10.0)
+     # If a matrix is passed as the last parameter to zutil.transform.* then the transform is concatenated to it.
+     B2C = zutil.transform.scale([0.1, 0.1, 0.1], A2B)
+     C2D = zutil.transform.translate([0.0, 0.0, 0.0], [-1.0, 0.0, 0.0], B2C)
 
-     b = np.array([1.0, 0.0, 0.0, 90.0 * np.pi / 180.0])
-     B2C = np.identity(4)
-     rot_mtx_b = pyrot.matrix_from_axis_angle(b)
-     B2C = pytr.rotate_transform(B2C, rot_mtx_b)
+     "mesh transform matrix": C2D
 
-     c = np.array([0.0, 1.0, 0.0, 10.0 * np.pi / 180.0])
-     C2D = np.identity(4)
-     rot_mtx_c = pyrot.matrix_from_axis_angle(c)
-     C2D = pytr.rotate_transform(C2D, rot_mtx_c)
-
-     A2C = pytr.concat(A2B, B2C)
-     A2D = pytr.concat(A2C, C2D)
-
-     "mesh transform matrix": A2D
+When using the zutil.transform helper functions transforms are applied in the order in which the user calls the functions. Rotations are considered using the same conventions as `pytransform3d <https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html>`_ and are interpreted as active and applied using the pre-multiplication convention. For more complex transformations `pytransform3d <https://dfki-ric.github.io/pytransform3d>`_ provides a comprehensive collection of python functions and can be easily interfaced with zCFD by simply passing the resulting transformation matrix to the solver.
 
      
 Mesh Quality Remediation
@@ -219,7 +192,7 @@ Restart
    * - 'restart ignore history'
      - No
      - False
-     - True/False: True to ignore the cycle history from restart file and begin the solve as sepcified in current control file.
+     - True/False: True to ignore the cycle history from restart file and begin the solve as specified in current control file.
    * - 'interpolate restart'
      - No
      - False

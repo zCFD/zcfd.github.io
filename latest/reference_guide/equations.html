@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide 2025.03.10415 documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.05.11605 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=71fde5b0"></script>
+    <script src="../_static/documentation_options.js?v=eec199d3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -161,27 +161,32 @@
 <td><p>“muscl”</p></td>
 <td><p>“muscl” | “umuscl” | “lpumuscl”</p></td>
 </tr>
-<tr class="row-even"><td><p>‘roe low dissipation sensor’</p></td>
+<tr class="row-even"><td><p>‘entropy fix’</p></td>
+<td><p>No</p></td>
+<td><p>“0.0”</p></td>
+<td><p>Float between 0.0 and 0.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘roe low dissipation sensor’</p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p>“FD” | “NTS” | “DES” | “NONE”</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘roe dissipation sensor minimum’</p></td>
+<tr class="row-even"><td><p>‘roe dissipation sensor minimum’</p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p>Float between 0.05 and 1.0</p></td>
 </tr>
-<tr class="row-even"><td><p>‘freeze limiter cycle’</p></td>
+<tr class="row-odd"><td><p>‘freeze limiter cycle’</p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘relax’</p></td>
+<tr class="row-even"><td><p>‘relax’</p></td>
 <td><p>Yes (for incompressible equation set)</p></td>
 <td><p>0.5</p></td>
 <td><p>Positive float</p></td>
 </tr>
-<tr class="row-even"><td><p>‘turbulence’</p></td>
+<tr class="row-odd"><td><p>‘turbulence’</p></td>
 <td><p>Yes (for ‘les’ or ‘rans’ equation set)</p></td>
 <td><p>{}</p></td>
 <td><p>See <a class="reference internal" href="#turbulence"><span class="std std-ref">“turbulence”</span></a></p></td>
@@ -877,6 +882,7 @@ Run 500 cycles first order.</p>
 <li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_conditions.html">Reference Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fluid_zone.html">Fluid Zones</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transforms.html">Mesh Transformation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overset.html">Overset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="write_output.html">Write Output</a></li>
@@ -910,7 +916,7 @@ Run 500 cycles first order.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2016-23, Zenotech Ltd.
+      &#169;2016-25, Zenotech Ltd.
       
       |
       <a href="../_sources/reference_guide/equations.rst.txt"
