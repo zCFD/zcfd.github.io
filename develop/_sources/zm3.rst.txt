@@ -117,4 +117,8 @@ Options
      - 1
      - Compute and write out immersed boundary data, 1 = True, 0 = False
      - *--writeImmersedData 1*
+   * - --removeDuplicatesFrequency
+     - 1
+     - Integer specifying number of times in each level duplicate cells should be removed. This prevents excess memory usage when using OMP parallelism
+     - *--removeDuplicatesFrequency 5*
 
