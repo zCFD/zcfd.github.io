@@ -82,6 +82,104 @@ ParaViewConnect
 `ParaviewConnect <https://github.com/zenotech/ParaViewConnect>`_ is a helper utility for connecting to remove ParaView servers. It reduces the complexity of setting up the required ssh connections and works well with zCFD. More information and installation instructions can be found on the `Github page <https://github.com/zenotech/ParaViewConnect>`_.
 
 
+ParaView Post-Processing Best Practices for Parallel zCFD Data
+--------------------------------------------------------------
+
+When post-processing solution data generated in parallel by zCFD using ParaView, it is important to understand the differences between various ParaView filters and their impact on data interpolation. This section provides guidance on recommended pipelines for accurate results.
+
+CleantoGrid vs MergeBlocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Two commonly used ParaView filters for processing parallel datasets are **CleantoGrid** and **MergeBlocks**. Each has distinct characteristics:
+
+**CleantoGrid Filter:**
+
+* **Purpose**: Merges points that are exactly coincident and removes degenerate cells
+* **Interpolation**: Performs minimal interpolation, preserving original data values at cell centres and vertices
+* **Use case**: Recommended when data accuracy is critical and you want to preserve the original computed values
+* **Characteristics**: May result in slightly fragmented visualisations at block boundaries but maintains data fidelity
+
+**MergeBlocks Filter:**
+
+* **Purpose**: Combines multiple blocks into a single unstructured grid
+* **Interpolation**: May perform interpolation across block boundaries to create smooth transitions
+* **Use case**: Better for smooth visualisations and streamline generation across block boundaries
+* **Characteristics**: Creates visually smoother results but may alter original computed values through interpolation
+
+Recommended Pipelines
+^^^^^^^^^^^^^^^^^^^^^
+
+For **quantitative analysis** and **data extraction** (probes, line plots, force calculations):
+
+.. code-block:: python
+
+    # Recommended pipeline for quantitative analysis
+    import paraview.simple as pvs
+    
+    # Load data
+    reader = pvs.PVDReader(FileName='solution.pvd')
+    
+    # Use CleantoGrid to preserve data accuracy
+    clean_data = pvs.CleantoGrid(Input=reader)
+    
+    # Convert to point data if needed
+    point_data = pvs.CellDatatoPointData(Input=clean_data)
+    
+    # Proceed with analysis (probes, calculators, etc.)
+
+For **visualisation purposes** (streamlines, contours, volume rendering):
+
+.. code-block:: python
+
+    # Pipeline for smooth visualisations
+    import paraview.simple as pvs
+    
+    # Load data
+    reader = pvs.PVDReader(FileName='solution.pvd')
+    
+    # Use MergeBlocks for smoother visualisations
+    merged_data = pvs.MergeBlocks(Input=reader)
+    
+    # Convert to point data for smooth contouring
+    point_data = pvs.CellDatatoPointData(Input=merged_data)
+    
+    # Apply visualisation filters (streamlines, contours, etc.)
+
+Important Considerations
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. **Data Accuracy**: Always use CleantoGrid when extracting quantitative data for analysis or validation
+2. **visualisation Quality**: MergeBlocks may provide better visual results for presentations and general visualisation
+3. **Performance**: CleantoGrid is typically faster as it performs less processing
+4. **Block Boundaries**: Be aware that different filters may show artefacts differently at parallel decomposition boundaries
+5. **Regression Testing**: When comparing results across different runs, ensure consistent filter usage
+
+Example Notebook Usage
+^^^^^^^^^^^^^^^^^^^^^^
+
+The following pattern is recommended in Jupyter notebooks when processing zCFD parallel data:
+
+.. code-block:: python
+
+    import paraview.simple as pvs
+    
+    # For data extraction and analysis
+    def load_for_analysis(filename):
+        reader = pvs.PVDReader(FileName=filename)
+        reader.UpdatePipeline()
+        clean = pvs.CleantoGrid(Input=reader)
+        return clean
+    
+    # For visualisation and rendering
+    def load_for_visualisation(filename):
+        reader = pvs.PVDReader(FileName=filename)
+        reader.UpdatePipeline()
+        merged = pvs.MergeBlocks(Input=reader)
+        point_data = pvs.CellDatatoPointData(Input=merged)
+        return point_data
+
+This ensures that your analysis maintains data integrity while your visualisations remain smooth and professional.
+
 Jupyter Notebooks
 -----------------
 We also recommend the use of  `Jupyter Lab <https://jupyter.org/>`_ for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser. 
