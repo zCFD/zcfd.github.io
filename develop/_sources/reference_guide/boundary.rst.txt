@@ -241,7 +241,6 @@ The options for the **'linear'** dictionary are:
      - Number
      - Overrides the magnitude of the translation velocity vector
 
-
 The options for the **'rotating'** dictionary are:
 
 .. list-table:: 
@@ -269,6 +268,38 @@ The options for the **'rotating'** dictionary are:
      - Number
      - Sets the rotational velocity of the rotation in radians per second
 
+Example Linear Velocity Boundary Wall BC:
+
+.. code-block:: python
+
+    'BC_1': {
+             'zone': [1], 
+             'type': 'wall', 
+             'kind': "noslip',
+             'v': {
+                   'linear': {
+                              'vector': [1.0,0,0], 
+                              'mach': 0.5, # optional override to vector magnitude
+                             },
+                  },
+             },
+
+Example Rotating Velocity Boundary Wall BC:
+
+.. code-block:: python
+
+    'BC_1': {
+             'zone': [7], 
+             'type': 'wall', 
+             'kind': "wallfunction',
+             'v': {
+                   'rotating': {
+                                'axis': [-1,0,0], 
+                                'origin': [0,0,0],
+                                'omega': 10, # radians per second
+                               },
+                  },
+             },
 
 .. _bc_temperature:
 
