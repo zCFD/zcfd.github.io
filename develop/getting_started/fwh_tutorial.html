@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 5: FWH Solver &#8212; zCFD User Guide v2025.07.12237-80-gf285e documentation</title>
+    <title>Tutorial 5: FWH Solver &#8212; zCFD User Guide v2025.07.12237-81-g82039 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=44ad6d74"></script>
+    <script src="../_static/documentation_options.js?v=04d1098b"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -89,7 +89,7 @@
 <div class="highlight-bash notranslate" id="fwhtutorialrunfwhcommand"><div class="highlight"><pre><span></span>run_fwh<span class="w"> </span>-c<span class="w"> </span>cylinder_fwh.py<span class="w"> </span>--reference_condition<span class="w"> </span>IC_1<span class="w"> </span>--observer_locations<span class="w"> </span>Observers.csv
 </pre></div>
 </div>
-<p>Running this command prints output to screen and to the <cite>cylinder_fwh.fwh.log</cite> file, and outputs the FWH calculated pressure history at <em>Obs1</em> to <cite>cylinder_fwh.fwh.Obs1.csv</cite>. Suggested post-processing is introduced <a class="reference internal" href="#fwhtutorialpp"><span class="std std-ref">below</span></a>.</p>
+<p>Running this command prints output to screen and to the <cite>cylinder_fwh.fwh.log</cite> file, and outputs the FWH calculated pressure history at <em>Obs1</em> to <cite>cylinder_fwh.fwh.Obs1.csv</cite>. In the case where there are multiple noise sources, the contribution of noise to each source is broken out, with the total observed noise also reported. Suggested post-processing is introduced <a class="reference internal" href="#fwhtutorialpp"><span class="std std-ref">below</span></a>.</p>
 </section>
 </section>
 <section id="using-the-fwh-python-module">
@@ -118,7 +118,7 @@
 <section id="setting-up-the-fwh-solver-inputs">
 <h3>Setting up the FWH solver inputs<a class="headerlink" href="#setting-up-the-fwh-solver-inputs" title="Link to this heading">¶</a></h3>
 <p>Now that we know the motions of our observers and surface, we can run the FWH solver. The python code required to run the FWH solver is in the file <em>‘run_fwh_solver.py</em>’, and also written out below. We define the surfaces, observers and the solver settings, then use <code class="code docutils literal notranslate"><span class="pre">fwh.solve()</span></code> to actually run the FWH solver.</p>
-<div class="highlight-python notranslate" id="qs3-fwh-run-code"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motion</span>
+<div class="highlight-python notranslate" id="qs3-fwh-run-code"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fwh</span><span class="w"> </span><span class="kn">import</span> <span class="n">fwh</span><span class="p">,</span> <span class="n">motion</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
@@ -187,6 +187,7 @@ The valid observer time window will be narrower if the FWH surface is large, sin
 <section id="post-processing">
 <span id="fwhtutorialpp"></span><h2>Post-processing<a class="headerlink" href="#post-processing" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="quick_start_1.html#qs1-jupyter"><span class="std std-ref">jupyter notebook</span></a> <em>postprocess_fwh_module_data.ipynb</em> from the <a class="reference internal" href="#runningzcfdwithfwhout"><span class="std std-ref">.zip file</span></a> can be used to post-process the FWH data. <em>postprocess_fwh_module_data.ipynb</em> uses the data from the <a class="reference internal" href="#fwhtutorialfwhmodule"><span class="std std-ref">fwh python module section</span></a> of this tutorial, but an equivalent notebook which uses the data from the <a class="reference internal" href="#fwhtutorialrunfwh"><span class="std std-ref">run_fwh utility section</span></a> is available in <em>postprocess_run_fwh_data.ipynb</em>.</p>
+<p>These notebooks contain a number of <em>zutil</em> functions which may be useful for users wishing to perform acoustic post-processing. The notebooks plot the pressure history <em>p(t)</em> and power spectral density (PSD) at both observers, as below.</p>
 <p><em>Obs1</em> moves through the FWH medium at a constant displacement from the cylinder centre (see <a class="reference internal" href="#qs3-fwhfig2"><span class="std std-numref">Fig. 3</span></a>). We see from our post-processing that the noise experienced by <em>Obs1</em> is dominated by a constant 10 Hz component, which is the shedding frequency of the cylinder. Various harmonics of the 10 Hz signal are present in the power spectral density plot for <em>Obs1</em>.</p>
 <a class="reference internal image-reference" href="../_images/Obs1_p.svg"><img alt="Obs1 p(t)" src="../_images/Obs1_p.svg" style="width: 600px;" />
 </a>

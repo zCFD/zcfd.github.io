@@ -88,7 +88,7 @@ Having decided on our inputs, we run the *run_fwh* utility by simply typing the 
 
   run_fwh -c cylinder_fwh.py --reference_condition IC_1 --observer_locations Observers.csv
 
-Running this command prints output to screen and to the `cylinder_fwh.fwh.log` file, and outputs the FWH calculated pressure history at *Obs1* to `cylinder_fwh.fwh.Obs1.csv`. Suggested post-processing is introduced :ref:`below<fwhTutorialPP>`.
+Running this command prints output to screen and to the `cylinder_fwh.fwh.log` file, and outputs the FWH calculated pressure history at *Obs1* to `cylinder_fwh.fwh.Obs1.csv`. In the case where there are multiple noise sources, the contribution of noise to each source is broken out, with the total observed noise also reported. Suggested post-processing is introduced :ref:`below<fwhTutorialPP>`.
 
 .. _fwhTutorialFwhModule:
 Using the fwh python module
@@ -128,7 +128,7 @@ Now that we know the motions of our observers and surface, we can run the FWH so
 .. _qs3_fwh_run_code:
 .. code-block:: python
 
-    from solvers import fwh, motion
+    from fwh import fwh, motion
     import json
     import math
 
@@ -208,6 +208,8 @@ Post-processing
 ===============
 
 The :ref:`jupyter notebook <qs1_jupyter>` *postprocess_fwh_module_data.ipynb* from the :ref:`.zip file<runningZcfdWithFwhOut>` can be used to post-process the FWH data. *postprocess_fwh_module_data.ipynb* uses the data from the :ref:`fwh python module section<fwhTutorialFwhModule>` of this tutorial, but an equivalent notebook which uses the data from the :ref:`run_fwh utility section<fwhTutorialRunFwh>` is available in *postprocess_run_fwh_data.ipynb*.
+
+These notebooks contain a number of *zutil* functions which may be useful for users wishing to perform acoustic post-processing. The notebooks plot the pressure history *p(t)* and power spectral density (PSD) at both observers, as below.
 
 *Obs1* moves through the FWH medium at a constant displacement from the cylinder centre (see :numref:`qs3_fwhfig2`). We see from our post-processing that the noise experienced by *Obs1* is dominated by a constant 10 Hz component, which is the shedding frequency of the cylinder. Various harmonics of the 10 Hz signal are present in the power spectral density plot for *Obs1*.
 
