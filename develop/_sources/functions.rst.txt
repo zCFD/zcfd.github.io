@@ -112,7 +112,7 @@ Example:
         return cfl_new
 
     elif solve_cycle < 1000:
-        cfl.trasport_cfl = 7.5
+        cfl.transport_cfl = 7.5
         cfl.max_cfl = 15.0
         return 15.0
 
