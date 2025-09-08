@@ -12,4 +12,3 @@ The getting started guide is here to teach the fundamentals of using zCFD, start
    quick_start_4
    fwh_tutorial
    overset_tutorial
-   epic_tutorial

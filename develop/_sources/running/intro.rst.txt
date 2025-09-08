@@ -8,7 +8,6 @@ zCFD is primarily run from the command line, you can run on your local machine o
 
    execution
    parallel
-   epic
    jupyter
    env
    

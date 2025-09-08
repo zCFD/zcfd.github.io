@@ -173,7 +173,7 @@ The motion is applied to the mesh because of the keyword ‘moving mesh’ in th
 
 The meshes and control files for the train and the tunnel can be downloaded from `here <https://zcfd.zenotech.com/tutorials/5/traintunnel.zip>`_.
 
-The train tunnel case is larger than the previous case in this tutorial: the train mesh has 1.31m cells and the tunnel has 7.35m cells.  To run this case in implicit mode on a GPU will require approximately 48GB RAM.  If this is not available locally, a range of computing resources are available via EPIC.
+The train tunnel case is larger than the previous case in this tutorial: the train mesh has 1.31m cells and the tunnel has 7.35m cells.  To run this case in implicit mode on a GPU will require approximately 48GB RAM.
 
 The case can be run with the command
 
