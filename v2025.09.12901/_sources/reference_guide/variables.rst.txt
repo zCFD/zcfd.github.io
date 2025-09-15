@@ -1,0 +1,71 @@
+.. _output_variables:
+
+Output variables
+----------------
+
+Output Variables
+================
+
+   ========================= ===================== ==================================
+    Variable Name             Alias                 Definition
+   ========================= ===================== ==================================
+    temperature               T, t                  Temperature in (:math:`K`)
+    temperaturegrad                                 Temperature gradient vector
+    potentialtemperature                            Potential temperature in (:math:`K`)
+    pressure                  p                     Pressure (:math:`Pa`)
+    gauge_pressure                                  Pressure relative to the reference value (:math:`Pa`)
+    density                   rho                   Density (:math:`kg/m^3`)
+    velocity                  V, v                  Velocity vector (:math:`m/s`)
+    velocitygradient                                Velocity gradient tensor
+    cp                                              `Pressure coefficient <https://en.wikipedia.org/wiki/Pressure_coefficient>`_
+    totalcp                                         Total pressure coefficient
+    mach                      m                     `Mach number <https://en.wikipedia.org/wiki/Mach_number>`_
+    viscosity                 mu                    Dynamic viscosity (:math:`Pa/s`)
+    kinematicviscosity        nu                    Kinematic viscosity (:math:`m^2/s`)
+    vorticity                                       `Vorticity vector <https://en.wikipedia.org/wiki/Vorticity>`_ (:math:`1/s`)
+    Qcriterion                                      Q criterion
+    reynoldstress                                   `Reynolds stress tensor <https://en.wikipedia.org/wiki/Reynolds_stress>`_
+    helicity                                        `Helicity <https://en.wikipedia.org/wiki/Hydrodynamical_helicity>`_
+    enstrophy
+    ek
+    lesregion
+    turbulenceintensity       ti                    Turbulence intensity
+    turbulencekineticenergy                         `Turbulence kinetic energy <https://en.wikipedia.org/wiki/Turbulence_kinetic_energy>`_ (:math:`J/kg`)
+    turbulenceeddyfrequency                         `Turbulence eddy frequency <https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure>`_ (:math:`1/s`)
+    eddy                                            Eddy viscosity (:math:`Pa/s`)
+    cell_velocity
+    cellzone
+    cellorder
+    centre                                          Cell centre location
+    viscouslengthscale                              Minimum distance between cell and its neighbours
+    walldist                                        Wall distance (:math:`m`)
+    sponge                                          Sponge layer damping coefficient
+    menterf1                                        Menter SST blending function
+    badcells                                        Cells tagged as first order when using mesh quality remediation
+   ========================= ===================== ==================================
+
+
+Surface Only Quantities
+=======================
+
+
+   ========================= ===================== ==================================
+    Variable Name             Alias                 Definition
+   ========================= ===================== ==================================
+    pressureforce                                   Pressure component of force on a face
+    pressuremoment                                  Pressure component of moment on a face
+    pressuremomentx                                 Component of pressure moment around x axis
+    pressuremomenty                                 Component of pressure moment around y axis
+    pressuremomentz                                 Component of pressure moment around z axis
+    frictionforce                                   Skin friction component of force on a face
+    frictionmoment                                  Skin friction component of moment on a face
+    frictionmomentx                                 Component of skin friction moment around x axis
+    frictionmomenty                                 Component of skin friction moment around y axis
+    frictionmomentz                                 Component of skin friction moment around z axis
+    roughness                                       Wall roughness height
+    yplus                                           Non-dimensional wall distance
+    zone                                            Boundary zone number
+    cf                                              Skin friction coefficient
+    facecentre                                      Face centre location
+    frictionvelocity         ut                     Friction velocity at the wall
+   ========================= ===================== ==================================
