@@ -1,0 +1,13 @@
+Running zCFD
+============
+
+zCFD is primarily run from the command line, you can run on your local machine or submit it to a batch scheduler for parallel execution. The following sections give information on how to execute zCFD.
+
+.. toctree::
+   :maxdepth: 1
+
+   execution
+   parallel
+   jupyter
+   env
+   
