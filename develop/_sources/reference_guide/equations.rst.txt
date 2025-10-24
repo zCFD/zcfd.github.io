@@ -34,22 +34,21 @@ The corresponding equation set options should also be defined in the control dic
      - :ref:`"euler" <equation_euler>`
      - --
      - --
-   * - RANS
-     - Use the RANS (Reynolds-Averaged Navier-Stokes) equations in the simulation. These are compressible, viscid flow equations with additional terms included to account for the effect of turbulence on the flow without the expense of simulating the turbulent flow structures themselves.
-     - :ref:`"rans" <equation_rans>`
-     - :ref:`"dgrans" <equation_dg>`
-     - Coming soon
    * - Viscous
      - Use the viscous flow equations. These are compressible, viscid flow equations which do not model turbulence.
      - :ref:`"viscous" <equation_viscous>`
      - :ref:`"dgviscous" <equation_dg>`
-     - Coming soon
+     - :ref:`"incomp viscous" <equation_incomp_viscous>`
+   * - RANS
+     - Use the RANS (Reynolds-Averaged Navier-Stokes) equations in the simulation. These are compressible, viscid flow equations with additional terms included to account for the effect of turbulence on the flow without the expense of simulating the turbulent flow structures themselves.
+     - :ref:`"rans" <equation_rans>`
+     - :ref:`"dgrans" <equation_dg>`
+     - :ref:`"incomp rans" <equation_incomp_rans>`
    * - LES
      - Use the Large Eddy Simulation (LES) equations.
      - :ref:`"les" <equation_les>`
      - :ref:`"dgles" <equation_dg>`
-     - Coming soon
-
+     - :ref:`"incomp les" <equation_incomp_les>`
 
 Example usage:
 
@@ -185,7 +184,7 @@ The sensor used to decide whether to use (and by how much) the Roe low dissipati
 
 roe dissipation sensor minimum
 ==============================
-Sets the minimum value that the dissipation term in the Roe scheme is multiplied by when using the **'Row low diss'** scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
+Sets the minimum value that the dissipation term in the Roe scheme is multiplied by when using the **'Roe low diss'** scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
 
 freeze limiter cycle
 ====================
@@ -284,6 +283,87 @@ Example usage:
                   'first order cycles': 100,
                   # Use low speed mach preconditioner
                   'precondition' : True,
+                  'linear gradients' : False,
+                  'Inviscid Flux Scheme': 'HLLC',
+                },
+    ..
+  }
+
+.. _equation_incomp_viscous:
+
+Incompressible Viscous
+^^^^^^^^^^^^^^^^^^^^^^
+
+Incompressible viscous equations follow the same structure as the compressible viscous equations with the addition of several parameters to address numerical challenges related to the orthogonality of the mesh.  Note that the **scheme** block is not required.
+
+.. list-table:: 
+   :widths: 20 10 10 10 20
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'relax'
+     - Yes
+     - 0.5
+     - Positive float
+     - The relaxation factor used on the flow equations in the incompressible solver.
+   * - 'correction'
+     - Yes
+     - 'over relaxed'
+     - 'none' | 'orthogonal' | 'minimum' | 'over relaxed'
+     - Selects the type of non-orthogonal correction to apply to the flow equations.
+   * - 'correction limiter
+     - Yes
+     - 0.5
+     - Float between 0.0 and 1.0
+     - Sets the limiter for the non-orthogonal correction. 1.0 applies the full correction, 0.0 turns off the correction.
+   * - 'gradient limiter type'
+     - Yes
+     - 'cell md'
+     - 'cell md' | 'cell'
+     - Selects the type of gradient limiter to apply to the flow equations. **cell_md** is more robust on highly non-orthogonal meshes. **cell** is less dissipative.
+   * - 'gradient limiter'
+     - Yes
+     - 0.5
+     - Float between 0.0 and 1.0
+     - Sets the coefficient for the gradient limiter. 1.0 is the most dissipative, 0.0 turns off the limiter.
+   * - 'max second order non orthogonal angle'
+     - Yes 
+     - 90.0
+     - Float between 0.0 and 90.0
+     - Sets the maximum non-orthogonal angle (in degrees) at which second order discretisation is used. Above this angle first order discretisation is used. 
+   * - 'order'
+     - Yes
+     - - 
+     - 'first' | 'second' | 'euler_second' | 'central'
+     - Sets the order of the spatial discretisation.
+   * - 'central blend'
+     - Yes
+     - 0.8
+     - Float between 0.0 and 1.0
+     - Coefficient of blending between first and second order terms. 
+
+Example usage:
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    # Use the viscous equation set
+    'equations' : 'viscous',
+    'viscous' : {
+                  'relax' : 0.5,
+                  'correction' : 'over relaxed',
+                  'correction limiter' : 0.5,
+                  'gradient limiter type' : 'cell md',
+                  'gradient limiter' : 0.5,
+                  'max second order non orthogonal angle' : 70.0,
+                  'order' : 'second',
+                  'central blend' : 0.8,
+                  'first order cycles': 100,
                   'linear gradients' : False,
                   'Inviscid Flux Scheme': 'HLLC',
                 },
@@ -453,42 +533,140 @@ The following parameters can be used in the 'turbulence' dictionary to allow tun
      - No
      - 20
      - Positive number
-     - Constant in the :math:`f_{dt}` blending function in IDDES
+     - Constant in the :math:`f_{dt}` blending function in DDES and IDDES
    * - 'cd2'
      - No
      - 3
      - Positive integer
-     - Constant in the :math:`f_{dt}` blending function in IDDES
+     - Constant in the :math:`f_{dt}` blending function in DDES and IDDES
+   * - 'cw'
+     - No
+     - 0.15
+     - Positive number
+     - Constant in the length scale calculation in IDDES
+   * - 'a1'
+     - No
+     - 0.31
+     - Positive integer
+     - Constant in the eddy viscosity limiter in SST
    * - 'production'
      - No
      - 0
      - Positive integer
-     - Selects the model for the production term in the SST model.
+     - Selects the model for the production term in the SST model. See :ref:`Production Term Table <production_term_table>` below
+   * - 'rotation correction'
+     - No
+     - -
+     - True | False
+     - Adds the rotation correction term to SST or SA-neg
    * - 'cdes'
      - No
      - 0.65
      - Positive number
-     - :math:`C_{DES}` constant used for SA-neg based hybrid RANS/LES
-
+     - :math:`C_{DES}` constant used for SA-neg based hybrid RANS/LES models
+   * - 'ca1'
+     - No
+     - 2.0
+     - Positive number
+     - Constant in the production of the gamma equation in the transition model in the compressible solver
+   * - 'ca2'
+     - No
+     - 0.06
+     - Positive number
+     - Constant in the destruction term for gamma equation in the transition model in the compressible solver
+   * - 'ce1'
+     - No
+     - 1.0
+     - Positive number
+     - Constant in the production of the epsilon equation in the transition model in the compressible solver
+   * - 'ce2'
+     - No
+     - 50.0
+     - Positive number
+     - Constant in the destruction term for gamma equation in the transition model in the compressible solver
+   * - 'cthetat'
+     - No
+     - 0.03
+     - Positive number
+     - Constant in the Re-theta transition correlation in the transition model in the compressible solver
+   * - 'sigmagamma'
+     - No
+     - 1.0
+     - Positive number
+     - Constant in the transition model in the compressible solver
+   * - 'sigmathetat'
+     - No
+     - 2.0
+     - Positive number
+     - Constant in the transition model in the compressible solver
+   * - 'limit gradient k'
+     - No
+     - 0.5
+     - Positive number
+     - Gradient limiter for the turbulent kinetic energy in the SA-neg model. A value of 0 turns off the limiter, 1 is maximum limiting
+   * - 'separation correction'
+     - No
+     - True | False
+     - Boolean
+     - Activates the separation correction for the transition model in the compressible solver
+   * - 'qcr'
+     - No
+     - -
+     - '2000' | '2020' | '2021'
+     - Selects the QCR model for the turbulence model in the compressible solver
 
 **'production'** can have the following values:
 
+.. _production_term_table:
+
 .. list-table:: 
-   :widths: 30 70
-   :header-rows: 1
+  :widths: 30 70
+  :header-rows: 1
 
-   * - Setting
-     - Notes
-   * - 0
-     - Selects the vorticity based production term (SST-V) :math:`P_m=\mu_t\Omega_v^2-\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
-   * - 1
-     - Selects the strain based production term for incompressible flows :math:`P_m=\mu_t S^2`
-   * - 2
-     - Selects the strain based production term for compressible flows :math:`P_m=\mu_t S^2 -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
-   * - 3
-     - Selects the Kato-Launder source term :math:`P_m=\mu_t S\Omega_v -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+  * - Setting
+    - Notes
+  * - 0
+    - Selects the vorticity based production term (SST-V) :math:`P_m=\mu_t\Omega_v^2-\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+  * - 1
+    - Selects the strain based production term for incompressible flows :math:`P_m=\mu_t S^2`
+  * - 2
+    - Selects the strain based production term for compressible flows :math:`P_m=\mu_t S^2 -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+  * - 3
+    - Selects the Kato-Launder source term :math:`P_m=\mu_t S\Omega_v -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
 
+Incompressible RANS
+^^^^^^^^^^^^^^^^^^^
+.. _equation_incomp_rans:
 
+Incompressible RANS equations follow the same structure as the compressible RANS equations with in addition to the parameters described in the :ref:`Incompressible Viscous <equation_incomp_viscous>` section. Note that the **scheme** block is not required, and that the turbulence model can have a different relaxation parameter to the main equation block.
+
+Example incompressible RANS usage:
+===================================   
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    # Use the incompressible RANS equation set
+    'equations' : 'incomp RANS',  
+    'incomp RANS': {
+                    'relax' : 0.5,
+                    'correction' : 'over relaxed',
+                    'correction limiter' : 0.5,
+                    'gradient limiter type' : 'cell md',
+                    'gradient limiter' : 0.5,
+                    'max second order non orthogonal angle' : 70.0,
+                    'order' : 'second',
+                    'central blend' : 0.8,
+                    'first order cycles': 100,
+                   
+                    'turbulence' : {
+                                    'model' : 'sst',
+                                    'relax': 0.2,
+                                  },
+                  },
+    ...
+  }
 
 .. _equation_les:
 
@@ -544,7 +722,33 @@ Example usage:
     ...
   }
 
+Incompressible LES
+^^^^^^^^^^^^^^^^^^
 
+.. _equation_incomp_les:
+
+Incompressible LES equations follow the same structure as the compressible LES equations with the addition of the parameters described in the :ref:`Incompressible Viscous <equation_incomp_viscous>` section. Note that the scheme block is not required, and that the turbulence model can have a different relaxation parameter to the main equation block.
+
+Example incompressible LES usage:
+===================================
+
+.. code-block:: python
+
+  parameters = {
+    ..
+    # Use the incompressible LES equation set
+    'equations' : 'incomp LES',
+    'incomp LES': {
+                   'relax' : 0.7,
+                   'order' : 'second',
+                   'first order cycles': 100,
+                   'turbulence' : {
+                                   'les' : 'DES',
+                                   'relax' : 0.2,
+                                  },
+      },
+    ...
+  }
 
 .. _equation_dg:
 
