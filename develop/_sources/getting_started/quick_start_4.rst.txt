@@ -60,7 +60,8 @@ To generate the acoustic mesh we run the :ref:`zm3 <zm3>` mesh generator. zM3 wi
         --stlSpacing 0.000625 \
         --seedPoints -1 -1 0.50001 \
         --stlFiles wall.stl \
-        --rotatedTranslatedRefinement 0.15 0.075 0.01 0 0 30 -0.035 -0.085 0.5 0.000625 0.00625
+        --rotatedTranslatedRefinement 0.15 0.075 0.01 0 0 30 -0.035 -0.085 0.5 0.000625 0.00625 \
+        --finiteVolumeOutput 0
 
 The options specified (shown in more detail :ref:`here <zm3_options>`)  are as follows:
 
