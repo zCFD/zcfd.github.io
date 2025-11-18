@@ -1,0 +1,61 @@
+.. _reference_guide:
+Reference Guide
+===============
+
+The zCFD control file is a python file that is executed at runtime. This provides a flexible way of specifying key parameters, enabling user defined functions and leveraging the rich array of python libraries available.
+
+A python dictionary called 'parameters' provides the main interface to controlling zCFD
+
+.. code-block:: python
+
+    parameters = {....}
+
+zCFD will validate the parameters dictionary specified at run time against a set of expected values for each key. In general, values that should be integers and floats will be coerced to the correct type. Values which should be strings, booleans, lists or dictionaries will cause an error if they are the incorrect type. The time marching scheme and solver/equation set chosen defines which dictionary keys are valid. A simple script is provided to allow the user to check the validity of their input parameters before submitting their job. See :ref:`input-validation`.
+
+This reference guide documents the parameters available in a zCFD control dictionary and the valid values for those keywords.
+
+.. parsed-literal::
+
+    parameters = {
+        'reference': :ref:`IC_1 <reference_state>`,
+        'initial': {:ref:`initial_state`},
+        'restart': :ref:`False <restart>`,
+        'partitioner': 'metis',
+        'scale': :ref:`[1,1,1] <scale_mesh>`,
+        'time marching': {:ref:`time`},
+        'linear solver settings': {:ref:`linear_solver`},
+        'equations': {:ref:`equations`},
+        'material': {:ref:`materials`},
+        'IC_1': {:ref:`initial_conditions`}
+        'BC_1': {:ref:`boundary_conditions`}
+        'FZ_1': {:ref:`fluid_zones`}
+        'TR_1': {:ref:`mesh_transform`}
+        'mapping': {:ref:`overset`}
+        'write output': {:ref:`write_output`}
+        'report': {:ref:`reporting`}
+    }
+
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   reference
+   boundary
+   time
+   linear_solver
+   equations
+   caa
+   fsi
+   materials
+   initial
+   reference_conditions
+   boundary
+   fluid_zone
+   transforms
+   overset
+   write_output
+   report
+   variables
+
+ 

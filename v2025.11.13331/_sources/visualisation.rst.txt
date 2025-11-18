@@ -1,0 +1,193 @@
+Visualisation
+=============
+
+zCFD by default will output data in `VTK <http://www.vtk.org/>`_ format.  This format can be read directly by many post-processing tools including `ParaView <http://www.paraview.org/>`_ by Kitware.
+
+Output in other formats is also possible, including `TECPLOT <http://www.tecplot.com/>`_ and `EnSight <https://www.ansys.com/en-gb/products/fluids/ansys-ensight>`_ as follows:
+
+
+VTK Output
+----------
+
+By default, zCFD will output data in VTK format. To explicitly force VTK output, use the following option in the *'write output'* part of the control dictionary:
+
+.. code-block:: python
+
+    'write output' : {
+                        # Output format
+                        'format' : 'vtk',
+
+EnSight Output
+--------------
+
+To output in EnSight format, use the following option in the *'write output'* part of the control dictionary:
+
+.. code-block:: python
+
+    'write output' : {
+                        # Output format
+                        'format' : 'ensight',
+
+Native HDF5 Output
+------------------
+
+To output in HDF5 format (the native format for zCFD), use the following option in the *'write output'* part of the control dictionary:
+
+.. code-block:: python
+
+    'write output' : {
+                        # Output format
+                        'format' : 'native',
+
+ParaView Catalyst Scripts
+-------------------------
+
+ParaView provides a powerful yet lightweight interface that allows parallel processing of simulation data during programme execution called `ParaView Catalyst <http://www.paraview.org/in-situ/>`_. This is driven by scripts (Python files) that can be called when data is output:
+
+.. code-block:: python
+
+    'write output' : {
+                        # Output format MUST be VTK
+                        'format' : 'vtk',
+                        # The scripts should be in the same directory as the input files
+                        'scripts' : ['paraview_catalyst1.py','paraview_catalyst2.py']
+
+ParaView Client
+---------------
+
+To download the free ParaView software for visualising VTK format data on the local device, just visit the `Paraview website <http://paraview.org/>`_.
+
+ParaView Client-Server
+----------------------
+
+In addition to running entirely locally on a device, ParaView can interface to a remote server.  This allows users to run ParaView to access data that is held (and processed) on a different computer, potentially running larger simulation tasks that would be possible on the local machine.  This also means that there is no need to transfer the large output files back to a local machine for post-processing.  The remote machine can easily be set up to run a ParaView Server in parallel - meaning that very large post-processing jobs can be run quickly.
+
+ParaView Server 
+^^^^^^^^^^^^^^^
+
+To download and install ParaView Server, you can either use the version on the main ParaView website and follow the instructions `here <http://www.paraview.org/Wiki/Setting_up_a_ParaView_Server>`_. 
+
+Alternatively or else use the version bundled with zCFD. The 'pvserver' included in the zCFD distribution includes plugins for reading the zCFD HDF5 mesh format directly.
+
+To start a ParaView Server on your computer within the zCFD environment run:
+
+.. code-block:: bash
+
+    > pvserver
+
+
+ParaViewConnect 
+^^^^^^^^^^^^^^^^
+
+`ParaviewConnect <https://github.com/zenotech/ParaViewConnect>`_ is a helper utility for connecting to remove ParaView servers. It reduces the complexity of setting up the required ssh connections and works well with zCFD. More information and installation instructions can be found on the `Github page <https://github.com/zenotech/ParaViewConnect>`_.
+
+
+ParaView Post-Processing Best Practices for Parallel zCFD Data
+--------------------------------------------------------------
+
+When post-processing solution data generated in parallel by zCFD using ParaView, it is important to understand the differences between various ParaView filters and their impact on data interpolation. This section provides guidance on recommended pipelines for accurate results.
+
+CleantoGrid vs MergeBlocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Two commonly used ParaView filters for processing parallel datasets are **CleantoGrid** and **MergeBlocks**. Each has distinct characteristics:
+
+**CleantoGrid Filter:**
+
+* **Purpose**: Merges points that are exactly coincident and removes degenerate cells
+* **Interpolation**: Performs minimal interpolation, preserving original data values at cell centres and vertices
+* **Use case**: Recommended when data accuracy is critical and you want to preserve the original computed values
+* **Characteristics**: May result in slightly fragmented visualisations at block boundaries but maintains data fidelity
+
+**MergeBlocks Filter:**
+
+* **Purpose**: Combines multiple blocks into a single unstructured grid
+* **Interpolation**: May perform interpolation across block boundaries to create smooth transitions
+* **Use case**: Better for smooth visualisations and streamline generation across block boundaries
+* **Characteristics**: Creates visually smoother results but may alter original computed values through interpolation
+
+Recommended Pipelines
+^^^^^^^^^^^^^^^^^^^^^
+
+For **quantitative analysis** and **data extraction** (probes, line plots, force calculations):
+
+.. code-block:: python
+
+    # Recommended pipeline for quantitative analysis
+    import paraview.simple as pvs
+    
+    # Load data
+    reader = pvs.PVDReader(FileName='solution.pvd')
+    
+    # Use CleantoGrid to preserve data accuracy
+    clean_data = pvs.CleantoGrid(Input=reader)
+    
+    # Convert to point data if needed
+    point_data = pvs.CellDatatoPointData(Input=clean_data)
+    
+    # Proceed with analysis (probes, calculators, etc.)
+
+For **visualisation purposes** (streamlines, contours, volume rendering):
+
+.. code-block:: python
+
+    # Pipeline for smooth visualisations
+    import paraview.simple as pvs
+    
+    # Load data
+    reader = pvs.PVDReader(FileName='solution.pvd')
+    
+    # Use MergeBlocks for smoother visualisations
+    merged_data = pvs.MergeBlocks(Input=reader)
+    
+    # Convert to point data for smooth contouring
+    point_data = pvs.CellDatatoPointData(Input=merged_data)
+    
+    # Apply visualisation filters (streamlines, contours, etc.)
+
+Important Considerations
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. **Data Accuracy**: Always use CleantoGrid when extracting quantitative data for analysis or validation
+2. **visualisation Quality**: MergeBlocks may provide better visual results for presentations and general visualisation
+3. **Performance**: CleantoGrid is typically faster as it performs less processing
+4. **Block Boundaries**: Be aware that different filters may show artefacts differently at parallel decomposition boundaries
+5. **Regression Testing**: When comparing results across different runs, ensure consistent filter usage
+
+Example Notebook Usage
+^^^^^^^^^^^^^^^^^^^^^^
+
+The following pattern is recommended in Jupyter notebooks when processing zCFD parallel data:
+
+.. code-block:: python
+
+    import paraview.simple as pvs
+    
+    # For data extraction and analysis
+    def load_for_analysis(filename):
+        reader = pvs.PVDReader(FileName=filename)
+        reader.UpdatePipeline()
+        clean = pvs.CleantoGrid(Input=reader)
+        return clean
+    
+    # For visualisation and rendering
+    def load_for_visualisation(filename):
+        reader = pvs.PVDReader(FileName=filename)
+        reader.UpdatePipeline()
+        merged = pvs.MergeBlocks(Input=reader)
+        point_data = pvs.CellDatatoPointData(Input=merged)
+        return point_data
+
+This ensures that your analysis maintains data integrity while your visualisations remain smooth and professional.
+
+Jupyter Notebooks
+-----------------
+We also recommend the use of  `Jupyter Lab <https://jupyter.org/>`_ for post-processing zCFD runs. This is one of the easiest ways to use Python, via an interactive notebook on your local computer. The notebook is a locally hosted server that you can access via a web-browser. 
+Jupyter is included in the zCFD distribution and notebooks for visualising the residual data will automatically be created when you run a zCFD case. In addition there are several example notebooks available in the `zPost <https://github.com/zenotech/zPost>`_.
+
+To automatically start up notebook server on your computer within the zCFD environment run:
+
+.. code-block:: bash
+
+    > start_lab
+
