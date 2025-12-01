@@ -1,7 +1,7 @@
 .. _reference_conditions:
 
 Reference Conditions
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 Reference Conditions enable a set of conditions to be specified relative to a base set of :ref:`initial conditions <initial_conditions>`. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain
 

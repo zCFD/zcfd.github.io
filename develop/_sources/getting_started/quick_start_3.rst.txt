@@ -1,7 +1,7 @@
 .. _tutorial_3:
 
 Tutorial 3: Time accurate solution
------------------------------
+-----------------------------------
 .. contents:: Table of Contents
     :depth: 1
     :local:
@@ -21,6 +21,7 @@ Following on from executing the steady state simulation of :ref:`Tutorial 2 <tut
 
 
 .. _qs3_download_link:
+
 You can download the required files `here <https://zcfd.zenotech.com/tutorials/3/cylinder.zip>`_.
 
 
@@ -62,6 +63,7 @@ zCFD uses dual time stepping to advance in real time by first iterating to conve
 The choice of timestep size, and number of cycles per inner loop will have a significant effect on the quality and cost of the final solution. Using too large of a real time step will mean higher frequency unsteady effects are lost, similarly too few inner cycles will result in unsteady effects being lost. A rule of thumb is to ensure the residuals converge by at least two orders of magnitude over an inner cycle. On the other hand if too many cycles or timesteps are performed, the cost of the simulation will quickly increase. Finally the number of cycles to reach convergence in a pseudo time loop also depends on the step size. Meaning in some cases it is actually beneficial to run a smaller timestep, in order to require fewer inner loop iterations.
 
 .. _quick_start_3_output:
+
 Output
 ^^^^^^
 
@@ -138,8 +140,9 @@ In the “plot_forces” cell, you should notice additional data points availabl
 
 
 .. _qs3_view_flowfield:
+
 Flow field
-^^^^^^^^^
+^^^^^^^^^^
 
 We set the output frequency to 5 when running the case and so the solver will have written visualisation VTK files every 5 real time steps. If you look in the *'cylinder_P1_OUTPUT/VISUALISATION'* directory you will see a series of .vtp and .pvtp files, one for every written timestep. 
 

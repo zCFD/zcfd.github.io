@@ -1,4 +1,5 @@
 .. _reference_guide:
+
 Reference Guide
 ===============
 
@@ -50,7 +51,6 @@ This reference guide documents the parameters available in a zCFD control dictio
    materials
    initial
    reference_conditions
-   boundary
    fluid_zone
    transforms
    overset

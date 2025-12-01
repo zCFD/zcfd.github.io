@@ -6,6 +6,7 @@ FWH solver
 A Ffowcs-Williams Hawkings (FWH) solver, which is used for prediction of farfield noise, is included in the zCFD distribution. The zCFD FWH solver uses the `Farrasat 1A formulation <https://ntrs.nasa.gov/citations/20070010579>`_, and can accept both permeable and impermeable FWH surfaces.
 
 .. _fwhWhatFor:
+
 What is an FWH solver for?
 --------------------------
 
@@ -17,6 +18,7 @@ The first issue of noise simulation can be made tractable by the use of techniqu
 This issue of noise propagation in the far-field is solved by the use of the Ffowcs-Williams Hawkings (FWH) equations. These equations allow us to propagate sound to an observer an arbitrary distance away without the use of a mesh which extends all the way to the observer.
 
 .. _fwhHowWorks:
+
 How does an FWH solver work?
 ----------------------------
 
@@ -52,8 +54,9 @@ Once we have collected the FWH surface data from a CFD simulation and correctly 
 
 
 .. _fwhRunning:
+
 Running the zCFD FWH solver
--------------------------
+----------------------------
 
 There are two ways of running the zCFD FWH solver - the :ref:`fwh python module<fwhRunningPython>` and the :ref:`run_fwh utility<fwhRunningRunFwh>`. The *fwh python module* is flexible and intended for advanced users with knowledge of the python programming language. The *run_fwh utility* is a simpler interface which requires no knowledge of the python programming language and is intended for FWH data generated using *zCFD*.
 
@@ -62,6 +65,7 @@ This documentation actually introduces the *fwh python module* first, since doin
 To use the zCFD FWH solver in either format, we must first generate FWH surface data during a zCFD simulation (see :ref:`write output <write_output>` for more details). The FWH surface data is stored in a HDF5 format. While no mesh conversion tools are provided, the zCFD FWH file format can easily be interrogated and replicated with tools like `h5ls` and `h5py` should you wish to convert data from other simulation tools to this format.
 
 .. _fwhRunningPython:
+
 Using the zCFD FWH python module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -124,6 +128,7 @@ The `Surface Summation` entry will likely cover a shorter time period than the i
 
 
 .. _fwhSurfaces:
+
 Surfaces dictionary
 ```````````````````
 
@@ -148,6 +153,7 @@ Example usage:
 
 
 .. _fwhIndividualSurface:
+
 Individual surface definition dictionary
 ::::::::::::::::::::::::::::::::::::::::
 
@@ -190,6 +196,7 @@ Individual surface definition dictionary
 
 
 .. _fwhObservers:
+
 Observers dictionary
 ````````````````````
 
@@ -209,6 +216,7 @@ Example usage:
 
 
 .. _fwhSolverSettings:
+
 Solver settings dictionary
 ``````````````````````````
 
@@ -261,18 +269,19 @@ Example usage:
      - The maximum number of iterations to use in the algorithm used to predict retarded time
    * - 'observerStartTime'
      - No
-     - 
+     -
      - Number
      - The simulation time (s) at which observers start recording data. If this is not set, this will be set automatically to be the earliest time when a surface/observer pair has a valid signal.
    * - 'observerEndTime'
      - No
-     - 
+     -
      - Number
      - The simulation time (s) at which observers end recording data. If this is not set, this will be set automatically to be the last time when a surface/observer pair has a valid signal.
 
 
 
 .. _fwhObsMotions:
+
 Point (observer) motion classes
 ```````````````````````````````
 
@@ -286,7 +295,7 @@ FWH Observers are points which move through the FWH quiescent medium according t
      - Inputs
      - Description
    * - `OriginPoint()`
-     - 
+     -
      - A point which is always on the origin, i.e. :math:`f(t)=[0,0,0]`.
    * - `StationaryPoint(X0)`
      - X0: a 3-d vector :math:`[x0,y0,z0]`
@@ -298,6 +307,7 @@ FWH Observers are points which move through the FWH quiescent medium according t
 
 
 .. _fwhSurfMotions:
+
 Surface motion classes
 ``````````````````````
 
@@ -321,6 +331,7 @@ Just like FWH Observers, FWH Surfaces require their motion to be defined. There 
 
 
 .. _fwhRunningRunFwh:
+
 Using the zCFD run_fwh utility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 When using the :ref:`fwh python module<fwhRunningPython>` defined above, we manually define FWH :ref:`surface<fwhSurfaces>`, :ref:`observer<fwhObservers>` and :ref:`solver settings<fwhSolverSettings>` dictionaries which are used in `fwh.solve()`. This gives us fine grained control, but for most FWH simulations which are based on zCFD CFD simulations, the input dictionaries to `fwh.solve()` can actually be generated automatically by reading the :ref:`zCFD input parameters file<reference_guide>`. This is what the `run_fwh` utility does. Within the :ref:`zCFD command-line environment<zcfd-command>`, the `run_fwh` utility can be called as below:
@@ -338,6 +349,7 @@ The `run_fwh` utility reads the :ref:`zcfd control file<runFwhZcfdParameters>` a
 For the example outlined in the :ref:`fwh python module example<fwhRunningPython>`, the `run_fwh` command would look something like this:
 
 .. _runFwhBash:
+
 .. code-block:: bash
   
     run_fwh -c zcfdSim.py --reference_condition IC_1 --observer_locations observers.csv
@@ -345,11 +357,13 @@ For the example outlined in the :ref:`fwh python module example<fwhRunningPython
 
 
 .. _runFwhZcfdParameters:
+
 zCFD control file
 `````````````````
 The first input to the `run_fwh` utility is the `zCFD control file`. This is the control file for the zCFD simulation which generated the FWH surface data files which are to be used. For the example outlined in :numref:`fwhfig1` and the :ref:`fwh python module example<fwhRunningPython>`, the `zCFD control file` would be called :code:`zcfdSim.py` and would look something like the example below.
 
 .. _runFwhZcfdParametersCode:
+
 .. code-block:: python
 
     parameters = {
@@ -372,6 +386,7 @@ The first input to the `run_fwh` utility is the `zCFD control file`. This is the
 The `run_fwh` utility reads the zCFD parameter file and finds the paths to all the FWH surface output files which were generated by the zCFD CFD simulation defined by :code:`zcfdSim.py`. In this case, it would find the file :code:`./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5`.
 
 .. _runFwhRefCond:
+
 Reference condition
 ```````````````````
 In the :ref:`fwh python module example<fwhRunningPython>`, we have to manually define the solver settings and the motions of the observers and surfaces through the FWH quiescent medium manually. However, if all the surfaces and observers are in the same `translational reference frame`, we can set the motions and solver settings directly from a zCFD :ref:`IC block<initial_conditions>`.
@@ -385,11 +400,13 @@ In most cases, a zCFD simulation control file will already contain an IC block s
 Which `translational reference frame` an FWH surface is in is independent of whether the FWH surface is rotating or not - see :ref:`below<runFwhAdvanced>` for more details.
 
 .. _runFwhObserversCsv:
+
 Observer .csv file
 ``````````````````
 In the Observers .csv file, we define the locations of the observers (in the 'mesh fixed' frame of reference). To match the observers shown in :numref:`fwhfig1` and :numref:`fwhfig2`, the `observers .csv file` should contain the following:
 
 .. _runFwhObserversCsvCode:
+
 .. code-block::
 
     Obs1, 1.0,  0.0,  0.0
@@ -397,6 +414,7 @@ In the Observers .csv file, we define the locations of the observers (in the 'me
 
 
 .. _runFwhAdvanced:
+
 Advanced use
 ````````````
 The `run_fwh` utility allows and accounts for :ref:`overset<overset>` zCFD simulations and FWH surfaces which exist in zCFD `rotating fluid zones`. This means that even complex simulations like drones with multiple rotating propellors can be simulated with the `run_fwh` utility.
@@ -427,16 +445,18 @@ Where the `run_fwh` utility is not suitable, it is still possible to use compone
 
 
 FWH file utilities
--------------------
+------------------
 
 As well as the FWH solver itself, two FWH file utilities are provided - `writeFWHSurfaceFrequenciesFile` and `writeBlankedOffFWHSurfaceFile`.
 Users may find these utilities useful for investigating the sources of noise within their CFD simulation.
 
 .. _fwhFrequenciesUtility:
+
 writeFWHSurfaceFrequenciesFile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ..
   Basically just a copy of the docstring
+
 This python function takes an FWH surface file as input, and creates a file where the FWH surface data can be viewed in the frequency, instead of time, domain.
 
 This can be useful for visually indicating where particular frequencies originate from in an FWH observer pressure signal.
@@ -454,8 +474,10 @@ Example usage:
 
 
 .. _fwhBlankingUtility:
+
 writeBlankedOffFWHSurfaceFile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ..
   Basically just a copy of the docstring
 

@@ -43,7 +43,7 @@ and name the file as *wall.stl* (change file to *STL*).  Save the file as Binary
 
 
 2. Create mesh with zM3
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 To generate the acoustic mesh we run the :ref:`zm3 <zm3>` mesh generator. zM3 will create a cartesian mesh and embed the STL file to represent the geometry and as a source of refinement. As this mesh generator is currently command line based, the commands to generate a suitable acoustic mesh is as follows:
 
@@ -99,7 +99,7 @@ Control dictionary configuration for aero-acoustics
 
 The acoustic solver is run in a similar fashion to the CFD solvers, where a Python control dictionary is supplied containing the relevant solver parameters.  The flow conditions supplied are identical to those used for the RANS simulation in Tutorial 2.  Additional sections are described below.
 
-A copy of the acoustics control dictionary can be downloaded `here <https://zcfd.zenotech.com/tutorials/4/acoustics.zip>`_. 
+A copy of the acoustics control dictionary can be downloaded `here <https://zcfd.zenotech.com/tutorials/4/acoustics.zip>`__. 
 
 
 Nodal Locations
@@ -197,7 +197,7 @@ Note: you must ensure that the input files used for the steady RANS simulation (
 Post-Processing
 ===============
 
-The acoustics solver can take some time to run, if you want to look at pre-generated results then they can be downloaded `here <https://zcfd.zenotech.com/tutorials/4/acoustics_results.zip>`_ (1.5GB).
+The acoustics solver can take some time to run, if you want to look at pre-generated results then they can be downloaded `here <https://zcfd.zenotech.com/tutorials/4/acoustics_results.zip>`__ (1.5GB).
 
 Paraview
 ^^^^^^^^

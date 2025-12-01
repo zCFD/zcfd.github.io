@@ -202,6 +202,7 @@ zCFD will run for the 1500 `cycles` specified in the control dictionary, if you 
 The solver should take a few minutes to complete on a modern GPU, and a bit longer on a CPU. 
 
 .. _qs1_review_output:
+
 Step 4. Review the output
 =========================
 
@@ -235,6 +236,7 @@ A successful zCFD run will result in the following files and directories being c
      - Contains a separate copy of the naca0012.log file for each MPI partition. Used for debugging.
 
 .. _qs1_jupyter:
+
 Step 5. Looking at residuals with notebook
 ==========================================
 

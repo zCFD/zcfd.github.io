@@ -40,7 +40,7 @@ There are 4 (mesh, control dictionary) pairs of input files.  These are listed i
 
 Note that in this case, the “back3.h5” mesh defining a cylinder has been used twice.  This is OK, because the “back3.py” and “back4.py” control dictionaries each apply a different transformation (down and up along the y-axis respectively).  The solver knows that the meshes are used for different solutions, in different parts of the flow domain.  Also note that the translated mesh for “back4” overlaps the translated mesh for “back3” (the mesh between the two cylinders). This is also OK because the solver knows that “back4” oversets “back3”, which oversets “back2” and “back1”.  In each case, the active solution is the one on the top-level oversetting mesh.  
 
-The files for running the case are available for download `here <https://zcfd.zenotech.com/tutorials/5/oversetmulticylinder.zip>`_.
+The files for running the case are available for download `here <https://zcfd.zenotech.com/tutorials/5/oversetmulticylinder.zip>`__.
 
 For each of the meshes, a transformation has been defined in the corresponding control file, for example the “back1.h5” mesh is moved according to the transformation defined by the following lines in the “back1.py” control dictionary: 
 
@@ -171,7 +171,7 @@ The motion is applied to the mesh because of the keyword ‘moving mesh’ in th
         "moving mesh": True,
     },
 
-The meshes and control files for the train and the tunnel can be downloaded from `here <https://zcfd.zenotech.com/tutorials/5/traintunnel.zip>`_.
+The meshes and control files for the train and the tunnel can be downloaded from `here <https://zcfd.zenotech.com/tutorials/5/traintunnel.zip>`__.
 
 The train tunnel case is larger than the previous case in this tutorial: the train mesh has 1.31m cells and the tunnel has 7.35m cells.  To run this case in implicit mode on a GPU will require approximately 48GB RAM.
 

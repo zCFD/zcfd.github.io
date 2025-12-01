@@ -770,8 +770,8 @@ These additional DG keys are:
      - Description
    * - 'order'
      - Yes
-     - 
-     - 0 |1 | 2 | 3 | 4
+     -
+     - 0, 1, 2, 3, or 4
      - This parameter sets the order of the polynomials within each element used to define the numerical solution
    * - 'freeze diffusion during rk stages'
      - Yes

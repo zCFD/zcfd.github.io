@@ -107,7 +107,7 @@ Example usage:
 
 
 Mesh Transform Matrix
-**************
+**********************
 
 The mesh can be transformed using an `affine transform <https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia <https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. Helper functions for rotations, translations and scalings are provided in zutil.transform. An example is given below:
 
@@ -122,7 +122,7 @@ The mesh can be transformed using an `affine transform <https://www.brainvoyager
 
      "mesh transform matrix": C2D
 
-When using the zutil.transform helper functions transforms are applied in the order in which the user calls the functions. Rotations are considered using the same conventions as `pytransform3d <https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html>`_ and are interpreted as active and applied using the pre-multiplication convention. For more complex transformations `pytransform3d <https://dfki-ric.github.io/pytransform3d>`_ provides a comprehensive collection of python functions and can be easily interfaced with zCFD by simply passing the resulting transformation matrix to the solver.
+When using the zutil.transform helper functions transforms are applied in the order in which the user calls the functions. Rotations are considered using the same conventions as `pytransform3d <https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html>`__ and are interpreted as active and applied using the pre-multiplication convention. For more complex transformations `pytransform3d <https://dfki-ric.github.io/pytransform3d>`__ provides a comprehensive collection of python functions and can be easily interfaced with zCFD by simply passing the resulting transformation matrix to the solver.
 
      
 Mesh Quality Remediation

@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2025.11.13331-9-g486d9 documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.11.13331-10-g34971 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=3101596f"></script>
+    <script src="../_static/documentation_options.js?v=2ac7c069"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -928,7 +928,7 @@ Run 500 cycles first order.</p>
 <tr class="row-even"><td><p>‘order’</p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>0 <a href="#id5"><span class="problematic" id="id6">|</span></a>1 | 2 | 3 | 4</p></td>
+<td><p>0, 1, 2, 3, or 4</p></td>
 <td><p>This parameter sets the order of the polynomials within each element used to define the numerical solution</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘freeze diffusion during rk stages’</p></td>
@@ -982,7 +982,7 @@ Run 500 cycles first order.</p>
 </tbody>
 </table>
 <section id="dg-nodal-locations">
-<span id="id7"></span><h3>DG Nodal locations<a class="headerlink" href="#dg-nodal-locations" title="Link to this heading">¶</a></h3>
+<span id="id5"></span><h3>DG Nodal locations<a class="headerlink" href="#dg-nodal-locations" title="Link to this heading">¶</a></h3>
 <p>In addition to the equation set the location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary. The nodal locations are used in the generation of Lagrange polynomials used to define the solution within an element.</p>
 <p>There are various sets of nodal locations defined in literature for use with high order methods.  Varying the nodal locations can minimise aliasing errors within the DG method.  It is recommended to use the default values.</p>
 <table class="docutils align-default">
@@ -1116,7 +1116,6 @@ Run 500 cycles first order.</p>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Material Specification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="initial.html">Initial Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_conditions.html">Reference Conditions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="boundary.html">Boundary Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fluid_zone.html">Fluid Zones</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transforms.html">Mesh Transformation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overset.html">Overset</a></li>

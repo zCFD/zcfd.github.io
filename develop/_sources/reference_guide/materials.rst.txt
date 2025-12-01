@@ -56,7 +56,7 @@ Example usage:
     }
 
 sutherlands const
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
 This option controls the variation of the viscosity of the fluid with temperature.
 
 Sutherland's law:

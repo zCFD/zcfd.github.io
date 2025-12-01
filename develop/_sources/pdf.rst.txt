@@ -1,4 +1,8 @@
 PDF copy
 =========
 
-:download:`PDF link <zCFDguide.pdf>`
+.. The PDF version is generated during the PDF build process.
+.. To enable the download link, uncomment the following line after building the PDF:
+.. :download:`PDF link <zCFDguide.pdf>`
+
+PDF version is available after the PDF build completes (``make latexpdf``).
