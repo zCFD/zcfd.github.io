@@ -10,7 +10,7 @@ There are two main strategies for running the code in parallel:
 
 **Hybrid MPI/OpenMP** runs one MPI process per socket, reducing the number of MPI ranks at larger core counts. Running in hybrid mode assigns multiple cores to each MPI rank, allowing it to reduce the communication overheads associated with running in parallel. 
 
-**Full MPI** runs one MPI process per core and is typically the best strategy for low core count runs or GPU based runs where you would run 1 MPI rank per GPU available on the node. 
+**Full MPI** runs one MPI process per core and is typically the best strategy for low core count runs or GPU based runs. For GPU runs, you can run 1 MPI rank per GPU available on the node, or multiple MPI ranks per GPU. When running multiple ranks per GPU, the ranks will share the GPU resources. This can be useful for smaller problem sizes, testing and development, or workloads with low GPU utilization. 
 
 To run in parallel you add the -n option to the run_zcfd script. The provided argument is the number of MPI processes to launch.
 
@@ -37,6 +37,43 @@ For example, if you had two hosts with 2 x 12 core CPUs per host and wanted to r
 
     export OMP_NUM_THREADS=1
     run_zcfd -p <mesh_name> -c <case_name> -n 48 –tpn 24
+
+
+GPU Parallel Execution
+----------------------
+
+zCFD automatically assigns GPUs to MPI ranks when running on GPU-enabled nodes.
+
+**Single Rank per GPU:** This is the default and recommended configuration for most workloads. Each MPI rank gets exclusive access to one GPU.
+
+.. code-block:: bash
+
+    # For a node with 4 GPUs, run 4 ranks (1 per GPU)
+    run_zcfd -p <mesh_name> -c <case_name> -n 4
+
+**Multiple Ranks per GPU (Experimental):** To enable multiple MPI ranks sharing GPUs, set the ``ZCFD_DEV_OVERSUBSCRIBE_GPU`` environment variable. This is an experimental feature primarily intended for debugging and testing. When enabled, ranks will be assigned to GPUs using modulo arithmetic (rank % num_gpus).
+
+.. warning::
+
+    GPU oversubscription is an experimental feature. It may result in reduced performance and is primarily intended for debugging purposes with limited GPU resources.
+
+This can be useful for:
+
+- Testing and development with limited GPU resources
+- Debugging with smaller problem sizes
+- Workloads with low GPU compute utilization
+
+.. code-block:: bash
+
+    # For a node with 4 GPUs, run 8 ranks (2 per GPU) - experimental
+    export ZCFD_DEV_OVERSUBSCRIBE_GPU=1
+    run_zcfd -p <mesh_name> -c <case_name> -n 8
+
+**Example assignments with oversubscription enabled:**
+
+- 4 GPUs, 4 ranks: GPU assignment [0,1,2,3]
+- 4 GPUs, 8 ranks: GPU assignment [0,1,2,3,0,1,2,3]
+- 4 GPUs, 6 ranks: GPU assignment [0,1,2,3,0,1]
 
 
 Running across multiple machines with a cluster scheduler

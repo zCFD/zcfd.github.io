@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Parallel Guide &#8212; zCFD User Guide v2025.11.13331-36-g3c910 documentation</title>
+    <title>Parallel Guide &#8212; zCFD User Guide v2025.11.13331-37-gf3e903b documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=c5ab9e5d"></script>
+    <script src="../_static/documentation_options.js?v=fb0490f6"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -39,7 +39,7 @@
 <p>zCFD uses Intel MPI (Message Passing Interface) to enable running over multiple machines or multiple GPUs, either in one machine or across multiple. A paid license is required for this functionality. This is achieved by decomposing the domain into parallel regions that are distributed to each MPI rank. MPI can leverage high bandwidth network interconnects such as infiniband or AWS’ Elastic Fabric adaptor,</p>
 <p>There are two main strategies for running the code in parallel:</p>
 <p><strong>Hybrid MPI/OpenMP</strong> runs one MPI process per socket, reducing the number of MPI ranks at larger core counts. Running in hybrid mode assigns multiple cores to each MPI rank, allowing it to reduce the communication overheads associated with running in parallel.</p>
-<p><strong>Full MPI</strong> runs one MPI process per core and is typically the best strategy for low core count runs or GPU based runs where you would run 1 MPI rank per GPU available on the node.</p>
+<p><strong>Full MPI</strong> runs one MPI process per core and is typically the best strategy for low core count runs or GPU based runs. For GPU runs, you can run 1 MPI rank per GPU available on the node, or multiple MPI ranks per GPU. When running multiple ranks per GPU, the ranks will share the GPU resources. This can be useful for smaller problem sizes, testing and development, or workloads with low GPU utilization.</p>
 <p>To run in parallel you add the -n option to the run_zcfd script. The provided argument is the number of MPI processes to launch.</p>
 </section>
 <section id="hybrid-mpi-openmp">
@@ -59,6 +59,37 @@
 run_zcfd<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">48</span><span class="w"> </span>–tpn<span class="w"> </span><span class="m">24</span>
 </pre></div>
 </div>
+</section>
+<section id="gpu-parallel-execution">
+<h2>GPU Parallel Execution<a class="headerlink" href="#gpu-parallel-execution" title="Link to this heading">¶</a></h2>
+<p>zCFD automatically assigns GPUs to MPI ranks when running on GPU-enabled nodes.</p>
+<p><strong>Single Rank per GPU:</strong> This is the default and recommended configuration for most workloads. Each MPI rank gets exclusive access to one GPU.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For a node with 4 GPUs, run 4 ranks (1 per GPU)</span>
+run_zcfd<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+<p><strong>Multiple Ranks per GPU (Experimental):</strong> To enable multiple MPI ranks sharing GPUs, set the <code class="docutils literal notranslate"><span class="pre">ZCFD_DEV_OVERSUBSCRIBE_GPU</span></code> environment variable. This is an experimental feature primarily intended for debugging and testing. When enabled, ranks will be assigned to GPUs using modulo arithmetic (rank % num_gpus).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>GPU oversubscription is an experimental feature. It may result in reduced performance and is primarily intended for debugging purposes with limited GPU resources.</p>
+</div>
+<p>This can be useful for:</p>
+<ul class="simple">
+<li><p>Testing and development with limited GPU resources</p></li>
+<li><p>Debugging with smaller problem sizes</p></li>
+<li><p>Workloads with low GPU compute utilization</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For a node with 4 GPUs, run 8 ranks (2 per GPU) - experimental</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZCFD_DEV_OVERSUBSCRIBE_GPU</span><span class="o">=</span><span class="m">1</span>
+run_zcfd<span class="w"> </span>-p<span class="w"> </span>&lt;mesh_name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">8</span>
+</pre></div>
+</div>
+<p><strong>Example assignments with oversubscription enabled:</strong></p>
+<ul class="simple">
+<li><p>4 GPUs, 4 ranks: GPU assignment [0,1,2,3]</p></li>
+<li><p>4 GPUs, 8 ranks: GPU assignment [0,1,2,3,0,1,2,3]</p></li>
+<li><p>4 GPUs, 6 ranks: GPU assignment [0,1,2,3,0,1]</p></li>
+</ul>
 </section>
 <section id="running-across-multiple-machines-with-a-cluster-scheduler">
 <h2>Running across multiple machines with a cluster scheduler<a class="headerlink" href="#running-across-multiple-machines-with-a-cluster-scheduler" title="Link to this heading">¶</a></h2>
