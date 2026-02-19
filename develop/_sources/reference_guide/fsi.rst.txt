@@ -16,7 +16,7 @@ zCFD has the capability of simulating Fluid Structure Interaction (FSI) using bo
    * - 'type'
      - Yes
      - 
-     - 'abaqus' | 'generic'
+     - 'generic'
      - FSI driver to be used when coupling to an FEA code
    * - 'zone'
      - Yes
@@ -86,14 +86,9 @@ zCFD has the capability of simulating Fluid Structure Interaction (FSI) using bo
 
 type
 ====
-Specifies which FSI driver should be used when coupling to an FEA code, **'abaqus'** or **'generic'**.
+Specifies which FSI driver should be used when coupling to an FEA code, **'generic'**.
 This tells zCFD which FSI python file should be used to execute the FSI coupling:
 **'generic'** will use the **genericFSI.py** interface that should be implemented to meet your requirements. Out the box **genericFSI.py** will not perform any changes.
- 
-**'abaqus'**  is an extension of generic interface that allows the solver to run in tandem with the SIMULIA CSE engine.
-
-.. note::
-    Abaqus requires the CSE engine to be built with zCFD
 
 zone
 ====

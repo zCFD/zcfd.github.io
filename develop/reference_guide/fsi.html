@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fluid-structure interaction &#8212; zCFD User Guide v2025.11.13331-52-ge81465 documentation</title>
+    <title>Fluid-structure interaction &#8212; zCFD User Guide v2025.11.13331-53-g75b54 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=e9af2e59"></script>
+    <script src="../_static/documentation_options.js?v=82e84a47"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -55,7 +55,7 @@
 <tr class="row-even"><td><p>‘type’</p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘abaqus’ | ‘generic’</p></td>
+<td><p>‘generic’</p></td>
 <td><p>FSI driver to be used when coupling to an FEA code</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘zone’</p></td>
@@ -140,14 +140,9 @@
 </table>
 <section id="type">
 <h2>type<a class="headerlink" href="#type" title="Link to this heading">¶</a></h2>
-<p>Specifies which FSI driver should be used when coupling to an FEA code, <strong>‘abaqus’</strong> or <strong>‘generic’</strong>.
+<p>Specifies which FSI driver should be used when coupling to an FEA code, <strong>‘generic’</strong>.
 This tells zCFD which FSI python file should be used to execute the FSI coupling:
 <strong>‘generic’</strong> will use the <strong>genericFSI.py</strong> interface that should be implemented to meet your requirements. Out the box <strong>genericFSI.py</strong> will not perform any changes.</p>
-<p><strong>‘abaqus’</strong>  is an extension of generic interface that allows the solver to run in tandem with the SIMULIA CSE engine.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Abaqus requires the CSE engine to be built with zCFD</p>
-</div>
 </section>
 <section id="zone">
 <h2>zone<a class="headerlink" href="#zone" title="Link to this heading">¶</a></h2>
