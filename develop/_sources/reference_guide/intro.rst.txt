@@ -46,7 +46,6 @@ This reference guide documents the parameters available in a zCFD control dictio
    time
    linear_solver
    equations
-   caa
    fsi
    materials
    initial

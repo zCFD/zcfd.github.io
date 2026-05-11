@@ -16,7 +16,7 @@ There are several common causes of code crashing:
 Numerical instability
 ---------------------
 
-The solver will try to advance the flow solution towards convergence at the required level of spatial and temporal accuracy, subject to a user-defined limit called the :ref:`CFL <cfl_control>` (Courant–Friedrichs–Lewy) number.  The CFL number limits the update to the solution in each cycle to maintain the stability of the underlying numerical scheme (either finite difference or high order Discontinuous Galerkin).  
+The solver will try to advance the flow solution towards convergence at the required level of spatial and temporal accuracy, subject to a user-defined limit called the :ref:`CFL <cfl_control>` (Courant–Friedrichs–Lewy) number.  The CFL number limits the update to the solution in each cycle to maintain the stability of the underlying numerical scheme.  
 
 There are formal criteria for the CFL number for given schemes, however these typically only apply to idealised (orthogonal or structured meshes with very gradual variation in cell-to-cell volume ratios).  For complex meshes or where cell quality may be poor (even in only a few cells), the limit for stability may be significantly less.  In explicit mode, the theoretical CFL limit is formally approximately 1.0 for most schemes - though in many cases a higher value (1.5 to 2.0) will actually work.  In implicit mode the CFL limit is theoretically 1000 or more, with values between 10 and 100 quite common.  
 

@@ -16,38 +16,33 @@ Equations
      - --
      - Any of equation sets detailed below.
 
-The equations key selects the equation set to be solved as well as the finite volume solver or the high order strong form Discontinuous Galerkin/Flux Reconstruction solver.
+The equations key selects the equation set to be solved.
 
 The corresponding equation set options should also be defined in the control dictionary. The valid equation keys are shown in the table below.
 
 .. list-table:: 
-   :widths: 10 60 10 10 10
+   :widths: 10 60 10 10
    :header-rows: 1
 
    * - Solver
      - Description
      - Compressible
-     - High order
      - Incompressible
    * - Euler
      - Use the Euler flow equations in the simulation. These are compressible, inviscid flow equations.
      - :ref:`"euler" <equation_euler>`
      - --
-     - --
    * - Viscous
      - Use the viscous flow equations. These are compressible, viscid flow equations which do not model turbulence.
      - :ref:`"viscous" <equation_viscous>`
-     - :ref:`"dgviscous" <equation_dg>`
      - :ref:`"incomp viscous" <equation_incomp_viscous>`
    * - RANS
      - Use the RANS (Reynolds-Averaged Navier-Stokes) equations in the simulation. These are compressible, viscid flow equations with additional terms included to account for the effect of turbulence on the flow without the expense of simulating the turbulent flow structures themselves.
      - :ref:`"rans" <equation_rans>`
-     - :ref:`"dgrans" <equation_dg>`
      - :ref:`"incomp rans" <equation_incomp_rans>`
    * - LES
      - Use the Large Eddy Simulation (LES) equations.
      - :ref:`"les" <equation_les>`
-     - :ref:`"dgles" <equation_dg>`
      - :ref:`"incomp les" <equation_incomp_les>`
 
 Example usage:
@@ -750,172 +745,4 @@ Example incompressible LES usage:
     ...
   }
 
-.. _equation_dg:
 
-High Order
-^^^^^^^^^^
-
-When using the high order strong form Discontinuous Galerkin/Flux Reconstruction solver the keys in the :ref:`"common" <equation_common>` equations dictionary are the same for each equation set except that the **'linear gradients'** and **'limiter'** keys are not valid and additional keys are available in the equations dictionary.  For example all the available keys for **'dgviscous'** are a combination of the **'viscous'** keys and the keys shows below. The same logic applies to the **'dgrans'**, and **'dgles'** equation sets.
-
-These additional DG keys are:
-
-.. list-table:: 
-   :widths: 20 10 10 10 20
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'order'
-     - Yes
-     -
-     - 0, 1, 2, 3, or 4
-     - This parameter sets the order of the polynomials within each element used to define the numerical solution
-   * - 'freeze diffusion during rk stages'
-     - Yes
-     - True
-     - True | False
-     - Fixes diffusion terms after first RK stage
-   * - 'inviscid flow'
-     - Yes
-     - False
-     - True | False
-     - Defines if only advective terms should be computed
-   * - 'c11 stability parameter'
-     - Yes
-     - 0
-     - Number
-     -
-   * - 'ldg upwind parameter'
-     - Yes
-     - 0.5
-     - Number between 0 & 1
-     -
-   * - 'shock sensing'
-     - Yes
-     - False
-     - True | False
-     -
-   * - 'shock sensing variable'
-     - Yes
-     - density
-     - "density" | "temperature" | "mach" | "turbulence"
-     -
-   * - 'shock k'
-     - No
-     - 1.0
-     - Number
-     -
-   * - 'shock sensing viscosity scale'
-     - No
-     - 1.0
-     - Number
-     -
-
-.. _dg_nodal_locations:
-
-DG Nodal locations
-==================
-In addition to the equation set the location of the DG solution points must be specified in the parameters dictionary. The definitions first need to be imported by including this import statement at the start of the control dictionary. The nodal locations are used in the generation of Lagrange polynomials used to define the solution within an element.
-
-There are various sets of nodal locations defined in literature for use with high order methods.  Varying the nodal locations can minimise aliasing errors within the DG method.  It is recommended to use the default values.
-
-.. list-table:: 
-   :widths: 10 10 10 20 50
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'line'
-     - Yes
-     - line_gauss_lobatto
-     - line_evenly_spaced | line_gauss_lobatto | line_gauss_legendre_lobatto
-     - Specifies 1D points defining nodal locations.
-   * - 'tri'
-     - Yes
-     - tri_shunn_ham
-     - tri_shunn_ham | tri_evenly_spaced, 
-     - Specifies 2D triangle points defining nodal locations.
-   * - 'tetrahedron'
-     - Yes
-     - tet_shunn_ham
-     - tet_shunn_ham | tet_evenly_spaced
-     - Specifies 3D tetra points defining nodal locations.
-   * - 'pyramid'
-     - Yes
-     - pyramid_gauss_legendre_lobatto
-     - pyramid_evenly_spaced | pyramid_gauss_legendre | pyramid_gauss_legendre_lobatto
-     - Specifies 3D pyramid points defining nodal locations.
-
-
-Before you use the nodal locations the dictionaries must be imported by adding the following to your control file:
-
-.. code-block:: python
-
-    from zcfd.solvers.utils.DGNodalLocations import *
-
-To use the default values:
-
-.. code-block:: python
-    
-    from zcfd.solvers.utils.DGNodalLocations import *
-    
-    parameters = {
-    ..
-        'Nodal Locations' : nodal_locations_default['Nodal Locations']
-    ..
-    }
-
-
-Or select from the available types
-
-.. code-block:: python
-
-    from zcfd.solvers.utils.DGNodalLocations import *
-    
-    parameters = {
-    ..
-      'Nodal Locations' : {
-                            'line':  line_gauss_legendre_lobatto,
-                            'tetrahedron': tet_evenly_spaced,
-                            'tri' : tri_evenly_spaced,
-                            'pyramid': pyramid_evenly_spaced
-                          },
-    ..
-    }
-
-
-Example "dgviscous"
-===================
-
-.. code-block:: python
-
-    from zcfd.solvers.utils.DGNodalLocations import *
-    
-    parameters = {
-    ..
-        'equation': "dgviscous",
-        'dgviscous' : {
-                   # Keys for viscous
-                   'precondition' : True,
-                   'Inviscid Flux Scheme': 'HLLC',
-                   
-                   # Additional DG Keys 
-                   'order' : 2,
-                   'inviscid flow': False,
-                   'freeze diffusion during rk stages': False
-                   'c11 stability parameter': 0.0,
-                   'LDG upwind parameter': 0.5,
-                   'Shock Sensing': False,
-                   'Shock Sensing k': 1.0,
-                   'Shock Sensing Viscosity Scale': 1.0,
-                   'Shock Sensing Variable': 'density',
-                },
-        'Nodal Locations' : nodal_locations_default['Nodal Locations']
-    ..
-    } 

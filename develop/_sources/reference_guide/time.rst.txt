@@ -16,7 +16,6 @@ zCFD is capable of performing both steady-state and time dependent simulations. 
                 'cfl': `30.0 <cfl_control_>`_,
                 "multigrid": `3 <multigrid_>`_,
                 "multigrid cycles": `20000 <multigrid_>`_,
-                "multipoly": `False <multigrid_>`_,
                 "moving mesh": `False <moving_mesh_>`_,
             },
             ...
@@ -76,14 +75,11 @@ The Courant-Friedrichs-Lewy (CFL) number controls the local pseudo time-step tha
      - Yes
      - 1
      - Any positive floating point number.
-   * - 'cfl for pmg levels'
-     - No
-     - --
-     - List of 2 floating point numbers.
+
 
 cfl
 ===
-Sets the CFL number used in the mass, momentum and energy equations. When using :ref:`dgcaa <caa>` this applies to the the 'rho', 'rhou_i' and 'rhoE' equations.
+Sets the CFL number used in the mass, momentum and energy equations.
 
 Example usage:
 
@@ -157,18 +153,7 @@ Factor applied to the diffusive (viscous) time step when applying the CFL condit
     "cfl viscous factor": 1.0E-6,
     "cfl ramp factor": {"initial": 0.1, "growth": 1.05},
 
-cfl for pmg levels
-==================
 
-**'cfl for pmg levels'** sets the cfl number for each polynomial level during a polynomial multigrid cycle.  Two values are required in the Python list, the CFL number for the highest polynomial order, and the CFL number for a P0 polynomial. The CFL number varies with polynomial order in accordance with the linear formula as :math:`1.0 / (2 * P + 1)`. Note that the order of spatial accuracy of a P0 polynomial is P + 1 and for a P2 polynomial the order is P + 3.
-
-.. code-block:: python
-
-    # For the high order (DG) cylinder case, the CFL for the P2 polynomial is 0.55, while the CFL for the P0 polynomial can be larger at 1.5.  
-    "cfl": 0.55,
-    "cfl for pmg levels": [0.55, 1.5],
-    "cfl viscous factor": 0.5,
-    "cfl ramp factor": {"initial": 0.1, "growth": 1.05},
 
 
 .. _scheme:
@@ -356,16 +341,13 @@ Multigrid
      - No
      - --
      - Any positive integer.
-   * - 'multipoly'
-     - No
-     - False
-     - True | False
+
 
 To accelerate an explicit finite volume solution, coarse meshes are generated from the original (fine) mesh by agglomerating or combining cells together to create larger cells.  The **'multigrid'** value sets the number of successive times to apply this operation, each iteration resulting in a coarser mesh with fewer cells.  By solving on the hierarchy of coarser meshes as well as the fine mesh, information is moved faster in the flow domain and a converged solution is reached more efficiently.  The multigrid scheme is designed so that the acceleration does not (in theory) change the result that would be obtained just by solving on the finest mesh alone, though in practice the use of multigrid does ultimately stall convergence on most meshes.  
 
 Use multigrid acceleration for a specified number of **'multigrid cycles'** and then revert to the finest mesh only.  This is to make use of the more efficient scheme at the start, and avoid convergence stall due to multigrid at the end of a solution process.  
 
-For high order (Discontinuous Galerkin) simulations, **'multipoly'** may be used to accelerate convergence by using lower order polynomials in a manner analogous to finite volume multigrid acceleration.  The time step limitation on the lower order polynomials is less restrictive that for the higher order polynomials and hence information corresponding to longer wavelengths may be more efficiently propagated in the fluid domain.  The use of **'multipoly'** automatically uses the highest one specified and P0.   
+
 
 Example usage:
 
@@ -391,7 +373,7 @@ Example usage:
     }
 
 .. note::
-    Multigrid only applies to explicit finite volume solutions. Multipoly only applies to High Order (DG) solutions.
+    Multigrid only applies to explicit finite volume solutions.
 
 
 .. _moving_mesh:

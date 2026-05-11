@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2025.11.13331-103-ged2fd documentation</title>
+    <title>Tutorial 1: Simple Aerofoil &#8212; zCFD User Guide v2025.11.13331-104-ge66ef documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=47f7a1ee"></script>
+    <script src="../_static/documentation_options.js?v=70220f4b"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -146,7 +146,7 @@ unzip<span class="w"> </span>naca0012.zip
 }</pre>
 <section id="time-marching">
 <span id="tutorial-1-time"></span><h3>Time marching<a class="headerlink" href="#time-marching" title="Link to this heading">¶</a></h3>
-<p>The start of the parameters dictionary contains the <a class="reference internal" href="../reference_guide/time.html#time"><span class="std std-ref">time marching</span></a> sub-dictionary. The <a class="reference internal" href="../reference_guide/time.html#id10"><span class="std std-ref">unsteady</span></a> sub-dictionary sets whether we are running an <cite>unsteady</cite> or a <cite>steady</cite> simulation. The fact that <cite>total time</cite> and <cite>time step</cite> are the same number means that we’re running a steady simulation.
+<p>The start of the parameters dictionary contains the <a class="reference internal" href="../reference_guide/time.html#time"><span class="std std-ref">time marching</span></a> sub-dictionary. The <a class="reference internal" href="../reference_guide/time.html#id9"><span class="std std-ref">unsteady</span></a> sub-dictionary sets whether we are running an <cite>unsteady</cite> or a <cite>steady</cite> simulation. The fact that <cite>total time</cite> and <cite>time step</cite> are the same number means that we’re running a steady simulation.
 Steady simulations assume that the flow we are simulating does not vary with time. Most real flows are not truly ‘steady’, but steady simulations tend to be much easier and cheaper to run than unsteady simulations. For an attached, streamlined flow like this one using a steady simulation is reasonable when time-resolved data is not required.</p>
 <p>CFD simulations work by iteration - we start with a very rough estimate of the flow <span class="math notranslate nohighlight">\(f(x, 0)\)</span>, then during the first  ‘iteration cycle’ the solver uses <span class="math notranslate nohighlight">\(f(x, 0)\)</span> to create a better approximation of the flow, <span class="math notranslate nohighlight">\(f(x,1)\)</span>. This is repeated many times  - we use <span class="math notranslate nohighlight">\(f(x,1)\)</span> to calculate <span class="math notranslate nohighlight">\(f(x,2)\)</span>, <span class="math notranslate nohighlight">\(f(x,2)\)</span> to calculate <span class="math notranslate nohighlight">\(f(x,3)\)</span> and so on, until eventually we reach an estimate of the flow we are happy with.</p>
 <p>The flow will generally change very quickly in the first few iterations, and then converge asymptotically on the ‘right’ answer. The <a class="reference internal" href="../reference_guide/time.html#cycles"><span class="std std-ref">cycles</span></a> parameter states how many iterations should be used in the simulation - the higher it is the more accurate the solution is likely to be, but given the convergence is asymptotic setting it too high will lead to lots of computational effort being used for very little change in the solution towards the end.</p>
@@ -418,7 +418,6 @@ Select the “cp” variable in “Series Parameters’, and use ‘Points_X’ 
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 1: Simple Aerofoil</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start_3.html">Tutorial 3: Time accurate solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quick_start_4.html">Tutorial 4: Aero-acoustics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fwh_tutorial.html">Tutorial 5: FWH Solver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overset_tutorial.html">Tutorial 6: Overset Meshes</a></li>
 </ul>
