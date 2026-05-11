@@ -5,13 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 5: FWH Solver &#8212; zCFD User Guide v2026.05.14025 documentation</title>
+    <title>Tutorial 5: FWH Solver &#8212; zCFD User Guide v2025.11.13331-103-ged2fd documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=c4569f3d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/documentation_options.js?v=47f7a1ee"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Tutorial 6: Overset Meshes" href="overset_tutorial.html" />
@@ -42,7 +43,7 @@
 <span id="runningzcfdwithfwhout"></span><h2>Running zCFD with FWH output<a class="headerlink" href="#running-zcfd-with-fwh-output" title="Link to this heading">¶</a></h2>
 <p>The flow we’re going to be running the FWH solver on is the shedding cylinder. To get the required inputs to our FWH solver, we need to define an <em>FWH surface</em>, and collect data on this surface during a CFD simulation.</p>
 <p>The files required for the fwh tutorial can be downloaded <a class="reference external" href="https://zcfd.zenotech.com/tutorials/3/cylinder_fwh.zip" target="_blank">here</a>. In the zip file there’s a FWH surface definition file, called <em>fwh_surface1.stl</em>. Given we’ve already run the cylinder case in <a class="reference internal" href="quick_start_3.html#tutorial-3"><span class="std std-ref">Tutorial 3</span></a>, we can view the FWH surface in Paraview alongside the cylinder CFD volume data (see <a class="reference internal" href="quick_start_3.html#qs3-view-flowfield"><span class="std std-ref">here</span></a>), as below. You may find the surface easier to see if you set the <em>view style</em> to be <em>Feature Edges</em> instead of <em>Surface</em> for the FWH surface, and increase the <em>Line Width</em> in the <em>Geometry Representation</em>.</p>
-<a class="reference internal image-reference" href="../_images/cylinder_fwh_surface1.png" id="qs3-stl-pic"><img alt="fwh_surface1.stl plotted alongside CFD volume solution" id="qs3-stl-pic" src="../_images/cylinder_fwh_surface1.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/cylinder_fwh_surface1.png" id="qs3-stl-pic"><img alt="fwh_surface1.stl plotted alongside CFD volume solution" id="qs3-stl-pic" src="../_images/cylinder_fwh_surface1.png" width="600" />
 </a>
 <p>The FWH surface encloses the noise generating near-field region, but does not intersect the wake, in order to avoid spurious pseudo-sound [<a class="reference internal" href="#tutorial-3-citations"><span class="std std-ref">1</span></a>, <a class="reference internal" href="#tutorial-3-citations"><span class="std std-ref">2</span></a>] .</p>
 <p>There’s also a prepared control dictionary, <em>cylinder_fwh.py</em>. This is identical to tutorials 3’s <em>cylinder.py</em> apart from the output section, which is detailed below.</p>
@@ -72,7 +73,7 @@
 <span id="fwhtutorialrunfwh"></span><h3>Using the run_fwh utility<a class="headerlink" href="#using-the-run-fwh-utility" title="Link to this heading">¶</a></h3>
 <p>We’re going to use the <cite>run_fwh</cite> utility to calculate noise at an observer <em>Obs1</em>. <em>‘Obs1’</em> is an observer that is a fixed distance away from the cylinder - if we consider the cylinder in a wind tunnel, we could consider <em>‘Obs1’</em> as a microphone attached to the wind tunnel wall. Since <em>Obs1</em> is static relative to the FWH surface, it is in the same <a class="reference internal" href="../fwh.html#runfwhrefcond"><span class="std std-ref">translational reference frame</span></a> as the FWH surface and we can therefore use the <cite>run_fwh</cite> utility.</p>
 <figure class="align-default" id="id1">
-<span id="qs3-fwhfig1-obs1only"></span><a class="reference internal image-reference" href="../_images/fwhdiagram_cyl1_obs1only.svg"><img alt="FWH Observer and surface motions - CFD frame of reference" src="../_images/fwhdiagram_cyl1_obs1only.svg" style="width: 600px;" />
+<span id="qs3-fwhfig1-obs1only"></span><a class="reference internal image-reference" href="../_images/fwhdiagram_cyl1_obs1only.svg"><img alt="FWH Observer and surface motions - CFD frame of reference" src="../_images/fwhdiagram_cyl1_obs1only.svg" width="600" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 1 </span><span class="caption-text">FWH surface and <em>Obs1</em> motions - CFD frame of reference</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
@@ -97,7 +98,7 @@
 <p>As can be seen above, the <em>run_fwh</em> utility is very easy to use and is applicable in most simple FWH calculations. However, it has limitations - namely the fact that all observers and surfaces must be in the same <a class="reference internal" href="../fwh.html#runfwhrefcond"><span class="std std-ref">translational reference frame</span></a>, and that using it when more than one FWH surface encloses a noise generating region will <a class="reference internal" href="../fwh.html#runfwhadvanced"><span class="std std-ref">lead to double accounting</span></a>.</p>
 <p>Where the <em>run_fwh</em> utility is not applicable, the <a class="reference internal" href="../fwh.html#fwhrunningpython"><span class="std std-ref">fwh python module</span></a> can be used instead. In this section, we will use the <em>fwh python module</em> to calculate observer pressure histories at both <em>Obs1</em> and <em>Obs2</em>, where <em>Obs2</em> is a ‘flyby’ observer whose pressure history cannot be calculated using the <em>run_fwh</em> utility.</p>
 <figure class="align-default" id="id2">
-<span id="qs3-fwhfig1"></span><a class="reference internal image-reference" href="../_images/fwhdiagram_cyl1.svg"><img alt="FWH surface and observer motions - CFD frame of reference" src="../_images/fwhdiagram_cyl1.svg" style="width: 600px;" />
+<span id="qs3-fwhfig1"></span><a class="reference internal image-reference" href="../_images/fwhdiagram_cyl1.svg"><img alt="FWH surface and observer motions - CFD frame of reference" src="../_images/fwhdiagram_cyl1.svg" width="600" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 2 </span><span class="caption-text">FWH surface and observer motions - CFD frame of reference</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
@@ -108,7 +109,7 @@
 <p>When the FWH equations are derived, we make an important assumption - that of a ‘quiescent medium’ (i.e. still air, with a free-stream velocity of zero). Clearly, with a freestream velocity of <em>(0,66.8,0)</em>, the flow in our CFD simulation does not satisfy this condition. In order to use the FWH solver, we therefore have to perform a co-ordinate transformation, as in <a class="reference internal" href="#qs3-fwhfig2"><span class="std std-numref">Fig. 3</span></a>. In the <em>run_fwh</em> utility, this co-ordinate transformation is performed automatically, whereas in the <a class="reference internal" href="../fwh.html#fwhrunningpython"><span class="std std-ref">fwh python module</span></a> we set up the surface and observer motions through the FWH quiescent medium manually.</p>
 <p>In this ‘quiescent medium’ co-ordinate system, the cylinder and <em>‘Obs1’</em> are ‘flying’ through the air. In this co-ordinate system, we can also see that <em>‘Obs2’</em> represents a microphone fixed to the ground, as the cylinder flies overhead.</p>
 <figure class="align-default" id="id3">
-<span id="qs3-fwhfig2"></span><a class="reference internal image-reference" href="../_images/fwhdiagram_cyl2.svg"><img alt="FWH surface and observer motions - FWH (quiescent medium) frame of reference" src="../_images/fwhdiagram_cyl2.svg" style="width: 600px;" />
+<span id="qs3-fwhfig2"></span><a class="reference internal image-reference" href="../_images/fwhdiagram_cyl2.svg"><img alt="FWH surface and observer motions - FWH (quiescent medium) frame of reference" src="../_images/fwhdiagram_cyl2.svg" width="600" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 3 </span><span class="caption-text">FWH surface and observer motions - FWH (quiescent medium) frame of reference</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
@@ -189,14 +190,14 @@ The valid observer time window will be narrower if the FWH surface is large, sin
 <p>The <a class="reference internal" href="quick_start_1.html#qs1-jupyter"><span class="std std-ref">jupyter notebook</span></a> <em>postprocess_fwh_module_data.ipynb</em> from the <a class="reference internal" href="#runningzcfdwithfwhout"><span class="std std-ref">.zip file</span></a> can be used to post-process the FWH data. <em>postprocess_fwh_module_data.ipynb</em> uses the data from the <a class="reference internal" href="#fwhtutorialfwhmodule"><span class="std std-ref">fwh python module section</span></a> of this tutorial, but an equivalent notebook which uses the data from the <a class="reference internal" href="#fwhtutorialrunfwh"><span class="std std-ref">run_fwh utility section</span></a> is available in <em>postprocess_run_fwh_data.ipynb</em>.</p>
 <p>These notebooks contain a number of <em>zutil</em> functions which may be useful for users wishing to perform acoustic post-processing. The notebooks plot the pressure history <em>p(t)</em> and power spectral density (PSD) at both observers, as below.</p>
 <p><em>Obs1</em> moves through the FWH medium at a constant displacement from the cylinder centre (see <a class="reference internal" href="#qs3-fwhfig2"><span class="std std-numref">Fig. 3</span></a>). We see from our post-processing that the noise experienced by <em>Obs1</em> is dominated by a constant 10 Hz component, which is the shedding frequency of the cylinder. Various harmonics of the 10 Hz signal are present in the power spectral density plot for <em>Obs1</em>.</p>
-<a class="reference internal image-reference" href="../_images/Obs1_p.svg"><img alt="Obs1 p(t)" src="../_images/Obs1_p.svg" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/Obs1_p.svg"><img alt="Obs1 p(t)" src="../_images/Obs1_p.svg" width="600" />
 </a>
-<a class="reference internal image-reference" href="../_images/Obs1_psd.svg"><img alt="Obs1 PSD" src="../_images/Obs1_psd.svg" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/Obs1_psd.svg"><img alt="Obs1 PSD" src="../_images/Obs1_psd.svg" width="600" />
 </a>
 <p>During the FWH simulation run in the <a class="reference internal" href="#fwhtutorialfwhmodule"><span class="std std-ref">fwh python module section</span></a> of this tutorial, the cylinder gets closer to <em>Obs2</em> from 0 to 2.5 seconds, before getting further away from <em>Obs2</em> from 2.5 seconds onwards. We can see in the <em>Obs2</em> <em>p(t)</em> plot that the peaks are closer together from 0 to 2.5 seconds than they are after 2.5 seconds. This is due to Doppler shift. We can also see the effect of Doppler shift in the power spectral density, which has a more rounded 10 Hz peak than that seen in <em>Obs1</em>.</p>
-<a class="reference internal image-reference" href="../_images/Obs2_p.svg"><img alt="Obs2 p(t)" src="../_images/Obs2_p.svg" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/Obs2_p.svg"><img alt="Obs2 p(t)" src="../_images/Obs2_p.svg" width="600" />
 </a>
-<a class="reference internal image-reference" href="../_images/Obs2_psd.svg"><img alt="Obs2 PSD" src="../_images/Obs2_psd.svg" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/Obs2_psd.svg"><img alt="Obs2 PSD" src="../_images/Obs2_psd.svg" width="600" />
 </a>
 <p><em>postprocess_fwh_module_data.ipynb</em> also creates <em>.wav</em> files, which allow you to listen to the sound experienced by <em>Obs1</em> and <em>Obs2</em>.</p>
 </section>

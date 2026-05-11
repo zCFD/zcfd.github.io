@@ -1,2 +1,0 @@
-source/reference_guide/equations.rst:327: (dissipative) ["dissipate", "dissipating", "dissipated", "dissipates", "dissociative", "disruptive"]  is less dissipative.
-source/reference_guide/equations.rst:332: (dissipative) ["dissipate", "dissipating", "dissipated", "dissipates", "dissociative", "disruptive"] Sets the coefficient for the gradient limiter. 1.0 is the most dissipative, 0.0 turns off the limiter.

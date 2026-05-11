@@ -5,12 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2026.05.14025 documentation</title>
+    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2025.11.13331-103-ged2fd documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=c4569f3d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/documentation_options.js?v=47f7a1ee"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Tutorial 4: Aero-acoustics" href="quick_start_4.html" />
@@ -46,7 +47,7 @@
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>Following on from executing the steady state simulation of <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">Tutorial 2</span></a>, this tutorial will explore the generation of a time accurate result for the unsteady laminar shedding from a 2D cylinder.</p>
-<a class="reference internal image-reference" href="../_images/cylinder.png"><img alt="2D Cylinder" class="align-center" src="../_images/cylinder.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/cylinder.png"><img alt="2D Cylinder" class="align-center" src="../_images/cylinder.png" width="600" />
 </a>
 <p id="qs3-download-link">You can download the required files <a class="reference external" href="https://zcfd.zenotech.com/tutorials/3/cylinder.zip" target="_blank">here</a>.</p>
 </section>
@@ -126,10 +127,10 @@ total unsteady timesteps to perform.</p>
 <section id="output-report">
 <h3>Output report<a class="headerlink" href="#output-report" title="Link to this heading">¶</a></h3>
 <p>Start and connect to a Jupyter server, using <strong>‘start_lab’</strong> as outlined in the previous sections. Go ahead and run all cells.</p>
-<a class="reference internal image-reference" href="../_images/residuals.png"><img alt="Residuals" class="align-center" src="../_images/residuals.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/residuals.png"><img alt="Residuals" class="align-center" src="../_images/residuals.png" width="600" />
 </a>
 <p>In the “plot_forces” cell, you should notice additional data points available provided by the monitor point. Visualising the pressure trace [<cite>probe_cp</cite>] should reveal an oscillatory pattern, indicating that the predicted vortex shedding is indeed occurring. This trace can then be used to calculate the corresponding shedding frequency.</p>
-<a class="reference internal image-reference" href="../_images/probe_cp.png"><img alt="Probe location" class="align-center" src="../_images/probe_cp.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/probe_cp.png"><img alt="Probe location" class="align-center" src="../_images/probe_cp.png" width="600" />
 </a>
 </section>
 <section id="flow-field">
@@ -137,7 +138,7 @@ total unsteady timesteps to perform.</p>
 <p>We set the output frequency to 5 when running the case and so the solver will have written visualisation VTK files every 5 real time steps. If you look in the <em>‘cylinder_P1_OUTPUT/VISUALISATION’</em> directory you will see a series of .vtp and .pvtp files, one for every written timestep.</p>
 <p>You could load these individually but the easier method is to load the <em>‘cylinder.pvd’</em> in <em>‘cylinder_P1_OUTPUT/’</em>. This .pvd file links to all of the timesteps.</p>
 <p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>. Paraview will render a single solution time step at a time, and time series data can be navigated using the icons at the top of the screen:</p>
-<a class="reference internal image-reference" href="../_images/paraview_time.png"><img alt="Probe location" class="align-center" src="../_images/paraview_time.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/paraview_time.png"><img alt="Probe location" class="align-center" src="../_images/paraview_time.png" width="600" />
 </a>
 </section>
 <section id="animation">
@@ -148,7 +149,7 @@ Since this case is quite small we will export an mp4 video directly from Paravie
 <li><p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>.</p></li>
 <li><p>Set the view up to shade the output by <em>“cp”</em> and zoom/move the image until you are happy with the view:</p></li>
 </ol>
-<a class="reference internal image-reference" href="../_images/paraview.png"><img alt="Cp shaded" class="align-center" src="../_images/paraview.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/paraview.png"><img alt="Cp shaded" class="align-center" src="../_images/paraview.png" width="600" />
 </a>
 <ol class="arabic simple" start="3">
 <li><p>Select <em>‘File-&gt;Save Animation’</em> in Paraview. To export as video select your preferred format, the format will depend on your Operating System but for Windows you should be able to select “MP4 files” and on Linux “FFMPEG AVI”. Give the file a name and click OK.</p></li>
