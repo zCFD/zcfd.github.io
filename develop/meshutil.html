@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Mesh Conversion &#8212; zCFD User Guide v2025.11.13331-146-g2fac6 documentation</title>
+    <title>Mesh Conversion &#8212; zCFD User Guide v2025.11.13331-147-g5e3d9 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=7d4b1c34"></script>
+    <script src="_static/documentation_options.js?v=2e030cec"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="_static/fav.png"/>
@@ -53,58 +53,58 @@
 </div>
 <p>This will create a new folder called <em>zInterface/</em> containing the HDF5 file.</p>
 </section>
-<section id="fluent-mesh-converter">
-<h2>Fluent Mesh Converter<a class="headerlink" href="#fluent-mesh-converter" title="Link to this heading">¶</a></h2>
-<p>The converter for <a class="reference external" href="http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent" target="_blank">ANSYS Fluent</a> files is a utility called <em>fluent_convert</em>.  This is included in the path set by activating the zCFD command line environment.</p>
+<section id="zcfd-mesh-converter-utility">
+<h2>zCFD Mesh Converter Utility<a class="headerlink" href="#zcfd-mesh-converter-utility" title="Link to this heading">¶</a></h2>
+<p>The converter for various mesh files is a utility called <em>convert</em>. This is included in the path set by activating the zCFD command line environment.</p>
 <p>To run the utility, use</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">fluent_convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">msh</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;new_filename&gt;.h5
 </pre></div>
 </div>
-<p>or</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">fluent_convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">cas</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+<p>The utility auto-detects the format from the file extension. You can also explicitly specify the format using the <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>-f<span class="w"> </span>&lt;format&gt;<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;new_filename&gt;.h5
 </pre></div>
 </div>
-<p>The will produce 2 files: the zCFD HDF5 file and the <em>name_zone.py</em> python file which holds the fluid and boundary zone names.</p>
+<p>The following mesh formats are supported:</p>
+<section id="fluent-mesh-converter">
+<h3>Fluent Mesh Converter<a class="headerlink" href="#fluent-mesh-converter" title="Link to this heading">¶</a></h3>
+<p>The converter supports <a class="reference external" href="http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent" target="_blank">ANSYS Fluent</a> files (<em>.msh</em>, <em>.cas</em>, <em>.msh.gz</em>, <em>.cas.gz</em>).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>&lt;filename&gt;.msh<span class="w"> </span>&lt;new_filename&gt;.h5
+</pre></div>
+</div>
+<p>This will produce 2 files: the zCFD HDF5 file and the <em>name_zone.py</em> python file which holds the fluid and boundary zone names.</p>
 </section>
-<section id="star-ccm-mesh-converter">
-<h2>Star CCM+ Mesh Converter<a class="headerlink" href="#star-ccm-mesh-converter" title="Link to this heading">¶</a></h2>
-<p>There are a number of different file formats for <a class="reference external" href="http://www.cd-adapco.com/products/star-ccm%C2%AE" target="_blank">CD-Adapco Star CCM+</a> meshes.  The <em>&lt;filename&gt;.sim</em> file is in a proprietary format and at this stage cannot be converted.  The <em>&lt;filename&gt;.ccm</em> can be converted using</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">ccmconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">ccm</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
-</pre></div>
-</div>
-<p>This produces the zCFD HDF5 file.</p>
-</section>
-<section id="cgns-mesh-converter">
-<h2>CGNS Mesh Converter<a class="headerlink" href="#cgns-mesh-converter" title="Link to this heading">¶</a></h2>
-<p>This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS (ref) format.  The converter will handle meshes with element types (HEXA_8):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">cgnsconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">cgns</span> <span class="o">&lt;</span><span class="n">new_filenam</span><span class="o">&gt;.</span><span class="n">h5</span>
-</pre></div>
-</div>
-<p>This produces the zCFD HDF5 file. If you require support for additional element types please contact us: <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com" target="_blank">mailto:zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a>.</p>
-</section>
-<section id="ugrid-mesh-converter">
-<span id="ugrid-converter"></span><h2>UGRID Mesh Converter<a class="headerlink" href="#ugrid-mesh-converter" title="Link to this heading">¶</a></h2>
-<p>UGRID is a NASA format for meshes. You must follow the naming convention for UGRID files, which describes the format and <em>endian-ness</em> of the file data (“ascii8”, “b8”, “lb8”, or “r8”) depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">ugridconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="p">[</span><span class="n">ascii8</span><span class="p">,</span> <span class="n">b8</span><span class="p">,</span> <span class="n">lb8</span><span class="p">,</span> <span class="n">r8</span><span class="p">]</span><span class="o">.</span><span class="n">ugrid</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>  <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">mapbc</span>
-</pre></div>
-</div>
-<p>This produces the zCFD HDF5 file.</p>
-</section>
-<section id="dlr-tau-mesh-converter">
-<h2>DLR Tau Mesh Converter<a class="headerlink" href="#dlr-tau-mesh-converter" title="Link to this heading">¶</a></h2>
-<p>Tau is a CFD solver produced by the DLR (<a class="reference external" href="http://tau.dlr.de/startseite/" target="_blank">http://tau.dlr.de/startseite/</a>).  Note that Tau is a node-based solver so flow field variables are calculated for and stored at the mesh nodes (or vertices) rather than at cell centres (the approach used by Star CCM+, OpenFOAM, CFX and zCFD). Thus simply converting the file format will not guarantee a good result. In many cases, the conversion will not result in a valid cell-centred zCFD mesh.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">tauconvert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">XXX</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+<section id="fluent-cff-mesh-converter">
+<h3>Fluent CFF Mesh Converter<a class="headerlink" href="#fluent-cff-mesh-converter" title="Link to this heading">¶</a></h3>
+<p>The converter also supports Fluent CFF format files (<em>.msh.h5</em>, <em>.cas.h5</em>).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>&lt;filename&gt;.msh.h5<span class="w"> </span>&lt;new_filename&gt;.h5
 </pre></div>
 </div>
 <p>This produces the zCFD HDF5 file.</p>
 </section>
 <section id="su2-mesh-converter">
-<h2>SU2 Mesh Converter<a class="headerlink" href="#su2-mesh-converter" title="Link to this heading">¶</a></h2>
+<h3>SU2 Mesh Converter<a class="headerlink" href="#su2-mesh-converter" title="Link to this heading">¶</a></h3>
 <p>SU2 is an open source CFD solver (<a class="reference external" href="https://su2code.github.io/" target="_blank">https://su2code.github.io/</a>). Note that conversion of 2D meshes is not supported as they are not handled in zCFD.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">zCFD</span><span class="p">):</span> <span class="n">su2convert</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">su2</span> <span class="o">&lt;</span><span class="n">new_filename</span><span class="o">&gt;.</span><span class="n">h5</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>&lt;filename&gt;.su2<span class="w"> </span>&lt;new_filename&gt;.h5
 </pre></div>
 </div>
 <p>This produces the zCFD HDF5 file.</p>
+</section>
+<section id="cgns-mesh-converter">
+<h3>CGNS Mesh Converter<a class="headerlink" href="#cgns-mesh-converter" title="Link to this heading">¶</a></h3>
+<p>This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS (ref) format.  The converter will handle meshes with element types (HEXA_8):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>&lt;filename&gt;.cgns<span class="w"> </span>&lt;new_filename&gt;.h5
+</pre></div>
+</div>
+<p>This produces the zCFD HDF5 file. If you require support for additional element types please contact us: <a class="reference external" href="mailto:zcfd&#37;&#52;&#48;zenotech&#46;com" target="_blank">mailto:zcfd<span>&#64;</span>zenotech<span>&#46;</span>com</a>.</p>
+</section>
+<section id="ugrid-mesh-converter">
+<span id="ugrid-converter"></span><h3>UGRID Mesh Converter<a class="headerlink" href="#ugrid-mesh-converter" title="Link to this heading">¶</a></h3>
+<p>UGRID is a NASA format for meshes. You must follow the naming convention for UGRID files, which describes the format and <em>endian-ness</em> of the file data (“ascii8”, “b8”, “lb8”, or “r8”) depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if provided as an extra argument, boundary conditions will be read from it; otherwise, they default to wall.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>:<span class="w"> </span>convert<span class="w"> </span>&lt;filename&gt;.<span class="o">[</span>ascii8,<span class="w"> </span>b8,<span class="w"> </span>lb8,<span class="w"> </span>r8<span class="o">]</span>.ugrid<span class="w"> </span>&lt;new_filename&gt;.h5<span class="w"> </span>&lt;filename&gt;.mapbc
+</pre></div>
+</div>
+<p>This produces the zCFD HDF5 file.</p>
+</section>
 </section>
 <section id="cba-mesh-converter">
 <h2>CBA Mesh Converter<a class="headerlink" href="#cba-mesh-converter" title="Link to this heading">¶</a></h2>
@@ -136,12 +136,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Mesh Conversion</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#openfoam-x-x-x">OpenFOAM-x.x.x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#openfoam-mesh-converter">OpenFOAM Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fluent-mesh-converter">Fluent Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#star-ccm-mesh-converter">Star CCM+ Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cgns-mesh-converter">CGNS Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ugrid-mesh-converter">UGRID Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dlr-tau-mesh-converter">DLR Tau Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#su2-mesh-converter">SU2 Mesh Converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zcfd-mesh-converter-utility">zCFD Mesh Converter Utility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cba-mesh-converter">CBA Mesh Converter</a></li>
 </ul>
 </li>

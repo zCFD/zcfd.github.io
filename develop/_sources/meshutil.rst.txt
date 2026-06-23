@@ -27,79 +27,79 @@ To convert from an OpenFOAM format mesh to zCFD, run the following command in th
 
 This will create a new folder called *zInterface/* containing the HDF5 file.
 
-Fluent Mesh Converter
----------------------
+zCFD Mesh Converter Utility
+---------------------------
 
-The converter for `ANSYS Fluent <http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent>`_ files is a utility called *fluent_convert*.  This is included in the path set by activating the zCFD command line environment.
+The converter for various mesh files is a utility called *convert*. This is included in the path set by activating the zCFD command line environment.
 
 To run the utility, use
 
-.. code-block:: python
+.. code-block:: bash
 
-    (zCFD): fluent_convert <filename>.msh <new_filename>.h5
+    (zCFD): convert <filename> <new_filename>.h5
 
-or
+The utility auto-detects the format from the file extension. You can also explicitly specify the format using the ``-f`` flag:
 
-.. code-block:: python
+.. code-block:: bash
 
-    (zCFD): fluent_convert <filename>.cas <new_filename>.h5
+    (zCFD): convert -f <format> <filename> <new_filename>.h5
 
-The will produce 2 files: the zCFD HDF5 file and the *name_zone.py* python file which holds the fluid and boundary zone names.
+The following mesh formats are supported:
 
-Star CCM+ Mesh Converter
-------------------------
+Fluent Mesh Converter
+~~~~~~~~~~~~~~~~~~~~~
 
-There are a number of different file formats for `CD-Adapco Star CCM+ <http://www.cd-adapco.com/products/star-ccm%C2%AE>`_ meshes.  The *<filename>.sim* file is in a proprietary format and at this stage cannot be converted.  The *<filename>.ccm* can be converted using
+The converter supports `ANSYS Fluent <http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent>`_ files (*.msh*, *.cas*, *.msh.gz*, *.cas.gz*).
 
-.. code-block:: python
+.. code-block:: bash
 
-    (zCFD): ccmconvert <filename>.ccm <new_filenam>.h5
+    (zCFD): convert <filename>.msh <new_filename>.h5
+
+This will produce 2 files: the zCFD HDF5 file and the *name_zone.py* python file which holds the fluid and boundary zone names.
+
+Fluent CFF Mesh Converter
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The converter also supports Fluent CFF format files (*.msh.h5*, *.cas.h5*).
+
+.. code-block:: bash
+
+    (zCFD): convert <filename>.msh.h5 <new_filename>.h5
+
+This produces the zCFD HDF5 file.
+
+SU2 Mesh Converter
+~~~~~~~~~~~~~~~~~~
+
+SU2 is an open source CFD solver (https://su2code.github.io/). Note that conversion of 2D meshes is not supported as they are not handled in zCFD.
+
+.. code-block:: bash
+
+    (zCFD): convert <filename>.su2 <new_filename>.h5
 
 This produces the zCFD HDF5 file.
 
 CGNS Mesh Converter
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS (ref) format.  The converter will handle meshes with element types (HEXA_8):
 
-.. code-block:: python
+.. code-block:: bash
 
-    (zCFD): cgnsconvert <filename>.cgns <new_filenam>.h5
+    (zCFD): convert <filename>.cgns <new_filename>.h5
 
 This produces the zCFD HDF5 file. If you require support for additional element types please contact us: mailto:zcfd@zenotech.com.
 
 .. _ugrid_converter:
 
 UGRID Mesh Converter
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
-UGRID is a NASA format for meshes. You must follow the naming convention for UGRID files, which describes the format and *endian-ness* of the file data ("ascii8", "b8", "lb8", or "r8") depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if not provided the boundary conditions of the zones default to wall.
+UGRID is a NASA format for meshes. You must follow the naming convention for UGRID files, which describes the format and *endian-ness* of the file data ("ascii8", "b8", "lb8", or "r8") depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if provided as an extra argument, boundary conditions will be read from it; otherwise, they default to wall.
 
-.. code-block:: python
+.. code-block:: bash
 
-    (zCFD): ugridconvert <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5  <filename>.mapbc
-
-This produces the zCFD HDF5 file.
-
-DLR Tau Mesh Converter
-----------------------
-
-Tau is a CFD solver produced by the DLR (http://tau.dlr.de/startseite/).  Note that Tau is a node-based solver so flow field variables are calculated for and stored at the mesh nodes (or vertices) rather than at cell centres (the approach used by Star CCM+, OpenFOAM, CFX and zCFD). Thus simply converting the file format will not guarantee a good result. In many cases, the conversion will not result in a valid cell-centred zCFD mesh.
-
-.. code-block:: python
-
-    (zCFD): tauconvert <filename>.XXX <new_filename>.h5
-
-This produces the zCFD HDF5 file.
-
-SU2 Mesh Converter
---------------------
-
-SU2 is an open source CFD solver (https://su2code.github.io/). Note that conversion of 2D meshes is not supported as they are not handled in zCFD.
-
-.. code-block:: python
-
-    (zCFD): su2convert <filename>.su2 <new_filename>.h5
+    (zCFD): convert <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5 <filename>.mapbc
 
 This produces the zCFD HDF5 file.
 
