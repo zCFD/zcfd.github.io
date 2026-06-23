@@ -97,7 +97,7 @@ The following parameters are common for all of the equation sets.
    * - 'reconstruction'
      - No
      - "muscl"
-     - "muscl" | "umuscl" | "lpumuscl"
+     - "muscl" | "umuscl"
    * - 'entropy fix'
      - No
      - "0.0"
