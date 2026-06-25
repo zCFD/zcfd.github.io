@@ -55,6 +55,11 @@ The **mapping** dictionary sets additional mapping options for overset methods a
      - 0
      - Positive integer
      - Adds additional active cells to overlapped mesh
+   * - 'verbose logging'
+     - No
+     - False
+     - True or False
+     - Enables detailed mapper diagnostic output
 
 
 Example usage:
@@ -66,6 +71,7 @@ Example usage:
     'mapping': {
         'idw from cells order': 0,
         'number of additional overset active layers': 0,
+        'verbose logging': False,
     }
     ..
   }
@@ -79,5 +85,8 @@ number of additional overset active layers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Adds additional active cells which may have been made inactive by an overlapping mesh. If for example, we have a rotating domain, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering cells made inactive.  This will result in no mapping between background and overset meshes at these points.  To resolve this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and background meshes.  Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.
 
+verbose logging
+^^^^^^^^^^^^^^^
+When set to True, enables detailed diagnostic output for overset mapping operations. This includes per-mesh-pair mapping messages, time history copy notifications, mesh rotation angles, and the full list of missing data face coordinates. When False (the default), these are replaced with compact summary messages. The warning count for unmapped overset boundary faces is always shown regardless of this setting.
 
 
