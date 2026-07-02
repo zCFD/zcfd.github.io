@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2025.11.13331-171-g2211d documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.11.13331-172-g0b9f4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=978bf8b0"></script>
+    <script src="../_static/documentation_options.js?v=56e64168"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -149,7 +149,7 @@
 <tr class="row-even"><td><p>‘inviscid flux scheme’</p></td>
 <td><p>Yes</p></td>
 <td><p>“Roe”</p></td>
-<td><p>“HLLC” | “Rusanov” | “Roe” | “Roe low diss”</p></td>
+<td><p>“HLLC” | “Rusanov” | “Roe” | “Roe low diss” | “HLLC low diss”</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘reconstruction’</p></td>
 <td><p>No</p></td>
@@ -161,12 +161,12 @@
 <td><p>“0.0”</p></td>
 <td><p>Float between 0.0 and 0.2</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘roe low dissipation sensor’</p></td>
+<tr class="row-odd"><td><p>‘low dissipation sensor’</p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p>“FD” | “NTS” | “DES” | “NONE”</p></td>
 </tr>
-<tr class="row-even"><td><p>‘roe dissipation sensor minimum’</p></td>
+<tr class="row-even"><td><p>‘dissipation sensor minimum’</p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p>Float between 0.05 and 1.0</p></td>
@@ -216,15 +216,16 @@ Run 500 cycles first order.</p>
 </section>
 <section id="inviscid-flux-scheme">
 <h3>inviscid flux scheme<a class="headerlink" href="#inviscid-flux-scheme" title="Link to this heading">¶</a></h3>
-<p>Picks the scheme to use for the inviscid flux. <strong>HLLC</strong> is good when running explicit, <strong>Roe</strong> is best for implicit and <strong>Rusanov</strong> is good for getting an implicit simulation going. The <strong>Roe low diss</strong> scheme can be used with LES or Hybrid RANS/LES</p>
+<p>Picks the scheme to use for the inviscid flux. <strong>HLLC</strong> is good when running explicit, <strong>Roe</strong> is best for implicit and <strong>Rusanov</strong> is good for getting an implicit simulation going. The <strong>Roe low diss</strong> and <strong>HLLC low diss</strong> schemes can be used with LES or Hybrid RANS/LES</p>
 </section>
-<section id="roe-low-dissipation-sensor">
-<h3>roe low dissipation sensor<a class="headerlink" href="#roe-low-dissipation-sensor" title="Link to this heading">¶</a></h3>
-<p>The sensor used to decide whether to use (and by how much) the Roe low dissipation scheme.</p>
+<section id="low-dissipation-sensor">
+<h3>low dissipation sensor<a class="headerlink" href="#low-dissipation-sensor" title="Link to this heading">¶</a></h3>
+<p>The sensor decides <em>where</em> - and by <em>how much</em> - the dissipation of the <strong>‘Roe low diss’</strong> / <strong>‘HLLC low diss’</strong> scheme is reduced. In a resolved region the sensor returns a small value (down to <strong>‘dissipation sensor minimum’</strong>) so the scheme approaches a low-dissipation central scheme; elsewhere it returns 1 so the full upwind dissipation needed for stability and shock capturing is retained.</p>
+<p>The three active sensors differ in <em>what they key off</em>:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 30.0%" />
-<col style="width: 70.0%" />
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Setting</p></th>
@@ -233,23 +234,31 @@ Run 500 cycles first order.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>‘DES’</strong></p></td>
-<td><p>Uses the blending function from the selected DES model to turn on the Roe low dissipation scheme in LES regions</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>‘NONE’</strong></p></td>
-<td><p>Uses the value set on <strong>‘roe dissipation sensor minimum’</strong> everywhere</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>‘FD’</strong></p></td>
-<td><p>See Johnsen et al. JCP 229 (2010) pag. 1234</p></td>
+<td><p>Uses the hybrid length-scale blending of the selected DES/DDES/IDDES model (the RANS-to-LES length-scale ratio). Low dissipation is enabled wherever the model has switched to its LES branch, so it follows the model’s resolved-turbulence (LES) regions directly.</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>‘NTS’</strong></p></td>
-<td><p>See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 <a class="reference external" href="https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007" target="_blank">https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007</a></p></td>
+<td><p>Grid-resolution sensor after Travin/Xiao (see Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 <a class="reference external" href="https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007" target="_blank">https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007</a>). Activates low dissipation where the local grid is fine relative to the turbulence length scale and the flow is vortical, combined with the shock sensor via a probabilistic-OR. Tends to enable low dissipation over a broader region than <strong>‘DES’</strong>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>‘FD’</strong></p></td>
+<td><p>Eddy-viscosity (DDES-shielding) sensor after Johnsen et al. JCP 229 (2010) pag. 1234, based on the local ratio <span class="math notranslate nohighlight">\(r_d = (\nu + \nu_t) / (\lVert \nabla u \rVert \, \kappa^2 d^2)\)</span>. It retains the <strong>full</strong> dissipation wherever the modeled eddy viscosity <span class="math notranslate nohighlight">\(\nu_t\)</span> is high (the shielded near-wall / RANS region) and only reduces dissipation once <span class="math notranslate nohighlight">\(\nu_t\)</span> drops. Because activation is gated on the modeled <span class="math notranslate nohighlight">\(\nu_t\)</span>, it will <strong>not</strong> reduce dissipation in resolved regions that still carry high modeled eddy viscosity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>‘NONE’</strong></p></td>
+<td><p>No sensor; uses the value set on <strong>‘dissipation sensor minimum’</strong> everywhere.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the requirement is <em>low dissipation in resolved regions regardless of the modeled eddy viscosity</em>, use <strong>‘DES’</strong> or <strong>‘NTS’</strong>. The <strong>‘FD’</strong> sensor is gated on the modeled eddy viscosity <span class="math notranslate nohighlight">\(\nu_t\)</span> (it follows the DDES shielding function), so in regions where the turbulence model still produces significant <span class="math notranslate nohighlight">\(\nu_t\)</span> it retains full dissipation even when the flow is well resolved.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <strong>‘DES’</strong> and <strong>‘FD’</strong> sensors derive from a RANS turbulence model (the hybrid length-scale ratio and the DDES shielding function respectively). When no RANS model is active - for example a pure LES run (<code class="docutils literal notranslate"><span class="pre">'les':</span> <span class="pre">'WALE'</span></code>) or an inviscid/laminar run - these fields are not produced, so <strong>‘DES’</strong> and <strong>‘FD’</strong> fall back to treating the whole domain as fully resolved LES and apply the <strong>‘dissipation sensor minimum’</strong> everywhere (the shock-protection term still raises the dissipation at shocks). For pure LES, <strong>‘NTS’</strong> is the natural choice as it is grid based and does not require a RANS model.</p>
+</div>
 </section>
-<section id="roe-dissipation-sensor-minimum">
-<h3>roe dissipation sensor minimum<a class="headerlink" href="#roe-dissipation-sensor-minimum" title="Link to this heading">¶</a></h3>
-<p>Sets the minimum value that the dissipation term in the Roe scheme is multiplied by when using the <strong>‘Roe low diss’</strong> scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)</p>
+<section id="dissipation-sensor-minimum">
+<h3>dissipation sensor minimum<a class="headerlink" href="#dissipation-sensor-minimum" title="Link to this heading">¶</a></h3>
+<p>Sets the minimum value that the dissipation term in the scheme is multiplied by when using the <strong>‘Roe low diss’</strong> or <strong>‘HLLC low diss’</strong> scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)</p>
 </section>
 <section id="freeze-limiter-cycle">
 <h3>freeze limiter cycle<a class="headerlink" href="#freeze-limiter-cycle" title="Link to this heading">¶</a></h3>
@@ -597,8 +606,8 @@ Run 500 cycles first order.</p>
               <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
               <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
               <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;roe low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;roe dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="s1">&#39;low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
               <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
                                 <span class="s1">&#39;model&#39;</span> <span class="p">:</span> <span class="s1">&#39;sst&#39;</span><span class="p">,</span>
                                 <span class="c1"># No Hybrid RANS/LES</span>
@@ -863,8 +872,8 @@ Run 500 cycles first order.</p>
               <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
               <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
               <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;roe low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;roe dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="s1">&#39;low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
               <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
                                 <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
                               <span class="p">},</span>

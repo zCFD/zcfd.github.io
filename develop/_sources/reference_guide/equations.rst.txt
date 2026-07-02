@@ -93,7 +93,7 @@ The following parameters are common for all of the equation sets.
    * - 'inviscid flux scheme'
      - Yes
      - "Roe"
-     - "HLLC" | "Rusanov" | "Roe" | "Roe low diss"
+     - "HLLC" | "Rusanov" | "Roe" | "Roe low diss" | "HLLC low diss"
    * - 'reconstruction'
      - No
      - "muscl"
@@ -102,11 +102,11 @@ The following parameters are common for all of the equation sets.
      - No
      - "0.0"
      - Float between 0.0 and 0.2
-   * - 'roe low dissipation sensor'
+   * - 'low dissipation sensor'
      - No
      - -- 
      - "FD" | "NTS" | "DES" | "NONE"
-   * - 'roe dissipation sensor minimum'
+   * - 'dissipation sensor minimum'
      - No
      - -- 
      - Float between 0.05 and 1.0
@@ -154,32 +154,41 @@ By default zCFD uses a Weighted Green-Gauss gradient calculation. This can be sw
 
 inviscid flux scheme
 ====================
-Picks the scheme to use for the inviscid flux. **HLLC** is good when running explicit, **Roe** is best for implicit and **Rusanov** is good for getting an implicit simulation going. The **Roe low diss** scheme can be used with LES or Hybrid RANS/LES
+Picks the scheme to use for the inviscid flux. **HLLC** is good when running explicit, **Roe** is best for implicit and **Rusanov** is good for getting an implicit simulation going. The **Roe low diss** and **HLLC low diss** schemes can be used with LES or Hybrid RANS/LES
 
-roe low dissipation sensor
-==========================
-The sensor used to decide whether to use (and by how much) the Roe low dissipation scheme.
+low dissipation sensor
+======================
+The sensor decides *where* - and by *how much* - the dissipation of the **'Roe low diss'** / **'HLLC low diss'** scheme is reduced. In a resolved region the sensor returns a small value (down to **'dissipation sensor minimum'**) so the scheme approaches a low-dissipation central scheme; elsewhere it returns 1 so the full upwind dissipation needed for stability and shock capturing is retained.
 
+The three active sensors differ in *what they key off*:
 
-.. list-table:: 
-   :widths: 30 70
+.. list-table::
+   :widths: 15 85
    :header-rows: 1
 
    * - Setting
      - Notes
    * - **'DES'**
-     - Uses the blending function from the selected DES model to turn on the Roe low dissipation scheme in LES regions
-   * - **'NONE'**
-     - Uses the value set on **'roe dissipation sensor minimum'** everywhere
-   * - **'FD'**
-     - See Johnsen et al. JCP 229 (2010) pag. 1234
+     - Uses the hybrid length-scale blending of the selected DES/DDES/IDDES model (the RANS-to-LES length-scale ratio). Low dissipation is enabled wherever the model has switched to its LES branch, so it follows the model's resolved-turbulence (LES) regions directly.
    * - **'NTS'**
-     - See Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007
+     - Grid-resolution sensor after Travin/Xiao (see Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007). Activates low dissipation where the local grid is fine relative to the turbulence length scale and the flow is vortical, combined with the shock sensor via a probabilistic-OR. Tends to enable low dissipation over a broader region than **'DES'**.
+   * - **'FD'**
+     - Eddy-viscosity (DDES-shielding) sensor after Johnsen et al. JCP 229 (2010) pag. 1234, based on the local ratio :math:`r_d = (\nu + \nu_t) / (\lVert \nabla u \rVert \, \kappa^2 d^2)`. It retains the **full** dissipation wherever the modeled eddy viscosity :math:`\nu_t` is high (the shielded near-wall / RANS region) and only reduces dissipation once :math:`\nu_t` drops. Because activation is gated on the modeled :math:`\nu_t`, it will **not** reduce dissipation in resolved regions that still carry high modeled eddy viscosity.
+   * - **'NONE'**
+     - No sensor; uses the value set on **'dissipation sensor minimum'** everywhere.
+
+.. note::
+
+   If the requirement is *low dissipation in resolved regions regardless of the modeled eddy viscosity*, use **'DES'** or **'NTS'**. The **'FD'** sensor is gated on the modeled eddy viscosity :math:`\nu_t` (it follows the DDES shielding function), so in regions where the turbulence model still produces significant :math:`\nu_t` it retains full dissipation even when the flow is well resolved.
+
+.. note::
+
+   The **'DES'** and **'FD'** sensors derive from a RANS turbulence model (the hybrid length-scale ratio and the DDES shielding function respectively). When no RANS model is active - for example a pure LES run (``'les': 'WALE'``) or an inviscid/laminar run - these fields are not produced, so **'DES'** and **'FD'** fall back to treating the whole domain as fully resolved LES and apply the **'dissipation sensor minimum'** everywhere (the shock-protection term still raises the dissipation at shocks). For pure LES, **'NTS'** is the natural choice as it is grid based and does not require a RANS model.
 
 
-roe dissipation sensor minimum
-==============================
-Sets the minimum value that the dissipation term in the Roe scheme is multiplied by when using the **'Roe low diss'** scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
+dissipation sensor minimum
+==========================
+Sets the minimum value that the dissipation term in the scheme is multiplied by when using the **'Roe low diss'** or **'HLLC low diss'** scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
 
 freeze limiter cycle
 ====================
@@ -482,8 +491,8 @@ Example RANS usage:
                 'linear gradients' : False,
                 'leastsq gradients' : False,
                 'Inviscid Flux Scheme': 'HLLC',
-                'roe low dissipation sensor': 'DES',
-                'roe dissipation sensor minimum': 0.05,
+                'low dissipation sensor': 'DES',
+                'dissipation sensor minimum': 0.05,
                 'turbulence' : {
                                   'model' : 'sst',
                                   # No Hybrid RANS/LES
@@ -708,8 +717,8 @@ Example usage:
                 'linear gradients' : False,
                 'leastsq gradients' : False,
                 'Inviscid Flux Scheme': 'HLLC',
-                'roe low dissipation sensor': 'DES',
-                'roe dissipation sensor minimum': 0.05,
+                'low dissipation sensor': 'DES',
+                'dissipation sensor minimum': 0.05,
                 'turbulence' : {
                                   'les' : 'none',
                                 },
