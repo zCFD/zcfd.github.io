@@ -1,6 +1,6 @@
 .. _oversetTutorial:
 
-Tutorial 6: Overset Meshes
+Tutorial 5: Overset Meshes
 --------------------------
 
 There are various situations in CFD modelling when it is useful to be able to place one mesh over the top of another one, effectively blanking out the cells in the lower level mesh in favour of the mesh on top, while maintaining solution accuracy across the interface.
