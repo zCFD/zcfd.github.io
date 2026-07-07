@@ -30,19 +30,19 @@ This will create a new folder called *zInterface/* containing the HDF5 file.
 zCFD Mesh Converter Utility
 ---------------------------
 
-The converter for various mesh files is a utility called *convert*. This is included in the path set by activating the zCFD command line environment.
+The converter for various mesh files is a utility called *convert_mesh*. This is included in the path set by activating the zCFD command line environment.
 
 To run the utility, use
 
 .. code-block:: bash
 
-    (zCFD): convert <filename> <new_filename>.h5
+    (zCFD): convert_mesh <filename> <new_filename>.h5
 
 The utility auto-detects the format from the file extension. You can also explicitly specify the format using the ``-f`` flag:
 
 .. code-block:: bash
 
-    (zCFD): convert -f <format> <filename> <new_filename>.h5
+    (zCFD): convert_mesh -f <format> <filename> <new_filename>.h5
 
 The following mesh formats are supported:
 
@@ -53,7 +53,7 @@ The converter supports `ANSYS Fluent <http://www.ansys.com/Products/Simulation+T
 
 .. code-block:: bash
 
-    (zCFD): convert <filename>.msh <new_filename>.h5
+    (zCFD): convert_mesh <filename>.msh <new_filename>.h5
 
 This will produce 2 files: the zCFD HDF5 file and the *name_zone.py* python file which holds the fluid and boundary zone names.
 
@@ -64,7 +64,7 @@ The converter also supports Fluent CFF format files (*.msh.h5*, *.cas.h5*).
 
 .. code-block:: bash
 
-    (zCFD): convert <filename>.msh.h5 <new_filename>.h5
+    (zCFD): convert_mesh <filename>.msh.h5 <new_filename>.h5
 
 This produces the zCFD HDF5 file.
 
@@ -75,7 +75,7 @@ SU2 is an open source CFD solver (https://su2code.github.io/). Note that convers
 
 .. code-block:: bash
 
-    (zCFD): convert <filename>.su2 <new_filename>.h5
+    (zCFD): convert_mesh <filename>.su2 <new_filename>.h5
 
 This produces the zCFD HDF5 file.
 
@@ -86,7 +86,7 @@ This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS 
 
 .. code-block:: bash
 
-    (zCFD): convert <filename>.cgns <new_filename>.h5
+    (zCFD): convert_mesh <filename>.cgns <new_filename>.h5
 
 This produces the zCFD HDF5 file. If you require support for additional element types please contact us: mailto:zcfd@zenotech.com.
 
@@ -99,7 +99,7 @@ UGRID is a NASA format for meshes. You must follow the naming convention for UGR
 
 .. code-block:: bash
 
-    (zCFD): convert <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5 <filename>.mapbc
+    (zCFD): convert_mesh <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5 <filename>.mapbc
 
 This produces the zCFD HDF5 file.
 
