@@ -6,7 +6,7 @@ Write Output
 write output
 ============
 
-Controls the frequency and contents of the files output into the the **output** directory and the **VISUALISATION** subdirectory.
+Controls the frequency and contents of the files output into the **output** directory.
 
 .. _output_dir:
 
@@ -32,7 +32,7 @@ The **output** directory will be created in the working directory from which the
    * - 'format'
      - Yes
      - 'vtk'
-     - 'none' | 'vtk' 
+     - 'none' | 'vtk' | 'ensight'
    * - 'scripts'
      - No
      - []
@@ -89,7 +89,7 @@ Example usage:
                   'scripts' : ['paraview_catalyst1.py'],
                   'variable_name_alias' : { "V" : "VELOCITY", },
                   "frequency": 500,
-                  'calculate averge and rms': True,
+                  'compute average and rms': True,
                   'average start time cycle': 1000,
                   "immersed boundary surface": [{"zone": 7, "stl": "body.stl"},
                                                 {"zone": 9, "stl": "hub.stl"}],
@@ -100,7 +100,11 @@ Example usage:
 
 format
 ^^^^^^
-Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in vtk format for reading into `ParaView <https://www.paraview.org>`_. 
+Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in VTK HDF format (.vtkhdf) for reading into `ParaView <https://www.paraview.org>`_. 
+
+.. note::
+
+    The .vtkhdf output format requires `ParaView 6.1.1 <https://www.paraview.org/download/>`_ or later.
 
 .. 'ensight' is EnSight Gold format.
 
@@ -110,7 +114,7 @@ zCFD is capable of calling ParaView catalyst scripts while running, this allows 
 
 This allows you to extract data as your simulation progresses without needing to store the full solution at every timestep. For instance a video of a slice through the dataset could be generated for an unsteady solution.
 
-For more information about Catalyst see: https://www.paraview.org/hpc-insitu/
+For more information about Catalyst see: https://www.paraview.org/insitu/
 
 
 variable_name_alias
@@ -125,17 +129,17 @@ For the 'vtk' format the surface data is written to the :ref:`output <output_dir
 
 .. code-block:: python
     
-    <case_name>_<boundary>.pvd
+    <case_name>_<boundary>.vtkhdf
 
 volume variables
 ^^^^^^^^^^^^^^^^^
 A list of :ref:`variables <output_variables>` to output in a volumetric format.
 
-For the 'vtk' format the volume  data is written to the :ref:`output <output_dir>` directory with the file name:
+For the 'vtk' format the volume data is written to the :ref:`output <output_dir>` directory with the file name:
 
 .. code-block:: python
     
-    <case_name>.pvd
+    <case_name>.vtkhdf
 
 .. _volume_interpolate:
 

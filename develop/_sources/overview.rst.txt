@@ -3,7 +3,7 @@ Overview
 
 zCFD is a GPU-accelerated high-performance computational fluid dynamics (CFD) solver.
 
-zCFD is designed to make highly effective use of modern computer architectures. It is structured as a high performance core, executed via a flexible Python based wrapper. zCFD will run on unstructured meshes from a variety of sources, and will export data in many common formats.  zCFD offers an easier route to coupling multi-disciplinary capabilities and integrating third-party data sources.  
+zCFD is designed to make highly effective use of modern computer architectures. It is structured as a high performance core, executed via a flexible Python based wrapper. zCFD will run on unstructured meshes from a variety of sources, and will export data in VTK HDF format (.vtkhdf) for efficient post-processing with tools such as `ParaView <https://www.paraview.org/>`_.  zCFD offers an easier route to coupling multi-disciplinary capabilities and integrating third-party data sources.
 
 Features include both compressible and incompressible finite-volume formulations, overset capability and fluid-structure interaction (FSI) running on both CPUs and GPUs. zCFD is capable of performing both steady-state and time accurate simulations, with a range of time marching schemes. The numerical schemes available have been selected for accuracy and robustness. The code provides automatic scaling of turbulent wall functions; automatic determination of inflow / outflow conditions and pre-conditioning to allow for low and high Mach number flow.
 

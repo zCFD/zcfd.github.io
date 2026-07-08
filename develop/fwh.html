@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FWH solver &#8212; zCFD User Guide v2025.11.13331-183-gc89e8 documentation</title>
+    <title>FWH solver &#8212; zCFD User Guide v2025.11.13331-184-g0bd1d documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=60a5515e"></script>
+    <script src="_static/documentation_options.js?v=8f555bcb"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -41,7 +41,7 @@
 <span id="fwhwhatfor"></span><h2>What is an FWH solver for?<a class="headerlink" href="#what-is-an-fwh-solver-for" title="Link to this heading">¶</a></h2>
 <p>A common problem in CFD is the prediction of the farfield aerodynamic noise which results from a particular airflow.
 Two issues make prediction of farfield aerodynamic noise challenging. First of all, many of the sources of aerodynamic noise (turbulence, vortex shedding etc.) require high fidelity, time accurate simulations and fine CFD meshes to be properly captured. Secondly, a mesh must be very fine and the simulation must have very low numerical dissipation in order to propagate aerodynamic noise any distance within a CFD mesh.</p>
-<p>The first issue of noise simulation can be made tractable by the use of techniques like FRPM, but the second issue of far-field mesh requirements for noise propagation means that e.g. predicting the noise from a helicopter main rotor a kilometre away is simply not feasible using a conventional CFD simulation.</p>
+<p>The first issue of noise simulation can be made tractable by the use of techniques like FRPM (Fast Random Particle Method), but the second issue of far-field mesh requirements for noise propagation means that e.g. predicting the noise from a helicopter main rotor a kilometre away is simply not feasible using a conventional CFD simulation.</p>
 <p>This issue of noise propagation in the far-field is solved by the use of the Ffowcs-Williams Hawkings (FWH) equations. These equations allow us to propagate sound to an observer an arbitrary distance away without the use of a mesh which extends all the way to the observer.</p>
 </section>
 <section id="how-does-an-fwh-solver-work">
@@ -184,7 +184,7 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 <td><p>No</p></td>
 <td><p>False</p></td>
 <td><p>True | False</p></td>
-<td><p>Whether or not to invert the FWH surface normals before running the FWH solver. The surface normals should always point outwards towards the farfield. For FWH surface data generated using the <a class="reference internal" href="reference_guide/write_output.html#write-output"><span class="std std-ref">fwh interpolate</span></a> keyword in the zCFD solver, the surface normal direction depends on the .stl file used to define the FWH surface, and can be checked using a visualisation tool (e.g. Paraview).</p></td>
+<td><p>Whether or not to invert the FWH surface normals before running the FWH solver. The surface normals should always point outwards towards the farfield. For FWH surface data generated using the <a class="reference internal" href="reference_guide/write_output.html#write-output"><span class="std std-ref">fwh interpolate</span></a> keyword in the zCFD solver, the surface normal direction depends on the .stl file used to define the FWH surface, and can be checked using a visualisation tool (e.g. ParaView).</p></td>
 </tr>
 <tr class="row-even"><td><p>‘transformSurfaceVelocity’</p></td>
 <td><p>No</p></td>
@@ -440,7 +440,7 @@ Users may find these utilities useful for investigating the sources of noise wit
 <p>This can be useful for visually indicating where particular frequencies originate from in an FWH observer pressure signal.
 To generate the FWH surface frequencies file, an FFT (using a Hann window) of the FWH data is calculated at each surface face.
 The data stored in the surface frequencies file at a particular surface face and chosen frequency is then the magnitude of that FFT’s amplitude, at the chosen frequency.
-The data can be viewed by opening the <cite>.xdmf`</cite> file corresponding to the output file in Paraview - the ‘time’ chosen in Paraview corresponds to the frequency being viewed.
+The data can be viewed by opening the <cite>.xdmf`</cite> file corresponding to the output file in ParaView - the ‘time’ chosen in ParaView corresponds to the frequency being viewed.
 The data at frequency = 0 corresponds to the time average of the FWH surface data.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fileManipulation</span>
@@ -459,7 +459,7 @@ then sets to zero the face area of any face in the output file where the python 
 shouldBlankOff(x,y,z) returns ‘True’ for the face’s (x,y,z) co-ordinates.
 When the face area of a face has been artificially set to 0, that face will not contribute to the observer location pressures
 calculated by the FWH solver.
-The region which has been set to have 0 face area can be inspected visually by opening the <cite>.xdmf</cite> corresponding to the output file in Paraview</p>
+The region which has been set to have 0 face area can be inspected visually by opening the <cite>.xdmf</cite> corresponding to the output file in ParaView</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fileManipulation</span>
 

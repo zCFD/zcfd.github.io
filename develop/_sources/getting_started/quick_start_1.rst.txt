@@ -162,7 +162,7 @@ Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensiona
 Write Output
 ^^^^^^^^^^^^
 
-The final section of `parameters`, `write output`, defines which variables should be outputted into VTK format for visualisation by the user at the end of the simulation.
+The final section of `parameters`, `write output`, defines which variables should be outputted into VTK HDF format (.vtkhdf) for visualisation by the user at the end of the simulation.
 
 Step 3. Running zCFD
 ====================
@@ -225,13 +225,11 @@ A successful zCFD run will result in the following files and directories being c
    * - naca0012_status.txt
      - A .json format file outputted by zCFD. Among other things, it  records when the simulation was last run, which mesh was used and which control file was used.
    * - naca0012_P1_OUTPUT/
-     - A directory which contains flow solution calculated by zCFD, in VTK format. This is generally more suitable for visualising the data with than the zCFD proprietary format.
-   * - naca0012_P1_OUTPUT/naca0012.pvd
-     - A VTK file which, when opened, will load all the volume data from the simulation.
-   * - naca0012_P1_OUTPUT/naca0012_farfield.pvd, naca0012_wall.pvd etc
-     - A series of VTK files (one for each boundary condition type) which, when opened, will load the surface data for that boundary condition.
-   * - naca0012_P1_OUTPUT/VISUALISATION/
-     - Contains the raw data files which are loaded when the naca0012.pvd and naca0012_farfield.pvd, naca0012_wall.pvd etc. files are opened.
+     - A directory which contains the flow solution calculated by zCFD, in VTK HDF format (.vtkhdf). This is generally more suitable for visualising the data with than the zCFD proprietary format.
+   * - naca0012_P1_OUTPUT/naca0012.vtkhdf
+     - A VTK HDF file containing the volume data from the simulation. 
+   * - naca0012_P1_OUTPUT/naca0012_farfield.vtkhdf, naca0012_wall.vtkhdf etc
+     - A series of VTK HDF files (one for each boundary condition type) containing the surface data for that boundary condition.
    * - naca0012_P1_OUTPUT/LOGGING/
      - Contains a separate copy of the naca0012.log file for each MPI partition. Used for debugging.
 
@@ -304,34 +302,38 @@ Plotting performance
 
 Finally, we can plot the time used per cycle using the ``plot_performance()`` method. The last cycle is particularly long because it is the only cycle where the flow solution is written to a file. If an implicit solver is used, `plot_performance()` will also attempt to plot the memory usage per cycle.
 
-Step 6. Looking at results with Paraview
+Step 6. Looking at results with ParaView
 ========================================
 
-Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see `ParaView.org <https://www.paraview.org>`_ for download and installation instructions. 
+ParaView is a general purpose visualisation tool that is the recommended way of post processing zCFD results. Please see `ParaView.org <https://www.paraview.org>`_ for download and installation instructions. 
+
+.. note::
+
+    The .vtkhdf output format requires `ParaView 6.1.1 <https://www.paraview.org/download/>`_ or later.
 
 Loading your data
 ^^^^^^^^^^^^^^^^^
-As mentioned above a “naca0012_P1_OUTPUT” folder has been generated, and contains a “.pvd” file (naca0012.pvd). This file can be seen as an of index of all the different output files, this way, your output data is imported onto Paraview using a single file, making it easier to handle. 
+As mentioned above a "naca0012_P1_OUTPUT" folder has been generated, and contains a ".vtkhdf" file (naca0012.vtkhdf). This is a single VTK HDF file containing all of the volume output data, making it easy to load into ParaView.
 
-After opening Paraview, simply click on the “Open” icon shown below or go into File>Open or press Ctrl+O. Locate the directory in which you have stored your data and open naca0012.pvd.
+After opening ParaView, simply click on the “Open” icon shown below or go into File>Open or press Ctrl+O. Locate the directory in which you have stored your data and open naca0012.vtkhdf.
 
 .. image:: ../images/tutorial1/Figure_1.png
   :width: 500
-  :alt: File open menu in Paraview
+  :alt: File open menu in ParaView
   :align: center
 
-Once the file is correctly loaded in Paraview, the “Pipeline Browser” on the left of your screen should look like this:
+Once the file is correctly loaded in ParaView, the “Pipeline Browser” on the left of your screen should look like this:
 
 .. image:: ../images/tutorial1/Figure_2.png
   :width: 500
-  :alt: Paraview Pipeline
+  :alt: ParaView Pipeline
   :align: center
 
 Now you need to click “Apply”, which will lead to the following layout:
 
 .. image:: ../images/tutorial1/Figure_3.png
   :width: 600
-  :alt: Paraview after loading pvd file
+  :alt: ParaView after loading pvd file
 
 You may need to use the 'set view direction to +ve y' button:
 
@@ -344,7 +346,7 @@ You may need to use the 'set view direction to +ve y' button:
 Visualising Variables
 ^^^^^^^^^^^^^^^^^^^^^
 
-By default, Paraview shows the “cellvolume” variable. This allows to see that the mesh is refined near the center of the mesh, where the airfoil is. This is common practice, as capturing the flow around a body is more demanding than doing so in the free-stream. Naturally, having a really fine mesh over the entire fluid domain would make the problem really computationally expensive. 
+By default, ParaView shows the “cellvolume” variable. This allows to see that the mesh is refined near the center of the mesh, where the airfoil is. This is common practice, as capturing the flow around a body is more demanding than doing so in the free-stream. Naturally, having a really fine mesh over the entire fluid domain would make the problem really computationally expensive. 
 
 Other variables can be selected and shown using the following scrolling menu:
 
@@ -365,7 +367,7 @@ This gives the following (you will need to zoom in substantially to the centre o
   :width: 600
   :alt: Pressure around airfoil
 
-Note that you can change the colormap used by Paraview by clicking on the "Edit Color Map" icon: 
+Note that you can change the colormap used by ParaView by clicking on the "Edit Color Map" icon: 
 
 .. image:: ../images/tutorial1/Figure_6a.png
   :width: 200
@@ -394,15 +396,15 @@ Those simple steps allow to qualitatively inspect the solution given by our CFD 
 Pressure Coefficient Plot
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Open the “naca0012_wall.pvd” file . Naturally, the resulting image looks different from the previous as this only contains the zones where a “wall” boundary condition has been defined, which in this case happens to just be the airfoil itself.
+Open the “naca0012_wall.vtkhdf” file. Naturally, the resulting image looks different from the previous as this only contains the zones where a “wall” boundary condition has been defined, which in this case happens to just be the airfoil itself.
 
 .. image:: ../images/tutorial1/Figure_9.png
   :width: 600
-  :alt: Wall.pvd
+  :alt: Wall.vtkhdf
 
 It is usually of interest to have a plot showing the pressure coefficient on the upper and the lower surface, therefore it is necessary to extract the data separately for each face of the airfoil. The upper and lower surfaces of the airfoil then need to be separated.
 
-To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -> Alphabetical -> Clip. The properties of the “Clip” filter are displayed on the left. Firstly, untick the "Invert" option and then you should set them to the following combination:
+To this end, the "Clip" filter has to be used. To use it, right-click on the "naca0012_wall.vtkhdf" object in the Pipeline Browser, select Add Filter -> Alphabetical -> Clip. The properties of the "Clip" filter are displayed on the left. Firstly, untick the "Invert" option and then you should set them to the following combination:
 
 .. image:: ../images/tutorial1/Figure_10.png
   :width: 500
@@ -435,7 +437,7 @@ You should end up with this:
 
 Then the data should be converted from “cell data” to “point data”. This is done by using the “CellDatatoPointData” filter. Access by right-clicking on the “Slice” object selecting “Add filters”.
 
-Once this is done, a plot can be produced in Paraview using the “PlotOnSortedLines” filter. Right-click on the “CellDatatoPointData1” object created previously and add the “PlotOnSortedLines” filter. A plot should appear on the right. You can select the variables to plot in the “Properties -> Series Parameters” window, as well as changing the settings of the axis. 
+Once this is done, a plot can be produced in ParaView using the “PlotOnSortedLines” filter. Right-click on the “CellDatatoPointData1” object created previously and add the “PlotOnSortedLines” filter. A plot should appear on the right. You can select the variables to plot in the “Properties -> Series Parameters” window, as well as changing the settings of the axis. 
 Select the “cp” variable in “Series Parameters’, and use ‘Points_X’ as the ‘X Array Name’. Untick ‘Show Legend’, set ‘Left Axis Title’ to ‘$C_p$’ and set the ‘Bottom Axis Title’ to ‘x’. You can also use the “Left Axis Use Custom Range” option to  change the y-axis range:
 
 .. image:: ../images/tutorial1/Figure_14.png
@@ -458,6 +460,6 @@ The data can be exported as a .csv file, which can then be manipulated in Python
   :alt: CSV Writer tool
   :align: center
 
-By default, Paraview writes all the variables into the .csv file. However, if only a few of them are of interest, you can use the “Choose Arrays To Write” option.
+By default, ParaView writes all the variables into the .csv file. However, if only a few of them are of interest, you can use the “Choose Arrays To Write” option.
 
 Now, this procedure can be repeated for the lower surface of the airfoil. A pressure coefficient plot can then be made for validation purposes.

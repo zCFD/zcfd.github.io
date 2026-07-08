@@ -106,7 +106,7 @@ For porous regions
         * - Fine mesh
           - 10000
 
-For actuator disk zones
+For actuator disk zones (see also :ref:`Actuator Disc Modelling <utilities>` for a detailed overview)
 
 .. note::
 

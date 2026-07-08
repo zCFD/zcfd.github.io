@@ -102,14 +102,3 @@ UGRID is a NASA format for meshes. You must follow the naming convention for UGR
     (zCFD): convert_mesh <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5 <filename>.mapbc
 
 This produces the zCFD HDF5 file.
-
-CBA Mesh Converter
---------------------
-
-CBA is a structured multiblock mesh format used within the University of Bristol and HMB projects. Note 2D meshes will have a symmetry plane added to extend them into 3D for use in zCFD.
-
-.. code-block:: python
-
-    (zCFD): cba_convert <filename>.[cba, blk] <new_filename>.h5
-
-This produces the zCFD HDF5 file.

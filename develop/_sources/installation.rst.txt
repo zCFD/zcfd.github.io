@@ -65,7 +65,7 @@ The installer is available for download from the `zCFD website <https://zcfd.zen
 
 .. code-block:: bash
 
-    $ bash zCFD-icc-sse-impi-<INSTALL_VERSION>-Linux-64bit.sh
+    $ bash zCFD-icx-sse-impi-<INSTALL_VERSION>-Linux-64bit.sh
 
 Then copy the license file provided over email into the lic folder in the install directory.
 

@@ -88,7 +88,7 @@ To combine the 4 overset meshes into a single solution that can be operated on a
 
 * Launch ParaView so that you can load the solution files (locally or remotely). 
 
-* Load the 4 files “back*_P1_OUTPUT/back*.pvd” for * = 1,2,3 and 4.
+* Load the 4 files "back*_P1_OUTPUT/back*.vtkhdf" for * = 1,2,3 and 4.
 
 * Highlight all 4 files on the navigation tree (on the left) and select “Filters > Append Datasets”.  This will create a new item in the navigation tree called “AppendDatasets1” that acts on all four datasets at once.
 

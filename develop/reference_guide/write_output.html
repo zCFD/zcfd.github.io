@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Write Output &#8212; zCFD User Guide v2025.11.13331-183-gc89e8 documentation</title>
+    <title>Write Output &#8212; zCFD User Guide v2025.11.13331-184-g0bd1d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=60a5515e"></script>
+    <script src="../_static/documentation_options.js?v=8f555bcb"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -37,7 +37,7 @@
 <span id="id1"></span><h1>Write Output<a class="headerlink" href="#write-output" title="Link to this heading">¶</a></h1>
 <section id="id2">
 <h2>write output<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
-<p>Controls the frequency and contents of the files output into the the <strong>output</strong> directory and the <strong>VISUALISATION</strong> subdirectory.</p>
+<p>Controls the frequency and contents of the files output into the <strong>output</strong> directory.</p>
 <p id="output-dir">The <strong>output</strong> directory will be created in the working directory from which the solver is run and is named using the following format:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;</span><span class="n">_P</span><span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">mpi</span> <span class="n">ranks</span><span class="o">&gt;</span><span class="n">_OUTPUT</span>
 </pre></div>
@@ -65,7 +65,7 @@
 <tr class="row-odd"><td><p>‘format’</p></td>
 <td><p>Yes</p></td>
 <td><p>‘vtk’</p></td>
-<td><p>‘none’ | ‘vtk’</p></td>
+<td><p>‘none’ | ‘vtk’ | ‘ensight’</p></td>
 </tr>
 <tr class="row-even"><td><p>‘scripts’</p></td>
 <td><p>No</p></td>
@@ -130,7 +130,7 @@
                 <span class="s1">&#39;scripts&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;paraview_catalyst1.py&#39;</span><span class="p">],</span>
                 <span class="s1">&#39;variable_name_alias&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="s2">&quot;VELOCITY&quot;</span><span class="p">,</span> <span class="p">},</span>
                 <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                <span class="s1">&#39;calculate averge and rms&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;compute average and rms&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s1">&#39;average start time cycle&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
                 <span class="s2">&quot;immersed boundary surface&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;stl&quot;</span><span class="p">:</span> <span class="s2">&quot;body.stl&quot;</span><span class="p">},</span>
                                               <span class="p">{</span><span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;stl&quot;</span><span class="p">:</span> <span class="s2">&quot;hub.stl&quot;</span><span class="p">}],</span>
@@ -142,13 +142,17 @@
 </div>
 <section id="format">
 <h3>format<a class="headerlink" href="#format" title="Link to this heading">¶</a></h3>
-<p>Selects the file format to output the data in. Using ‘none’ as format will output no files. ‘vtk’ outputs in vtk format for reading into <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView</a>.</p>
+<p>Selects the file format to output the data in. Using ‘none’ as format will output no files. ‘vtk’ outputs in VTK HDF format (.vtkhdf) for reading into <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The .vtkhdf output format requires <a class="reference external" href="https://www.paraview.org/download/" target="_blank">ParaView 6.1.1</a> or later.</p>
+</div>
 </section>
 <section id="scripts">
 <h3>scripts<a class="headerlink" href="#scripts" title="Link to this heading">¶</a></h3>
 <p>zCFD is capable of calling ParaView catalyst scripts while running, this allows you to generate “in situ” visualisation output while the solver is running.</p>
 <p>This allows you to extract data as your simulation progresses without needing to store the full solution at every timestep. For instance a video of a slice through the dataset could be generated for an unsteady solution.</p>
-<p>For more information about Catalyst see: <a class="reference external" href="https://www.paraview.org/hpc-insitu/" target="_blank">https://www.paraview.org/hpc-insitu/</a></p>
+<p>For more information about Catalyst see: <a class="reference external" href="https://www.paraview.org/insitu/" target="_blank">https://www.paraview.org/insitu/</a></p>
 </section>
 <section id="variable-name-alias">
 <h3>variable_name_alias<a class="headerlink" href="#variable-name-alias" title="Link to this heading">¶</a></h3>
@@ -159,15 +163,15 @@ If downstream processes need variables named using a specific convention a namin
 <h3>surface variables<a class="headerlink" href="#surface-variables" title="Link to this heading">¶</a></h3>
 <p>A list of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">variables</span></a> to output on the boundaries of the mesh. This is useful for visualisation of the flow variables on the wall of the mesh for post processing.
 For the ‘vtk’ format the surface data is written to the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory with the file name:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;</span><span class="n">_</span><span class="o">&lt;</span><span class="n">boundary</span><span class="o">&gt;.</span><span class="n">pvd</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;</span><span class="n">_</span><span class="o">&lt;</span><span class="n">boundary</span><span class="o">&gt;.</span><span class="n">vtkhdf</span>
 </pre></div>
 </div>
 </section>
 <section id="volume-variables">
 <h3>volume variables<a class="headerlink" href="#volume-variables" title="Link to this heading">¶</a></h3>
 <p>A list of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">variables</span></a> to output in a volumetric format.</p>
-<p>For the ‘vtk’ format the volume  data is written to the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory with the file name:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;.</span><span class="n">pvd</span>
+<p>For the ‘vtk’ format the volume data is written to the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory with the file name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;.</span><span class="n">vtkhdf</span>
 </pre></div>
 </div>
 </section>

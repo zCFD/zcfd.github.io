@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Overview &#8212; zCFD User Guide v2025.11.13331-183-gc89e8 documentation</title>
+    <title>Overview &#8212; zCFD User Guide v2025.11.13331-184-g0bd1d documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=60a5515e"></script>
+    <script src="_static/documentation_options.js?v=8f555bcb"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="_static/fav.png"/>
@@ -36,7 +36,7 @@
   <section id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h1>
 <p>zCFD is a GPU-accelerated high-performance computational fluid dynamics (CFD) solver.</p>
-<p>zCFD is designed to make highly effective use of modern computer architectures. It is structured as a high performance core, executed via a flexible Python based wrapper. zCFD will run on unstructured meshes from a variety of sources, and will export data in many common formats.  zCFD offers an easier route to coupling multi-disciplinary capabilities and integrating third-party data sources.</p>
+<p>zCFD is designed to make highly effective use of modern computer architectures. It is structured as a high performance core, executed via a flexible Python based wrapper. zCFD will run on unstructured meshes from a variety of sources, and will export data in VTK HDF format (.vtkhdf) for efficient post-processing with tools such as <a class="reference external" href="https://www.paraview.org/" target="_blank">ParaView</a>.  zCFD offers an easier route to coupling multi-disciplinary capabilities and integrating third-party data sources.</p>
 <p>Features include both compressible and incompressible finite-volume formulations, overset capability and fluid-structure interaction (FSI) running on both CPUs and GPUs. zCFD is capable of performing both steady-state and time accurate simulations, with a range of time marching schemes. The numerical schemes available have been selected for accuracy and robustness. The code provides automatic scaling of turbulent wall functions; automatic determination of inflow / outflow conditions and pre-conditioning to allow for low and high Mach number flow.</p>
 <p>zCFD makes use of the MPI protocol to manage execution over a set of compute nodes. The execution process is completely parallel from the start to finish including all the input/output functionality.  To support this scalable implementation the mesh input is provided in hdf5 format which is portable and self describing. Filters are provided to convert the most frequently used formats to this internal format.</p>
 <p>zCFD uses a single control dictionary to specify all the parameters. This is a Python file containing a python dictionary with certain mandatory keys. The use of Python for the control dictionary enables the user to add custom functions that populate the dictionary at runtime.</p>

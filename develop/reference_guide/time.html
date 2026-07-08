@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-183-gc89e8 documentation</title>
+    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-184-g0bd1d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=60a5515e"></script>
+    <script src="../_static/documentation_options.js?v=8f555bcb"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -240,7 +240,7 @@
 <p>Global time stepping uses the same time step in each cell for the integration, whereas local time stepping calculates and uses the time step in each cell as determined by the local flow conditions and the prescribed CFL number. In cases where there are very small cells. it would be impractical to use global timestepping as all the cells would have to march at the pace of the slowest.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>While global timestepping restricts all cells to the smallest timestep and should only be used for unsteady simulations.</p>
+<p>Global timestepping restricts all cells to the smallest timestep and should only be used for unsteady simulations.</p>
 </div>
 </section>
 </section>
@@ -388,7 +388,7 @@
 <span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
          <span class="s1">&#39;multigrid&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-         <span class="s1">&#39;multigrid cycles&#39;</span> <span class="mi">20000</span><span class="p">,</span>
+         <span class="s1">&#39;multigrid cycles&#39;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
          <span class="o">...</span>
  <span class="p">}</span>
 </pre></div>
