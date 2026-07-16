@@ -17,7 +17,7 @@ Running zCFD with FWH output
 
 The flow we're going to be running the FWH solver on is the shedding cylinder. To get the required inputs to our FWH solver, we need to define an *FWH surface*, and collect data on this surface during a CFD simulation.
 
-The files required for the fwh tutorial can be downloaded `here <https://zcfd.zenotech.com/tutorials/3/cylinder_fwh.zip>`_. In the zip file there's a FWH surface definition file, called *fwh_surface1.stl*. Given we've already run the cylinder case in :ref:`Tutorial 3 <tutorial_3>`, we can view the FWH surface in Paraview alongside the cylinder CFD volume data (see :ref:`here <qs3_view_flowfield>`), as below. You may find the surface easier to see if you set the *view style* to be *Feature Edges* instead of *Surface* for the FWH surface, and increase the *Line Width* in the *Geometry Representation*.
+The files required for the fwh tutorial can be downloaded `here <https://zcfd.zenotech.com/tutorials/3/cylinder_fwh.zip>`_. In the zip file there's a FWH surface definition file, called *fwh_surface1.stl*. Given we've already run the cylinder case in :ref:`Tutorial 3 <tutorial_3>`, we can view the FWH surface in ParaView alongside the cylinder CFD volume data (see :ref:`here <qs3_view_flowfield>`), as below. You may find the surface easier to see if you set the *view style* to be *Feature Edges* instead of *Surface* for the FWH surface, and increase the *Line Width* in the *Geometry Representation*.
 
 .. _qs3_stl_pic:
 .. image:: ../images/tutorial3/cylinder_fwh_surface1.png
@@ -51,7 +51,7 @@ For the FWH tutorial we have also updated the *'time marching'* section to run t
     run_zcfd -m cylinder.h5 -c cylinder_fwh.py
 
   
-When we've run the CFD simulation of the cylinder, we should be able to see the FWH interpolated data in *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5'*. There is also a corresponding *xdmf* file, *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.xdmf'*, which allows us to open the FWH surface in Paraview and see the pressure, velocity and density at each cell centre varying with simulation time. Use the Paraview *Time* controls to adjust the simulation time being viewed. You may find that changing the *view style* to *Point Gaussian* and increasing the *Gaussian Radius* in the *Properties* sidebar makes the cell values easier to see.
+When we've run the CFD simulation of the cylinder, we should be able to see the FWH interpolated data in *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5'*. There is also a corresponding *xdmf* file, *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.xdmf'*, which allows us to open the FWH surface in ParaView and see the pressure, velocity and density at each cell centre varying with simulation time. Use the ParaView *Time* controls to adjust the simulation time being viewed. You may find that changing the *view style* to *Point Gaussian* and increasing the *Gaussian Radius* in the *Properties* sidebar makes the cell values easier to see.
 
 Running the zCFD FWH solver
 ===========================

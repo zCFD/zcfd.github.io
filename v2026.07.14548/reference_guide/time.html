@@ -240,7 +240,7 @@
 <p>Global time stepping uses the same time step in each cell for the integration, whereas local time stepping calculates and uses the time step in each cell as determined by the local flow conditions and the prescribed CFL number. In cases where there are very small cells. it would be impractical to use global timestepping as all the cells would have to march at the pace of the slowest.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>While global timestepping restricts all cells to the smallest timestep and should only be used for unsteady simulations.</p>
+<p>Global timestepping restricts all cells to the smallest timestep and should only be used for unsteady simulations.</p>
 </div>
 </section>
 </section>
@@ -388,7 +388,7 @@
 <span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
          <span class="s1">&#39;multigrid&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-         <span class="s1">&#39;multigrid cycles&#39;</span> <span class="mi">20000</span><span class="p">,</span>
+         <span class="s1">&#39;multigrid cycles&#39;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
          <span class="o">...</span>
  <span class="p">}</span>
 </pre></div>

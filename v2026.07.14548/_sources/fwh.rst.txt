@@ -13,7 +13,7 @@ What is an FWH solver for?
 A common problem in CFD is the prediction of the farfield aerodynamic noise which results from a particular airflow.
 Two issues make prediction of farfield aerodynamic noise challenging. First of all, many of the sources of aerodynamic noise (turbulence, vortex shedding etc.) require high fidelity, time accurate simulations and fine CFD meshes to be properly captured. Secondly, a mesh must be very fine and the simulation must have very low numerical dissipation in order to propagate aerodynamic noise any distance within a CFD mesh.
 
-The first issue of noise simulation can be made tractable by the use of techniques like FRPM, but the second issue of far-field mesh requirements for noise propagation means that e.g. predicting the noise from a helicopter main rotor a kilometre away is simply not feasible using a conventional CFD simulation.
+The first issue of noise simulation can be made tractable by the use of techniques like FRPM (Fast Random Particle Method), but the second issue of far-field mesh requirements for noise propagation means that e.g. predicting the noise from a helicopter main rotor a kilometre away is simply not feasible using a conventional CFD simulation.
 
 This issue of noise propagation in the far-field is solved by the use of the Ffowcs-Williams Hawkings (FWH) equations. These equations allow us to propagate sound to an observer an arbitrary distance away without the use of a mesh which extends all the way to the observer.
 
@@ -186,7 +186,7 @@ Individual surface definition dictionary
      - No
      - False
      - True | False
-     - Whether or not to invert the FWH surface normals before running the FWH solver. The surface normals should always point outwards towards the farfield. For FWH surface data generated using the :ref:`fwh interpolate <write_output>` keyword in the zCFD solver, the surface normal direction depends on the .stl file used to define the FWH surface, and can be checked using a visualisation tool (e.g. Paraview). 
+     - Whether or not to invert the FWH surface normals before running the FWH solver. The surface normals should always point outwards towards the farfield. For FWH surface data generated using the :ref:`fwh interpolate <write_output>` keyword in the zCFD solver, the surface normal direction depends on the .stl file used to define the FWH surface, and can be checked using a visualisation tool (e.g. ParaView). 
    * - 'transformSurfaceVelocity'
      - No
      - True
@@ -462,7 +462,7 @@ This python function takes an FWH surface file as input, and creates a file wher
 This can be useful for visually indicating where particular frequencies originate from in an FWH observer pressure signal.
 To generate the FWH surface frequencies file, an FFT (using a Hann window) of the FWH data is calculated at each surface face.
 The data stored in the surface frequencies file at a particular surface face and chosen frequency is then the magnitude of that FFT's amplitude, at the chosen frequency.
-The data can be viewed by opening the `.xdmf`` file corresponding to the output file in Paraview - the 'time' chosen in Paraview corresponds to the frequency being viewed.
+The data can be viewed by opening the `.xdmf`` file corresponding to the output file in ParaView - the 'time' chosen in ParaView corresponds to the frequency being viewed.
 The data at frequency = 0 corresponds to the time average of the FWH surface data.
 
 Example usage:
@@ -491,7 +491,7 @@ then sets to zero the face area of any face in the output file where the python 
 shouldBlankOff(x,y,z) returns 'True' for the face's (x,y,z) co-ordinates.
 When the face area of a face has been artificially set to 0, that face will not contribute to the observer location pressures
 calculated by the FWH solver.
-The region which has been set to have 0 face area can be inspected visually by opening the `.xdmf` corresponding to the output file in Paraview
+The region which has been set to have 0 face area can be inspected visually by opening the `.xdmf` corresponding to the output file in ParaView
 
 Example usage:
 

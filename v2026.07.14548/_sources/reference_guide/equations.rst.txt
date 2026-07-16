@@ -691,7 +691,7 @@ As well as the :ref:`"common" <equation_common>` settings, the **'LES'** equatio
    * - 'les'
      - Yes
      - 'none'
-     - 'none' | 'WALE" | 
+     - 'none' | 'WALE'
      - Selects the hybrid RANS/LES model.
  
 

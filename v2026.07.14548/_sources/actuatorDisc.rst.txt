@@ -10,7 +10,7 @@ When simulating the effects of an aerodynamic force device (such as a wind turbi
 Actuator disc definitions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Conceptually turbines and propellors behave nearly identically in terms of the actuator disc model, with the only differences being in in the coordinate systems and sign conventions typically used to define them. In zCFD an actuator disc zone is defined as a fluid zone, using the following keys:
+Conceptually turbines and propellors behave nearly identically in terms of the actuator disc model, with the only differences being in in the coordinate systems and sign conventions typically used to define them. In zCFD an actuator disc zone is defined as a :ref:`fluid zone <fluid_zones>`, using the following keys:
 
 .. code-block:: python
 

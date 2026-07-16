@@ -63,7 +63,7 @@
 <li><p><a class="reference internal" href="#plotting-performance" id="id18">Plotting performance</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#step-6-looking-at-results-with-paraview" id="id19">Step 6. Looking at results with Paraview</a></p>
+<li><p><a class="reference internal" href="#step-6-looking-at-results-with-paraview" id="id19">Step 6. Looking at results with ParaView</a></p>
 <ul>
 <li><p><a class="reference internal" href="#loading-your-data" id="id20">Loading your data</a></p></li>
 <li><p><a class="reference internal" href="#visualising-variables" id="id21">Visualising Variables</a></p></li>
@@ -183,7 +183,7 @@ Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensiona
 </section>
 <section id="write-output">
 <span id="tutorial-1-output"></span><h3>Write Output<a class="headerlink" href="#write-output" title="Link to this heading">¶</a></h3>
-<p>The final section of <cite>parameters</cite>, <cite>write output</cite>, defines which variables should be outputted into VTK format for visualisation by the user at the end of the simulation.</p>
+<p>The final section of <cite>parameters</cite>, <cite>write output</cite>, defines which variables should be outputted into VTK HDF format (.vtkhdf) for visualisation by the user at the end of the simulation.</p>
 </section>
 </section>
 <section id="step-3-running-zcfd">
@@ -245,18 +245,15 @@ validate_input<span class="w"> </span>naca0012.py<span class="w"> </span>-m<span
 <td><p>A .json format file outputted by zCFD. Among other things, it  records when the simulation was last run, which mesh was used and which control file was used.</p></td>
 </tr>
 <tr class="row-odd"><td><p>naca0012_P1_OUTPUT/</p></td>
-<td><p>A directory which contains flow solution calculated by zCFD, in VTK format. This is generally more suitable for visualising the data with than the zCFD proprietary format.</p></td>
+<td><p>A directory which contains the flow solution calculated by zCFD, in VTK HDF format (.vtkhdf). This is generally more suitable for visualising the data with than the zCFD proprietary format.</p></td>
 </tr>
-<tr class="row-even"><td><p>naca0012_P1_OUTPUT/naca0012.pvd</p></td>
-<td><p>A VTK file which, when opened, will load all the volume data from the simulation.</p></td>
+<tr class="row-even"><td><p>naca0012_P1_OUTPUT/naca0012.vtkhdf</p></td>
+<td><p>A VTK HDF file containing the volume data from the simulation.</p></td>
 </tr>
-<tr class="row-odd"><td><p>naca0012_P1_OUTPUT/naca0012_farfield.pvd, naca0012_wall.pvd etc</p></td>
-<td><p>A series of VTK files (one for each boundary condition type) which, when opened, will load the surface data for that boundary condition.</p></td>
+<tr class="row-odd"><td><p>naca0012_P1_OUTPUT/naca0012_farfield.vtkhdf, naca0012_wall.vtkhdf etc</p></td>
+<td><p>A series of VTK HDF files (one for each boundary condition type) containing the surface data for that boundary condition.</p></td>
 </tr>
-<tr class="row-even"><td><p>naca0012_P1_OUTPUT/VISUALISATION/</p></td>
-<td><p>Contains the raw data files which are loaded when the naca0012.pvd and naca0012_farfield.pvd, naca0012_wall.pvd etc. files are opened.</p></td>
-</tr>
-<tr class="row-odd"><td><p>naca0012_P1_OUTPUT/LOGGING/</p></td>
+<tr class="row-even"><td><p>naca0012_P1_OUTPUT/LOGGING/</p></td>
 <td><p>Contains a separate copy of the naca0012.log file for each MPI partition. Used for debugging.</p></td>
 </tr>
 </tbody>
@@ -314,19 +311,23 @@ start_lab
 </section>
 </section>
 <section id="step-6-looking-at-results-with-paraview">
-<h2>Step 6. Looking at results with Paraview<a class="headerlink" href="#step-6-looking-at-results-with-paraview" title="Link to this heading">¶</a></h2>
-<p>Paraview is a generally purpose visualisation tool that is the recommended way of post processing zCFD results. Please see <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView.org</a> for download and installation instructions.</p>
+<h2>Step 6. Looking at results with ParaView<a class="headerlink" href="#step-6-looking-at-results-with-paraview" title="Link to this heading">¶</a></h2>
+<p>ParaView is a general purpose visualisation tool that is the recommended way of post processing zCFD results. Please see <a class="reference external" href="https://www.paraview.org" target="_blank">ParaView.org</a> for download and installation instructions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The .vtkhdf output format requires <a class="reference external" href="https://www.paraview.org/download/" target="_blank">ParaView 6.1.1</a> or later.</p>
+</div>
 <section id="loading-your-data">
 <h3>Loading your data<a class="headerlink" href="#loading-your-data" title="Link to this heading">¶</a></h3>
-<p>As mentioned above a “naca0012_P1_OUTPUT” folder has been generated, and contains a “.pvd” file (naca0012.pvd). This file can be seen as an of index of all the different output files, this way, your output data is imported onto Paraview using a single file, making it easier to handle.</p>
-<p>After opening Paraview, simply click on the “Open” icon shown below or go into File&gt;Open or press Ctrl+O. Locate the directory in which you have stored your data and open naca0012.pvd.</p>
-<a class="reference internal image-reference" href="../_images/Figure_1.png"><img alt="File open menu in Paraview" class="align-center" src="../_images/Figure_1.png" width="500" />
+<p>As mentioned above a “naca0012_P1_OUTPUT” folder has been generated, and contains a “.vtkhdf” file (naca0012.vtkhdf). This is a single VTK HDF file containing all of the volume output data, making it easy to load into ParaView.</p>
+<p>After opening ParaView, simply click on the “Open” icon shown below or go into File&gt;Open or press Ctrl+O. Locate the directory in which you have stored your data and open naca0012.vtkhdf.</p>
+<a class="reference internal image-reference" href="../_images/Figure_1.png"><img alt="File open menu in ParaView" class="align-center" src="../_images/Figure_1.png" width="500" />
 </a>
-<p>Once the file is correctly loaded in Paraview, the “Pipeline Browser” on the left of your screen should look like this:</p>
-<a class="reference internal image-reference" href="../_images/Figure_2.png"><img alt="Paraview Pipeline" class="align-center" src="../_images/Figure_2.png" width="500" />
+<p>Once the file is correctly loaded in ParaView, the “Pipeline Browser” on the left of your screen should look like this:</p>
+<a class="reference internal image-reference" href="../_images/Figure_2.png"><img alt="ParaView Pipeline" class="align-center" src="../_images/Figure_2.png" width="500" />
 </a>
 <p>Now you need to click “Apply”, which will lead to the following layout:</p>
-<a class="reference internal image-reference" href="../_images/Figure_3.png"><img alt="Paraview after loading pvd file" src="../_images/Figure_3.png" width="600" />
+<a class="reference internal image-reference" href="../_images/Figure_3.png"><img alt="ParaView after loading pvd file" src="../_images/Figure_3.png" width="600" />
 </a>
 <p>You may need to use the ‘set view direction to +ve y’ button:</p>
 <a class="reference internal image-reference" href="../_images/Figure_17.png"><img alt="Set view direction to +ve y" src="../_images/Figure_17.png" width="600" />
@@ -334,7 +335,7 @@ start_lab
 </section>
 <section id="visualising-variables">
 <h3>Visualising Variables<a class="headerlink" href="#visualising-variables" title="Link to this heading">¶</a></h3>
-<p>By default, Paraview shows the “cellvolume” variable. This allows to see that the mesh is refined near the center of the mesh, where the airfoil is. This is common practice, as capturing the flow around a body is more demanding than doing so in the free-stream. Naturally, having a really fine mesh over the entire fluid domain would make the problem really computationally expensive.</p>
+<p>By default, ParaView shows the “cellvolume” variable. This allows to see that the mesh is refined near the center of the mesh, where the airfoil is. This is common practice, as capturing the flow around a body is more demanding than doing so in the free-stream. Naturally, having a really fine mesh over the entire fluid domain would make the problem really computationally expensive.</p>
 <p>Other variables can be selected and shown using the following scrolling menu:</p>
 <a class="reference internal image-reference" href="../_images/Figure_4.png"><img alt="Variables drop down" src="../_images/Figure_4.png" width="600" />
 </a>
@@ -347,7 +348,7 @@ start_lab
 <p>This gives the following (you will need to zoom in substantially to the centre of the mesh before you can clearly see the airfoil):</p>
 <a class="reference internal image-reference" href="../_images/Figure_5.png"><img alt="Pressure around airfoil" src="../_images/Figure_5.png" width="600" />
 </a>
-<p>Note that you can change the colormap used by Paraview by clicking on the “Edit Color Map” icon:</p>
+<p>Note that you can change the colormap used by ParaView by clicking on the “Edit Color Map” icon:</p>
 <a class="reference internal image-reference" href="../_images/Figure_6a.png"><img alt="Edit Color Map" class="align-center" src="../_images/Figure_6a.png" width="200" />
 </a>
 <p>and then the “Choose Preset” icon:</p>
@@ -362,11 +363,11 @@ start_lab
 </section>
 <section id="pressure-coefficient-plot">
 <h3>Pressure Coefficient Plot<a class="headerlink" href="#pressure-coefficient-plot" title="Link to this heading">¶</a></h3>
-<p>Open the “naca0012_wall.pvd” file . Naturally, the resulting image looks different from the previous as this only contains the zones where a “wall” boundary condition has been defined, which in this case happens to just be the airfoil itself.</p>
-<a class="reference internal image-reference" href="../_images/Figure_9.png"><img alt="Wall.pvd" src="../_images/Figure_9.png" width="600" />
+<p>Open the “naca0012_wall.vtkhdf” file. Naturally, the resulting image looks different from the previous as this only contains the zones where a “wall” boundary condition has been defined, which in this case happens to just be the airfoil itself.</p>
+<a class="reference internal image-reference" href="../_images/Figure_9.png"><img alt="Wall.vtkhdf" src="../_images/Figure_9.png" width="600" />
 </a>
 <p>It is usually of interest to have a plot showing the pressure coefficient on the upper and the lower surface, therefore it is necessary to extract the data separately for each face of the airfoil. The upper and lower surfaces of the airfoil then need to be separated.</p>
-<p>To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.pvd” object in the Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the “Clip” filter are displayed on the left. Firstly, untick the “Invert” option and then you should set them to the following combination:</p>
+<p>To this end, the “Clip” filter has to be used. To use it, right-click on the “naca0012_wall.vtkhdf” object in the Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the “Clip” filter are displayed on the left. Firstly, untick the “Invert” option and then you should set them to the following combination:</p>
 <a class="reference internal image-reference" href="../_images/Figure_10.png"><img alt="Clip parameters" class="align-center" src="../_images/Figure_10.png" width="500" />
 </a>
 <p>By default, this will “remove” the lower surface of the airfoil, leaving the following shape:</p>
@@ -384,7 +385,7 @@ procedure as for the “Clip” filter but select the “Slice” filter instead
 <a class="reference internal image-reference" href="../_images/Figure_13.png"><img alt="Upper airfoil slice" src="../_images/Figure_13.png" width="600" />
 </a>
 <p>Then the data should be converted from “cell data” to “point data”. This is done by using the “CellDatatoPointData” filter. Access by right-clicking on the “Slice” object selecting “Add filters”.</p>
-<p>Once this is done, a plot can be produced in Paraview using the “PlotOnSortedLines” filter. Right-click on the “CellDatatoPointData1” object created previously and add the “PlotOnSortedLines” filter. A plot should appear on the right. You can select the variables to plot in the “Properties -&gt; Series Parameters” window, as well as changing the settings of the axis.
+<p>Once this is done, a plot can be produced in ParaView using the “PlotOnSortedLines” filter. Right-click on the “CellDatatoPointData1” object created previously and add the “PlotOnSortedLines” filter. A plot should appear on the right. You can select the variables to plot in the “Properties -&gt; Series Parameters” window, as well as changing the settings of the axis.
 Select the “cp” variable in “Series Parameters’, and use ‘Points_X’ as the ‘X Array Name’. Untick ‘Show Legend’, set ‘Left Axis Title’ to ‘$C_p$’ and set the ‘Bottom Axis Title’ to ‘x’. You can also use the “Left Axis Use Custom Range” option to  change the y-axis range:</p>
 <a class="reference internal image-reference" href="../_images/Figure_14.png"><img alt="Left axis parameters" class="align-center" src="../_images/Figure_14.png" width="500" />
 </a>
@@ -394,7 +395,7 @@ Select the “cp” variable in “Series Parameters’, and use ‘Points_X’ 
 <p>The data can be exported as a .csv file, which can then be manipulated in Python, Excel, MATLAB or any other software. To do so, go to File -&gt; Save data -&gt; <em>select a folder and give a name to the file</em>. The following window should appear:</p>
 <a class="reference internal image-reference" href="../_images/Figure_16.png"><img alt="CSV Writer tool" class="align-center" src="../_images/Figure_16.png" width="500" />
 </a>
-<p>By default, Paraview writes all the variables into the .csv file. However, if only a few of them are of interest, you can use the “Choose Arrays To Write” option.</p>
+<p>By default, ParaView writes all the variables into the .csv file. However, if only a few of them are of interest, you can use the “Choose Arrays To Write” option.</p>
 <p>Now, this procedure can be repeated for the lower surface of the airfoil. A pressure coefficient plot can then be made for validation purposes.</p>
 </section>
 </section>

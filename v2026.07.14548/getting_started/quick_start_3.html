@@ -135,24 +135,23 @@ total unsteady timesteps to perform.</p>
 </section>
 <section id="flow-field">
 <span id="qs3-view-flowfield"></span><h3>Flow field<a class="headerlink" href="#flow-field" title="Link to this heading">¶</a></h3>
-<p>We set the output frequency to 5 when running the case and so the solver will have written visualisation VTK files every 5 real time steps. If you look in the <em>‘cylinder_P1_OUTPUT/VISUALISATION’</em> directory you will see a series of .vtp and .pvtp files, one for every written timestep.</p>
-<p>You could load these individually but the easier method is to load the <em>‘cylinder.pvd’</em> in <em>‘cylinder_P1_OUTPUT/’</em>. This .pvd file links to all of the timesteps.</p>
-<p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>. Paraview will render a single solution time step at a time, and time series data can be navigated using the icons at the top of the screen:</p>
+<p>We set the output frequency to 5 when running the case and so the solver will have written visualisation data every 5 real time steps. All timesteps are stored within a single <code class="docutils literal notranslate"><span class="pre">cylinder.vtkhdf</span></code> file in the <em>‘cylinder_P1_OUTPUT/’</em> directory — no separate per-timestep files are created.</p>
+<p>Launch ParaView and load <em>‘cylinder_P1_OUTPUT/cylinder.vtkhdf’</em>. ParaView will render a single solution time step at a time, and time series data can be navigated using the icons at the top of the screen:</p>
 <a class="reference internal image-reference" href="../_images/paraview_time.png"><img alt="Probe location" class="align-center" src="../_images/paraview_time.png" width="600" />
 </a>
 </section>
 <section id="animation">
 <h3>Animation<a class="headerlink" href="#animation" title="Link to this heading">¶</a></h3>
-<p>For unsteady data it is often useful to output an animation of the solution. This can be done in Paraview by either exporting an image per timestep and then using a third party tool to stitch the images into a video or by saving the animation directly. The advantage of the first approach is that it can easily be scripted and is more suitable for large cases.
-Since this case is quite small we will export an mp4 video directly from Paraview. The steps to do this are:</p>
+<p>For unsteady data it is often useful to output an animation of the solution. This can be done in ParaView by either exporting an image per timestep and then using a third party tool to stitch the images into a video or by saving the animation directly. The advantage of the first approach is that it can easily be scripted and is more suitable for large cases.
+Since this case is quite small we will export an mp4 video directly from ParaView. The steps to do this are:</p>
 <ol class="arabic simple">
-<li><p>Launch Paraview and load <em>‘cylinder_P1_OUTPUT/cylinder.pvd’</em>.</p></li>
+<li><p>Launch ParaView and load <em>‘cylinder_P1_OUTPUT/cylinder.vtkhdf’</em>.</p></li>
 <li><p>Set the view up to shade the output by <em>“cp”</em> and zoom/move the image until you are happy with the view:</p></li>
 </ol>
 <a class="reference internal image-reference" href="../_images/paraview.png"><img alt="Cp shaded" class="align-center" src="../_images/paraview.png" width="600" />
 </a>
 <ol class="arabic simple" start="3">
-<li><p>Select <em>‘File-&gt;Save Animation’</em> in Paraview. To export as video select your preferred format, the format will depend on your Operating System but for Windows you should be able to select “MP4 files” and on Linux “FFMPEG AVI”. Give the file a name and click OK.</p></li>
+<li><p>Select <em>‘File-&gt;Save Animation’</em> in ParaView. To export as video select your preferred format, the format will depend on your Operating System but for Windows you should be able to select “MP4 files” and on Linux “FFMPEG AVI”. Give the file a name and click OK.</p></li>
 <li><p>On the next screen you can set the target resolution, frame rate and the timesteps to export. Set the Image resolution to 1920x1080 (FHD) and the frame rate to 24. If you just want to export the end of the simulation (where the oscillation is established) you can set the Frame Window from 300 to 600.</p></li>
 <li><p>Click OK to export the animation. This will take some time.</p></li>
 </ol>

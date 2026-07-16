@@ -108,7 +108,7 @@ Mass flow rate is defined as:
 
 Using a file
 ------------
-A file can be used to provide a lookup for the pressure and temperature ratios. This file should be in the Paraview/VTK VTP format. The file should contain a surface with specific values as node arrays data. zCFD then looks up the values by finding the nearest point to the mesh location.
+A file can be used to provide a lookup for the pressure and temperature ratios. This file should be in the ParaView/VTK VTP format. The file should contain a surface with specific values as node arrays data. zCFD then looks up the values by finding the nearest point to the mesh location.
 
 The node array data in the VTP should be named specifically for each keyword:
 

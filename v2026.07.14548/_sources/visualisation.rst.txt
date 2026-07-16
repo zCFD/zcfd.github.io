@@ -1,15 +1,19 @@
 Visualisation
 =============
 
-zCFD by default will output data in `VTK <http://www.vtk.org/>`_ format.  This format can be read directly by many post-processing tools including `ParaView <http://www.paraview.org/>`_ by Kitware.
+zCFD by default will output data in `VTK HDF <https://www.vtk.org/>`_ format (.vtkhdf).  This format can be read directly by many post-processing tools including `ParaView <https://www.paraview.org/>`_ by Kitware.
+
+.. note::
+
+    The .vtkhdf output format requires `ParaView 6.1.1 <https://www.paraview.org/download/>`_ or later.
 
 Output in other formats is also possible, including `TECPLOT <http://www.tecplot.com/>`_ and `EnSight <https://www.ansys.com/en-gb/products/fluids/ansys-ensight>`_ as follows:
 
 
-VTK Output
-----------
+VTK HDF Output
+--------------
 
-By default, zCFD will output data in VTK format. To explicitly force VTK output, use the following option in the *'write output'* part of the control dictionary:
+By default, zCFD will output data in VTK HDF format (.vtkhdf). To explicitly force VTK HDF output, use the following option in the *'write output'* part of the control dictionary:
 
 .. code-block:: python
 
@@ -28,21 +32,10 @@ To output in EnSight format, use the following option in the *'write output'* pa
                         # Output format
                         'format' : 'ensight',
 
-Native HDF5 Output
-------------------
-
-To output in HDF5 format (the native format for zCFD), use the following option in the *'write output'* part of the control dictionary:
-
-.. code-block:: python
-
-    'write output' : {
-                        # Output format
-                        'format' : 'native',
-
 ParaView Catalyst Scripts
 -------------------------
 
-ParaView provides a powerful yet lightweight interface that allows parallel processing of simulation data during programme execution called `ParaView Catalyst <http://www.paraview.org/in-situ/>`_. This is driven by scripts (Python files) that can be called when data is output:
+ParaView provides a powerful yet lightweight interface that allows parallel processing of simulation data during programme execution called `ParaView Catalyst <https://www.paraview.org/insitu/>`_. This is driven by scripts (Python files) that can be called when data is output:
 
 .. code-block:: python
 
@@ -55,7 +48,7 @@ ParaView provides a powerful yet lightweight interface that allows parallel proc
 ParaView Client
 ---------------
 
-To download the free ParaView software for visualising VTK format data on the local device, just visit the `Paraview website <http://paraview.org/>`_.
+To download the free ParaView software for visualising VTK HDF format data on the local device, visit the `ParaView download page <https://www.paraview.org/download/>`_. ParaView 6.1.1 or later is required for .vtkhdf file support.
 
 ParaView Client-Server
 ----------------------
@@ -65,9 +58,9 @@ In addition to running entirely locally on a device, ParaView can interface to a
 ParaView Server 
 ^^^^^^^^^^^^^^^
 
-To download and install ParaView Server, you can either use the version on the main ParaView website and follow the instructions `here <http://www.paraview.org/Wiki/Setting_up_a_ParaView_Server>`_. 
+To download and install ParaView Server, you can either use the version on the main ParaView website and follow the `official documentation <https://docs.paraview.org/en/latest/ReferenceManual/parallelDataVisualization.html>`_.
 
-Alternatively or else use the version bundled with zCFD. The 'pvserver' included in the zCFD distribution includes plugins for reading the zCFD HDF5 mesh format directly.
+Alternatively, use the version bundled with zCFD. The 'pvserver' included in the zCFD distribution includes plugins for reading the zCFD HDF5 mesh format directly.
 
 To start a ParaView Server on your computer within the zCFD environment run:
 
@@ -79,7 +72,7 @@ To start a ParaView Server on your computer within the zCFD environment run:
 ParaViewConnect 
 ^^^^^^^^^^^^^^^^
 
-`ParaviewConnect <https://github.com/zenotech/ParaViewConnect>`_ is a helper utility for connecting to remove ParaView servers. It reduces the complexity of setting up the required ssh connections and works well with zCFD. More information and installation instructions can be found on the `Github page <https://github.com/zenotech/ParaViewConnect>`_.
+`ParaViewConnect <https://github.com/zenotech/ParaViewConnect>`_ is a helper utility for connecting to remote ParaView servers. It reduces the complexity of setting up the required ssh connections and works well with zCFD. More information and installation instructions can be found on the `Github page <https://github.com/zenotech/ParaViewConnect>`_.
 
 
 ParaView Post-Processing Best Practices for Parallel zCFD Data
@@ -117,7 +110,7 @@ For **quantitative analysis** and **data extraction** (probes, line plots, force
     import paraview.simple as pvs
     
     # Load data
-    reader = pvs.PVDReader(FileName='solution.pvd')
+    reader = pvs.OpenDataFile('solution.vtkhdf')
     
     # Use CleantoGrid to preserve data accuracy
     clean_data = pvs.CleantoGrid(Input=reader)
@@ -135,7 +128,7 @@ For **visualisation purposes** (streamlines, contours, volume rendering):
     import paraview.simple as pvs
     
     # Load data
-    reader = pvs.PVDReader(FileName='solution.pvd')
+    reader = pvs.OpenDataFile('solution.vtkhdf')
     
     # Use MergeBlocks for smoother visualisations
     merged_data = pvs.MergeBlocks(Input=reader)
@@ -149,7 +142,7 @@ Important Considerations
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. **Data Accuracy**: Always use CleantoGrid when extracting quantitative data for analysis or validation
-2. **visualisation Quality**: MergeBlocks may provide better visual results for presentations and general visualisation
+2. **Visualisation Quality**: MergeBlocks may provide better visual results for presentations and general visualisation
 3. **Performance**: CleantoGrid is typically faster as it performs less processing
 4. **Block Boundaries**: Be aware that different filters may show artefacts differently at parallel decomposition boundaries
 5. **Regression Testing**: When comparing results across different runs, ensure consistent filter usage
@@ -165,14 +158,14 @@ The following pattern is recommended in Jupyter notebooks when processing zCFD p
     
     # For data extraction and analysis
     def load_for_analysis(filename):
-        reader = pvs.PVDReader(FileName=filename)
+        reader = pvs.OpenDataFile(filename)
         reader.UpdatePipeline()
         clean = pvs.CleantoGrid(Input=reader)
         return clean
     
     # For visualisation and rendering
     def load_for_visualisation(filename):
-        reader = pvs.PVDReader(FileName=filename)
+        reader = pvs.OpenDataFile(filename)
         reader.UpdatePipeline()
         merged = pvs.MergeBlocks(Input=reader)
         point_data = pvs.CellDatatoPointData(Input=merged)

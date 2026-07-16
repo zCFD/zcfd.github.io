@@ -167,9 +167,9 @@ Examining the force convergence history next, we are interested in the x and y f
 
 Which show reasonable agreement with experimental results, and additionally that the forces are at least nearing convergence. The grid for this case is still extremely coarse, accounting for the differences in lift and drag coefficients. 
 
-Paraview
+ParaView
 ========
-Opening Paraview, and loading in the `30p30n_steady_wall.pvd` results will allow you to view the aerofoil surface results:
+Opening ParaView, and loading in the `30p30n_steady_wall.vtkhdf` results will allow you to view the aerofoil surface results:
 
 .. image:: ../images/tutorial2/Figure_4.png
   :width: 600

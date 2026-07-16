@@ -89,7 +89,7 @@ oversetmulticylinder_report.ipynb
 <p>To combine the 4 overset meshes into a single solution that can be operated on as though it were a single object, we use the “Append Datasets” filter in ParaView.</p>
 <ul class="simple">
 <li><p>Launch ParaView so that you can load the solution files (locally or remotely).</p></li>
-<li><p>Load the 4 files “back*_P1_OUTPUT/back*.pvd” for * = 1,2,3 and 4.</p></li>
+<li><p>Load the 4 files “back*_P1_OUTPUT/back*.vtkhdf” for * = 1,2,3 and 4.</p></li>
 <li><p>Highlight all 4 files on the navigation tree (on the left) and select “Filters &gt; Append Datasets”.  This will create a new item in the navigation tree called “AppendDatasets1” that acts on all four datasets at once.</p></li>
 <li><p>The volumetric data output for this case contains a variable called “overset” which is 0 or 1 for any cell in the meshes. 0 means that the cell has been overset by another mesh, and 1 means that the cell is the active cell in that location.  Use the “Filters &gt; Threshold” filter to select only the cells in the “AppendDatasets1” combined dataset that have an “overset” value of 1 (do this by changing the lower threshold value from 0 to 1).  This will create a new item in the navigation tree called “Threshold1” excluding any cells that have been overset by cells in another mesh.</p></li>
 <li><p>Use the “Filters &gt; Cell Data to Point Data” filter to interpolate the cell data from “Threshold1” to the mesh nodes.  This makes subsequent interpolation operations in ParaView more accurate.  This will create a new item in the navigation tree called “CellDatatoPointData1”.</p></li>
