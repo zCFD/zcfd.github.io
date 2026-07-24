@@ -639,8 +639,12 @@ This boundary condition needs to be specified in pairs with opposing transformat
 
     Each periodic boundary needs to provide the correct vector to the opposite matching boundary.
 
+.. note::
 
-.. list-table:: 
+    The incompressible solver ('incomp viscous' / 'incomp rans' / 'incomp les') only supports the **'linear'** (translational) periodic kind. **'rotated'** periodic boundaries are only supported by the compressible solver.
+
+
+.. list-table::
    :widths: 20 10 10 20 35
    :header-rows: 1
 
@@ -651,24 +655,24 @@ This boundary condition needs to be specified in pairs with opposing transformat
      - Description
    * - 'ref'
      - Yes
-     - 
+     -
      - Integer
-     - Mesh reference defined by this boundary condition 
+     - Mesh reference defined by this boundary condition
    * - 'zone'
      - No
-     - 
+     -
      - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
+     - Specifies list of mesh zones defined by this boundary condition
    * - 'type'
      - Yes
-     - 
+     -
      - 'periodic'
      - This sets the type of boundary condition to be associated with the zones.
    * - 'kind'
      - Yes
-     - 
+     -
      - 'rotated' or 'linear' dictionary (see below)
-     - The definition of the periodic transformations, can either be a 'rotated' or 'linear' dictionary
+     - The definition of the periodic transformations, can either be a 'rotated' or 'linear' dictionary (see note above on incompressible-solver support)
 
 The options for the **'linear'** dictionary are:
 
@@ -704,7 +708,7 @@ Example linear periodic boundary condition:
     },
 
 
-The options for the **'rotated'** dictionary are:
+The options for the **'rotated'** dictionary are (compressible solver only — see note above):
 
 .. list-table:: 
    :widths: 25 10 10 20 30
