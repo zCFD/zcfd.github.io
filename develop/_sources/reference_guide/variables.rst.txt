@@ -29,6 +29,8 @@ Output Variables
     enstrophy
     ek
     lesregion
+    lescfl                                          Nominal cell convective CFL number, :math:`|u|\Delta t/\Delta`, in the DES/DDES/IDDES LES region (zero elsewhere)
+    fdshield                                        DES/DDES/IDDES shielding function :math:`f_d` (1 in resolved LES, 0 in the shielded RANS region)
     turbulenceintensity       ti                    Turbulence intensity
     turbulencekineticenergy                         `Turbulence kinetic energy <https://en.wikipedia.org/wiki/Turbulence_kinetic_energy>`_ (:math:`J/kg`)
     turbulenceeddyfrequency                         `Turbulence eddy frequency <https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure>`_ (:math:`1/s`)
