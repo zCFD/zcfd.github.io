@@ -444,6 +444,43 @@ Selects the hybrid RANS/LES model in the RANS solver which is applied to the bas
    * - **'SAS'**
      - Scale Adaptive Simulation
 
+les cfl limit
+=============
+Convective CFL number at or below which the LES branch of a DES/DDES/IDDES model is left
+untouched. Defaults to **0.0**, which disables the CFL shield entirely.
+
+The LES branch replaces the modelled RANS stress with resolved eddies of the size of the local
+filter width :math:`\Delta`, but those eddies are only genuinely resolved if the time step can
+carry them, that is if the convective CFL number is of order one. Where the CFL is larger the
+model still drops the RANS stress, while the temporal discretisation cannot supply the resolved
+stress that should replace it. The eddy viscosity shielding function :math:`f_d` does not
+protect against this because it is built from :math:`r_d`, a purely spatial ratio.
+
+Setting a limit adds a second shield built from the cell CFL number,
+
+.. math::
+
+   \mathrm{CFL} = \frac{\left| \mathbf{u} - \mathbf{u}_{grid} \right| \Delta t}{\Delta},
+   \qquad
+   f_{CFL} = \mathrm{smoothstep}\left(
+   \mathrm{clamp}\left( \frac{\mathrm{CFL} - \mathrm{limit}}{\mathrm{width}}, 0, 1 \right) \right)
+
+which is combined with :math:`f_d` so that the more protective of the two wins. At
+:math:`f_{CFL} = 1` the hybrid length scale is exactly the RANS length scale, so the LES branch
+is fully suppressed. Because :math:`f_{CFL}` is exactly zero at or below the limit, a
+simulation whose CFL number is everywhere within the limit is unaffected.
+
+The shield is only active for time accurate runs, that is dual time stepping or global time
+stepping, since a steady run has no meaningful real time step. It applies to the **'DES'**,
+**'DDES'** and **'IDDES'** settings only, not to **'SAS'** or **'WALE'**. Use the **lescfl**
+output variable to find where the CFL number exceeds the limit before enabling it.
+
+les cfl width
+=============
+Width of the blend above **"les cfl limit"**. RANS is fully enforced at a CFL number of
+``limit + width``. Defaults to **1.0**. A wider blend gives a more gradual return to RANS,
+which is usually preferable since the shielded cells also revert to full upwind dissipation.
+
 model
 =====
 Selects the RANS turbulence model. 

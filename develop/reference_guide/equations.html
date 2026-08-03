@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2025.11.13331-233-ga4464 documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.11.13331-234-gdd303 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=81719b1e"></script>
+    <script src="../_static/documentation_options.js?v=cb8d5413"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -554,6 +554,37 @@ Run 500 cycles first order.</p>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="les-cfl-limit">
+<h3>les cfl limit<a class="headerlink" href="#les-cfl-limit" title="Link to this heading">¶</a></h3>
+<p>Convective CFL number at or below which the LES branch of a DES/DDES/IDDES model is left
+untouched. Defaults to <strong>0.0</strong>, which disables the CFL shield entirely.</p>
+<p>The LES branch replaces the modelled RANS stress with resolved eddies of the size of the local
+filter width <span class="math notranslate nohighlight">\(\Delta\)</span>, but those eddies are only genuinely resolved if the time step can
+carry them, that is if the convective CFL number is of order one. Where the CFL is larger the
+model still drops the RANS stress, while the temporal discretisation cannot supply the resolved
+stress that should replace it. The eddy viscosity shielding function <span class="math notranslate nohighlight">\(f_d\)</span> does not
+protect against this because it is built from <span class="math notranslate nohighlight">\(r_d\)</span>, a purely spatial ratio.</p>
+<p>Setting a limit adds a second shield built from the cell CFL number,</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{CFL} = \frac{\left| \mathbf{u} - \mathbf{u}_{grid} \right| \Delta t}{\Delta},
+\qquad
+f_{CFL} = \mathrm{smoothstep}\left(
+\mathrm{clamp}\left( \frac{\mathrm{CFL} - \mathrm{limit}}{\mathrm{width}}, 0, 1 \right) \right)\]</div>
+<p>which is combined with <span class="math notranslate nohighlight">\(f_d\)</span> so that the more protective of the two wins. At
+<span class="math notranslate nohighlight">\(f_{CFL} = 1\)</span> the hybrid length scale is exactly the RANS length scale, so the LES branch
+is fully suppressed. Because <span class="math notranslate nohighlight">\(f_{CFL}\)</span> is exactly zero at or below the limit, a
+simulation whose CFL number is everywhere within the limit is unaffected.</p>
+<p>The shield is only active for time accurate runs, that is dual time stepping or global time
+stepping, since a steady run has no meaningful real time step. It applies to the <strong>‘DES’</strong>,
+<strong>‘DDES’</strong> and <strong>‘IDDES’</strong> settings only, not to <strong>‘SAS’</strong> or <strong>‘WALE’</strong>. Use the <strong>lescfl</strong>
+output variable to find where the CFL number exceeds the limit before enabling it.</p>
+</section>
+<section id="les-cfl-width">
+<h3>les cfl width<a class="headerlink" href="#les-cfl-width" title="Link to this heading">¶</a></h3>
+<p>Width of the blend above <strong>“les cfl limit”</strong>. RANS is fully enforced at a CFL number of
+<code class="docutils literal notranslate"><span class="pre">limit</span> <span class="pre">+</span> <span class="pre">width</span></code>. Defaults to <strong>1.0</strong>. A wider blend gives a more gradual return to RANS,
+which is usually preferable since the shielded cells also revert to full upwind dissipation.</p>
 </section>
 <section id="model">
 <h3>model<a class="headerlink" href="#model" title="Link to this heading">¶</a></h3>
