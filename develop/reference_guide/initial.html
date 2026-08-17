@@ -38,8 +38,8 @@
 <span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Link to this heading">¶</a></h1>
 <p>An initial condition dictionary defines a fluid state. They are used to provide a reference initial state for the solution as well as specific conditions that can be assigned to <a class="reference internal" href="boundary.html#boundary-conditions"><span class="std std-ref">boundary conditions</span></a>.</p>
 <p>Initial condition properties are defined using consecutively numbered blocks</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
-<span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
 </pre></div>
 </div>
 <p>By default zCFD will use the “IC_1” block  to provide initial flow field conditions for the simulation but this can be changed with the <a class="reference internal" href="reference.html#initial-state"><span class="std std-ref">‘initial’</span></a> parameter.</p>
@@ -133,15 +133,15 @@
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
 <span class="o">..</span>
-<span class="s2">&quot;IC_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="p">},</span>
-    <span class="s2">&quot;ambient eddy viscosity ratio&quot;</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
-    <span class="s2">&quot;ambient turbulence intensity&quot;</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
-    <span class="s2">&quot;eddy viscosity ratio&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">273.15</span><span class="p">,</span>
-    <span class="s2">&quot;turbulence intensity&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-    <span class="s2">&quot;viscosity&quot;</span><span class="p">:</span> <span class="mf">1.79e-05</span><span class="p">,</span>
+<span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"V"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="p">},</span>
+    <span class="s2">"ambient eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s2">"ambient turbulence intensity"</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s2">"eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s2">"pressure"</span><span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
+    <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">273.15</span><span class="p">,</span>
+    <span class="s2">"turbulence intensity"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s2">"viscosity"</span><span class="p">:</span> <span class="mf">1.79e-05</span><span class="p">,</span>
 <span class="o">..</span>
 <span class="p">},</span>
 </pre></div>
@@ -151,13 +151,13 @@
 <p>Velocity can be specified in two ways, either a vector or a vector and a Mach number. When Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and speed of sound at the pressure and temperature provided.</p>
 <p>For example to set a velocity of 50 mesh units/sec in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">]}</span>
+<span class="s2">"V"</span> <span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">]}</span>
 <span class="o">..</span>
 </pre></div>
 </div>
 <p>Or to set a velocity of mach 0.2 in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="s2">&quot;mach&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="s2">"V"</span> <span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="s2">"mach"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="o">..</span>
 </pre></div>
 </div>
@@ -166,14 +166,14 @@
 <span id="ic-viscosity"></span><h2>Viscosity<a class="headerlink" href="#viscosity" title="Link to this heading">¶</a></h2>
 <p>Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified.  This can be specified either as a dimensional quantity or by a Reynolds number and reference length</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dynamic viscosity in dimensional units</span>
-<span class="s1">&#39;viscosity&#39;</span> <span class="p">:</span> <span class="mf">1.83e-5</span><span class="p">,</span>
+<span class="s1">'viscosity'</span> <span class="p">:</span> <span class="mf">1.83e-5</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>or</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reynolds number</span>
-<span class="s1">&#39;reynolds No&#39;</span> <span class="p">:</span> <span class="mf">5.0e6</span><span class="p">,</span>
+<span class="s1">'reynolds No'</span> <span class="p">:</span> <span class="mf">5.0e6</span><span class="p">,</span>
 <span class="c1"># Reference length</span>
-<span class="s1">&#39;reference length&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="s1">'reference length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -186,9 +186,9 @@
 <span id="ic-turb-intensity"></span><h2>Turbulence intensity &amp; Eddy viscosity<a class="headerlink" href="#turbulence-intensity-eddy-viscosity" title="Link to this heading">¶</a></h2>
 <p>Turbulence intensity is defined as the ratio of velocity fluctuations <span class="math notranslate nohighlight">\(u^{'}\)</span> to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Turbulence intensity %</span>
-<span class="s1">&#39;turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="s1">'turbulence intensity'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
 <span class="c1"># Turbulence intensity for sustainment %</span>
-<span class="s1">&#39;ambient turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="s1">'ambient turbulence intensity'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>The eddy viscosity ratio <span class="math notranslate nohighlight">\((\mu_t/\mu)\)</span> varies depending type of flow.
@@ -216,9 +216,9 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Eddy viscosity ratio</span>
-<span class="s1">&#39;eddy viscosity ratio&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="s1">'eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
 <span class="c1"># Eddy viscosity ratio for sustainment</span>
-<span class="s1">&#39;ambient eddy viscosity ratio&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="s1">'ambient eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
@@ -266,10 +266,10 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <span id="ic-field"></span><h3>field<a class="headerlink" href="#field" title="Link to this heading">¶</a></h3>
 <p>The file specified using the ‘field’ parameter should be in the ParaView/VTK VTP format. If should contain a node array with one or more of the following array names: ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. zCFD will then look up those values in the solution by looking up the nearest point in the VTP file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s1">&#39;profile&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;field&#39;</span> <span class="p">:</span> <span class="s1">&#39;inflow_field.vtp&#39;</span><span class="p">,</span>
+<span class="s1">'profile'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'field'</span> <span class="p">:</span> <span class="s1">'inflow_field.vtp'</span><span class="p">,</span>
          <span class="c1"># Localise field using wall distance rather that z coordinate</span>
-         <span class="s1">&#39;use wall distance&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="s1">'use wall distance'</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">},</span>
 <span class="o">..</span>
 </pre></div>

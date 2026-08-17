@@ -101,9 +101,9 @@
 <p>Example usage:</p>
 <p>For a simulation with 1000’s of cycles, it can be unnecessary to report every time cycle, which slows the solver down. For a dual timestepping simulation with 20 inner time cycles, outputting every 10 cycles generally gives enough information without substantially slowing the solver down</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Report every 10 cycles</span>
-<span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'report'</span> <span class="p">:</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="s1">'frequency'</span><span class="p">:</span> <span class="mi">10</span>
     <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>
@@ -112,19 +112,19 @@
 <h2>A simulation with two monitor points and one forces block.<a class="headerlink" href="#a-simulation-with-two-monitor-points-and-one-forces-block" title="Link to this heading">¶</a></h2>
 <p>In addition to standard flow field outputs (see below), zCFD can provide information at monitor points in the flow domain, and integrated forces across all parallel partitions, any number of <code class="code docutils literal notranslate"><span class="pre">'MR_'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'FR_'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'MF_'</span></code> blocks may be specified.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Report every 10 cycles</span>
-<span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'report'</span> <span class="p">:</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">10</span>
-    <span class="s1">&#39;monitor&#39;</span> <span class="p">{</span>
-      <span class="s1">&#39;MR_1&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'frequency'</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="s1">'monitor'</span> <span class="p">{</span>
+      <span class="s1">'MR_1'</span><span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
        <span class="p">},</span>
-       <span class="s1">&#39;MR_2&#39;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="s1">'MR_2'</span><span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
        <span class="p">},</span>
     <span class="p">}</span>
-    <span class="s1">&#39;forces&#39;</span> <span class="p">{</span>
-      <span class="s1">&#39;FR_1&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'forces'</span> <span class="p">{</span>
+      <span class="s1">'FR_1'</span><span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
        <span class="p">}</span>
     <span class="p">}</span>
@@ -172,13 +172,13 @@
 <p><strong>‘variables’</strong> controls which variables are reported at this point. In the &lt;casename&gt;_report.csv the column name will be a combination of the <strong>‘name’</strong> and the variable name.</p>
 <p>Example usage:</p>
 <p>Tracking pressure and velocity is useful for determining shedding cycle behaviour, or in the case of a scale resolving simulation, to determine the turbulence spectrum which is being resolved. It may be important to track other variables (e.g. turbulence intensity) may also be appropriate depending on the simulation setup.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s1">&#39;monitor&#39;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;MR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;monitor_1&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">],</span>
-                <span class="s1">&#39;variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="s2">&quot;Ti&quot;</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'report'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'frequency'</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s1">'monitor'</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'MR_1'</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">'name'</span> <span class="p">:</span> <span class="s1">'monitor_1'</span><span class="p">,</span>
+                <span class="s1">'point'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">],</span>
+                <span class="s1">'variables'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">,</span><span class="s1">'T'</span><span class="p">,</span><span class="s2">"Ti"</span><span class="p">],</span>
         <span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
@@ -262,21 +262,21 @@ The force and moment coefficients resulting exclusively from viscous forces and 
 </tbody>
 </table>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'report'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'frequency'</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
         <span class="c1"># Report force coefficient in grid axis as well as using user defined transform</span>
-        <span class="s1">&#39;forces&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;FR_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                            <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;force_1&#39;</span><span class="p">,</span>
+        <span class="s1">'forces'</span> <span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">'FR_1'</span> <span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">'name'</span> <span class="p">:</span> <span class="s1">'force_1'</span><span class="p">,</span>
                             <span class="c1"># Required: Zones to be included</span>
-                            <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                            <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
                             <span class="c1"># Transformation function</span>
-                            <span class="s1">&#39;transform&#39;</span> <span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
-                            <span class="s1">&#39;reference area&#39;</span> <span class="p">:</span> <span class="mf">0.112032</span><span class="p">,</span>
-                            <span class="s1">&#39;reference length&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                            <span class="s1">&#39;reference point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                            <span class="s1">'transform'</span> <span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+                            <span class="s1">'reference area'</span> <span class="p">:</span> <span class="mf">0.112032</span><span class="p">,</span>
+                            <span class="s1">'reference length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                            <span class="s1">'reference point'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
                             <span class="c1"># Calculate forces using a specified reference pressure rather than absolute</span>
-                            <span class="s1">&#39;reference pressure&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+                            <span class="s1">'reference pressure'</span><span class="p">:</span> <span class="mf">0.0</span>
                             <span class="p">},</span>
                     <span class="p">},</span>
 <span class="p">},</span>
@@ -399,15 +399,15 @@ Where <span class="math notranslate nohighlight">\(c\)</span> = reference length
 <p><strong>`name`</strong> Sets the name that appears in the &lt;casename&gt;_report.csv column heading for variables from this mass flow monitor. For example, setting this to ‘pipe_outflow’ would mean the massflow would appear as ‘pipe_outflow_massflow in the &lt;casename&gt;_report.csv file</p>
 <p><strong>‘zones’</strong> The mass flows through all the zones are summed to give a single output value for the mass flow monitor. Flow out of the domain is considered positive massflow, flow into the domain is considered positive massflow and the massflows are dimensional (typically kg per second).</p>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;report&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;frequency&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'report'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'frequency'</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
         <span class="c1"># Report massflow ratio</span>
-        <span class="s1">&#39;massflow&#39;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;MF_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'massflow'</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'MF_1'</span> <span class="p">:</span> <span class="p">{</span>
                     <span class="c1"># Output name</span>
-                    <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;massflow_1&#39;</span><span class="p">,</span>
+                    <span class="s1">'name'</span> <span class="p">:</span> <span class="s1">'massflow_1'</span><span class="p">,</span>
                     <span class="c1"># Zones to be included</span>
-                    <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="p">,</span><span class="mi">3</span><span class="p">],</span>
                     <span class="p">},</span>
             <span class="p">},</span>
 <span class="p">},</span>

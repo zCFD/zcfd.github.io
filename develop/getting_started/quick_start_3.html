@@ -59,21 +59,21 @@
 <p>To switch to a time accurate simulation we need to update the <em>“time marching”</em> dictionary. In the steady state <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a> case the <em>‘total time’</em> and <em>‘time step’</em> parameters were both set to 1.0, this causes the solver to run a single steady state timestep for the number of cycles defined by the <em>‘cycles’</em> parameter.</p>
 <p>We will now update these to run the time accurate simulation. To do this we set <em>‘total time’</em> to be 1.2, which means the simulation will be run for a total of 1.2 seconds. <em>‘time step’</em> is set to 0.002 seconds, this is the interval at which the solver will step time forwards. Which means we will have a total of 1.2 / 0.002 = 600
 total unsteady timesteps to perform.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;unsteady&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;total time&#39;</span> <span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
-        <span class="s1">&#39;time step&#39;</span> <span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
-        <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;start&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'unsteady'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'total time'</span> <span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
+        <span class="s1">'time step'</span> <span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
+        <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+        <span class="s1">'start'</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s1">&#39;scheme&#39;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;implicit euler&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;stage&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'scheme'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'name'</span> <span class="p">:</span> <span class="s1">'implicit euler'</span><span class="p">,</span>
+        <span class="s1">'stage'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">},</span>
-     <span class="s2">&quot;cfl&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-     <span class="s2">&quot;cfl viscous factor&quot;</span><span class="p">:</span> <span class="mf">1.0E-6</span><span class="p">,</span>
-     <span class="s2">&quot;cfl ramp factor&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;initial&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;growth&quot;</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">},</span>
-     <span class="s2">&quot;cycles&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+     <span class="s2">"cfl"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+     <span class="s2">"cfl viscous factor"</span><span class="p">:</span> <span class="mf">1.0E-6</span><span class="p">,</span>
+     <span class="s2">"cfl ramp factor"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"initial"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">"growth"</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">},</span>
+     <span class="s2">"cycles"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -83,14 +83,14 @@ total unsteady timesteps to perform.</p>
 <section id="output">
 <span id="quick-start-3-output"></span><h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
 <p>The <em>‘write output’</em> dictionary in the control dictionary is a bit more complicated here than in <a class="reference internal" href="quick_start_1.html#tutorial-1"><span class="std std-ref">tutorial 1</span></a> or <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;write output&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;vtk&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;surface variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;rho&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;volume variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;rho&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;volume data&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;surface data&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;checkpoint&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"write output"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">,</span>
+    <span class="s2">"surface variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
+    <span class="s2">"volume variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
+    <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"volume data"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">"surface data"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">"checkpoint"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
@@ -104,11 +104,11 @@ total unsteady timesteps to perform.</p>
 <section id="monitor-points">
 <h3>Monitor Points<a class="headerlink" href="#monitor-points" title="Link to this heading">¶</a></h3>
 <p>In order to capture the shedding frequencies of vortices behind the cylinder, we will place a monitor point in this region to append data to the report file. A monitor point will simply report the requested output variables, at the point defined within the flow. These results can be visualised alongside the force report in the output notebook.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;monitor&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;MR_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;probe&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;point&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span> <span class="mf">0.313</span><span class="p">],</span>
-        <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cp&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"monitor"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"MR_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"probe"</span><span class="p">,</span>
+        <span class="s2">"point"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span> <span class="mf">0.313</span><span class="p">],</span>
+        <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"cp"</span><span class="p">]</span>
     <span class="p">}</span>
 <span class="p">},</span>
 </pre></div>

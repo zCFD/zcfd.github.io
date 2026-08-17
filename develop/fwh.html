@@ -100,25 +100,25 @@ pOut,tOut = fwh.solve(mySurfaces, myObservers, solverSettings)</pre>
 <span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 
 <span class="n">mySurfaces</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;fwhSurf1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;motion&quot;</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
-        <span class="s2">&quot;fileName&quot;</span><span class="p">:</span> <span class="s2">&quot;./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5&quot;</span>
+    <span class="s2">"fwhSurf1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"motion"</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
+        <span class="s2">"fileName"</span><span class="p">:</span> <span class="s2">"./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5"</span>
     <span class="p">}</span>
 <span class="p">}</span>
-<span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Obs1&quot;</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">&quot;Ob2&quot;</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
-<span class="n">mySolverSettings</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">&quot;rho0&quot;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">}</span>
+<span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Obs1"</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">"Ob2"</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
+<span class="n">mySolverSettings</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">"c"</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">"rho0"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">"p0"</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">}</span>
 
 <span class="n">pOut</span><span class="p">,</span><span class="n">tOut</span> <span class="o">=</span> <span class="n">fwh</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mySurfaces</span><span class="p">,</span><span class="n">myObservers</span><span class="p">,</span><span class="n">solverSettings</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs1&quot;</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs1&quot;</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Obs1&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs2&quot;</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">&quot;fwhSurf1&quot;</span><span class="p">][</span><span class="s2">&quot;Obs2&quot;</span><span class="p">],</span><span class="n">lable</span><span class="o">=</span><span class="s2">&quot;Obs2&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;t (s)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;p (Pa)&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;./FWH_figure.pdf&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">"fwhSurf1"</span><span class="p">][</span><span class="s2">"Obs1"</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">"fwhSurf1"</span><span class="p">][</span><span class="s2">"Obs1"</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">"Obs1"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tOut</span><span class="p">[</span><span class="s2">"fwhSurf1"</span><span class="p">][</span><span class="s2">"Obs2"</span><span class="p">],</span><span class="n">pOut</span><span class="p">[</span><span class="s2">"fwhSurf1"</span><span class="p">][</span><span class="s2">"Obs2"</span><span class="p">],</span><span class="n">lable</span><span class="o">=</span><span class="s2">"Obs2"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"t (s)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"p (Pa)"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">"./FWH_figure.pdf"</span><span class="p">)</span>
 
-<span class="n">dataForJson</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">pOut</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">tOut</span><span class="p">}</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./FWH_data.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="n">dataForJson</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"p"</span><span class="p">:</span> <span class="n">pOut</span><span class="p">,</span> <span class="s2">"t"</span><span class="p">:</span> <span class="n">tOut</span><span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"./FWH_data.json"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dataForJson</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -136,9 +136,9 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 <span class="n">surfaceMotion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">NonrotatingSurface</span><span class="p">(</span><span class="n">surfaceCentreMotion</span><span class="p">)</span>
 
 <span class="n">mySurfaces</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;fwhSurf1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;motion&quot;</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
-        <span class="s2">&quot;fileName&quot;</span><span class="p">:</span> <span class="s2">&quot;./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5&quot;</span>
+    <span class="s2">"fwhSurf1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"motion"</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
+        <span class="s2">"fileName"</span><span class="p">:</span> <span class="s2">"./zcfdSim_P2_OUTPUT/ACOUSTIC_DATA/fwhsurf1_FWHData.h5"</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -205,7 +205,7 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 <span class="n">obs1Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 <span class="n">obs2Motion</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">ConstantVelocityPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">)</span>
 
-<span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Obs1&quot;</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">&quot;Ob2&quot;</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
+<span class="n">myObservers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Obs1"</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">"Ob2"</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -213,7 +213,7 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 <span id="fwhsolversettings"></span><h4>Solver settings dictionary<a class="headerlink" href="#solver-settings-dictionary" title="Link to this heading">¶</a></h4>
 <p>The solver settings dictionary sets the properties of the FWH medium, and the numerical settings used in the FWH solver.</p>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mySolverSettings</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">&quot;rho0&quot;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mySolverSettings</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">"c"</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">"rho0"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">"p0"</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">}</span>
 </pre></div>
 </div>
 <table class="docutils align-default">
@@ -371,16 +371,16 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 <p>The first input to the <cite>run_fwh</cite> utility is the <cite>zCFD control file</cite>. This is the control file for the zCFD simulation which generated the FWH surface data files which are to be used. For the example outlined in <a class="reference internal" href="#fwhfig1"><span class="std std-numref">Fig. 4</span></a> and the <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module example</span></a>, the <cite>zCFD control file</cite> would be called <code class="code docutils literal notranslate"><span class="pre">zcfdSim.py</span></code> and would look something like the example below.</p>
 <div class="highlight-python notranslate" id="runfwhzcfdparameterscode"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">...</span>
-  <span class="s2">&quot;IC_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">288</span><span class="p">,</span>
-      <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">,</span>
-      <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+  <span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"temperature"</span><span class="p">:</span> <span class="mi">288</span><span class="p">,</span>
+      <span class="s2">"pressure"</span><span class="p">:</span> <span class="mf">1e5</span><span class="p">,</span>
+      <span class="s2">"V"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
       <span class="o">...</span>
   <span class="p">},</span>
   <span class="o">...</span>
-  <span class="s2">&quot;write output&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s2">"write output"</span><span class="p">:</span> <span class="p">{</span>
       <span class="o">...</span>
-      <span class="s2">&quot;fwh interpolate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;fwhsurf1.stl&quot;</span><span class="p">],</span>
+      <span class="s2">"fwh interpolate"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"fwhsurf1.stl"</span><span class="p">],</span>
       <span class="o">...</span>
   <span class="p">},</span>
   <span class="o">...</span>
@@ -414,17 +414,17 @@ The surface name must be a string, and cannot be ‘Surface Summation’.</p>
 <p>Where the <cite>run_fwh</cite> utility is not suitable, it is still possible to use components of the <cite>run_fwh</cite> utility to automate parts of a <a class="reference internal" href="#fwhrunningpython"><span class="std std-ref">fwh python module</span></a> workflow. A simplified summary of what happens within the <cite>run_fwh</cite> executable is detailed below, showing the use of the <cite>fwh_helper_functions</cite> which can be used in the <cite>fwh python module</cite> to automate workflows.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fwh_helper_functions</span>
 <span class="n">rho0</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freestreamV</span> <span class="o">=</span> <span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">get_zcfd_ref_conditions</span><span class="p">(</span>
-    <span class="s2">&quot;zcfdSim.py&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_1&quot;</span>
+    <span class="s2">"zcfdSim.py"</span><span class="p">,</span> <span class="s2">"IC_1"</span>
 <span class="p">)</span>
 <span class="n">surfaces</span> <span class="o">=</span> <span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">get_zcfd_surfaces</span><span class="p">(</span>
-    <span class="s2">&quot;zcfdSim.py&quot;</span><span class="p">,</span> <span class="n">freestreamV</span>
+    <span class="s2">"zcfdSim.py"</span><span class="p">,</span> <span class="n">freestreamV</span>
 <span class="p">)</span>
 <span class="n">observers</span> <span class="o">=</span> <span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">get_csv_observers</span><span class="p">(</span>
-    <span class="s2">&quot;observers.csv&quot;</span><span class="p">,</span> <span class="n">freestreamV</span>
+    <span class="s2">"observers.csv"</span><span class="p">,</span> <span class="n">freestreamV</span>
 <span class="p">)</span>
-<span class="n">solverSettings</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rho&quot;</span><span class="p">:</span> <span class="n">rho0</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">:</span> <span class="n">p0</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">}</span>
+<span class="n">solverSettings</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"rho"</span><span class="p">:</span> <span class="n">rho0</span><span class="p">,</span> <span class="s2">"p0"</span><span class="p">:</span> <span class="n">p0</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">:</span> <span class="n">c</span><span class="p">}</span>
 <span class="n">pOut</span><span class="p">,</span> <span class="n">tOut</span> <span class="o">=</span> <span class="n">fwh</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">observers</span><span class="p">,</span> <span class="n">solverSettings</span><span class="p">)</span>
-<span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">write_fwh_data_to_zcfd_csv</span><span class="p">(</span><span class="s2">&quot;zcfdSim.py&quot;</span><span class="p">,</span> <span class="n">tOut</span><span class="p">,</span> <span class="n">pOut</span><span class="p">)</span>
+<span class="n">fwh_helper_functions</span><span class="o">.</span><span class="n">write_fwh_data_to_zcfd_csv</span><span class="p">(</span><span class="s2">"zcfdSim.py"</span><span class="p">,</span> <span class="n">tOut</span><span class="p">,</span> <span class="n">pOut</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -444,7 +444,7 @@ The data can be viewed by opening the <cite>.xdmf`</cite> file corresponding to 
 The data at frequency = 0 corresponds to the time average of the FWH surface data.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fileManipulation</span>
-<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeFWHSurfaceFrequenciesFile</span><span class="p">(</span><span class="s2">&quot;./myFWHSurface.h5&quot;</span><span class="p">,</span><span class="s2">&quot;./myFWHSurface_Frequencies.h5&quot;</span><span class="p">)</span>
+<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeFWHSurfaceFrequenciesFile</span><span class="p">(</span><span class="s2">"./myFWHSurface.h5"</span><span class="p">,</span><span class="s2">"./myFWHSurface_Frequencies.h5"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -469,7 +469,7 @@ The region which has been set to have 0 face area can be inspected visually by o
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeBlankedOffFWHSurfaceFile</span><span class="p">(</span><span class="s2">&quot;./myFWHSurface.h5&quot;</span><span class="p">,</span><span class="s2">&quot;./myFWHSurface_IgnorePositiveX.h5&quot;</span><span class="p">,</span> <span class="n">isPositiveX</span><span class="p">)</span>
+<span class="n">fileManipulation</span><span class="o">.</span><span class="n">writeBlankedOffFWHSurfaceFile</span><span class="p">(</span><span class="s2">"./myFWHSurface.h5"</span><span class="p">,</span><span class="s2">"./myFWHSurface_IgnorePositiveX.h5"</span><span class="p">,</span> <span class="n">isPositiveX</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

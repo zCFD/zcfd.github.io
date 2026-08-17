@@ -83,26 +83,26 @@
 <h3>Scale<a class="headerlink" href="#scale" title="Link to this heading">¶</a></h3>
 <p>In this case a scaling is applied to convert the size of the mesh. The .h5 mesh file was generated with units of inches, whereas the flow conditions are specified in SI units, therefore a scaling of 0.0254 is applied to convert the mesh into metres. The z (spanwise) direction has been scaled to be 1 metre wide. The mesh has only a single cell in the z direction so no spanwise flow is expected - making the z extent of the mesh 1 metre simply means that the forces and moments reported by zCFD will already be per unit span.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># scale the mesh to match the experimental data</span>
-<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="o">/</span><span class="mf">0.127</span><span class="p">],</span>
+<span class="s1">'scale'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="o">/</span><span class="mf">0.127</span><span class="p">],</span>
 </pre></div>
 </div>
 </section>
 <section id="inflow-vector">
 <h3>Inflow vector<a class="headerlink" href="#inflow-vector" title="Link to this heading">¶</a></h3>
 <p>In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The <code class="code docutils literal notranslate"><span class="pre">zutil</span></code> function <code class="code docutils literal notranslate"><span class="pre">vector_from_angle()</span></code> calculates the inflow vector given an x-z angle of attack, x-y angle of attack and flow speed.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
-    <span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
-    <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'temperature'</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+    <span class="s1">'pressure'</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
+    <span class="s1">'V'</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># calculate the inflow vector based on the angle of attack</span>
-        <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">U</span><span class="p">),</span>
+        <span class="s1">'vector'</span> <span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">U</span><span class="p">),</span>
     <span class="p">},</span>
-    <span class="s1">&#39;Reynolds No&#39;</span> <span class="p">:</span> <span class="n">reynolds</span><span class="p">,</span>
-    <span class="s1">&#39;Reference Length&#39;</span> <span class="p">:</span> <span class="n">reference_length</span><span class="p">,</span>
-    <span class="s1">&#39;turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-    <span class="s1">&#39;eddy viscosity ratio&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="s1">&#39;ambient turbulence intensity&#39;</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
-    <span class="s1">&#39;ambient eddy viscosity ratio&#39;</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s1">'Reynolds No'</span> <span class="p">:</span> <span class="n">reynolds</span><span class="p">,</span>
+    <span class="s1">'Reference Length'</span> <span class="p">:</span> <span class="n">reference_length</span><span class="p">,</span>
+    <span class="s1">'turbulence intensity'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s1">'eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s1">'ambient turbulence intensity'</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s1">'ambient eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -114,7 +114,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">]</span>
     <span class="n">v</span> <span class="o">=</span>  <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">alpha</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;v1&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;v2&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;v3&#39;</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">'v1'</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'v2'</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'v3'</span> <span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 </pre></div>
 </div>
 </section>
@@ -136,11 +136,11 @@
 <section id="performing-a-restart">
 <h3>Performing a restart<a class="headerlink" href="#performing-a-restart" title="Link to this heading">¶</a></h3>
 <p>To restart the solver we need to update the <em>‘restart’</em> parameter in the control dictionary. If this is set to <em>False</em> the solver will always perform a fresh start, if it is <em>True</em> then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit <em>30p30n_steady.py</em> and change restart to <em>True</em>. You will also need to update <em>‘cycles’</em> to 2000.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;restart&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 
-<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;cycles&#39;</span> <span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="s1">'cycles'</span> <span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
     <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>

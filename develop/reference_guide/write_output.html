@@ -122,18 +122,18 @@
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
-  <span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;vtk&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;surface variables&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;volume variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;volume interpolate&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;mesh.stl&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;scripts&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;paraview_catalyst1.py&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;variable_name_alias&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;V&quot;</span> <span class="p">:</span> <span class="s2">&quot;VELOCITY&quot;</span><span class="p">,</span> <span class="p">},</span>
-                <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                <span class="s1">&#39;compute average and rms&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s1">&#39;average start time cycle&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-                <span class="s2">&quot;immersed boundary surface&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;stl&quot;</span><span class="p">:</span> <span class="s2">&quot;body.stl&quot;</span><span class="p">},</span>
-                                              <span class="p">{</span><span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;stl&quot;</span><span class="p">:</span> <span class="s2">&quot;hub.stl&quot;</span><span class="p">}],</span>
+  <span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'vtk'</span><span class="p">,</span>
+                <span class="s1">'surface variables'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
+                <span class="s1">'volume variables'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
+                <span class="s1">'volume interpolate'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'mesh.stl'</span><span class="p">],</span>
+                <span class="s1">'scripts'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'paraview_catalyst1.py'</span><span class="p">],</span>
+                <span class="s1">'variable_name_alias'</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">"V"</span> <span class="p">:</span> <span class="s2">"VELOCITY"</span><span class="p">,</span> <span class="p">},</span>
+                <span class="s2">"frequency"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                <span class="s1">'compute average and rms'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">'average start time cycle'</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s2">"immersed boundary surface"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">"stl"</span><span class="p">:</span> <span class="s2">"body.stl"</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">"stl"</span><span class="p">:</span> <span class="s2">"hub.stl"</span><span class="p">}],</span>
 
               <span class="p">},</span>
   <span class="o">..</span>
@@ -294,21 +294,21 @@ The data is outputted to the <em>ACOUSTIC_DATA</em> sub-directory within the <a 
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
-  <span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;vtk&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;surface variables&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;volume variables&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>
-                <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'vtk'</span><span class="p">,</span>
+                <span class="s1">'surface variables'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
+                <span class="s1">'volume variables'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
+                <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
                     <span class="c1"># Output visualisation files every 3 cycles</span>
-                    <span class="s2">&quot;volume data&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="s2">&quot;surface data&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="s2">&quot;volume interpolate&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="s2">&quot;checkpoint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="s2">"volume data"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="s2">"surface data"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="s2">"volume interpolate"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="s2">"checkpoint"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
                     <span class="c1"># Start output every 3 cycles after 1 cycle (default = 1)</span>
-                    <span class="s2">&quot;volume data start&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">&quot;surface data start&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">&quot;volume interpolate start&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">&quot;checkpoint start&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">"volume data start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">"surface data start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">"volume interpolate start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">"checkpoint start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="p">},</span>
               <span class="p">},</span>
   <span class="o">..</span>

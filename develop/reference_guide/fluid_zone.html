@@ -37,49 +37,49 @@
   <section id="fluid-zones">
 <span id="id1"></span><h1>Fluid Zones<a class="headerlink" href="#fluid-zones" title="Link to this heading">¶</a></h1>
 <p>The fluidic zone properties are defined using consecutively numbered blocks like:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
-<span class="s1">&#39;FZ_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
-<span class="s1">&#39;FZ_3&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+<span class="s1">'FZ_2'</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+<span class="s1">'FZ_3'</span> <span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
 </pre></div>
 </div>
 <p>Each block corresponds to a specific fluid zone within the simulation domain and is identified by a unique key (e.g., ‘FZ_1’). The properties within each block specify the type of zone (such as translating, rotating, porous, disc, or canopy) and the relevant parameters required for that zone type. These parameters control the physical behaviour and characteristics of the fluid zone, such as velocity vectors, resistance factors, geometric definitions, and other model-specific settings.</p>
 <p>The configuration allows for flexible definition of multiple fluid zones, each with its own set of properties, to accurately represent complex flow regions within the computational mesh.</p>
 <p>For translating regions</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;translating&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span><span class="p">:{</span>
+        <span class="s1">'type'</span><span class="p">:</span><span class="s1">'translating'</span><span class="p">,</span>
         <span class="c1"># Use def when the vtp file specifies a closed volumetric region defining the translating region</span>
-        <span class="s1">&#39;def&#39;</span><span class="p">:</span><span class="s1">&#39;translating.vtp&#39;</span><span class="p">,</span>
+        <span class="s1">'def'</span><span class="p">:</span><span class="s1">'translating.vtp'</span><span class="p">,</span>
         <span class="c1"># Use zone when the mesh containns a predefined cell zone</span>
-        <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+        <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
         <span class="c1"># Velocity vector in mesh units/sec</span>
-        <span class="s1">&#39;vector&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="s1">'vector'</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>For rotating regions</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;rotating&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span><span class="p">:{</span>
+        <span class="s1">'type'</span><span class="p">:</span><span class="s1">'rotating'</span><span class="p">,</span>
         <span class="c1"># Use def when the vtp file specifies a closed volumetric region defining the rotating region</span>
-        <span class="s1">&#39;def&#39;</span><span class="p">:</span><span class="s1">&#39;rotating.vtp&#39;</span><span class="p">,</span>
+        <span class="s1">'def'</span><span class="p">:</span><span class="s1">'rotating.vtp'</span><span class="p">,</span>
         <span class="c1"># Use zone when the mesh containns a predefined cell zone</span>
-        <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-        <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.52</span><span class="p">,</span> <span class="c1"># rad/s</span>
-        <span class="s1">&#39;axis&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+        <span class="s1">'omega'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.52</span><span class="p">,</span> <span class="c1"># rad/s</span>
+        <span class="s1">'axis'</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="s1">'origin'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>For porous regions</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;porous&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span><span class="p">:{</span>
+        <span class="s1">'type'</span><span class="p">:</span><span class="s1">'porous'</span><span class="p">,</span>
         <span class="c1"># Use def when the vtp file specifies a closed volumetric region defining the porous region</span>
-        <span class="s1">&#39;def&#39;</span><span class="p">:</span><span class="s1">&#39;porous.vtp&#39;</span><span class="p">,</span>
+        <span class="s1">'def'</span><span class="p">:</span><span class="s1">'porous.vtp'</span><span class="p">,</span>
         <span class="c1"># Use zone when the mesh containens a predefined cell zone</span>
-        <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+        <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
         <span class="c1"># Inertial resistance factor</span>
-        <span class="s1">&#39;C2&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s1">'C2'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
         <span class="c1"># Permeability</span>
-        <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">10e-7</span><span class="p">,</span>
+        <span class="s1">'alpha'</span><span class="p">:</span> <span class="mf">10e-7</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -146,58 +146,58 @@ The thrust coefficient (CT) is a dimensionless parameter that relates the thrust
 \[CT = \frac{T}{\frac{1}{2} \rho V^2 A}\]</div>
 <p>where <span class="math notranslate nohighlight">\(T\)</span> is the thrust force, <span class="math notranslate nohighlight">\(\rho\)</span> is the fluid density, <span class="math notranslate nohighlight">\(V\)</span> is the velocity of the incoming flow, and <span class="math notranslate nohighlight">\(A\)</span> is the area of the disc.</p>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
-         <span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;disc&#39;</span><span class="p">,</span>
-         <span class="s2">&quot;discretisation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;disc&quot;</span><span class="p">,</span> <span class="s2">&quot;number of elements&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span>
-         <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span><span class="p">:{</span>
+         <span class="s1">'type'</span><span class="p">:</span><span class="s1">'disc'</span><span class="p">,</span>
+         <span class="s2">"discretisation"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"disc"</span><span class="p">,</span> <span class="s2">"number of elements"</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span>
+         <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
              <span class="c1"># simple or BET</span>
-             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;simple&quot;</span><span class="p">,</span>
+             <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"simple"</span><span class="p">,</span>
              <span class="c1"># Thrust coefficient</span>
-             <span class="s1">&#39;thrust coefficient&#39;</span><span class="p">:</span><span class="mf">0.84</span><span class="p">,</span>
+             <span class="s1">'thrust coefficient'</span><span class="p">:</span><span class="mf">0.84</span><span class="p">,</span>
              <span class="c1"># Power coefficient</span>
-             <span class="s1">&#39;power coefficient&#39;</span><span class="p">:</span><span class="mf">0.84</span><span class="p">,</span>
+             <span class="s1">'power coefficient'</span><span class="p">:</span><span class="mf">0.84</span><span class="p">,</span>
          <span class="p">},</span>
-         <span class="s2">&quot;controller&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">"controller"</span><span class="p">:</span> <span class="p">{</span>
              <span class="c1"># none, tsr curve, fixed, schedule</span>
-             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+             <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
          <span class="p">},</span>
-         <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
              <span class="c1"># Thrust direction</span>
-             <span class="s2">&quot;normal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+             <span class="s2">"normal"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
              <span class="c1"># Disc centre</span>
-             <span class="s2">&quot;centre&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-06</span><span class="p">],</span>
+             <span class="s2">"centre"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-06</span><span class="p">],</span>
              <span class="c1"># Up vector</span>
-             <span class="s2">&quot;up&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+             <span class="s2">"up"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
              <span class="c1"># Inner radius</span>
-             <span class="s2">&quot;inner radius&quot;</span><span class="p">:</span> <span class="mf">0.039025</span><span class="p">,</span>
+             <span class="s2">"inner radius"</span><span class="p">:</span> <span class="mf">0.039025</span><span class="p">,</span>
              <span class="c1"># Outer radius</span>
-             <span class="s2">&quot;outer radius&quot;</span><span class="p">:</span> <span class="mf">0.175</span><span class="p">,</span>
+             <span class="s2">"outer radius"</span><span class="p">:</span> <span class="mf">0.175</span><span class="p">,</span>
          <span class="p">},</span>
-         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;R01&quot;</span><span class="p">,</span>
+         <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"R01"</span><span class="p">,</span>
          <span class="c1"># Rotation direction clockwise or anticlockwise</span>
-         <span class="s2">&quot;rotation direction&quot;</span><span class="p">:</span> <span class="s2">&quot;clockwise&quot;</span><span class="p">,</span>
+         <span class="s2">"rotation direction"</span><span class="p">:</span> <span class="s2">"clockwise"</span><span class="p">,</span>
          <span class="c1"># closed surface defining region of cells to distribute momemtum source</span>
-         <span class="s1">&#39;def&#39;</span><span class="p">:</span><span class="s1">&#39;T38-248.75.vtp&#39;</span><span class="p">,</span>
+         <span class="s1">'def'</span><span class="p">:</span><span class="s1">'T38-248.75.vtp'</span><span class="p">,</span>
          <span class="c1"># Location of reference conditions used to calculate thrust from disc</span>
-         <span class="s1">&#39;reference point&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span>
+         <span class="s1">'reference point'</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span>
          <span class="c1"># Rotational speed</span>
-         <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">314.1592653589793</span><span class="p">,</span> <span class="c1"># rad/s</span>
+         <span class="s1">'omega'</span><span class="p">:</span> <span class="mf">314.1592653589793</span><span class="p">,</span> <span class="c1"># rad/s</span>
  <span class="p">},</span>
 </pre></div>
 </div>
 <p>Blade Element Theory (BET) actuator disk model
 The BET actuator disk model is a more advanced representation of a rotating disc that takes into account the aerodynamic characteristics of the blades or elements on the disc. It is commonly used in simulations of wind turbines, propellers, and other rotating machinery to accurately predict their performance in fluid flows.
 The BET model divides the disc into multiple sections or elements, each with its own aerodynamic properties. The thrust and drag forces are calculated for each element based on its local angle of attack, lift and drag coefficients, and other parameters. This allows for a more detailed representation of the flow around the disc and the interaction between the blades and the fluid.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;FZ_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;disc&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;discretisation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;disc&quot;</span><span class="p">,</span> <span class="s2">&quot;number of elements&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span>
-    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"FZ_1"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"disc"</span><span class="p">,</span>
+    <span class="s2">"discretisation"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"disc"</span><span class="p">,</span> <span class="s2">"number of elements"</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span>
+    <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># simple or BET</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;BET&quot;</span><span class="p">,</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"BET"</span><span class="p">,</span>
         <span class="c1"># propellor or turbine</span>
-        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;propellor&quot;</span><span class="p">,</span>
+        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"propellor"</span><span class="p">,</span>
         <span class="c1"># Blade chord (span %, chord length)</span>
-        <span class="s2">&quot;blade chord&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"blade chord"</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">[</span><span class="mf">0.2333</span><span class="p">,</span> <span class="mf">0.1468</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.2667</span><span class="p">,</span> <span class="mf">0.1681</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.3333</span><span class="p">,</span> <span class="mf">0.211</span><span class="p">],</span>
@@ -213,7 +213,7 @@ The BET model divides the disc into multiple sections or elements, each with its
             <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0581</span><span class="p">],</span>
         <span class="p">],</span>
         <span class="c1"># Blade twist (span %, angle degrees)</span>
-        <span class="s2">&quot;blade twist&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"blade twist"</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">[</span><span class="mf">0.2333</span><span class="p">,</span> <span class="mf">28.6202</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.2667</span><span class="p">,</span> <span class="mf">25.5228</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.3333</span><span class="p">,</span> <span class="mf">20.9055</span><span class="p">],</span>
@@ -229,17 +229,17 @@ The BET model divides the disc into multiple sections or elements, each with its
             <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="p">],</span>
         <span class="c1"># Number of circumferential sections</span>
-        <span class="s2">&quot;number of sections&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="s2">"number of sections"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
         <span class="c1"># Number of blades</span>
-        <span class="s2">&quot;number of blades&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="c1"># list of aerofoil sections [[spanwise %, airofoil_name1], ...] names should correlate to entries in &quot;aerofoils&quot;</span>
-        <span class="s2">&quot;aerofoil positions&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;aerofoil1&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;aerofoil1&quot;</span><span class="p">]],</span>
+        <span class="s2">"number of blades"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="c1"># list of aerofoil sections [[spanwise %, airofoil_name1], ...] names should correlate to entries in "aerofoils"</span>
+        <span class="s2">"aerofoil positions"</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">"aerofoil1"</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"aerofoil1"</span><span class="p">]],</span>
         <span class="c1"># Aerofoil data</span>
-        <span class="s2">&quot;aerofoils&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"aerofoils"</span><span class="p">:</span> <span class="p">{</span>
             <span class="c1"># dictionary of aerofoil coefficient tables</span>
-            <span class="s2">&quot;aerofoil1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"aerofoil1"</span><span class="p">:</span> <span class="p">{</span>
                 <span class="c1"># drag polar in [degrees, cd]</span>
-                <span class="s2">&quot;cd&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"cd"</span><span class="p">:</span> <span class="p">[</span>
                     <span class="p">[</span><span class="o">-</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">1.4552</span><span class="p">],</span>
                     <span class="p">[</span><span class="o">-</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0992</span><span class="p">],</span>
                     <span class="p">[</span><span class="o">-</span><span class="mf">40.0</span><span class="p">,</span> <span class="mf">0.748</span><span class="p">],</span>
@@ -271,7 +271,7 @@ The BET model divides the disc into multiple sections or elements, each with its
                     <span class="p">[</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">2.3542</span><span class="p">],</span>
                 <span class="p">],</span>
                 <span class="c1"># lift polar in [degrees, cl]</span>
-                <span class="s2">&quot;cl&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"cl"</span><span class="p">:</span> <span class="p">[</span>
                     <span class="p">[</span><span class="o">-</span><span class="mf">60.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7978</span><span class="p">],</span>
                     <span class="p">[</span><span class="o">-</span><span class="mf">50.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8195</span><span class="p">],</span>
                     <span class="p">[</span><span class="o">-</span><span class="mf">40.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7204</span><span class="p">],</span>
@@ -305,57 +305,57 @@ The BET model divides the disc into multiple sections or elements, each with its
             <span class="p">},</span>
         <span class="p">},</span>
         <span class="c1"># Tip loss correction radius (span %)</span>
-        <span class="s2">&quot;tip loss correction radius&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+        <span class="s2">"tip loss correction radius"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
         <span class="c1"># elliptic, acos-fit, accos shift-fit, f-fit, none, rstar</span>
-        <span class="s2">&quot;tip loss correction&quot;</span><span class="p">:</span> <span class="s2">&quot;rstar&quot;</span><span class="p">,</span>
+        <span class="s2">"tip loss correction"</span><span class="p">:</span> <span class="s2">"rstar"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;controller&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"controller"</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># none, tsr curve, fixed, schedule</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"fixed"</span><span class="p">,</span>
         <span class="c1"># angular velocity</span>
-        <span class="s2">&quot;omega&quot;</span><span class="p">:</span> <span class="mf">314.1592653589793</span><span class="p">,</span>
+        <span class="s2">"omega"</span><span class="p">:</span> <span class="mf">314.1592653589793</span><span class="p">,</span>
         <span class="c1"># blade pitch angle</span>
-        <span class="s2">&quot;pitch&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+        <span class="s2">"pitch"</span><span class="p">:</span> <span class="mf">0.0</span>
     <span class="p">},</span>
     <span class="c1"># Rotation direction clockwise or anticlockwise</span>
-    <span class="s2">&quot;rotation direction&quot;</span><span class="p">:</span> <span class="s2">&quot;clockwise&quot;</span><span class="p">,</span>
+    <span class="s2">"rotation direction"</span><span class="p">:</span> <span class="s2">"clockwise"</span><span class="p">,</span>
     <span class="c1"># Geometry of the actuator disk</span>
-    <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># Thrust direction</span>
-        <span class="s2">&quot;normal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="s2">"normal"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
         <span class="c1"># Disc centre</span>
-        <span class="s2">&quot;centre&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-06</span><span class="p">],</span>
+        <span class="s2">"centre"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-06</span><span class="p">],</span>
         <span class="c1"># Up vector</span>
-        <span class="s2">&quot;up&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="s2">"up"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="c1"># Inner radius</span>
-        <span class="s2">&quot;inner radius&quot;</span><span class="p">:</span> <span class="mf">0.039025</span><span class="p">,</span>
+        <span class="s2">"inner radius"</span><span class="p">:</span> <span class="mf">0.039025</span><span class="p">,</span>
         <span class="c1"># Outer radius</span>
-        <span class="s2">&quot;outer radius&quot;</span><span class="p">:</span> <span class="mf">0.175</span><span class="p">,</span>
+        <span class="s2">"outer radius"</span><span class="p">:</span> <span class="mf">0.175</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;R01&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;reference plane&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="c1"># &quot;reference point&quot;: [0.0, 0.0, 0.0],</span>
-    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;update frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;def&quot;</span><span class="p">:</span> <span class="s2">&quot;R01.vtp&quot;</span><span class="p">,</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"R01"</span><span class="p">,</span>
+    <span class="s2">"reference plane"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="c1"># "reference point": [0.0, 0.0, 0.0],</span>
+    <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"on"</span><span class="p">,</span>
+    <span class="s2">"verbose"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"update frequency"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"output"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"def"</span><span class="p">:</span> <span class="s2">"R01.vtp"</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>For tree canopies in terrain wind models</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;FZ_1&#39;</span><span class="p">:{</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;canopy&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span><span class="p">:{</span>
+        <span class="s1">'type'</span><span class="p">:</span><span class="s1">'canopy'</span><span class="p">,</span>
         <span class="c1"># Use def when the vtp file specifies a closed volumetric region defining the canopy</span>
-        <span class="s1">&#39;def&#39;</span><span class="p">:</span><span class="s1">&#39;canopy_dacosta.vtp&#39;</span><span class="p">,</span>
+        <span class="s1">'def'</span><span class="p">:</span><span class="s1">'canopy_dacosta.vtp'</span><span class="p">,</span>
         <span class="c1"># Use field when the vtp specifies a set of points on the surface (see below for details)</span>
-        <span class="s1">&#39;field&#39;</span><span class="p">:</span><span class="s1">&#39;canopy_field.vtp&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;func&#39;</span><span class="p">:</span><span class="n">lad_function</span><span class="p">,</span>
-        <span class="s1">&#39;cd&#39;</span><span class="p">:</span><span class="mf">0.25</span><span class="p">,</span>
-        <span class="s1">&#39;beta_p&#39;</span><span class="p">:</span><span class="mf">0.17</span><span class="p">,</span>
-        <span class="s1">&#39;beta_d&#39;</span><span class="p">:</span><span class="mf">3.37</span><span class="p">,</span>
-        <span class="s1">&#39;Ceps_4&#39;</span><span class="p">:</span><span class="mf">0.9</span><span class="p">,</span>
-        <span class="s1">&#39;Ceps_5&#39;</span><span class="p">:</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="s1">'field'</span><span class="p">:</span><span class="s1">'canopy_field.vtp'</span><span class="p">,</span>
+        <span class="s1">'func'</span><span class="p">:</span><span class="n">lad_function</span><span class="p">,</span>
+        <span class="s1">'cd'</span><span class="p">:</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="s1">'beta_p'</span><span class="p">:</span><span class="mf">0.17</span><span class="p">,</span>
+        <span class="s1">'beta_d'</span><span class="p">:</span><span class="mf">3.37</span><span class="p">,</span>
+        <span class="s1">'Ceps_4'</span><span class="p">:</span><span class="mf">0.9</span><span class="p">,</span>
+        <span class="s1">'Ceps_5'</span><span class="p">:</span><span class="mf">0.9</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>

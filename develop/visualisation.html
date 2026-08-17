@@ -44,29 +44,29 @@
 <section id="vtk-hdf-output">
 <h2>VTK HDF Output<a class="headerlink" href="#vtk-hdf-output" title="Link to this heading">¶</a></h2>
 <p>By default, zCFD will output data in VTK HDF format (.vtkhdf). To explicitly force VTK HDF output, use the following option in the <em>‘write output’</em> part of the control dictionary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
                     <span class="c1"># Output format</span>
-                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;vtk&#39;</span><span class="p">,</span>
+                    <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'vtk'</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
 <section id="ensight-output">
 <h2>EnSight Output<a class="headerlink" href="#ensight-output" title="Link to this heading">¶</a></h2>
 <p>To output in EnSight format, use the following option in the <em>‘write output’</em> part of the control dictionary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
                     <span class="c1"># Output format</span>
-                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;ensight&#39;</span><span class="p">,</span>
+                    <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'ensight'</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
 <section id="paraview-catalyst-scripts">
 <h2>ParaView Catalyst Scripts<a class="headerlink" href="#paraview-catalyst-scripts" title="Link to this heading">¶</a></h2>
 <p>ParaView provides a powerful yet lightweight interface that allows parallel processing of simulation data during programme execution called <a class="reference external" href="https://www.paraview.org/insitu/" target="_blank">ParaView Catalyst</a>. This is driven by scripts (Python files) that can be called when data is output:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;write output&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
                     <span class="c1"># Output format MUST be VTK</span>
-                    <span class="s1">&#39;format&#39;</span> <span class="p">:</span> <span class="s1">&#39;vtk&#39;</span><span class="p">,</span>
+                    <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'vtk'</span><span class="p">,</span>
                     <span class="c1"># The scripts should be in the same directory as the input files</span>
-                    <span class="s1">&#39;scripts&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;paraview_catalyst1.py&#39;</span><span class="p">,</span><span class="s1">&#39;paraview_catalyst2.py&#39;</span><span class="p">]</span>
+                    <span class="s1">'scripts'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'paraview_catalyst1.py'</span><span class="p">,</span><span class="s1">'paraview_catalyst2.py'</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
@@ -119,7 +119,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">paraview.simple</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvs</span>
 
 <span class="c1"># Load data</span>
-<span class="n">reader</span> <span class="o">=</span> <span class="n">pvs</span><span class="o">.</span><span class="n">OpenDataFile</span><span class="p">(</span><span class="s1">&#39;solution.vtkhdf&#39;</span><span class="p">)</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">pvs</span><span class="o">.</span><span class="n">OpenDataFile</span><span class="p">(</span><span class="s1">'solution.vtkhdf'</span><span class="p">)</span>
 
 <span class="c1"># Use CleantoGrid to preserve data accuracy</span>
 <span class="n">clean_data</span> <span class="o">=</span> <span class="n">pvs</span><span class="o">.</span><span class="n">CleantoGrid</span><span class="p">(</span><span class="n">Input</span><span class="o">=</span><span class="n">reader</span><span class="p">)</span>
@@ -135,7 +135,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">paraview.simple</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvs</span>
 
 <span class="c1"># Load data</span>
-<span class="n">reader</span> <span class="o">=</span> <span class="n">pvs</span><span class="o">.</span><span class="n">OpenDataFile</span><span class="p">(</span><span class="s1">&#39;solution.vtkhdf&#39;</span><span class="p">)</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">pvs</span><span class="o">.</span><span class="n">OpenDataFile</span><span class="p">(</span><span class="s1">'solution.vtkhdf'</span><span class="p">)</span>
 
 <span class="c1"># Use MergeBlocks for smoother visualisations</span>
 <span class="n">merged_data</span> <span class="o">=</span> <span class="n">pvs</span><span class="o">.</span><span class="n">MergeBlocks</span><span class="p">(</span><span class="n">Input</span><span class="o">=</span><span class="n">reader</span><span class="p">)</span>

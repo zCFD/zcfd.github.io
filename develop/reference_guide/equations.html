@@ -101,9 +101,9 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the euler equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;euler&#39;</span><span class="p">,</span>
-  <span class="c1"># Define the inputs for the &#39;euler&#39; equation set</span>
-  <span class="s1">&#39;euler&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">..</span><span class="p">}</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'euler'</span><span class="p">,</span>
+  <span class="c1"># Define the inputs for the 'euler' equation set</span>
+  <span class="s1">'euler'</span><span class="p">:</span> <span class="p">{</span><span class="o">..</span><span class="p">}</span>
   <span class="o">..</span>
 <span class="p">}</span>
 </pre></div>
@@ -199,10 +199,10 @@
 Run 500 cycles first order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;euler&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;euler&#39;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'euler'</span><span class="p">,</span>
+  <span class="s1">'euler'</span><span class="p">:</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
     <span class="o">...</span>
   <span class="p">}</span>
   <span class="o">..</span>
@@ -306,15 +306,15 @@ Run 500 cycles first order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the euler equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;euler&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;euler&#39;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'euler'</span><span class="p">,</span>
+  <span class="s1">'euler'</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+            <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
             <span class="c1"># Cycle on which to freeze the limiter values</span>
-            <span class="s1">&#39;freeze limiter cycle&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="s1">'freeze limiter cycle'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
             <span class="c1"># Use low speed mach preconditioner</span>
-            <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+            <span class="s1">'precondition'</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">'Inviscid Flux Scheme'</span><span class="p">:</span> <span class="s1">'HLLC'</span><span class="p">,</span>
           <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
@@ -354,14 +354,14 @@ Run 500 cycles first order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the viscous equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;viscous&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;viscous&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'viscous'</span><span class="p">,</span>
+  <span class="s1">'viscous'</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+                <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
                 <span class="c1"># Use low speed mach preconditioner</span>
-                <span class="s1">&#39;precondition&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+                <span class="s1">'precondition'</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">'linear gradients'</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">'Inviscid Flux Scheme'</span><span class="p">:</span> <span class="s1">'HLLC'</span><span class="p">,</span>
               <span class="p">},</span>
   <span class="o">..</span>
 <span class="p">}</span>
@@ -445,19 +445,19 @@ Run 500 cycles first order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the viscous equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;viscous&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;viscous&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;relax&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="s1">&#39;correction&#39;</span> <span class="p">:</span> <span class="s1">&#39;over relaxed&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;correction limiter&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="s1">&#39;gradient limiter type&#39;</span> <span class="p">:</span> <span class="s1">&#39;cell md&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;gradient limiter&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="s1">&#39;max second order non orthogonal angle&#39;</span> <span class="p">:</span> <span class="mf">70.0</span><span class="p">,</span>
-                <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;central blend&#39;</span> <span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
-                <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-                <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'viscous'</span><span class="p">,</span>
+  <span class="s1">'viscous'</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">'relax'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s1">'correction'</span> <span class="p">:</span> <span class="s1">'over relaxed'</span><span class="p">,</span>
+                <span class="s1">'correction limiter'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s1">'gradient limiter type'</span> <span class="p">:</span> <span class="s1">'cell md'</span><span class="p">,</span>
+                <span class="s1">'gradient limiter'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s1">'max second order non orthogonal angle'</span> <span class="p">:</span> <span class="mf">70.0</span><span class="p">,</span>
+                <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+                <span class="s1">'central blend'</span> <span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+                <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                <span class="s1">'linear gradients'</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">'Inviscid Flux Scheme'</span><span class="p">:</span> <span class="s1">'HLLC'</span><span class="p">,</span>
               <span class="p">},</span>
   <span class="o">..</span>
 <span class="p">}</span>
@@ -629,23 +629,23 @@ which is usually preferable since the shielded cells also revert to full upwind 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the viscous equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;RANS&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;RANS&#39;</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-              <span class="s1">&#39;freeze limiter cycle&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-              <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-              <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-              <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
-              <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                                <span class="s1">&#39;model&#39;</span> <span class="p">:</span> <span class="s1">&#39;sst&#39;</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'RANS'</span><span class="p">,</span>
+  <span class="s1">'RANS'</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+              <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+              <span class="s1">'freeze limiter cycle'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+              <span class="s1">'linear gradients'</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="s1">'leastsq gradients'</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="s1">'Inviscid Flux Scheme'</span><span class="p">:</span> <span class="s1">'HLLC'</span><span class="p">,</span>
+              <span class="s1">'low dissipation sensor'</span><span class="p">:</span> <span class="s1">'DES'</span><span class="p">,</span>
+              <span class="s1">'dissipation sensor minimum'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="s1">'turbulence'</span> <span class="p">:</span> <span class="p">{</span>
+                                <span class="s1">'model'</span> <span class="p">:</span> <span class="s1">'sst'</span><span class="p">,</span>
                                 <span class="c1"># No Hybrid RANS/LES</span>
-                                <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;rotation correction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                                <span class="s1">&#39;limit gradient k&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
-                                <span class="s1">&#39;qcr&#39;</span><span class="p">:</span> <span class="mi">2020</span>
+                                <span class="s1">'les'</span> <span class="p">:</span> <span class="s1">'none'</span><span class="p">,</span>
+                                <span class="s1">'rotation correction'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                <span class="s1">'limit gradient k'</span><span class="p">:</span> <span class="mf">0.5</span>
+                                <span class="s1">'qcr'</span><span class="p">:</span> <span class="mi">2020</span>
                               <span class="p">},</span>
              <span class="p">},</span>
   <span class="o">...</span>
@@ -837,21 +837,21 @@ which is usually preferable since the shielded cells also revert to full upwind 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the incompressible RANS equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;incomp RANS&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;incomp RANS&#39;</span><span class="p">:</span> <span class="p">{</span>
-                  <span class="s1">&#39;relax&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                  <span class="s1">&#39;correction&#39;</span> <span class="p">:</span> <span class="s1">&#39;over relaxed&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;correction limiter&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                  <span class="s1">&#39;gradient limiter type&#39;</span> <span class="p">:</span> <span class="s1">&#39;cell md&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;gradient limiter&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                  <span class="s1">&#39;max second order non orthogonal angle&#39;</span> <span class="p">:</span> <span class="mf">70.0</span><span class="p">,</span>
-                  <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;central blend&#39;</span> <span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
-                  <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'incomp RANS'</span><span class="p">,</span>
+  <span class="s1">'incomp RANS'</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s1">'relax'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                  <span class="s1">'correction'</span> <span class="p">:</span> <span class="s1">'over relaxed'</span><span class="p">,</span>
+                  <span class="s1">'correction limiter'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                  <span class="s1">'gradient limiter type'</span> <span class="p">:</span> <span class="s1">'cell md'</span><span class="p">,</span>
+                  <span class="s1">'gradient limiter'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                  <span class="s1">'max second order non orthogonal angle'</span> <span class="p">:</span> <span class="mf">70.0</span><span class="p">,</span>
+                  <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+                  <span class="s1">'central blend'</span> <span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+                  <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
 
-                  <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                                  <span class="s1">&#39;model&#39;</span> <span class="p">:</span> <span class="s1">&#39;sst&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;relax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+                  <span class="s1">'turbulence'</span> <span class="p">:</span> <span class="p">{</span>
+                                  <span class="s1">'model'</span> <span class="p">:</span> <span class="s1">'sst'</span><span class="p">,</span>
+                                  <span class="s1">'relax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
                                 <span class="p">},</span>
                 <span class="p">},</span>
   <span class="o">...</span>
@@ -895,18 +895,18 @@ which is usually preferable since the shielded cells also revert to full upwind 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the viscous equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;LES&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;LES&#39;</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-              <span class="s1">&#39;freeze limiter cycle&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-              <span class="s1">&#39;linear gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-              <span class="s1">&#39;leastsq gradients&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-              <span class="s1">&#39;Inviscid Flux Scheme&#39;</span><span class="p">:</span> <span class="s1">&#39;HLLC&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;low dissipation sensor&#39;</span><span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;dissipation sensor minimum&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
-              <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                                <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'LES'</span><span class="p">,</span>
+  <span class="s1">'LES'</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+              <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+              <span class="s1">'freeze limiter cycle'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+              <span class="s1">'linear gradients'</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="s1">'leastsq gradients'</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="s1">'Inviscid Flux Scheme'</span><span class="p">:</span> <span class="s1">'HLLC'</span><span class="p">,</span>
+              <span class="s1">'low dissipation sensor'</span><span class="p">:</span> <span class="s1">'DES'</span><span class="p">,</span>
+              <span class="s1">'dissipation sensor minimum'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="s1">'turbulence'</span> <span class="p">:</span> <span class="p">{</span>
+                                <span class="s1">'les'</span> <span class="p">:</span> <span class="s1">'none'</span><span class="p">,</span>
                               <span class="p">},</span>
              <span class="p">},</span>
   <span class="o">...</span>
@@ -923,14 +923,14 @@ which is usually preferable since the shielded cells also revert to full upwind 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">..</span>
   <span class="c1"># Use the incompressible LES equation set</span>
-  <span class="s1">&#39;equations&#39;</span> <span class="p">:</span> <span class="s1">&#39;incomp LES&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;incomp LES&#39;</span><span class="p">:</span> <span class="p">{</span>
-                 <span class="s1">&#39;relax&#39;</span> <span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
-                 <span class="s1">&#39;order&#39;</span> <span class="p">:</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;first order cycles&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-                 <span class="s1">&#39;turbulence&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                                 <span class="s1">&#39;les&#39;</span> <span class="p">:</span> <span class="s1">&#39;DES&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;relax&#39;</span> <span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+  <span class="s1">'equations'</span> <span class="p">:</span> <span class="s1">'incomp LES'</span><span class="p">,</span>
+  <span class="s1">'incomp LES'</span><span class="p">:</span> <span class="p">{</span>
+                 <span class="s1">'relax'</span> <span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+                 <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
+                 <span class="s1">'first order cycles'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                 <span class="s1">'turbulence'</span> <span class="p">:</span> <span class="p">{</span>
+                                 <span class="s1">'les'</span> <span class="p">:</span> <span class="s1">'DES'</span><span class="p">,</span>
+                                 <span class="s1">'relax'</span> <span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
                                 <span class="p">},</span>
     <span class="p">},</span>
   <span class="o">...</span>

@@ -62,12 +62,12 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom function to scale z coordinate by 100</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">my_scale_func</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
     <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mf">100.0</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;coord&#39;</span> <span class="p">:</span> <span class="n">point</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">'coord'</span> <span class="p">:</span> <span class="n">point</span><span class="p">}</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
  <span class="o">...</span>
- <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="n">my_scale_func</span>
+ <span class="s1">'scale'</span><span class="p">:</span> <span class="n">my_scale_func</span>
  <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>
@@ -101,7 +101,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
   <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
   <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-  <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;v1&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;v2&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;v3&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+  <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 </pre></div>
 </div>
 </section>
@@ -154,9 +154,9 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
  <span class="o">...</span>
- <span class="s1">&#39;time marching&#39;</span><span class="p">:</span> <span class="p">{</span>
+ <span class="s1">'time marching'</span><span class="p">:</span> <span class="p">{</span>
    <span class="o">...</span>
-   <span class="s1">&#39;ramp func&#39;</span><span class="p">:</span> <span class="n">my_cfl_ramp</span><span class="p">,</span>
+   <span class="s1">'ramp func'</span><span class="p">:</span> <span class="n">my_cfl_ramp</span><span class="p">,</span>
    <span class="o">...</span>
    <span class="p">}</span>
  <span class="o">...</span>
@@ -225,25 +225,25 @@
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_initialisation</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
   <span class="c1"># Dimensional primitive variables</span>
-  <span class="n">pressure</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span>
-  <span class="n">temperature</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span>
-  <span class="n">velocity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]</span>
-  <span class="n">wall_distance</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wall_distance&#39;</span><span class="p">]</span>
+  <span class="n">pressure</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'pressure'</span><span class="p">]</span>
+  <span class="n">temperature</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span>
+  <span class="n">velocity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'velocity'</span><span class="p">]</span>
+  <span class="n">wall_distance</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'wall_distance'</span><span class="p">]</span>
   <span class="c1"># Cell centre localtion [X, Y, Z]</span>
-  <span class="n">location</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+  <span class="n">location</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span>
 
   <span class="k">if</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">10.0</span><span class="p">:</span>
     <span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">2.0</span>
 
   <span class="c1"># Return a dictionary with user defined quantity.</span>
-  <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;velocity&#39;</span> <span class="p">:</span> <span class="n">velocity</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="p">{</span> <span class="s1">'velocity'</span> <span class="p">:</span> <span class="n">velocity</span> <span class="p">}</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
  <span class="o">...</span>
- <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="p">{</span>
+ <span class="s1">'initial'</span><span class="p">:</span> <span class="p">{</span>
    <span class="o">...</span>
-   <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">my_initialisation</span><span class="p">,</span>
+   <span class="s1">'func'</span><span class="p">:</span> <span class="n">my_initialisation</span><span class="p">,</span>
    <span class="o">...</span>
    <span class="p">}</span>
  <span class="o">...</span>
@@ -283,10 +283,10 @@
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">example_ic_func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Example driver function to target a lift coefficient by varying</span>
 <span class="sd">  angle of attack</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
   <span class="n">alpha_init</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Initial angle of attack</span>
   <span class="n">lift_target</span><span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Targeted lift coefficient</span>
   <span class="n">update_period</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># How often alpha should be updated</span>
@@ -296,38 +296,38 @@
   <span class="n">relaxation_factor</span> <span class="o">=</span> <span class="mf">1.15</span> <span class="c1"># &lt;1: under-relaxation, &gt;1: over-relaxation</span>
 
 
-  <span class="k">if</span> <span class="s1">&#39;lift_target_alpha&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="c1"># If timestep &gt; 1</span>
-      <span class="n">alpha_current</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;lift_target_alpha&#39;</span><span class="p">]</span>
-      <span class="n">F_xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wall_Fx&#39;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wall_Fy&#39;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wall_Fz&#39;</span><span class="p">]]</span>
+  <span class="k">if</span> <span class="s1">'lift_target_alpha'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="c1"># If timestep &gt; 1</span>
+      <span class="n">alpha_current</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'lift_target_alpha'</span><span class="p">]</span>
+      <span class="n">F_xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">'wall_Fx'</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'wall_Fy'</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'wall_Fz'</span><span class="p">]]</span>
       <span class="n">F_LDS</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">F_xyz</span><span class="p">,</span> <span class="n">alpha_current</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
       <span class="n">lift_current</span> <span class="o">=</span> <span class="n">F_LDS</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Lift coefficient, having rotated to account for alpha</span>
   <span class="k">else</span><span class="p">:</span>
       <span class="n">lift_current</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># placeholder value</span>
 
-  <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;Cycle&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">flow_settling_period</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'Cycle'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">flow_settling_period</span><span class="p">:</span>
       <span class="n">alpha_new</span> <span class="o">=</span> <span class="n">alpha_init</span>
   <span class="k">else</span><span class="p">:</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;Cycle&#39;</span><span class="p">]</span> <span class="o">%</span> <span class="n">update_period</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">'Cycle'</span><span class="p">]</span> <span class="o">%</span> <span class="n">update_period</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
           <span class="n">d_cL_required</span> <span class="o">=</span> <span class="n">lift_target</span> <span class="o">-</span> <span class="n">lift_current</span>
           <span class="n">d_alpha</span> <span class="o">=</span> <span class="n">relaxation_factor</span> <span class="o">/</span> <span class="n">assumed_d_cL_d_alpha</span> <span class="o">*</span>  <span class="n">d_cL_required</span>
           <span class="n">alpha_new</span> <span class="o">=</span> <span class="n">alpha_current</span> <span class="o">+</span> <span class="n">d_alpha</span>
-          <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Alpha updated from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha_current</span><span class="p">,</span> <span class="n">alpha_new</span><span class="p">),</span> <span class="n">flush</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s2">"Alpha updated from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha_current</span><span class="p">,</span> <span class="n">alpha_new</span><span class="p">),</span> <span class="n">flush</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
           <span class="n">alpha_new</span> <span class="o">=</span> <span class="n">alpha_current</span>
 
   <span class="n">dict_out</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-      <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-      <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s1">&#39;mach&#39;</span> <span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
-          <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="n">alpha_new</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+      <span class="s2">"temperature"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+      <span class="s2">"pressure"</span><span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
+      <span class="s1">'v'</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'mach'</span> <span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+          <span class="s1">'vector'</span> <span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="n">alpha_new</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
           <span class="p">},</span>
-      <span class="s2">&quot;reynolds no&quot;</span><span class="p">:</span> <span class="mf">6.0e6</span><span class="p">,</span>
-      <span class="s2">&quot;eddy viscosity ratio&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-      <span class="s2">&quot;monitor&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="c1"># Monitor entries can be floats or lists of floats</span>
-                    <span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;lift_target&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">alpha_new</span><span class="p">,</span>   <span class="c1"># Extra keys can be added to a driven IC dictionary,</span>
-                    <span class="s2">&quot;lift&quot;</span><span class="p">:</span> <span class="n">lift_current</span><span class="p">,</span>  <span class="c1"># allowing monitoring of key parameters flow in the _report.csv</span>
+      <span class="s2">"reynolds no"</span><span class="p">:</span> <span class="mf">6.0e6</span><span class="p">,</span>
+      <span class="s2">"eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+      <span class="s2">"monitor"</span><span class="p">:</span> <span class="p">{</span> <span class="c1"># Monitor entries can be floats or lists of floats</span>
+                    <span class="s2">"prefix"</span><span class="p">:</span> <span class="s2">"lift_target"</span><span class="p">,</span>
+                    <span class="s2">"alpha"</span><span class="p">:</span> <span class="n">alpha_new</span><span class="p">,</span>   <span class="c1"># Extra keys can be added to a driven IC dictionary,</span>
+                    <span class="s2">"lift"</span><span class="p">:</span> <span class="n">lift_current</span><span class="p">,</span>  <span class="c1"># allowing monitoring of key parameters flow in the _report.csv</span>
                   <span class="p">},</span>
   <span class="p">}</span>
 
@@ -336,7 +336,7 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
  <span class="o">...</span>
- <span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="n">example_ic_func</span>
+ <span class="s1">'IC_2'</span> <span class="p">:</span> <span class="n">example_ic_func</span>
  <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>
@@ -453,9 +453,9 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
  <span class="o">...</span>
- <span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span>
-      <span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="n">inflow_direction</span>
+ <span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s1">'reference'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
+      <span class="s1">'vector'</span> <span class="p">:</span> <span class="n">inflow_direction</span>
       <span class="p">},</span>
  <span class="o">...</span>
 <span class="p">}</span>

@@ -55,7 +55,7 @@
 <p>The total number of pseudo time-steps to use in a <a class="reference internal" href="#running-steady">steady-state</a> simulation, or the number of pseudo time-steps to use in each real time-step of an <a class="reference internal" href="#running-unsteady">unsteady</a> time-dependent simulation</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># A good starting value for most explicit, steady state cases. Implicit simulations can use a higher CFL and therefore require fewer cycles - around 100 - 500 cycles is a good starting point for an implicit steady state case.</span>
-<span class="s1">&#39;cycles&#39;</span> <span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>
+<span class="s1">'cycles'</span> <span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
@@ -114,11 +114,11 @@
 <p>Sets the CFL number used in the mass, momentum and energy equations.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typical value used for a RANS simulation using explicit time marching</span>
-<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">1</span>
+<span class="s1">'cfl'</span> <span class="p">:</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typical value used for a RANS simulations using implicit time marching</span>
-<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">30</span>
+<span class="s1">'cfl'</span> <span class="p">:</span> <span class="mi">30</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -130,8 +130,8 @@
 <h3>cfl transport<a class="headerlink" href="#cfl-transport" title="Link to this heading">¶</a></h3>
 <p>Sets the maximum CFL number used to update the turbulent transport equations (for example <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use cfl transport to promote solver stability</span>
-<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-<span class="s1">&#39;cfl transport&#39;</span><span class="p">:</span> <span class="mi">20</span>
+<span class="s1">'cfl'</span> <span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+<span class="s1">'cfl transport'</span><span class="p">:</span> <span class="mi">20</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -144,10 +144,10 @@
 <p>This allows a relatively large target CFL number to be specified, but start the simulation using a smaller one to provide stability as large non-physical transients are eliminated from the solution.</p>
 <p>Starting a simulation with a large CFL number can cause instability to crash the solver.  A more gentle start will reduce the impact of non-physical transients.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start cfl at 0.1 and grow at a rate 1.1, reaching the target cfl of 30 in 26 steps</span>
-<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-<span class="s1">&#39;cfl ramp&#39;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="s1">&#39;growth&#39;</span><span class="p">:</span> <span class="mf">1.1</span>
+<span class="s1">'cfl'</span> <span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+<span class="s1">'cfl ramp'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'initial'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s1">'growth'</span><span class="p">:</span> <span class="mf">1.1</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -157,8 +157,8 @@
 <p>For simulations with multigrid acceleration, the <strong>‘cfl coarse’</strong> number is used as a CFL condition on the coarse meshes.  For such cases the <strong>‘cfl’</strong> number is still applied to the finest mesh.</p>
 <p>This only applies to explicit finite volume solutions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The quality of agglomerated (multigrid) coarse meshes is typically less than the quality of the primary (fine) mesh and so a lower CFL number may be required for numerical stability.</span>
-<span class="s1">&#39;cfl&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-<span class="s1">&#39;cfl coarse&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
+<span class="s1">'cfl'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="s1">'cfl coarse'</span><span class="p">:</span> <span class="mf">0.5</span>
 </pre></div>
 </div>
 </section>
@@ -167,9 +167,9 @@
 <p>Factor applied to the diffusive (viscous) time step when applying the CFL condition.  As viscous effects are rarely the cause of solver instability, the contribution of the viscous terms to the time step evaluation may be reduced by setting <strong>‘cfl viscous factor’</strong> to a number less than 1.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For the low Reynolds number cylinder case, viscous effects are dominant but do not contribute to instability.</span>
 <span class="c1"># The value of 1e-6 effectively discounts viscosity in the determination of the time step when applying the CFL condition.</span>
-<span class="s2">&quot;cfl&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-<span class="s2">&quot;cfl viscous factor&quot;</span><span class="p">:</span> <span class="mf">1.0E-6</span><span class="p">,</span>
-<span class="s2">&quot;cfl ramp factor&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;initial&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;growth&quot;</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">},</span>
+<span class="s2">"cfl"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+<span class="s2">"cfl viscous factor"</span><span class="p">:</span> <span class="mf">1.0E-6</span><span class="p">,</span>
+<span class="s2">"cfl ramp factor"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"initial"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">"growth"</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">},</span>
 </pre></div>
 </div>
 </section>
@@ -295,11 +295,11 @@
 <p>For steady-state simulations, <strong>‘total time’</strong> should be set equal to the <strong>‘time step’</strong> value.  The solver will then automatically run a steady-state simulation.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># Run an steady state simulation</span>
-<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
-         <span class="s2">&quot;unsteady&quot;</span><span class="p">:</span> <span class="p">{</span>
-             <span class="s2">&quot;total time&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-             <span class="s2">&quot;time step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s2">"unsteady"</span><span class="p">:</span> <span class="p">{</span>
+             <span class="s2">"total time"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+             <span class="s2">"time step"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
          <span class="p">},</span>
          <span class="o">...</span>
  <span class="p">}</span>
@@ -314,13 +314,13 @@
 <p>Example usage:</p>
 <p>The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 1.7 seconds to allow the oscillation to begin and establish a well-formed pattern. We set the time step to a small enough value to capture the unsteady shedding phenomenon.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds</span>
-<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
-         <span class="s2">&quot;unsteady&quot;</span><span class="p">:</span> <span class="p">{</span>
-             <span class="s2">&quot;total time&quot;</span><span class="p">:</span> <span class="mf">1.7</span><span class="p">,</span>
-             <span class="s2">&quot;time step&quot;</span><span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
-             <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="s2">&quot;second&quot;</span><span class="p">,</span>
-             <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span>
+         <span class="s2">"unsteady"</span><span class="p">:</span> <span class="p">{</span>
+             <span class="s2">"total time"</span><span class="p">:</span> <span class="mf">1.7</span><span class="p">,</span>
+             <span class="s2">"time step"</span><span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
+             <span class="s2">"order"</span><span class="p">:</span> <span class="s2">"second"</span><span class="p">,</span>
+             <span class="s2">"start"</span><span class="p">:</span> <span class="mi">0</span>
          <span class="p">},</span>
          <span class="o">...</span>
  <span class="p">}</span>
@@ -328,13 +328,13 @@
 </div>
 <p>The example below uses a relatively large time step and maintains accuracy with a second order integration scheme. The case starts with 2000 pseudo-timesteps before starting the unsteady simulation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># Run an unsteady simulation for 1.7 seconds with a time step of 0.002 seconds</span>
-<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
-         <span class="s2">&quot;unsteady&quot;</span><span class="p">:</span> <span class="p">{</span>
-             <span class="s2">&quot;total time&quot;</span><span class="p">:</span> <span class="mf">0.06</span><span class="p">,</span>
-             <span class="s2">&quot;time step&quot;</span><span class="p">:</span> <span class="mf">2.0e-5</span><span class="p">,</span>
-             <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="s2">&quot;second&quot;</span><span class="p">,</span>
-             <span class="s2">&quot;start&quot;</span><span class="p">:</span><span class="mi">2000</span>
+         <span class="s2">"unsteady"</span><span class="p">:</span> <span class="p">{</span>
+             <span class="s2">"total time"</span><span class="p">:</span> <span class="mf">0.06</span><span class="p">,</span>
+             <span class="s2">"time step"</span><span class="p">:</span> <span class="mf">2.0e-5</span><span class="p">,</span>
+             <span class="s2">"order"</span><span class="p">:</span> <span class="s2">"second"</span><span class="p">,</span>
+             <span class="s2">"start"</span><span class="p">:</span><span class="mi">2000</span>
          <span class="p">},</span>
          <span class="o">...</span>
  <span class="p">}</span>
@@ -376,19 +376,19 @@
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># 3 levels of multigrid is sufficient in most cases to reduce the number of cycles required by an order of magnitude.</span>
  <span class="c1"># If this causes instablility, a reduction to 2 may solve the problem.</span>
-<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
-         <span class="s1">&#39;multigrid&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="s1">'multigrid'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
          <span class="o">...</span>
  <span class="p">}</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># After 20000 explicit cycles, multigrid stall prevents convergence to the correct drag value.</span>
  <span class="c1"># By turning it off, the correct value is obtained on the finest mesh.</span>
-<span class="s1">&#39;time marching&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="o">...</span>
-         <span class="s1">&#39;multigrid&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-         <span class="s1">&#39;multigrid cycles&#39;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
+         <span class="s1">'multigrid'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="s1">'multigrid cycles'</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
          <span class="o">...</span>
  <span class="p">}</span>
 </pre></div>

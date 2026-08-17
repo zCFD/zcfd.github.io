@@ -38,8 +38,8 @@
 <span id="id1"></span><h1>Reference Conditions<a class="headerlink" href="#reference-conditions" title="Link to this heading">¶</a></h1>
 <p>Reference Conditions enable a set of conditions to be specified relative to a base set of <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">initial conditions</span></a>. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain</p>
 <p>Reference condition properties are defined in the same way as initial conditions using consecutively numbered blocks.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
-<span class="s1">&#39;IC_3&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<span class="s1">'IC_3'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -116,12 +116,12 @@
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
 <span class="o">..</span>
-<span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span>
-     <span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;total temperature ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-     <span class="s1">&#39;mass flow rate&#39;</span> <span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
-     <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-     <span class="s1">&#39;mach&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span>
+     <span class="s1">'reference'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
+     <span class="s1">'total temperature ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+     <span class="s1">'mass flow rate'</span> <span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+     <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+     <span class="s1">'mach'</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
      <span class="p">},</span>
 <span class="o">..</span>
 <span class="p">},</span>

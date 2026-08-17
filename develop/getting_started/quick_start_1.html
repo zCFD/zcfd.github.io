@@ -281,7 +281,7 @@ start_lab
 <h3>Plotting residuals<a class="headerlink" href="#plotting-residuals" title="Link to this heading">¶</a></h3>
 <p>The naca0012_report.ipynb makes use of the <cite>zutil.plot.zcfd_plots</cite> function to read and plot the zCFD report data. Calling the <cite>zcfd_plots(‘naca0012.py’)</cite> function reads the zcfd control file, finds all the output files, and returns a <cite>zutil.post.Report</cite> object, which provides plotting functionality . To plot the convergence of residuals, use the <cite>plot_residuals()</cite> method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">zutil.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">zcfd_plots</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">zcfd_plots</span><span class="p">(</span><span class="s1">&#39;naca0012.py&#39;</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">zcfd_plots</span><span class="p">(</span><span class="s1">'naca0012.py'</span><span class="p">)</span>
 <span class="n">r</span><span class="o">.</span><span class="n">plot_residuals</span><span class="p">()</span>
 </pre></div>
 </div>

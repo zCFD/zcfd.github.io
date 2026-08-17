@@ -155,18 +155,18 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;v1&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;v2&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;v3&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
 
 <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
         <span class="o">...</span>
-        <span class="s2">&quot;TR_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="s2">&quot;func&quot;</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
-            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
-            <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="s2">&quot;c2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;tol&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rbf"</span><span class="p">,</span>
+            <span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+            <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+            <span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
+            <span class="s2">"basis"</span><span class="p">:</span> <span class="s2">"c2"</span><span class="p">,</span>
+            <span class="s2">"tol"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="o">...</span>
 <span class="p">}</span>
@@ -182,17 +182,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;v1&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;v2&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;v3&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
 <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
         <span class="o">...</span>
-        <span class="s2">&quot;TR_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rbf multiscale&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;base point fraction&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-            <span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="s2">&quot;func&quot;</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
-            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
-            <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="s2">&quot;c2&quot;</span><span class="p">,</span>
+        <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rbf multiscale"</span><span class="p">,</span>
+            <span class="s2">"base point fraction"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+            <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+            <span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
+            <span class="s2">"basis"</span><span class="p">:</span> <span class="s2">"c2"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="o">...</span>
 <span class="p">}</span>
@@ -208,19 +208,19 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;v1&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;v2&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;v3&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
 <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
         <span class="o">...</span>
-        <span class="s2">&quot;TR_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;idw&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
-            <span class="s2">&quot;fixed zones&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="s2">&quot;n nearest&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-            <span class="s2">&quot;deformation distance&quot;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
-            <span class="s2">&quot;blending stiffness&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="s2">&quot;func&quot;</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+        <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"idw"</span><span class="p">,</span>
+            <span class="s2">"power"</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
+            <span class="s2">"fixed zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"n nearest"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="s2">"deformation distance"</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
+            <span class="s2">"blending stiffness"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+            <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="o">...</span>
 <span class="p">}</span>

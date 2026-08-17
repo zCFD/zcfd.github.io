@@ -45,28 +45,28 @@
 <section id="id1">
 <h2>Petsc<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>Details of the available options for the Petsc KSP linear system solvers used by zCFD are given <a class="reference external" href="https://petsc.org/release/manual/ksp/" target="_blank">here</a>. these options can be passed through to Petsc via the zCFD control dictionary using the “linear solver options” key. The default values are given below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;linear solver options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;flow&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-3&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-ksp_converged_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="p">},</span>
-                          <span class="s2">&quot;turbulence&quot;</span><span class="p">:</span>  <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
-                                           <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-5&quot;</span><span class="p">,</span>
-                                           <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                           <span class="s2">&quot;-ksp_converged_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="p">},</span>
-                          <span class="s2">&quot;rbf&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
-                                   <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-5&quot;</span><span class="p">,</span>
-                                   <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"linear solver options"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"flow"</span><span class="p">:</span> <span class="p">{</span> <span class="s2">"-ksp_type"</span><span class="p">:</span> <span class="s2">"fgmres"</span><span class="p">,</span>
+                                    <span class="s2">"-ksp_rtol"</span><span class="p">:</span> <span class="s2">"1.0e-3"</span><span class="p">,</span>
+                                    <span class="s2">"-ksp_monitor"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                                    <span class="s2">"-ksp_converged_reason"</span><span class="p">:</span> <span class="s2">""</span> <span class="p">},</span>
+                          <span class="s2">"turbulence"</span><span class="p">:</span>  <span class="p">{</span> <span class="s2">"-ksp_type"</span><span class="p">:</span> <span class="s2">"fgmres"</span><span class="p">,</span>
+                                           <span class="s2">"-ksp_rtol"</span><span class="p">:</span> <span class="s2">"1.0e-5"</span><span class="p">,</span>
+                                           <span class="s2">"-ksp_monitor"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                                           <span class="s2">"-ksp_converged_reason"</span><span class="p">:</span> <span class="s2">""</span> <span class="p">},</span>
+                          <span class="s2">"rbf"</span><span class="p">:</span> <span class="p">{</span> <span class="s2">"-ksp_type"</span><span class="p">:</span> <span class="s2">"fgmres"</span><span class="p">,</span>
+                                   <span class="s2">"-ksp_rtol"</span><span class="p">:</span> <span class="s2">"1.0e-5"</span><span class="p">,</span>
+                                   <span class="s2">"-ksp_monitor"</span><span class="p">:</span> <span class="s2">""</span> <span class="p">}</span>
                          <span class="p">}</span>
 </pre></div>
 </div>
 <p>Settings are provided for the mean flow, turbulence and RBF linear systems. Most of the settings detailed in the <a class="reference external" href="https://petsc.org" target="_blank">Petsc documentation</a> can be passed through by adding them as key, value pairs to the appropriate dictionary. Where an option doesn’t take a value an empty string needs to be provided.</p>
 <p>The <a class="reference external" href="https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods" target="_blank">Hypre</a> library of algebraic multigrid methods is available via <a class="reference external" href="https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre" target="_blank">Petsc PCHYPRE</a> and the associated settings can be supplied via the “linear solver options” dictionary. Using Hypre’s boomeramg package as a preconditioner has shown good performance with the incompressible solver:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;linear solver options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;flow&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;-ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;fgmres&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-ksp_rtol&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0e-3&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-ksp_monitor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-ksp_converged_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;hypre&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;-pc_hypre_type&quot;</span><span class="p">:</span> <span class="s2">&quot;boomeramg&quot;</span><span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"linear solver options"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"flow"</span><span class="p">:</span> <span class="p">{</span> <span class="s2">"-ksp_type"</span><span class="p">:</span> <span class="s2">"fgmres"</span><span class="p">,</span>
+                                    <span class="s2">"-ksp_rtol"</span><span class="p">:</span> <span class="s2">"1.0e-3"</span><span class="p">,</span>
+                                    <span class="s2">"-ksp_monitor"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                                    <span class="s2">"-ksp_converged_reason"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                                    <span class="s2">"-pc_type"</span><span class="p">:</span> <span class="s2">"hypre"</span><span class="p">,</span>
+                                    <span class="s2">"-pc_hypre_type"</span><span class="p">:</span> <span class="s2">"boomeramg"</span><span class="p">},</span>
                                     <span class="o">...</span>
 </pre></div>
 </div>
@@ -75,46 +75,46 @@
 <section id="id3">
 <h2>AMGX<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <p>The AMGX settings for the mean flow, turbulence and RBF linear systems can be found in ZCFD_HOME/amgx.json, ZCFD_HOME/turbamgx.json and ZCFD_HOME/RBF_amgx.json. The mean flow settings are shown below:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;config_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="nt">&quot;determinism_flag&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;preconditioner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;error_scaling&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;print_grid_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_uncolored_percentage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;algorithm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AGGREGATION&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AMG&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;smoother&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MULTICOLOR_GS&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;presweeps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;selector&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SIZE_8&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;coarse_solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NOSOLVER&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_iters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;postsweeps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;min_coarse_rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;relaxation_factor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.75</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;amg&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_levels&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;matrix_coloring_scheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PARALLEL_GREEDY&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;cycle&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;V&quot;</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">"config_version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="nt">"determinism_flag"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="nt">"solver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"preconditioner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"error_scaling"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"print_grid_stats"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"max_uncolored_percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AGGREGATION"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"solver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AMG"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"smoother"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MULTICOLOR_GS"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"presweeps"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"selector"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SIZE_8"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"coarse_solver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOSOLVER"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"max_iters"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"postsweeps"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"min_coarse_rows"</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"relaxation_factor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.75</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amg"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"max_levels"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"matrix_coloring_scheme"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARALLEL_GREEDY"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"V"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;use_scalar_norm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FGMRES&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;print_solve_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;obtain_timings&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;max_iters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;monitor_residual&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;gmres_n_restart&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;convergence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RELATIVE_INI_CORE&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;tolerance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-3</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;norm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;L2&quot;</span>
+<span class="w">  </span><span class="nt">"use_scalar_norm"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"solver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FGMRES"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"print_solve_stats"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"obtain_timings"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"max_iters"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"monitor_residual"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"gmres_n_restart"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"convergence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RELATIVE_INI_CORE"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tolerance"</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"norm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"L2"</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>In general these settings provide good performance for most cases. If issues are encountered converging the linear system reducing the “tolerance” may help. Otherwise altering the multigrid aggregation selection algorithm “selector”: “SIZE_8” to “SIZE_4” or “SIZE_2” will build smaller aggregates and hence increase the number of coarse levels - improving convergence at the expense of memory use. Increasing the number of “gmres_n_restart” may also improve convergence at the expense of increased memory use.</p>
 <p>There are too many AMGX options to detail here but example configurations for different solvers are given <a class="reference external" href="https://github.com/NVIDIA/AMGX/tree/main/src/configs" target="_blank">here</a>.</p>
 <p>When running on NVidia GPUs and using AMGX there is only one option available in the “linear solver options” dictionary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;linear solver options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;double precision&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"linear solver options"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"double precision"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The “double precision” option controls whether the mean flow linear system is solved in single or double precision. Solving in single precision brings a reduction in memory use and a speed up to the solver. However, double precision may be required for more challenging cases.</p>

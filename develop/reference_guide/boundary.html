@@ -37,8 +37,8 @@
   <section id="boundary-conditions">
 <span id="id1"></span><h1>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading">¶</a></h1>
 <p>Boundary condition properties are defined using consecutively numbered blocks.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
-<span class="s1">&#39;BC_2&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<span class="s1">'BC_2'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
 </pre></div>
 </div>
 <p>zCFD supports the following boundary condition types:</p>
@@ -81,8 +81,8 @@
 <p>Boundary conditions can be mapped to the mesh in two ways, depending on the mesh format used. Some mesh formats (for example Fluent) will have boundaries tagged with an integer (wall = 3, etc). These can be referenced directly using the <strong>“ref”</strong> keyword in your boundary condition definition. Alternatively, the mesh format may contain explicitly numbered zones (which can be determined by inspecting the mesh).  In this case, the user can specify the list of zone numbers for each boundary condition using the <strong>“zone”</strong> keyword.</p>
 <p>For example to apply BC_1 to boundaries tagged with value 3:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
           <span class="o">..</span>
 <span class="p">}</span>
 <span class="o">..</span>
@@ -90,8 +90,8 @@
 </div>
 <p>Or to apply BC_1 to boundaries to zones with IDs 0,1,2 &amp; 3:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
           <span class="o">..</span>
 <span class="p">}</span>
 <span class="o">..</span>
@@ -180,27 +180,27 @@
 </tbody>
 </table>
 <p>Example Wall BC with roughness and temperature set:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-          <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;wall&#39;</span><span class="p">,</span>
-          <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;slip&#39;</span><span class="p">,</span>
-          <span class="s1">&#39;roughness&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                        <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;scalar&#39;</span> <span class="p">:</span> <span class="mf">0.001</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+          <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'wall'</span><span class="p">,</span>
+          <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'slip'</span><span class="p">,</span>
+          <span class="s1">'roughness'</span> <span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'height'</span><span class="p">,</span>
+                        <span class="s1">'scalar'</span> <span class="p">:</span> <span class="mf">0.001</span>
                         <span class="p">},</span>
-          <span class="s1">&#39;temperature&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'temperature'</span> <span class="p">:</span> <span class="p">{</span>
                           <span class="c1"># Temperature in Kelvin</span>
-                          <span class="s1">&#39;scalar&#39;</span> <span class="p">:</span> <span class="mf">280.0</span><span class="p">,</span>
+                          <span class="s1">'scalar'</span> <span class="p">:</span> <span class="mf">280.0</span><span class="p">,</span>
                           <span class="p">},</span>
           <span class="p">},</span>
 </pre></div>
 </div>
 <p>Example Immersed Boundary Wall BC:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-          <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;immersed wall&#39;</span><span class="p">,</span>
-          <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;wallfunction&#39;</span><span class="p">,</span>
-          <span class="s1">&#39;immersed normal type&#39;</span> <span class="p">:</span> <span class="s1">&#39;STL&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+          <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'immersed wall'</span><span class="p">,</span>
+          <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'wallfunction'</span><span class="p">,</span>
+          <span class="s1">'immersed normal type'</span> <span class="p">:</span> <span class="s1">'STL'</span><span class="p">,</span>
         <span class="p">},</span>
 </pre></div>
 </div>
@@ -324,29 +324,29 @@
 </tbody>
 </table>
 <p>Example Linear Velocity Boundary Wall BC:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;wall&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s2">&quot;noslip&#39;,</span>
-         <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="p">{</span>
-               <span class="s1">&#39;linear&#39;</span><span class="p">:</span> <span class="p">{</span>
-                          <span class="s1">&#39;vector&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                          <span class="s1">&#39;mach&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="c1"># optional override to vector magnitude</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+         <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'wall'</span><span class="p">,</span>
+         <span class="s1">'kind'</span><span class="p">:</span> <span class="s2">"noslip',</span>
+         <span class="s1">'v'</span><span class="p">:</span> <span class="p">{</span>
+               <span class="s1">'linear'</span><span class="p">:</span> <span class="p">{</span>
+                          <span class="s1">'vector'</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="s1">'mach'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="c1"># optional override to vector magnitude</span>
                          <span class="p">},</span>
               <span class="p">},</span>
          <span class="p">},</span>
 </pre></div>
 </div>
 <p>Example Rotating Velocity Boundary Wall BC:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_1&#39;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;wall&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s2">&quot;wallfunction&#39;,</span>
-         <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="p">{</span>
-               <span class="s1">&#39;rotating&#39;</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="s1">&#39;axis&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="c1"># radians per second</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+         <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'wall'</span><span class="p">,</span>
+         <span class="s1">'kind'</span><span class="p">:</span> <span class="s2">"wallfunction',</span>
+         <span class="s1">'v'</span><span class="p">:</span> <span class="p">{</span>
+               <span class="s1">'rotating'</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">'axis'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s1">'origin'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s1">'omega'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="c1"># radians per second</span>
                            <span class="p">},</span>
               <span class="p">},</span>
          <span class="p">},</span>
@@ -450,17 +450,17 @@
 </tbody>
 </table>
 <p>Example boundary condition block for a farfield boundary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_2&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_2'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="c1"># Zone type tag</span>
-         <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
          <span class="c1"># Optional: Specific zone boundary condition override</span>
-         <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
          <span class="c1"># Required: Boundary condition type</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;farfield&#39;</span><span class="p">,</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'farfield'</span><span class="p">,</span>
          <span class="c1"># Required: Kind of farfield options (riemann, pressure or supersonic)</span>
-         <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;riemann&#39;</span><span class="p">,</span>
+         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'riemann'</span><span class="p">,</span>
          <span class="c1"># Required: Farfield conditions</span>
-         <span class="s1">&#39;condition&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
+         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
          <span class="c1"># Optional: Atmospheric Boundary Layer</span>
  <span class="p">},</span>
 </pre></div>
@@ -531,57 +531,57 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tbody>
 </table>
 <p>Example boundary condition for setting up a <strong>pressure</strong> inflow condition based on flow conditions defined in <em>IC_2</em>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_3&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;inflow&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;condition&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_2&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_3'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'inflow'</span><span class="p">,</span>
+         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'default'</span><span class="p">,</span>
+         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_2'</span><span class="p">,</span>
          <span class="p">},</span>
-<span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;temperature&#39;</span> <span class="p">:</span> <span class="mf">293.0</span><span class="p">,</span>
-         <span class="s1">&#39;pressure&#39;</span> <span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-         <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-              <span class="s1">&#39;Mach&#39;</span> <span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
+<span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'temperature'</span> <span class="p">:</span> <span class="mf">293.0</span><span class="p">,</span>
+         <span class="s1">'pressure'</span> <span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
+         <span class="s1">'V'</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+              <span class="s1">'Mach'</span> <span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
               <span class="p">},</span>
-         <span class="s1">&#39;Reynolds No&#39;</span> <span class="p">:</span> <span class="mf">1.0e6</span><span class="p">,</span>
-         <span class="s1">&#39;Reference Length&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">&#39;turbulence intensity&#39;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-         <span class="s1">&#39;eddy viscosity ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'Reynolds No'</span> <span class="p">:</span> <span class="mf">1.0e6</span><span class="p">,</span>
+         <span class="s1">'Reference Length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'turbulence intensity'</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+         <span class="s1">'eddy viscosity ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
          <span class="p">},</span>
-<span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;total temperature ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">&#39;total pressure ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'reference'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
+         <span class="s1">'total temperature ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'total pressure ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
          <span class="c1"># Optional - specify mach number to set</span>
          <span class="c1"># static pressure at inflow from total pressure</span>
-         <span class="s1">&#39;mach&#39;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+         <span class="s1">'mach'</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>Example boundary condition for setting up a <strong>massflow</strong> inflow condition based on flow conditions defined in <em>IC_2</em>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_3&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;inflow&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;massflow&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;condition&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_2&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_3'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'inflow'</span><span class="p">,</span>
+         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'massflow'</span><span class="p">,</span>
+         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_2'</span><span class="p">,</span>
 <span class="p">},</span>
-<span class="s1">&#39;IC_1&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;temperature&#39;</span> <span class="p">:</span> <span class="mf">293.0</span><span class="p">,</span>
-         <span class="s1">&#39;pressure&#39;</span> <span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-         <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-              <span class="s1">&#39;Mach&#39;</span> <span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
+<span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'temperature'</span> <span class="p">:</span> <span class="mf">293.0</span><span class="p">,</span>
+         <span class="s1">'pressure'</span> <span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
+         <span class="s1">'V'</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+              <span class="s1">'Mach'</span> <span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
               <span class="p">},</span>
-         <span class="s1">&#39;Reynolds No&#39;</span> <span class="p">:</span> <span class="mf">1.0e6</span><span class="p">,</span>
-         <span class="s1">&#39;Reference Length&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">&#39;turbulence intensity&#39;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-         <span class="s1">&#39;eddy viscosity ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'Reynolds No'</span> <span class="p">:</span> <span class="mf">1.0e6</span><span class="p">,</span>
+         <span class="s1">'Reference Length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'turbulence intensity'</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+         <span class="s1">'eddy viscosity ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 <span class="p">},</span>
-<span class="s1">&#39;IC_2&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;reference&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;total temperature ratio&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">&#39;mass flow rate&#39;</span> <span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'reference'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
+         <span class="s1">'total temperature ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'mass flow rate'</span> <span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -657,20 +657,20 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </tbody>
 </table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_4&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_4'</span> <span class="p">:</span> <span class="p">{</span>
          <span class="c1"># Zone type tag</span>
-         <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
          <span class="c1"># Optional: Specific zone boundary condition override</span>
-         <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
          <span class="c1"># Boundary condition type</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;outflow&#39;</span><span class="p">,</span>
-         <span class="c1"># Kind of outflow &#39;pressure, &#39;massflow&#39; or &#39;radial pressure gradient&#39;</span>
-         <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="s1">&#39;pressure&#39;</span><span class="p">,</span>
-         <span class="c1"># Required only when using &#39;radial pressure gradient&#39;</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'outflow'</span><span class="p">,</span>
+         <span class="c1"># Kind of outflow 'pressure, 'massflow' or 'radial pressure gradient'</span>
+         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'pressure'</span><span class="p">,</span>
+         <span class="c1"># Required only when using 'radial pressure gradient'</span>
          <span class="c1"># Radius at which the static pressure ratio is defined</span>
-         <span class="s1">&#39;reference radius&#39;</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">'reference radius'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
          <span class="c1"># Outflow conditions</span>
-         <span class="s1">&#39;condition&#39;</span> <span class="p">:</span> <span class="s1">&#39;IC_2&#39;</span><span class="p">,</span>
+         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_2'</span><span class="p">,</span>
          <span class="p">},</span>
 </pre></div>
 </div>
@@ -715,9 +715,9 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tbody>
 </table>
 <p>Example symmetry boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_5&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;ref&#39;</span> <span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;symmetry&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_5'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'symmetry'</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -803,13 +803,13 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tbody>
 </table>
 <p>Example linear periodic boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_6&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;periodic&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_6'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'periodic'</span><span class="p">,</span>
+         <span class="s1">'kind'</span> <span class="p">:</span> <span class="p">{</span>
                   <span class="c1"># Linear periodic settings</span>
-                  <span class="s1">&#39;linear&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                             <span class="s1">&#39;vector&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+                  <span class="s1">'linear'</span> <span class="p">:</span> <span class="p">{</span>
+                             <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
                              <span class="p">},</span>
           <span class="p">},</span>
 <span class="p">},</span>
@@ -854,15 +854,15 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tbody>
 </table>
 <p>Example rotated periodic boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_6&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;periodic&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;kind&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_6'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'periodic'</span><span class="p">,</span>
+         <span class="s1">'kind'</span> <span class="p">:</span> <span class="p">{</span>
                   <span class="c1"># Rotated periodic settings</span>
-                  <span class="s1">&#39;rotated&#39;</span> <span class="p">:</span> <span class="p">{</span>
-                              <span class="s1">&#39;theta&#39;</span> <span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">120.0</span><span class="p">),</span>
-                              <span class="s1">&#39;axis&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-                              <span class="s1">&#39;origin&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+                  <span class="s1">'rotated'</span> <span class="p">:</span> <span class="p">{</span>
+                              <span class="s1">'theta'</span> <span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">120.0</span><span class="p">),</span>
+                              <span class="s1">'axis'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+                              <span class="s1">'origin'</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
                               <span class="p">},</span>
                 <span class="p">},</span>
 <span class="p">}</span>
@@ -910,9 +910,9 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tbody>
 </table>
 <p>Example overset boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;BC_7&#39;</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">&#39;zone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
-         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;overset&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_7'</span> <span class="p">:</span> <span class="p">{</span>
+         <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'overset'</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>

@@ -46,97 +46,97 @@
 <h3>Actuator disc definitions<a class="headerlink" href="#actuator-disc-definitions" title="Link to this heading">¶</a></h3>
 <p>Conceptually turbines and propellors behave nearly identically in terms of the actuator disc model, with the only differences being in in the coordinate systems and sign conventions typically used to define them. In zCFD an actuator disc zone is defined as a <a class="reference internal" href="reference_guide/fluid_zone.html#fluid-zones"><span class="std std-ref">fluid zone</span></a>, using the following keys:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">turb_zone</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;FZ_1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;disc&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;controller&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;discretisation&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;turbine_name&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reference plane&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;def&quot;</span><span class="p">:</span> <span class="s2">&quot;./turbine_vtp/turbine_def.vtp&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reference point&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
-        <span class="s2">&quot;update frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"FZ_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"disc"</span><span class="p">,</span>
+        <span class="s2">"controller"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"discretisation"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"model"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"turbine_name"</span><span class="p">,</span>
+        <span class="s2">"reference plane"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"def"</span><span class="p">:</span> <span class="s2">"./turbine_vtp/turbine_def.vtp"</span><span class="p">,</span>
+        <span class="s2">"reference point"</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
+        <span class="s2">"update frequency"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The <em>controller</em> dictionary defines how the forces generated from the disc should be controlled. Options here are <em>fixed</em> and <em>tsr curve</em>. For a fixed controller the user must specify an angular velocity and blade pitch angle, and for a tsr curve the user must specify a tip speed ratio curve, and optionally a blade pitch curve in the case of a <em>BET</em> model.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;controller&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;tsr curve&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;tip speed ratio&quot;</span><span class="p">:</span> <span class="n">tsr</span><span class="p">,</span>
-    <span class="s2">&quot;tip speed ratio curve&quot;</span><span class="p">:</span> <span class="p">[</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"controller"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"tsr curve"</span><span class="p">,</span>
+    <span class="s2">"tip speed ratio"</span><span class="p">:</span> <span class="n">tsr</span><span class="p">,</span>
+    <span class="s2">"tip speed ratio curve"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="n">tsr0</span><span class="p">],</span>
         <span class="o">...</span>
         <span class="p">[</span><span class="n">un</span><span class="p">,</span> <span class="n">tsrn</span><span class="p">]</span>
     <span class="p">],</span>
 <span class="p">},</span>
 
-<span class="s2">&quot;controller&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;omega&quot;</span><span class="p">:</span> <span class="n">omega</span><span class="p">,</span>
-    <span class="s2">&quot;pitch&quot;</span><span class="p">:</span> <span class="n">pitch</span>
+<span class="s2">"controller"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"fixed"</span><span class="p">,</span>
+    <span class="s2">"omega"</span><span class="p">:</span> <span class="n">omega</span><span class="p">,</span>
+    <span class="s2">"pitch"</span><span class="p">:</span> <span class="n">pitch</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>The <em>geometry</em> dictionary contains the physical description of the disc geometry, and has the following keys:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;centre&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
-    <span class="s2">&quot;inner radius&quot;</span><span class="p">:</span> <span class="n">inner_radius</span><span class="p">,</span>
-    <span class="s2">&quot;normal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
-    <span class="s2">&quot;outer radius&quot;</span><span class="p">:</span> <span class="n">outer_radius</span><span class="p">,</span>
-    <span class="s2">&quot;up&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"centre"</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
+    <span class="s2">"inner radius"</span><span class="p">:</span> <span class="n">inner_radius</span><span class="p">,</span>
+    <span class="s2">"normal"</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
+    <span class="s2">"outer radius"</span><span class="p">:</span> <span class="n">outer_radius</span><span class="p">,</span>
+    <span class="s2">"up"</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>Here the <em>normal</em> direction will determine the direction of force from the disc. The convention in zCFD is that the normal should point on the direction of the force on the fluid. i.e. for a propeller the normal should point in the direction of the flow, and on a turbine it should point towards the incoming flow.</p>
 <p>The <em>discretisation</em> dictionary contains the information needed to create the actuator disc representation of the turbine/ propellor:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;discretisation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;disc&quot;</span><span class="p">,</span> <span class="s2">&quot;number of elements&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"discretisation"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"disc"</span><span class="p">,</span> <span class="s2">"number of elements"</span><span class="p">:</span> <span class="mi">48</span><span class="p">},</span>
 </pre></div>
 </div>
 <p>The <em>model</em> dictionary contains the information needed to drive the force calculation in the actuator disc model. Here the user can specify either a <em>simple</em> turbine model, which averages the performance of the turbine over the entire disc, or <em>BET</em> to use a blade element model:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
-<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;simple&quot;</span><span class="p">,</span>
-<span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;turbine&quot;</span><span class="p">,</span>
-<span class="s2">&quot;power model&quot;</span><span class="p">:</span> <span class="s2">&quot;curve&quot;</span><span class="p">,</span>
-<span class="s2">&quot;thrust coefficient&quot;</span><span class="p">:</span> <span class="n">thrust_coefficient</span><span class="p">,</span>
-<span class="s2">&quot;thrust coefficient curve&quot;</span><span class="p">:</span> <span class="p">[</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+<span class="s2">"type"</span><span class="p">:</span> <span class="s2">"simple"</span><span class="p">,</span>
+<span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"turbine"</span><span class="p">,</span>
+<span class="s2">"power model"</span><span class="p">:</span> <span class="s2">"curve"</span><span class="p">,</span>
+<span class="s2">"thrust coefficient"</span><span class="p">:</span> <span class="n">thrust_coefficient</span><span class="p">,</span>
+<span class="s2">"thrust coefficient curve"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="n">tc0</span><span class="p">],</span>
         <span class="o">...</span>
         <span class="p">[</span><span class="n">un</span><span class="p">,</span> <span class="n">tcn</span><span class="p">]</span>
     <span class="p">],</span>
-<span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="n">turbine_power</span><span class="p">,</span>
-<span class="s2">&quot;turbine power curve&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="s2">"power"</span><span class="p">:</span> <span class="n">turbine_power</span><span class="p">,</span>
+<span class="s2">"turbine power curve"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="n">p0</span><span class="p">],</span>
         <span class="o">...</span>
         <span class="p">[</span><span class="n">un</span><span class="p">,</span> <span class="n">pn</span><span class="p">]</span>
     <span class="p">],</span>
 <span class="p">},</span>
 
-<span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;BET&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;propellor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;blade chord&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"BET"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"propellor"</span><span class="p">,</span>
+    <span class="s2">"blade chord"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="n">r0</span><span class="o">/</span><span class="n">R</span><span class="p">,</span> <span class="n">c0</span><span class="p">],</span>
         <span class="o">...</span>
         <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cn</span><span class="p">],</span>
     <span class="p">],</span>
-    <span class="s2">&quot;blade twist&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">"blade twist"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="n">r0</span><span class="o">/</span><span class="n">R</span><span class="p">,</span> <span class="n">t0</span><span class="p">],</span>
         <span class="o">...</span>
         <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tn</span><span class="p">],</span>
     <span class="p">],</span>
-    <span class="s2">&quot;number of sections&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="s2">&quot;number of blades&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;aerofoil positions&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;aerofoil1&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;aerofoil1&quot;</span><span class="p">]],</span>
-    <span class="s2">&quot;aerofoils&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;aerofoil1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;cd&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">"number of sections"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="s2">"number of blades"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"aerofoil positions"</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">"aerofoil1"</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"aerofoil1"</span><span class="p">]],</span>
+    <span class="s2">"aerofoils"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"aerofoil1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"cd"</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">[</span><span class="n">a0</span><span class="p">,</span> <span class="n">cd0</span><span class="p">],</span>
                 <span class="o">...</span>
                 <span class="p">[</span><span class="n">an</span><span class="p">,</span> <span class="n">cdn</span><span class="p">],</span>
             <span class="p">],</span>
-            <span class="s2">&quot;cl&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">"cl"</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">[</span><span class="n">a0</span><span class="p">,</span> <span class="n">cl0</span><span class="p">],</span>
                 <span class="o">...</span>
                 <span class="p">[</span><span class="n">an</span><span class="p">,</span> <span class="n">cln</span><span class="p">],</span>
@@ -144,8 +144,8 @@
         <span class="p">},</span>
         <span class="o">...</span>
     <span class="p">},</span>
-    <span class="s2">&quot;tip loss correction radius&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
-    <span class="s2">&quot;tip loss correction&quot;</span><span class="p">:</span> <span class="s2">&quot;rstar&quot;</span><span class="p">,</span>
+    <span class="s2">"tip loss correction radius"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+    <span class="s2">"tip loss correction"</span><span class="p">:</span> <span class="s2">"rstar"</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>

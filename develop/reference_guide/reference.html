@@ -60,7 +60,7 @@
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set reference state to IC_1</span>
-<span class="s1">&#39;reference&#39;</span><span class="p">:</span> <span class="s1">&#39;IC_1&#39;</span><span class="p">,</span>
+<span class="s1">'reference'</span><span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>Sets the <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Condition</span></a> which provides the reference quantities when non-dimensionalisation is applied to <a class="reference internal" href="report.html#reporting"><span class="std std-ref">force reporting.</span></a>
@@ -96,8 +96,8 @@
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set initial state to IC_1</span>
-<span class="s2">&quot;initial&quot;</span><span class="p">:</span> <span class="p">{</span>
-  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;IC_1&quot;</span>
+<span class="s2">"initial"</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"IC_1"</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -135,15 +135,15 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <p>Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from mm to metres</span>
-<span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">]</span>
+<span class="s1">'scale'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from inches to metres</span>
-<span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">]</span>
+<span class="s1">'scale'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale the mesh to be 10 times larger in y axis</span>
-<span class="s1">&#39;scale&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="s1">'scale'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -160,7 +160,7 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <span class="n">B2C</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">A2B</span><span class="p">)</span>
 <span class="n">C2D</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">B2C</span><span class="p">)</span>
 
-<span class="s2">&quot;mesh transform matrix&quot;</span><span class="p">:</span> <span class="n">C2D</span>
+<span class="s2">"mesh transform matrix"</span><span class="p">:</span> <span class="n">C2D</span>
 </pre></div>
 </div>
 <p>When using the zutil.transform helper functions transforms are applied in the order in which the user calls the functions. Rotations are considered using the same conventions as <a class="reference external" href="https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html" target="_blank">pytransform3d</a> and are interpreted as active and applied using the pre-multiplication convention. For more complex transformations <a class="reference external" href="https://dfki-ric.github.io/pytransform3d" target="_blank">pytransform3d</a> provides a comprehensive collection of python functions and can be easily interfaced with zCFD by simply passing the resulting transformation matrix to the solver.</p>
@@ -271,25 +271,25 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <p>The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped on to a new mesh using the ‘interpolate restart’ parameter.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from previous solution</span>
-<span class="s1">&#39;restart&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="c1"># Load solution from case name &#39;my_case&#39;</span>
-<span class="s1">&#39;restart casename&#39;</span><span class="p">:</span> <span class="s1">&#39;my_case&#39;</span><span class="p">,</span>
-<span class="s1">&#39;restart ignore history&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="s1">'restart'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="c1"># Load solution from case name 'my_case'</span>
+<span class="s1">'restart casename'</span><span class="p">:</span> <span class="s1">'my_case'</span><span class="p">,</span>
+<span class="s1">'restart ignore history'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from previous solution on a different mesh</span>
-<span class="s2">&quot;interpolate restart&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="c1"># Interpolate restart from &quot;different_mesh.h5&quot;</span>
-<span class="s2">&quot;restart meshname&quot;</span><span class="p">:</span> <span class="s2">&quot;different_mesh&quot;</span><span class="p">,</span>
+<span class="s2">"interpolate restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="c1"># Interpolate restart from "different_mesh.h5"</span>
+<span class="s2">"restart meshname"</span><span class="p">:</span> <span class="s2">"different_mesh"</span><span class="p">,</span>
 <span class="c1"># Do not smooth initial solution</span>
-<span class="s2">&quot;solution smooth cycles&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s2">"solution smooth cycles"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
 </pre></div>
 </div>
 <section id="advanced-restart">
 <h3>Advanced Restart<a class="headerlink" href="#advanced-restart" title="Link to this heading">¶</a></h3>
 <p>It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate approximate initial field for SA-neg</span>
-<span class="s1">&#39;approximate sa from sst results&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="s1">'approximate sa from sst results'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
@@ -321,7 +321,7 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <p>Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Enable safe mode</span>
-<span class="s1">&#39;safe&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="s1">'safe'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
