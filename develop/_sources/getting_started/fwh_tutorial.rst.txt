@@ -30,28 +30,30 @@ There's also a prepared control dictionary, *cylinder_fwh.py*. This is identical
 
 .. code-block:: python
 
-    "write output": {
-        "format": "vtk",
-        "surface variables": ["V", "p", "T", "rho", "cp"],
-        "volume variables": ["V", "p", "T", "rho", "m", "cp"],
-        "fwh interpolate": ["fwh_surface1.stl"],
-        "frequency": {
-            "fwh interpolate": 1,
-            "volume data": 1000,
-            "surface data": 1000,
+    "output settings": {
+        "solution": {
+            "format": "vtk",
+            "surface variables": ["V", "p", "T", "rho", "cp"],
+            "volume variables": ["V", "p", "T", "rho", "m", "cp"],
+            "fwh interpolate": ["fwh_surface1.stl"],
+            "frequency": {
+                "fwh interpolate": 1,
+                "volume data": 1000,
+                "surface data": 1000,
+            },
         },
     },
 
-In this case, we have chosen to output *fwh interpolate* data every single timestep, using the *fwh_surface1.stl* FWH surface definition file. Volume and surface data is much less frequent, since we already have all this data from when we ran *cylinder.py* :ref:`above <tutorial_3>`. 
+This ``output_settings.solution`` block sits under the ``solver`` key of the control dictionary, alongside ``equations``, ``convergence_control`` and the other :ref:`solver settings <fwhTutorialRunFwh>` inherited from *cylinder.py*. In this case, we have chosen to output *fwh_interpolate* data every single timestep, using the *fwh_surface1.stl* FWH surface definition file. Volume and surface data is much less frequent, since we already have all this data from when we ran *cylinder.py* :ref:`above <tutorial_3>`.
 
-For the FWH tutorial we have also updated the *'time marching'* section to run the simulation for 4 seconds, rather than 1.2. We run the CFD simulation in the normal way, using the command below. 
+For the FWH tutorial we have also updated the ``solver.time_settings`` block to run the simulation for 4 seconds, rather than 1.2. We run the CFD simulation in the normal way, using the command below.
 
 .. code-block:: bash
 
     run_zcfd -m cylinder.h5 -c cylinder_fwh.py
 
-  
-When we've run the CFD simulation of the cylinder, we should be able to see the FWH interpolated data in *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5'*. There is also a corresponding *xdmf* file, *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.xdmf'*, which allows us to open the FWH surface in ParaView and see the pressure, velocity and density at each cell centre varying with simulation time. Use the ParaView *Time* controls to adjust the simulation time being viewed. You may find that changing the *view style* to *Point Gaussian* and increasing the *Gaussian Radius* in the *Properties* sidebar makes the cell values easier to see.
+
+When we've run the CFD simulation of the cylinder, we should be able to see the FWH interpolated data in *'cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5'*. There is also a corresponding *xdmf* file, *'cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.xdmf'*, which allows us to open the FWH surface in ParaView and see the pressure, velocity and density at each cell centre varying with simulation time. Use the ParaView *Time* controls to adjust the simulation time being viewed. You may find that changing the *view style* to *Point Gaussian* and increasing the *Gaussian Radius* in the *Properties* sidebar makes the cell values easier to see.
 
 Running the zCFD FWH solver
 ===========================
@@ -71,9 +73,9 @@ We're going to use the `run_fwh` utility to calculate noise at an observer *Obs1
 
 To use the `run_fwh` utility we need three inputs - a :ref:`zCFD control file<runFwhZcfdParameters>`, a :ref:`reference condition<runFwhRefCond>` specification and an :ref:`observers .csv file<runFwhObserversCsv>`.
 
-The zCFD control file is simply the control file for the zCFD simulation we used to create the FWH surface data - in this case, *cylinder_fwh.py*. *run_fwh* reads *cylinder_fwh.py* and can see that we have a single FWH surface, with data stored at *'cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5'*.
+The zCFD control file is simply the control file for the zCFD simulation we used to create the FWH surface data - in this case, *cylinder_fwh.py*. *run_fwh* reads *cylinder_fwh.py* and can see that we have a single FWH surface, with data stored at *'cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5'*.
 
-Next, we have to define a *reference condition*. In external flow simulations of this type, the *run_fwh* *reference condition* is the freestream conditions, defined as a zCFD :ref:`IC block<initial_conditions>`. In this case, the freestream conditions are already defined in *cylinder_fwh.py* to define the farfield boundary condition, so we can simply use *'IC_1'* for the *run_fwh* reference condition.
+Next, we have to define a *reference condition*. In external flow simulations of this type, the *run_fwh* *reference condition* is the freestream conditions, defined as a zCFD :ref:`reference condition block<initial_conditions>` under ``solver.reference_conditions``. In this case, the freestream conditions are already defined in *cylinder_fwh.py* to define the farfield boundary condition, so we can simply use *'IC_1'* for the *run_fwh* reference condition.
 
 Lastly, we need to define the name and location of our observers in a :code:`.csv` file. The centre of the cylinder in the CFD mesh is at (0.25,0,0), and we want *Obs1* to always be (0,0,20) metres  away from the cylinder centre during the FWH simulation. The file :code:`Observers.csv` (included in the tutorial :ref:`.zip file<runningZcfdWithFwhOut>`) therefore contains the following:
 
@@ -91,6 +93,9 @@ Having decided on our inputs, we run the *run_fwh* utility by simply typing the 
   run_fwh -c cylinder_fwh.py --reference_condition IC_1 --observer_locations Observers.csv
 
 Running this command prints output to screen and to the `cylinder_fwh.fwh.log` file, and outputs the FWH calculated pressure history at *Obs1* to `cylinder_fwh.fwh.Obs1.csv`. In the case where there are multiple noise sources, the contribution of noise to each source is broken out, with the total observed noise also reported. Suggested post-processing is introduced :ref:`below<fwhTutorialPP>`.
+
+.. note::
+  The ``run_fwh`` command-line interface takes a zCFD control file, a reference-condition name and an observers ``.csv`` file, whatever the control file's ``config_version``. The FWH tools read the control dictionary's raw parameters directly, rather than through the same schema-validated path as the solver: the ``run_fwh`` helper module has not been updated for the current control-file format and references a class that no longer exists in ``zutil.fileutils``. Check your local installation's release notes for the current status of these tools.
 
 .. _fwhTutorialFwhModule:
 
@@ -161,7 +166,7 @@ Now that we know the motions of our observers and surface, we can run the FWH so
     surfaces = {
         "surf1": {
             "motion": surfaceMotion,
-            "fileName": "./cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5",
+            "fileName": "./cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5",
         }
     }
     observers = {"Obs1": obs1Motion, "Obs2": obs2Motion}
@@ -192,7 +197,7 @@ We set *Obs2* to be stationary in the FWH reference frame, and to be coincident 
 Running the FWH solver
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The python code above is replicated in *'run_fwh_solver.py*'. To run the FWH solver, we simply run the command below from within the :ref:`zCFD command-line environment <zcfd-command>`. You may need to change the :code:`surfaces["surf1"]["fileName"]` parameter depending on how many ranks you used in your zCFD run.
+The python code above is replicated in *'run_fwh_solver.py*'. To run the FWH solver, we simply run the command below from within the :ref:`zCFD command-line environment <zcfd-command>`.
 
 
 .. code-block:: bash

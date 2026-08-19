@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Initial Conditions &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Initial Conditions &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -36,22 +36,55 @@
             
   <section id="initial-conditions">
 <span id="id1"></span><h1>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Link to this heading">¶</a></h1>
-<p>An initial condition dictionary defines a fluid state. They are used to provide a reference initial state for the solution as well as specific conditions that can be assigned to <a class="reference internal" href="boundary.html#boundary-conditions"><span class="std std-ref">boundary conditions</span></a>.</p>
-<p>Initial condition properties are defined using consecutively numbered blocks</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
-<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<p>A reference-condition entry defines a fluid state. These entries live in
+the <code class="docutils literal notranslate"><span class="pre">solver.reference_conditions</span></code> dict, each keyed by a name
+(conventionally “IC_1”, “IC_2”, …):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"reference_conditions"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+    <span class="s2">"IC_2"</span><span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>By default zCFD will use the “IC_1” block  to provide initial flow field conditions for the simulation but this can be changed with the <a class="reference internal" href="reference.html#initial-state"><span class="std std-ref">‘initial’</span></a> parameter.</p>
-<p>In addition to fully describing a set of conditions, zCFD allows you to specify <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">‘reference conditions’</span></a> to be specified relative to a base set. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain.</p>
-<p>Another way of prescribing an initial condition is by defining a dynamic <a class="reference internal" href="../functions.html#driving-function"><span class="std std-ref">‘driving function’</span></a>, which on evaluation returns an initial condition dictionary.</p>
+<p>The same dict, and the same entry shape, serves three different roles:
+there is no structural split between “the initial condition” and “a
+reference condition”:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference.html#initial-state"><span class="std std-ref">‘initial_conditions’</span></a> on <code class="docutils literal notranslate"><span class="pre">solver.initialisation</span></code>
+names the entry used to fill the flow field at the start of the
+simulation (the entry used is whichever name is given there — there is
+no hard-coded “IC_1” default, it must be named explicitly).</p></li>
+<li><p><a class="reference internal" href="reference.html#reference-state"><span class="std std-ref">‘reference’</span></a> on <code class="docutils literal notranslate"><span class="pre">solver.initialisation</span></code> names
+the entry used to non-dimensionalise <a class="reference internal" href="report.html#reporting"><span class="std std-ref">force reporting</span></a>.</p></li>
+<li><p>A boundary condition’s own <code class="docutils literal notranslate"><span class="pre">condition</span></code> field (see
+<a class="reference internal" href="boundary.html#boundary-conditions"><span class="std std-ref">boundary conditions</span></a>) names the entry used to
+set flow entering (inflow/farfield) or leaving (outflow) the domain.</p></li>
+</ul>
+<p>Each entry is validated against a different pydantic model depending on
+<code class="docutils literal notranslate"><span class="pre">solver.equations.type</span></code> — ‘euler’ entries reject viscosity/turbulence
+fields outright, ‘viscous’ entries add viscosity, and ‘rans’/’les’ entries
+add the full turbulence set. This routing is automatic; the deck just
+supplies the fields relevant to its equation type and the schema picks the
+right model.</p>
+<p>One entry can also inherit from another by including a ‘reference’ key
+naming the base entry — this is resolved before validation (the fields are
+merged and overridden, then ‘reference’ is discarded), so it never reaches
+the C++ dict. This is how a lean, ratio-only entry (used for boundary
+conditions specified relative to a base flow state) is expressed without
+repeating every field. See <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">‘reference conditions’</span></a>
+for the ratio-specific keywords (‘total_pressure_ratio’, etc.) available on
+every entry.</p>
+<p>Another way of prescribing an initial condition is by defining a dynamic
+<a class="reference internal" href="../functions.html#driving-function"><span class="std std-ref">‘driving function’</span></a>, a python callable which on
+evaluation returns a reference-condition dict; when ‘initial_conditions’ is
+set to a callable, ‘reference’ must be set explicitly to name a static
+entry for non-dimensionalisation.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 26.3%" />
-<col style="width: 10.5%" />
-<col style="width: 10.5%" />
-<col style="width: 21.1%" />
-<col style="width: 31.6%" />
+<col style="width: 22.0%" />
+<col style="width: 15.0%" />
+<col style="width: 12.0%" />
+<col style="width: 15.0%" />
+<col style="width: 36.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Keyword</p></th>
@@ -74,106 +107,130 @@
 <td><p>Float</p></td>
 <td><p>Static temperature in Kelvin. Used to compute density and for dynamic viscosity scaling using Sutherlands law.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘V’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>Dict</p></td>
-<td><p>See <a class="reference internal" href="#ic-v"><span class="std std-ref">Velocity</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p>‘reynolds no’</p></td>
-<td><p>When ‘viscosity’ not set.</p></td>
-<td></td>
-<td><p>Float</p></td>
-<td><p>Used to calculate viscosity at supplied temperature</p></td>
-</tr>
-<tr class="row-even"><td><p>‘reference length’</p></td>
+<tr class="row-even"><td><p>‘v’</p></td>
 <td><p>No</p></td>
-<td><p>1</p></td>
+<td><p>[0.0, 0.0, 0.0]</p></td>
+<td><p>Dict</p></td>
+<td><p>See <a class="reference internal" href="#ic-v"><span class="std std-ref">Velocity</span></a>. Optional — a zero-velocity entry is legal (e.g. a quiescent cavity’s initial state); pair it with a different <a class="reference internal" href="reference.html#reference-state"><span class="std std-ref">reference</span></a> entry for non-dimensionalisation in that case.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘reference_length’</p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
 <td><p>Float</p></td>
-<td><p>Reference length to be used to calculate viscosity from the Reynolds number</p></td>
+<td><p>Reference length used to calculate viscosity from the Reynolds number. Only meaningful when ‘reynolds_no’ is set (viscous/RANS/LES equation types).</p></td>
+</tr>
+<tr class="row-even"><td><p>‘reynolds_no’</p></td>
+<td><p>When ‘viscosity’ not set (viscous/RANS/LES only)</p></td>
+<td></td>
+<td><p>Float</p></td>
+<td><p>Used to calculate viscosity at the supplied temperature. Not valid for ‘euler’ equations.</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘viscosity’</p></td>
-<td><p>When ‘reynolds no’ not set.</p></td>
+<td><p>When ‘reynolds_no’ not set (viscous/RANS/LES only)</p></td>
 <td></td>
 <td><p>Float</p></td>
-<td><p>Sets the dynamic viscosity at the temperature with scaling provided by Sutherlands law defined in <a class="reference internal" href="materials.html#materials"><span class="std std-ref">material</span></a> section.</p></td>
+<td><p>Sets the dynamic viscosity at the temperature, with scaling provided by Sutherlands law defined in <a class="reference internal" href="materials.html#materials"><span class="std std-ref">material</span></a> section. Not valid for ‘euler’ equations. Exactly one of ‘reynolds_no’/’viscosity’ must be given for viscous/RANS/LES equations, never both.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘turbulence intensity’</span></a></p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘turbulence_intensity’</span></a></p></td>
+<td><p>Yes (RANS/LES only)</p></td>
 <td></td>
 <td><p>Float</p></td>
-<td><p>Turbulence intensity (%)</p></td>
+<td><p>Turbulence intensity (fraction, e.g. 0.01 = 1%). Only valid for ‘rans’/’les’ equation types.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘eddy viscosity ratio’</span></a></p></td>
-<td><p>No</p></td>
-<td><p>0.01</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘eddy_viscosity_ratio’</span></a></p></td>
+<td><p>Yes (RANS/LES only)</p></td>
+<td></td>
 <td><p>Float</p></td>
-<td><p>Ratio of dynamic viscosity to turbulent viscosity used to set the turbulence quantities</p></td>
+<td><p>Ratio of eddy viscosity to molecular viscosity used to set the turbulence quantities. Only valid for ‘rans’/’les’ equation types.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘ambient turbulence intensity’</span></a></p></td>
-<td><p>No</p></td>
-<td><p>0.1</p></td>
-<td><p>Float</p></td>
-<td><p>Value of background turbulence intensity (%) to maintain in fluid</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘ambient eddy viscosity ratio’</span></a></p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘ambient_turbulence_intensity’</span></a></p></td>
+<td><p>No (RANS/LES only)</p></td>
 <td><p>1e-20</p></td>
 <td><p>Float</p></td>
-<td><p>Value of background turbulence eddy viscosity ratio to maintain in fluid</p></td>
+<td><p>Value of background turbulence intensity to maintain in the fluid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ic-turb-intensity"><span class="std std-ref">‘ambient_eddy_viscosity_ratio’</span></a></p></td>
+<td><p>No (RANS/LES only)</p></td>
+<td><p>1e-20</p></td>
+<td><p>Float</p></td>
+<td><p>Value of background turbulence eddy viscosity ratio to maintain in the fluid.</p></td>
 </tr>
 <tr class="row-even"><td><p>‘profile’</p></td>
 <td><p>No</p></td>
-<td><p>1e-20</p></td>
+<td><p>Not set</p></td>
 <td><p>Dict</p></td>
-<td><p>See <a class="reference internal" href="#ic-v-profile"><span class="std std-ref">Velocity Profile</span></a></p></td>
+<td><p>See <a class="reference internal" href="#ic-v-profile"><span class="std std-ref">Velocity Profile</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘monitor’</p></td>
+<td><p>No</p></td>
+<td><p>Not set</p></td>
+<td><p>Dict</p></td>
+<td><p>Update/terminate/prefix contract used only when this entry’s parent dict is itself a python <a class="reference internal" href="../functions.html#driving-function"><span class="std std-ref">driving function</span></a> — not applicable to a static entry.</p></td>
+</tr>
+<tr class="row-even"><td><p>‘total_pressure_ratio’ / ‘total_temperature_ratio’ / ‘static_pressure_ratio’</p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Float</p></td>
+<td><p>Ratio relative to a base entry named by that entry’s own ‘reference’ key. See <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">‘reference conditions’</span></a>.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>‘turbulence_intensity’ and ‘eddy_viscosity_ratio’ are required (no
+default) for ‘rans’/’les’ equation types. ‘ambient_turbulence_intensity’
+defaults to 1e-20, matching ‘ambient_eddy_viscosity_ratio’ (also 1e-20
+by default). Field names are snake_case throughout
+(‘turbulence_intensity’, not ‘turbulence intensity’; ‘v’, not ‘V’;
+etc.).</p>
+</div>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-<span class="o">..</span>
-<span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">"V"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="p">},</span>
-    <span class="s2">"ambient eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
-    <span class="s2">"ambient turbulence intensity"</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
-    <span class="s2">"eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="s2">"pressure"</span><span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-    <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">273.15</span><span class="p">,</span>
-    <span class="s2">"turbulence intensity"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-    <span class="s2">"viscosity"</span><span class="p">:</span> <span class="mf">1.79e-05</span><span class="p">,</span>
-<span class="o">..</span>
-<span class="p">},</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"reference_conditions"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"v"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">"mach"</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"pressure"</span><span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
+        <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">273.15</span><span class="p">,</span>
+        <span class="s2">"reynolds_no"</span><span class="p">:</span> <span class="mf">6.0e6</span><span class="p">,</span>
+        <span class="s2">"reference_length"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">"turbulence_intensity"</span><span class="p">:</span> <span class="mf">5.2e-2</span><span class="p">,</span>
+        <span class="s2">"eddy_viscosity_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">"ambient_turbulence_intensity"</span><span class="p">:</span> <span class="mf">5.2e-2</span><span class="p">,</span>
+        <span class="s2">"ambient_eddy_viscosity_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <section id="velocity">
 <span id="ic-v"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading">¶</a></h2>
-<p>Velocity can be specified in two ways, either a vector or a vector and a Mach number. When Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and speed of sound at the pressure and temperature provided.</p>
+<p>Velocity can be specified in two ways: either a bare vector, or a vector and a Mach number. When a Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and the speed of sound at the pressure and temperature provided.</p>
 <p>For example to set a velocity of 50 mesh units/sec in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s2">"V"</span> <span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">]}</span>
+<span class="s2">"v"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]}</span>
 <span class="o">..</span>
 </pre></div>
 </div>
 <p>Or to set a velocity of mach 0.2 in the X direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s2">"V"</span> <span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="s2">"mach"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="s2">"v"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s2">"mach"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="o">..</span>
 </pre></div>
 </div>
 </section>
 <section id="viscosity">
 <span id="ic-viscosity"></span><h2>Viscosity<a class="headerlink" href="#viscosity" title="Link to this heading">¶</a></h2>
-<p>Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified.  This can be specified either as a dimensional quantity or by a Reynolds number and reference length</p>
+<p>Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified. This can be specified either as a dimensional quantity or by a Reynolds number and reference length. Both are only valid for ‘viscous’/’rans’/’les’ equation types — omit both for ‘euler’.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dynamic viscosity in dimensional units</span>
-<span class="s1">'viscosity'</span> <span class="p">:</span> <span class="mf">1.83e-5</span><span class="p">,</span>
+<span class="s2">"viscosity"</span><span class="p">:</span> <span class="mf">1.83e-5</span><span class="p">,</span>
 </pre></div>
 </div>
 <p>or</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reynolds number</span>
-<span class="s1">'reynolds No'</span> <span class="p">:</span> <span class="mf">5.0e6</span><span class="p">,</span>
+<span class="s2">"reynolds_no"</span><span class="p">:</span> <span class="mf">5.0e6</span><span class="p">,</span>
 <span class="c1"># Reference length</span>
-<span class="s1">'reference length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="s2">"reference_length"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -181,20 +238,22 @@
 <p>Reynolds number is defined as:
 <span class="math notranslate nohighlight">\(Re=\frac{density * V * reference length}{viscosity}\)</span></p>
 </div>
+<p>Exactly one of ‘reynolds_no’/’viscosity’ must be set; setting both, or
+neither, is a validation error.</p>
 </section>
 <section id="turbulence-intensity-eddy-viscosity">
 <span id="ic-turb-intensity"></span><h2>Turbulence intensity &amp; Eddy viscosity<a class="headerlink" href="#turbulence-intensity-eddy-viscosity" title="Link to this heading">¶</a></h2>
-<p>Turbulence intensity is defined as the ratio of velocity fluctuations <span class="math notranslate nohighlight">\(u^{'}\)</span> to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high.</p>
+<p>Turbulence intensity is defined as the ratio of velocity fluctuations <span class="math notranslate nohighlight">\(u^{'}\)</span> to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high. Both fields below are required for ‘rans’/’les’ equation types (no default) and not valid for ‘euler’/’viscous’.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Turbulence intensity %</span>
-<span class="s1">'turbulence intensity'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="s2">"turbulence_intensity"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
 <span class="c1"># Turbulence intensity for sustainment %</span>
-<span class="s1">'ambient turbulence intensity'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="s2">"ambient_turbulence_intensity"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
 </pre></div>
 </div>
-<p>The eddy viscosity ratio <span class="math notranslate nohighlight">\((\mu_t/\mu)\)</span> varies depending type of flow.
-For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)</p>
+<p>The eddy viscosity ratio <span class="math notranslate nohighlight">\((\mu_t/\mu)\)</span> varies depending on the type of flow.
+For external flows this ratio varies from 0.1 to 1 (wind tunnel 1 to 10).</p>
 <p>For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
-by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:</p>
+by the characteristic lengths of the geometry (e.g. the height of the channel or diameter of the pipe). Typical values are:</p>
 <table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Re</p></td>
@@ -216,15 +275,33 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Eddy viscosity ratio</span>
-<span class="s1">'eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="s2">"eddy_viscosity_ratio"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
 <span class="c1"># Eddy viscosity ratio for sustainment</span>
-<span class="s1">'ambient eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="s2">"ambient_eddy_viscosity_ratio"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>Both ambient fields default to <strong>1.0e-20</strong> — a near-zero numerical floor,
+not the freestream <code class="docutils literal notranslate"><span class="pre">turbulence_intensity</span></code>/<code class="docutils literal notranslate"><span class="pre">eddy_viscosity_ratio</span></code>
+value. There is no fallback to the freestream turbulence level when these
+are unset; sustaining the ambient level at the freestream value requires
+setting them explicitly to the same value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"reference_conditions"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="o">..</span>
+        <span class="s2">"turbulence_intensity"</span><span class="p">:</span> <span class="mf">5.2e-2</span><span class="p">,</span>
+        <span class="s2">"eddy_viscosity_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="c1"># Sustain ambient turbulence at the freestream level, rather</span>
+        <span class="c1"># than the 1.0e-20 default floor:</span>
+        <span class="s2">"ambient_turbulence_intensity"</span><span class="p">:</span> <span class="mf">5.2e-2</span><span class="p">,</span>
+        <span class="s2">"ambient_eddy_viscosity_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">},</span>
 </pre></div>
 </div>
 </section>
 <section id="velocity-profile">
 <span id="ic-v-profile"></span><h2>Velocity Profile<a class="headerlink" href="#velocity-profile" title="Link to this heading">¶</a></h2>
-<p>The user can also provide functions to specify a ‘wall-function’ - or the turbulence viscosity profile near a boundary.</p>
+<p>The user can also provide functions to specify a ‘wall-function’ — or the turbulence viscosity profile near a boundary.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -246,7 +323,7 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <td><p>No</p></td>
 <td></td>
 <td><p>Dict</p></td>
-<td><p>Specify an <a class="reference internal" href="#ic-abl"><span class="std std-ref">ABL</span></a>  (Atmospheric Boundary Layer)</p></td>
+<td><p>Specify an <a class="reference internal" href="#ic-abl"><span class="std std-ref">ABL</span></a> (Atmospheric Boundary Layer) profile.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ic-field"><span class="std std-ref">‘field’</span></a></p></td>
 <td><p>No</p></td>
@@ -254,34 +331,35 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <td><p>File name</p></td>
 <td><p>Specify a field of data that is used as a lookup for setting the flow conditions.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘use wall distance’</p></td>
+<tr class="row-even"><td><p>‘use_wall_distance’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
 <td><p>True/False</p></td>
-<td><p>Use wall distance in place of z coordinate in field during interpolation process. This can be used in setting the profile of flows on a terrain mesh with a variable ground location at the boundary</p></td>
+<td><p>Use wall distance in place of z coordinate in the field during interpolation. Can be used to set the profile of flows on a terrain mesh with a variable ground location at the boundary.</p></td>
 </tr>
 </tbody>
 </table>
 <section id="field">
 <span id="ic-field"></span><h3>field<a class="headerlink" href="#field" title="Link to this heading">¶</a></h3>
-<p>The file specified using the ‘field’ parameter should be in the ParaView/VTK VTP format. If should contain a node array with one or more of the following array names: ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. zCFD will then look up those values in the solution by looking up the nearest point in the VTP file.</p>
+<p>The file specified using the ‘field’ parameter should be in the ParaView/VTK VTP format. It should contain a node array with one or more of the following array names: ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. zCFD will look up those values in the solution by finding the nearest point in the VTP file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s1">'profile'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'field'</span> <span class="p">:</span> <span class="s1">'inflow_field.vtp'</span><span class="p">,</span>
-         <span class="c1"># Localise field using wall distance rather that z coordinate</span>
-         <span class="s1">'use wall distance'</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="p">},</span>
+<span class="s2">"profile"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"field"</span><span class="p">:</span> <span class="s2">"inflow_field.vtp"</span><span class="p">,</span>
+    <span class="c1"># Localise field using wall distance rather than z coordinate</span>
+    <span class="s2">"use_wall_distance"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">},</span>
 <span class="o">..</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.</p>
+<p>The field overrides conditions specified elsewhere in the entry; the user can specify only the conditions that differ from default.</p>
 </div>
 </section>
 </section>
 <section id="abl">
 <span id="ic-abl"></span><h2>ABL<a class="headerlink" href="#abl" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.reference_conditions.&lt;name&gt;.profile.abl</span></code></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -299,59 +377,78 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘roughness length’</p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p>‘roughness_length’</p></td>
+<td><p>Yes</p></td>
 <td></td>
-<td><p>Float</p></td>
-<td><p>It is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.</p></td>
+<td><p>Float &gt; 0</p></td>
+<td><p>A measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘friction velocity’</p></td>
+<tr class="row-odd"><td><p>‘friction_velocity’</p></td>
 <td><p>No</p></td>
 <td></td>
-<td><p>Float</p></td>
-<td><p>Specify the friction velocity at the surface.</p></td>
+<td><p>Float &gt; 0</p></td>
+<td><p>Specify the friction velocity at the surface. At least one of ‘friction_velocity’/’surface_layer_height’ should be set.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘surface layer height’</p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p>‘surface_layer_height’</p></td>
+<td><p>No (compressible solver only)</p></td>
 <td></td>
-<td><p>Float</p></td>
+<td><p>Float &gt; 0</p></td>
 <td><p>The surface layer height, also known as the aerodynamic or boundary layer height.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘monin-obukhov length’</p></td>
-<td><p>No</p></td>
+<tr class="row-odd"><td><p>‘monin_obukhov_length’</p></td>
+<td><p>No (compressible solver only)</p></td>
 <td></td>
-<td><p>Float</p></td>
-<td><p>The Monin-Obukhov length.</p></td>
+<td><p>Float, nonzero</p></td>
+<td><p>The Monin-Obukhov length. Negative values enable an unstable-stratification correction to the log-law profile; there is currently no stable-stratification (positive L) correction. Omit for neutral stability.</p></td>
 </tr>
 <tr class="row-even"><td><p>‘tke’</p></td>
-<td><p>No</p></td>
+<td><p>No (compressible solver only)</p></td>
 <td></td>
-<td><p>Float</p></td>
-<td><p>Set the turbulent kinetic energy.</p></td>
+<td><p>Float &gt;= 0</p></td>
+<td><p>Reference turbulent kinetic energy. Only applied when ‘friction_velocity’ is also set; otherwise it is ignored (with a warning) and TKE is derived from wall distance instead.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘z0’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p>Float</p></td>
-<td><p>Set the z location of the ground rather than using the z coordinate in the mesh.</p></td>
-</tr>
-<tr class="row-even"><td><p>‘up’</p></td>
-<td><p>No</p></td>
+<tr class="row-odd"><td><p>‘up’</p></td>
+<td><p>No (compressible solver only)</p></td>
 <td><p>[0,0,1]</p></td>
-<td><p>Vector</p></td>
-<td><p>Direction of gravity</p></td>
+<td><p>Unit vector</p></td>
+<td><p>Direction of “up”, used with ‘ground_level’ to compute height above ground. This is independent of the fluid’s gravity vector — nothing cross-checks that the two are anti-parallel.</p></td>
+</tr>
+<tr class="row-even"><td><p>‘ground_level’</p></td>
+<td><p>No (compressible solver only)</p></td>
+<td><p>0.0</p></td>
+<td><p>Float &gt;= 0</p></td>
+<td><p>Datum elevation of the ground, measured along ‘up’, subtracted before the log-law height is computed. This is unrelated to the aerodynamic roughness length (‘roughness_length’ above).</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>‘ground_level’ is the canonical spelling; ‘z0’ is a legacy spelling
+accepted for backward compatibility and normalised to ‘ground_level’
+automatically (the older name collided with the unrelated
+roughness-length <span class="math notranslate nohighlight">\(z_o\)</span> notation). ‘up’ is an independent vertical
+direction vector, unrelated to the gravity vector set on the fluid
+model.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>‘surface_layer_height’, ‘monin_obukhov_length’, ‘tke’, ‘up’ and
+‘ground_level’ are only accepted when the solver is compressible (or
+‘solver.solver_settings.type’ is unset). The incompressible inflow
+boundary condition reads only ‘roughness_length’ and
+‘friction_velocity’ from this profile; setting any of the other five on
+an incompressible deck is a validation error, since they would silently
+have no effect on that solver’s inflow.</p>
+</div>
 <section id="roughness-length">
-<h3>roughness length<a class="headerlink" href="#roughness-length" title="Link to this heading">¶</a></h3>
+<h3>roughness_length<a class="headerlink" href="#roughness-length" title="Link to this heading">¶</a></h3>
 <p>Is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.</p>
 <p>The roughness length is typically denoted by the symbol “<span class="math notranslate nohighlight">\(z_o\)</span>” and is defined as the vertical distance between the Earth’s surface and the height at which the logarithmic wind profile intersects the surface. The logarithmic wind profile is a mathematical relationship that describes the variation of wind speed with height in the atmospheric boundary layer.</p>
 <p>The roughness length depends on the surface characteristics of the terrain or objects present on the Earth’s surface. Different surfaces, such as forests, urban areas, or bodies of water, have different roughness lengths. For example, a smooth surface like open water would have a small roughness length, while a densely forested area would have a larger roughness length.</p>
 <p>The wall boundary mesh is assumed to be at the height of the roughness length rather than ground level and therefore the first cell height should not be smaller than the roughness length.</p>
 </section>
 <section id="friction-velocity">
-<h3>friction velocity<a class="headerlink" href="#friction-velocity" title="Link to this heading">¶</a></h3>
+<h3>friction_velocity<a class="headerlink" href="#friction-velocity" title="Link to this heading">¶</a></h3>
 <p>Friction velocity, often denoted as “<span class="math notranslate nohighlight">\(u\star\)</span>” (pronounced “u-star”), is another important parameter in the study of atmospheric boundary layers. It represents the characteristic velocity of turbulent motions in the surface layer of the atmosphere, generated by the shear stress between the air and the Earth’s surface.</p>
 <p>Friction velocity is defined as the square root of the shear stress divided by the air density:</p>
 <p><span class="math notranslate nohighlight">\(u\star = \sqrt{\frac{\tau}{\rho}}\)</span></p>
@@ -372,11 +469,11 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <p>The friction velocity provides a measure of the intensity of turbulence near the Earth’s surface. It influences several atmospheric processes, including heat and moisture exchange, pollutant dispersion, and the formation of atmospheric boundary layer structures. The magnitude of the friction velocity depends on surface roughness, wind speed, and atmospheric stability, among other factors.</p>
 </section>
 <section id="surface-layer-height">
-<h3>surface layer height<a class="headerlink" href="#surface-layer-height" title="Link to this heading">¶</a></h3>
+<h3>surface_layer_height<a class="headerlink" href="#surface-layer-height" title="Link to this heading">¶</a></h3>
 <p>The surface layer height, also known as the aerodynamic or boundary layer height, refers to the vertical extent of the atmospheric boundary layer near the Earth’s surface. It represents the region where the physical properties, such as wind speed, temperature, humidity, and turbulence, are influenced by the underlying surface. The height of the surface layer is often estimated based on empirical relationships or atmospheric stability conditions. It can vary from a few meters to a few hundred meters above the ground, depending on factors such as surface roughness length, wind speed, and atmospheric stability. Additionally, the surface layer height can change diurnally, with variations due to daytime heating and nighttime cooling effects.</p>
 </section>
 <section id="monin-obukhov-length">
-<h3>monin-obukhov length<a class="headerlink" href="#monin-obukhov-length" title="Link to this heading">¶</a></h3>
+<h3>monin_obukhov_length<a class="headerlink" href="#monin-obukhov-length" title="Link to this heading">¶</a></h3>
 <p>The Monin-Obukhov length, often denoted as “L”, is a parameter used in the study of atmospheric boundary layers to characterise the stability of the air near the Earth’s surface. It is named after the Russian scientists A. S. Monin and A. M. Obukhov, who made significant contributions to the understanding of turbulence and boundary layer physics.</p>
 <p>The Monin-Obukhov length is defined as the ratio of the potential temperature difference to the buoyancy flux. It is given by the following equation:</p>
 <p><span class="math notranslate nohighlight">\(L = -\frac{u\star^3 * \theta_v} {\kappa * g * w\theta}\)</span></p>
@@ -389,7 +486,7 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 <li><p><span class="math notranslate nohighlight">\(g\)</span> is the acceleration due to gravity, and</p></li>
 <li><p><span class="math notranslate nohighlight">\(w\theta\)</span> is the vertical flux of virtual potential temperature.</p></li>
 </ul>
-<p>The Monin-Obukhov length is an indicator of atmospheric stability. It quantifies the relationship between the mechanical production of turbulence due to wind shear and the buoyancy effects caused by vertical temperature gradients. Positive values of L indicate stable atmospheric conditions, while negative values indicate unstable conditions. A neutral atmosphere corresponds to L = 0.</p>
+<p>The Monin-Obukhov length is an indicator of atmospheric stability. It quantifies the relationship between the mechanical production of turbulence due to wind shear and the buoyancy effects caused by vertical temperature gradients. Positive values of L indicate stable atmospheric conditions, while negative values indicate unstable conditions. A neutral atmosphere corresponds to L = 0, but L = 0 itself is rejected as an input value — omit the key for neutral stability instead.</p>
 <p>The Monin-Obukhov length influences various atmospheric processes, such as turbulence structure, heat and moisture exchange, and dispersion of pollutants. It plays a significant role in determining the behaviour of the atmospheric boundary layer, including the vertical mixing of air masses and the development of turbulence. The value of L is influenced by factors such as surface properties, wind speed, temperature, and humidity gradients.</p>
 </section>
 </section>

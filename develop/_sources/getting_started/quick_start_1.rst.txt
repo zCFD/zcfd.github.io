@@ -36,58 +36,85 @@ This tutorial will assume you unzip the file in a directory called "zcfd_tutoria
 Step 2. Review Control file
 ===========================
 
-*naca0012.py* is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the Python dictionary :code:`parameters` to set the solver settings. A brief overview of the parameters dictionary for the  simulation is given below; for a more detailed description of the control file structure, see the :ref:`reference guide <reference_guide>`.
+*naca0012.py* is the zCFD control file. When we run zCFD, zCFD reads the control file and uses the Python dictionary :code:`parameters` to set the solver settings. Control files declare :code:`"config_version": 2`, and nest their settings under a top-level :code:`solver` key (numerics, physics and output settings shared by the whole simulation) and a :code:`model` key (one entry per mesh, holding that mesh's boundary conditions). A brief overview of the parameters dictionary for the simulation is given below; for a more detailed description of the control file structure, see the :ref:`reference guide <reference_guide>`.
 
 
 .. parsed-literal::
 
     parameters = {
-        :ref:`"time marching" <tutorial_1_time>`: {
-        "unsteady": {"total time": 1.0, "time step": 1.0},
-            "scheme": {"name": "implicit euler", "stage": 1},
-            "cfl": 50,
-            "cfl ramp factor": {"growth": 1.1, "initial": 1.0},
-            "cycles": 1500,
+        "config_version": 2,
+        "solver": {
+            :ref:`"equations" <tutorial_1_equations>`: {
+                "type": "rans",
+                "turbulence": {"model": "sst"},
+            },
+            "numerical scheme": {
+                "order": "euler_second",
+                "inviscid flux scheme": "roe",
+            },
+            "fluid properties": {
+                "material": "air",
+                "gamma": 1.4,
+                "gas constant": 287.0,
+                "sutherlands const": 110.4,
+                "prandtl no": 0.72,
+                "turbulent prandtl no": 0.9,
+            },
+            "reference conditions": {
+                :ref:`"IC_1" <tutorial_1_ic1>`: {
+                    "temperature": 300,
+                    "pressure": 101325.0,
+                    "v": {"vector": [1.0, 0.0, 0.0], "mach": 0.15},
+                    "viscosity": 1.02145e-05,
+                    "turbulence intensity": 5.2e-2,
+                    "eddy viscosity ratio": 1.0,
+                },
+            },
+            "solver settings": {"type": "compressible"},
+            "initialisation": {"initial conditions": "IC_1", "restart": False},
+            :ref:`"time settings" <tutorial_1_time>`: {"type": "steady"},
+            "convergence control": {
+                "scheme": {"name": "implicit euler"},
+                "cfl": {
+                    "cfl": 50,
+                    "cfl ramp": [{"type": "exponential", "factor": 1.1, "initial": 1.0}],
+                },
+                "cycles": 1500,
+            },
+            "output settings": {
+                :ref:`"report" <tutorial_1_report>`: {
+                    "frequency": 10,
+                    "forces": {
+                        "FR_1": {"name": "wall", "zones": [4]},
+                    },
+                },
+                :ref:`"solution" <tutorial_1_output>`: {
+                    "surface variables": ["V","p","mach","cp","cf","pressureforce","frictionforce"],
+                    "volume variables":  ["V", "p", "T", "rho", "mach", "cp", "eddy"],
+                },
+            },
         },
-        :ref:`"equations" <tutorial_1_equations>`: "RANS",
-        "RANS": {
-            "order": "euler_second",
-            "turbulence": {"model": "sst"},
-            "inviscid flux scheme": "Roe",
-        },
-        :ref:`"IC_1" <tutorial_1_ic1>`: {
-            "temperature": 300,
-            "pressure": 101325.0,
-            "V": {"vector": [1.0,0.0,0.0], "Mach": 0.15},
-            "viscosity": 1.02145e-05,
-            "turbulence intensity": 5.2e-2,
-            "eddy viscosity ratio": 1.0,
-        },
-        :ref:`"BC_1" <tutorial_1_bc1>`: {
-            "zone": [1],
-            "type": "farfield",
-            "condition": "IC_1",
-            "kind": "riemann",
-        },
-        :ref:`"BC_2" <tutorial_1_bc2>`: {
-            "zone": [4],
-            "type": "wall",
-            "kind": "noslip",
-        },
-        :ref:`"BC_3" <tutorial_1_bc3>`: {
-            "zone": [2, 3],
-            "type": "symmetry",
-        },
-        :ref:`"report" <tutorial_1_report>`: {
-            "frequency": 10,
-            "forces" : {
-              "FR_1" : {"name" : "wall", "zone" : [4]},
-            }
-        },
-        "reference": "IC_1",
-        :ref:`"write output" <tutorial_1_output>`: {
-            "surface variables": ["V","p","mach","cp","cf","pressureforce","frictionforce"],
-            "volume variables":  ["V", "p", "T", "rho", "mach", "cp", "eddy"],
+        "model": {
+            "naca0012": {
+                "mesh": "naca0012.h5",
+                "boundary conditions": {
+                    :ref:`"BC_1" <tutorial_1_bc1>`: {
+                        "zones": [1],
+                        "type": "farfield",
+                        "condition": "IC_1",
+                        "kind": "riemann",
+                    },
+                    :ref:`"BC_2" <tutorial_1_bc2>`: {
+                        "zones": [4],
+                        "type": "wall",
+                        "kind": "no slip",
+                    },
+                    :ref:`"BC_3" <tutorial_1_bc3>`: {
+                        "zones": [2, 3],
+                        "type": "symmetry",
+                    },
+                },
+            },
         },
     }
 
@@ -96,16 +123,18 @@ Step 2. Review Control file
 Time marching
 ^^^^^^^^^^^^^
 
-The start of the parameters dictionary contains the :ref:`time marching <time>` sub-dictionary. The :ref:`unsteady <unsteady>` sub-dictionary sets whether we are running an `unsteady` or a `steady` simulation. The fact that `total time` and `time step` are the same number means that we’re running a steady simulation. 
+The physical time layout and the pacing of the iterative solve are described by two sibling keys under `solver`: `time_settings`, which describes the physical time layout (steady or unsteady), and `convergence_control`, which paces the iterative solve. Keeping them separate means each one only has to say one thing: `time_settings` says *what kind of run this is*, and `convergence_control` says *how quickly to march towards convergence*.
+
+:code:`"time settings": {"type": "steady"}` declares a steady simulation outright, as an explicit, first-class declaration.
 Steady simulations assume that the flow we are simulating does not vary with time. Most real flows are not truly ‘steady’, but steady simulations tend to be much easier and cheaper to run than unsteady simulations. For an attached, streamlined flow like this one using a steady simulation is reasonable when time-resolved data is not required.
 
-CFD simulations work by iteration - we start with a very rough estimate of the flow :math:`f(x, 0)`, then during the first  ‘iteration cycle’ the solver uses :math:`f(x, 0)` to create a better approximation of the flow, :math:`f(x,1)`. This is repeated many times  - we use :math:`f(x,1)` to calculate :math:`f(x,2)`, :math:`f(x,2)` to calculate :math:`f(x,3)` and so on, until eventually we reach an estimate of the flow we are happy with. 
+CFD simulations work by iteration - we start with a very rough estimate of the flow :math:`f(x, 0)`, then during the first  ‘iteration cycle’ the solver uses :math:`f(x, 0)` to create a better approximation of the flow, :math:`f(x,1)`. This is repeated many times  - we use :math:`f(x,1)` to calculate :math:`f(x,2)`, :math:`f(x,2)` to calculate :math:`f(x,3)` and so on, until eventually we reach an estimate of the flow we are happy with.
 
-The flow will generally change very quickly in the first few iterations, and then converge asymptotically on the ‘right’ answer. The :ref:`cycles <cycles>` parameter states how many iterations should be used in the simulation - the higher it is the more accurate the solution is likely to be, but given the convergence is asymptotic setting it too high will lead to lots of computational effort being used for very little change in the solution towards the end.
+The flow will generally change very quickly in the first few iterations, and then converge asymptotically on the ‘right’ answer. The :ref:`cycles <cycles>` parameter, part of `convergence_control`, states how many iterations should be used in the simulation - the higher it is the more accurate the solution is likely to be, but given the convergence is asymptotic setting it too high will lead to lots of computational effort being used for very little change in the solution towards the end.
 
 The :ref:`scheme <scheme>`  defines the numerical scheme used by the solver to get from :math:`f(x,n)` to :math:`f(x,n+1)`. The `implicit euler` scheme is a sensible choice to use for this type of simulation.
 
-The :ref:`CFL <cfl_control>` essentially sets how much the flow is allowed to change between :math:`f(x,n)` and :math:`f(x,n+1)` approximations of the flow field - if it is set too high the simulation will not converge, and if it is set too low the simulation will take many cycles reach the appropriate flow.
+The :ref:`CFL <cfl_control>` essentially sets how much the flow is allowed to change between :math:`f(x,n)` and :math:`f(x,n+1)` approximations of the flow field - if it is set too high the simulation will not converge, and if it is set too low the simulation will take many cycles reach the appropriate flow. `cfl ramp` is a list of ramps, run in order; the single one here grows the CFL each cycle, from `initial` by a factor of `factor`, so early cycles - where the flow field is a poor approximation of the true solution - take a cautiously small step, while later cycles converge faster.
 
 
 .. _tutorial_1_equations:
@@ -113,56 +142,58 @@ The :ref:`CFL <cfl_control>` essentially sets how much the flow is allowed to ch
 Equations
 ^^^^^^^^^
 
-The :ref:`equations <equations>` sets the type of flow we are simulating - there are a number of different options depending on the assumptions we make about the flow. `RANS` is used when we are simulating a compressible flow, and want to simulate the effects of turbulence on the mean flow by use of a turbulence equation. The `order` sets how the flow is spatially discretised, and the `turbulence` sets the turbulence model used.
+The :ref:`equations <equations>` block sets the type of flow we are simulating - there are a number of different options depending on the assumptions we make about the flow. `rans` is used when we are simulating a compressible flow, and want to simulate the effects of turbulence on the mean flow by use of a turbulence equation. The `turbulence` sub-dictionary sets the turbulence model used.
+
+How the flow is spatially discretised - its `order` of accuracy and its inviscid flux scheme - is a separate concern from *what* is being solved, so those settings live in their own `numerical_scheme` block, alongside `equations`.
 
 .. _tutorial_1_ic1:
 
 IC_1
 ^^^^
 
-Now that the numerical settings have been defined, the flow needs to have boundary conditions. Boundary conditions define what happens at exterior faces of the mesh. In this case, there are three boundary conditions. 
+Now that the numerical settings have been defined, the flow needs to have boundary conditions. Boundary conditions define what happens at exterior faces of the mesh. In this case, there are three boundary conditions.
 
-The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 K, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The `IC_1` dictionary defines a flow at these conditions. 
+The first boundary condition we consider is that of the freestream air, which is at a temperature of 300 K, a pressure of 101325 Pa and flows parallel to the mesh’s x axis at a Mach number of 0.15. The `IC_1` entry in `reference_conditions` defines a flow at these conditions.
 
-Because the RANS equations include the effect of viscosity, we also need to define the viscosity at the `IC_1` flow condition (in this case, we set it to be :math:`1.02145 {\times}10^{-5}\ \mathrm{kg\  m^{-1}\ s^{-1}}` at 300 K). This corresponds to a chord based Reynolds number of 6 million. Because the RANS equations include turbulence modelling, we also need to set the `turbulence intensity` and `eddy viscosity ratio` - these are used as boundary conditions for the SST turbulence model equations. The values given are sensible values for flows without significant freestream turbulence.
+Because the RANS equations include the effect of viscosity, we also need to define the viscosity at the `IC_1` flow condition (in this case, we set it to be :math:`1.02145 {\times}10^{-5}\ \mathrm{kg\  m^{-1}\ s^{-1}}` at 300 K). This corresponds to a chord based Reynolds number of 6 million. Because the RANS equations include turbulence modelling, we also need to set the `turbulence_intensity` and `eddy_viscosity_ratio` - these are used as boundary conditions for the SST turbulence model equations. The values given are sensible values for flows without significant freestream turbulence.
+
+`IC_1` also doubles as the initial guess for the flow field: :code:`"initialisation": {"initial conditions": "IC_1"}` tells the solver that at 0 cycles the entirety of the flow should be initialised to the `IC_1` conditions. Stating this explicitly starts to matter once more than one reference condition is in play (see :ref:`Tutorial 2 <tutorial_2>`).
 
 .. _tutorial_1_bc1:
 
 BC_1
 ^^^^
 
-The `BC_1` dictionary assigns the `IC_1` flow condition to all mesh faces contained in the mesh zone `1`. Mesh zones are defined during the meshing process, and in this case mesh zone `1` contains all the mesh faces which are on the farfield exterior surface of the mesh. The `farfield` type means that flow can pass freely through the specified mesh faces, and the `riemann` kind means that flow can pass both in and out of the mesh via the specified mesh faces.
-
-The `IC_1` dictionary is, by default, also used to define the initial guess for the flow - at 0 cycles we assume that the entirety of the flow is flowing at the `IC_1` conditions.
+The `BC_1` entry assigns the `IC_1` flow condition to all mesh faces contained in the mesh zone `1` (note the plural `zones` key - a boundary condition can span more than one mesh zone). Mesh zones are defined during the meshing process, and in this case mesh zone `1` contains all the mesh faces which are on the farfield exterior surface of the mesh. The `farfield` type means that flow can pass freely through the specified mesh faces, and the `riemann` kind means that flow can pass both in and out of the mesh via the specified mesh faces.
 
 .. _tutorial_1_bc2:
 
 BC_2
 ^^^^
 
-The `BC_2` dictionary assigns a no-slip wall boundary condition to all mesh faces contained in the mesh zone `4`. Mesh zone `4`, in this case, contains all faces on the aerofoil surface.
+The `BC_2` entry assigns a no-slip wall boundary condition to all mesh faces contained in the mesh zone `4`. Mesh zone `4`, in this case, contains all faces on the aerofoil surface. Note the `kind` is written `"no slip"`, with a space.
 
 .. _tutorial_1_bc3:
 
 BC_3
 ^^^^
 
-The `BC_3` dictionary assigns a symmetry boundary condition to all mesh faces contained in mesh zones `2` and `3`, which are the +ve z and -ve z faces of the mesh. This boundary condition type is used here so that we can simulate an aerofoil of effectively infinite span, but with a low mesh resolution in the z axis to reduce simulation cost.
+The `BC_3` entry assigns a symmetry boundary condition to all mesh faces contained in mesh zones `2` and `3`, which are the +ve z and -ve z faces of the mesh. This boundary condition type is used here so that we can simulate an aerofoil of effectively infinite span, but with a low mesh resolution in the z axis to reduce simulation cost.
 
 .. _tutorial_1_report:
 
 Report
 ^^^^^^
 
-The `report` dictionary defines which flow statistics zCFD should output to the user during the simulation, and how often. The ‘frequency’ key here defines that zCFD should report flow statistics to the user every 10 iteration cycles during the simulation. Exactly which flow statistics are outputted can be changed by the user, but the defaults should be enough for us to successfully monitor the convergence of the solution. The ‘forces’ sub-dictionary allows us to monitor the forces on specific mesh zones- here we are outputting the forces on mesh zone 1, which is the aerofoil surface. 
-Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensionalised (see :ref:`here <report_nondimensionalisation>`) and the `reference` parameter defines the flow state they should be non-dimensionalised against. This is normally chosen to be the freestream state.
+The `report` sub-dictionary, nested under `output_settings`, defines which flow statistics zCFD should output to the user during the simulation, and how often. The ‘frequency’ key here defines that zCFD should report flow statistics to the user every 10 iteration cycles during the simulation. Exactly which flow statistics are outputted can be changed by the user, but the defaults should be enough for us to successfully monitor the convergence of the solution. The ‘forces’ sub-dictionary allows us to monitor the forces on specific mesh zones - here we are outputting the forces on mesh zone 4, which is the aerofoil surface.
+Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensionalised (see :ref:`here <report_nondimensionalisation>`) against the reference condition named in `initialisation`'s `reference` key. That key defaults to whichever condition `initial_conditions` names when it is left unset, which for us is `IC_1`, the freestream state - so there is nothing extra to write here.
 
 .. _tutorial_1_output:
 
 Write Output
 ^^^^^^^^^^^^
 
-The final section of `parameters`, `write output`, defines which variables should be outputted into VTK HDF format (.vtkhdf) for visualisation by the user at the end of the simulation.
+The final part of `output_settings`, the `solution` sub-dictionary, defines which variables should be outputted into VTK HDF format (.vtkhdf) for visualisation by the user at the end of the simulation.
 
 Step 3. Running zCFD
 ====================

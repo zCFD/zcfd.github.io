@@ -1,75 +1,125 @@
 .. _materials:
 
 Material Specification
-----------------------
-This dictionary sets the material properties of the fluid being modelled. The default values are those of air, but the dictionary can be modified to model any ideal, compressible, perfect gas.
+-----------------------
 
+``fluid_properties`` sets the material properties of the fluid being modelled, nested under the top-level ``solver`` key:
 
-.. list-table:: 
-   :widths: 25 10 25 35
+.. code-block:: python
+
+    parameters = {
+        "config_version": 2,
+        "solver": {
+            "fluid_properties": {....},
+            ..
+        },
+        ..
+    }
+
+The default values are those of air, but the dictionary can be modified to model any ideal, compressible, perfect gas.
+
+Which fields are accepted depends on the equation set (:ref:`equations <equations>`): the inviscid Euler equations only need ``gamma``/``gas_constant`` to close the equation of state, while viscous, RANS and LES equations also need ``sutherlands_const`` and the Prandtl numbers to model diffusion of momentum and heat.
+
+.. list-table::
+   :widths: 25 10 15 15 35
    :header-rows: 1
 
    * - Keyword
      - Required
      - Default
      - Valid values
-   * - 'sutherlands const'
-     - Yes
-     - 110.4
-     - Float
-   * - 'prandtl no'
-     - Yes
-     - 0.72
-     - Float
-   * - 'gas constant'
-     - Yes
-     - 287
-     - Float
-   * - 'gamma'
-     - Yes
-     - 1.4
-     - Float
-   * - 'turbulent prandtl no'
-     - Yes
-     - 0.9
-     - Float
-   * - 'gravity'
+     - Equations
+   * - ``material``
      - No
-     - 
-     - Vector
+     - ``"ideal gas"``
+     - String
+     - All. A descriptive label only — it does not select a named sub-block.
+   * - ``gamma``
+     - No
+     - 1.4
+     - Float, > 1.0
+     - All
+   * - ``gas_constant``
+     - No
+     - 287.0
+     - Float, > 0
+     - All
+   * - ``sutherlands_const``
+     - No
+     - 110.4
+     - Float, > 0
+     - Viscous, RANS, LES
+   * - ``prandtl_no``
+     - No
+     - 0.72
+     - Float, > 0
+     - Viscous, RANS, LES
+   * - ``turbulent_prandtl_no``
+     - No
+     - 0.9
+     - Float, > 0
+     - Viscous, RANS, LES
+   * - ``gravity``
+     - No
+     -
+     - [X, Y, Z] vector, m/s²
+     - All. ``None``/omitted means gravity is off.
+   * - ``thermal_expansion_coeff``
+     - No
+     -
+     - Float, > 0
+     - Incompressible only, and only once ``solve_energy`` is set true in :ref:`equations <equations>` — Boussinesq buoyancy coefficient :math:`\beta` (1/K).
+   * - ``boussinesq_buoyancy_reference_density``
+     - No
+     -
+     - Float, >= 0
+     - Incompressible only
+   * - ``latitude``
+     - No
+     -
+     - Float, degrees, -90 to 90
+     - Compressible only. Latitude for the Coriolis force; omitted means no Coriolis.
+
+.. note::
+
+   ``gravity``, ``thermal_expansion_coeff``, ``boussinesq_buoyancy_reference_density`` and ``latitude`` are body-force/buoyancy fields that live on ``fluid_properties`` because that is where the solver reads them (``Reference::set`` takes all four from ``parameters.fluidProperties()``). A dedicated per-solver buoyancy block is the intended eventual home for these fields; ``fluid_properties`` is where they are set in the meantime.
 
 Example usage:
 
 .. code-block:: python
 
     parameters = {
-    ..
-    'material' : 'air',
-    'air' : {
-              'gamma' : 1.4,
-              'gas constant' : 287.0,
-              'Sutherlands const': 110.4,
-              'Prandtl No' : 0.72,
-              'Turbulent Prandtl No' : 0.9,
+        "config_version": 2,
+        "solver": {
+            ..
+            "fluid_properties": {
+                "material": "air",
+                "gamma": 1.4,
+                "gas_constant": 287.0,
+                "sutherlands_const": 110.4,
+                "prandtl_no": 0.72,
+                "turbulent_prandtl_no": 0.9,
             },
-    ..
+            ..
+        },
+        ..
     }
 
-sutherlands const
+sutherlands_const
 ^^^^^^^^^^^^^^^^^
 This option controls the variation of the viscosity of the fluid with temperature.
 
 Sutherland's law:
 :math:`\mu = \mu_{ref} \left( \frac{T}{T_{ref}} \right) ^ {3/2} \frac{T_{ref} + S}{T+S}`, where :math:`S` is Sutherland's constant.
 
-In zCFD, :math:`T_{ref}` and :math:`\mu_{ref}` are given by the :ref:`reference <reference>` initial condition dictionary, where :math:`T` is specified directly and :math:`\mu` is specified either directly via **'viscosity'** or indirectly via **'reynolds no'**.
+In zCFD, :math:`T_{ref}` and :math:`\mu_{ref}` are given by the :ref:`reference <reference>` initial condition dictionary, where :math:`T` is specified directly and :math:`\mu` is specified either directly via **'viscosity'** or indirectly via **'reynolds_no'**.
 
 Typically for air :math:`\mu_{ref} = 1.716e-5` and :math:`T_{ref} = 273.15`
 
 For more information:
 https://www.cfd-online.com/Wiki/Sutherland%27s_law
 
-prandtl no
+prandtl_no
 ^^^^^^^^^^
 This option sets the Prandtl number, a non-dimensional number which is the ratio of momentum and thermal diffusivities in a fluid. In zCFD, where :math:`\mu` and :math:`c_p` are already set, setting the Prandtl number has the effect of setting the thermal conductivity, :math:`k`,  of the fluid.
 
@@ -78,7 +128,7 @@ This option sets the Prandtl number, a non-dimensional number which is the ratio
 This can also be considered as :math:`\Pr = \frac{Thickness\ of\ thermal\ boundary\ layer}{Thickness\ of\ fluid\ boundary\ layer}`
 
 
-gas constant
+gas_constant
 ^^^^^^^^^^^^
 This changes :math:`R`, the gas constant of the fluid. Different fluids have different molecular masses, and therefore different gas constants. 287.1 is appropriate for air.
 
@@ -94,16 +144,24 @@ gamma
 ^^^^^
 This changes :math:`\gamma`, the ratio of specific heats of the fluid. 1.4 is appropriate for air, but a value of 1.33 is often used for combustion exhaust gases.
 
-turbulent prandtl no
+turbulent_prandtl_no
 ^^^^^^^^^^^^^^^^^^^^
-This changes the turbulent Prandtl number of the fluid being modelled.
+This changes the turbulent Prandtl number of the fluid being modelled. Only meaningful for viscous, RANS and LES equations — omitted entirely for Euler.
 
-In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, :math:`\mu_t` accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this. 
+In simulations which model turbulence viscosity (RANS, LES and other scale resolving simulations), the eddy viscosity, :math:`\mu_t` accounts for the additional diffusivity of momentum due to turbulence relative to the equivalent laminar flow. There is likewise additional diffusivity of heat due to turbulence relative to the equivalent laminar flow, and the turbulent prandtl number accounts for this.
 
 In an eddy viscosity based simulation, :math:`Pr_t = \frac{ c_p \mu_t }{k_t}`
 
 gravity
 ^^^^^^^
-This sets the direction in which gravity acts in your simulation.  For most industrial and aerospace flows, bouyancy effects are not important and therefore bouyancy should not be set. However, certain flows (e.g. plumes) do require bouyancy effects for accurate modelling.
+This sets the direction in which gravity acts in your simulation. For most industrial and aerospace flows, buoyancy effects are not important and therefore gravity should not be set. However, certain flows (e.g. plumes) do require buoyancy effects for accurate modelling.
 
-**gravity** is specified as x,y,z vector, for example "[0,0,-9.81]"
+**gravity** is specified as an [X, Y, Z] vector, for example ``[0, 0, -9.81]``. Setting ``gravity`` alone is deliberately valid on the incompressible solver: without ``thermal_expansion_coeff`` set, gravity affects nothing (no buoyancy source is built), so it is not gated on the Boussinesq fields the way they are gated on it.
+
+thermal_expansion_coeff and boussinesq_buoyancy_reference_density
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+These configure Boussinesq buoyancy on the incompressible solver. ``thermal_expansion_coeff`` (:math:`\beta`, 1/K) is only accepted once ``equations.solve_energy`` is true — the buoyancy source acts on the temperature field, so it needs the energy equation solved. ``boussinesq_buoyancy_reference_density`` sets the reference density the buoyancy approximation is linearised about, and (like ``latitude``) is rejected on the compressible solver, which has its own body-force path.
+
+latitude
+^^^^^^^^
+Sets the latitude (degrees, -90 to 90) used to compute the Coriolis force on the compressible solver. Omit for no Coriolis force. Not accepted on the incompressible solver.

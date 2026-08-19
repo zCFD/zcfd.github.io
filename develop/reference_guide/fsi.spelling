@@ -1,0 +1,17 @@
+source/reference_guide/fsi.rst:5: (Nastran) ["Astrakhan", "Strand", "Rastaban"]  driven by mode shapes imported from a Nastran modal analysis, and a 
+source/reference_guide/fsi.rst:30: (Nastran) ["Astrakhan", "Strand", "Rastaban"]  selects the built-in Nastran modal-model coupling, 
+source/reference_guide/fsi.rst:36: (FSI) ["SI", "IFS", "PSI", "F SI", "FRI", "FSF"] ). The FSI coupling resolves this flag through the same model-block-then-solver-block precedence used everywhere else in zCFD: if the model that owns the FSI-coupled boundary condition sets its own 
+source/reference_guide/fsi.rst:44: (Nastran) ["Astrakhan", "Strand", "Rastaban"] The modal model reduces the structural response to a small set of Nastran mode shapes, integrates the modal equations of motion (via a Newmark-beta scheme) forced by the aerodynamic pressure load, and maps the resulting modal deformation back onto the fluid surface and, via RBF or IDW, into the volume mesh.
+source/reference_guide/fsi.rst:63: (nastran) ["astrakhan", "strand", "trans"] ‘nastran’
+source/reference_guide/fsi.rst:65: (nastran) ["astrakhan", "strand", "trans"] ‘nastran_casename’
+source/reference_guide/fsi.rst:69: (Nastran) ["Astrakhan", "Strand", "Rastaban"] Nastran case name, without file extension.
+source/reference_guide/fsi.rst:84: (Nastran) ["Astrakhan", "Strand", "Rastaban"] Which structural modes (by Nastran mode ID) to include in the coupling.
+source/reference_guide/fsi.rst:99: (normalise) ["normalize", "manorialism"] RBF/IDW support radius. Also sets the scale used to normalise mode shapes during mesh morphing.
+source/reference_guide/fsi.rst:104: (Nastran) ["Astrakhan", "Strand", "Rastaban"] Scaling factors [x, y, z] applied to the mode shapes read from the Nastran file.
+source/reference_guide/fsi.rst:125: (rbfs) ["refs", "barfs"] ‘recalculate_rbfs_alpha_fraction’
+source/reference_guide/fsi.rst:130: (newmark) ["new mark", "new-mark", "earmark"] ‘newmark_alpha’
+source/reference_guide/fsi.rst:135: (newmark) ["new mark", "new-mark", "earmark"] ‘newmark_delta’
+source/reference_guide/fsi.rst:244: (Fz) ["F", "Z", "Fez", "Fe", "Fr", "Oz", "Fl", "Dz", "Fm", "FL", "FD", "FM", "Hz", "Ez", "FA"] [Fx, Fy, Fz], or a Python callable
+source/reference_guide/fsi.rst:254: (Nastran) ["Astrakhan", "Strand", "Rastaban"] RBF multiscale coupling of a panel to a Nastran modal basis:
+source/reference_guide/fsi.rst:324: (fsi) ["si", "ifs", "psi", "f si", "FSF"] ‘generic_fsi’
+source/reference_guide/fsi.rst:325: (fsi) ["si", "ifs", "psi", "f si", "FSF"] ‘generic_fsi’

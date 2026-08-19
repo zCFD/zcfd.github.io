@@ -3,11 +3,21 @@
 Mesh Transformation
 -------------------
 
-This dictionary is used to setup an initial deformation of the mesh. Typically a known deformation of a surface in the mesh is propagated out into the volume using either radial basis function or inverse distance weighted interpolation. Deforming an aircraft wing or wind turbine blade to a static load shape are two uses of this functionality.
+zCFD has three distinct, independently-configured mechanisms for moving or deforming a mesh, all set up per model (i.e. per mesh) under ``model.<name>``:
 
+* **Initial placement** — a single static rotate/translate/scale of the whole mesh, applied once when the mesh is loaded. Set under ``model.<name>.transforms``.
+* **Dynamic rigid-body motion** — a zone of cells rotating or translating relative to the rest of the mesh (a rotor, a moving overset component). Set as a ``'rotating'`` or ``'translating'`` entry in ``model.<name>.fluid_zones``.
+* **Mesh morphing** — a known deformation of a surface (e.g. a wing or blade deflecting under load) propagated into the surrounding volume mesh using RBF or IDW interpolation. Set as an ``'rbf transform'`` or ``'idw transform'`` entry in ``model.<name>.fluid_zones``.
 
-.. list-table:: 
-   :widths: 20 5 10 20 30
+These are covered in turn below.
+
+Initial placement
+==================
+
+``model.<name>.transforms`` sets a single static affine transform applied to the whole mesh when it is read, before the solver starts.
+
+.. list-table::
+   :widths: 20 10 15 25 30
    :header-rows: 1
 
    * - Keyword
@@ -15,86 +25,258 @@ This dictionary is used to setup an initial deformation of the mesh. Typically a
      - Default
      - Valid values
      - Description
-   * - 'type'
+   * - ``transform_matrix``
+     - No
+     - ``None``
+     - 4x4 list of lists, or numpy array
+     - Affine transformation matrix applied to the mesh at load time.
+   * - ``scale``
+     - No
+     - ``None``
+     - List of 3 floats
+     - Per-axis ``[x, y, z]`` scale factors. Folded into ``transform_matrix`` before the solver runs (see note below); an identity scale (``[1, 1, 1]``) is a no-op.
+
+.. note::
+
+    ``scale`` and ``transform_matrix`` are not two independent transforms applied by the mesh loader — only ``transform_matrix`` is ever read at mesh-load time. If ``scale`` is given, it is composed into ``transform_matrix`` (on top of any matrix already given) before the solver runs. Setting a non-identity ``scale`` with no ``transform_matrix`` produces a pure diagonal scale matrix; giving both composes the scale on top of the existing matrix, it does not replace it.
+
+Build a rotation or translation matrix with the ``zutil.transform`` helpers (``rotate``, ``translate``, ``scale``), which each return/compose a 4x4 numpy array, and can be chained:
+
+.. code-block:: python
+
+    import zutil.transform
+
+    # Two 90-degree rotations about x, then 10 degrees about y, composed in order
+    mesh_transform = zutil.transform.rotate([1, 0, 0], 90.0)
+    mesh_transform = zutil.transform.rotate([1, 0, 0], 90.0, mesh_transform)
+    mesh_transform = zutil.transform.rotate([0, 1, 0], 10.0, mesh_transform)
+
+    parameters["model"]["naca0012"]["transforms"] = {"transform_matrix": mesh_transform}
+
+A plain anisotropic mesh stretch needs only ``scale``:
+
+.. code-block:: python
+
+    parameters["model"]["canopy_dacosta"] = {
+        "transforms": {"scale": [50.0, 1.0, 1.0]},
+        "mesh": "canopy_dacosta.h5",
+        ...
+    }
+
+.. note::
+
+    The schema also defines a ``transform_func`` field on ``transforms``, intended as a Python-callable hook for whole-mesh dynamic rigid motion. It is not currently read anywhere in the solver or launcher — no control deck in this repository sets it, and setting it has no effect. For dynamic rigid-body motion, use the ``'rotating'``/``'translating'`` fluid zone types below instead.
+
+Dynamic rigid-body motion
+==========================
+
+A zone of cells can be rotated or translated relative to the rest of the mesh by adding a ``'rotating'`` or ``'translating'`` entry to ``model.<name>.fluid_zones``. This is used both for a simple rotating reference frame (e.g. a spinning cylinder or rotor in its own non-overset mesh) and, when combined with an ``'overset'`` boundary condition and ``moving_mesh: True``, for a mesh that is physically re-cut and re-mapped against its background mesh every time step.
+
+.. list-table::
+   :widths: 20 10 15 25 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``type``
      - Yes
-     - 
-     - 'rbf' | 'rbf multiscale' | 'idw'
+     - --
+     - ``'rotating'`` | ``'translating'``
+     - Selects rigid rotation or rigid translation of the zone.
+   * - ``zones``
+     - Yes
+     - --
+     - List of zone ID integers
+     - Surface/volume zones the motion applies to.
+   * - ``axis``
+     - Yes (``'rotating'`` only)
+     - --
+     - Normalised 3-vector
+     - Rotation axis.
+   * - ``origin``
+     - Yes (``'rotating'`` only)
+     - --
+     - 3-vector
+     - Point the rotation axis passes through.
+   * - ``omega``
+     - Yes (``'rotating'`` only)
+     - --
+     - Float
+     - Angular velocity in rad/s.
+   * - ``velocity``
+     - Yes (``'translating'`` only)
+     - --
+     - 3-vector
+     - Translation velocity vector.
+   * - ``translation_function``
+     - No
+     - ``None``
+     - Python function
+     - Overrides ``velocity`` with a time-dependent translation velocity function (``'translating'`` only).
+   * - ``moving_mesh``
+     - No
+     - ``False``
+     - ``True`` | ``False``
+     - Physically moves the mesh (requires this model to also declare an ``'overset'`` boundary condition — see :ref:`overset <overset>`). Without an overset boundary, the zone still rotates/translates as a reference frame, but ``moving_mesh`` has no additional effect.
+   * - ``ramp``
+     - No
+     - ``None``
+     - Dict
+     - Optional ramping of the motion at start-up. Not a validated sub-schema — no control deck in this repository sets it; check the C++ read site before relying on a specific shape.
+
+A rotating reference frame, with the mesh itself placed by an initial rotation (no overset boundary, so ``moving_mesh`` is left at its default):
+
+.. code-block:: python
+
+    import zutil.transform
+
+    parameters["model"]["background"] = {
+        "mesh": "cylinder.h5",
+        "transforms": {"transform_matrix": zutil.transform.rotate([0, 1, 0], -90.0)},
+        "fluid_zones": {
+            "rotating_zone": {
+                "type": "rotating",
+                "zones": [3],
+                "axis": [0, 0, 1],
+                "origin": [0, 0, 0],
+                "omega": 17.453292519943297,
+            }
+        },
+        "boundary_conditions": {...},
+    }
+
+An overset mesh that is actually rotated in place each time step (``moving_mesh: True``, paired with an ``'overset'`` boundary condition on the same model):
+
+.. code-block:: python
+
+    parameters["model"]["cylinder_1"] = {
+        "mesh": "cylinder_origin.h5",
+        "transforms": {
+            "transform_matrix": [
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0, 1.2],
+                [0.0, 0.0, 1.0, 1.2],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        },
+        "fluid_zones": {
+            "FZ_1": {
+                "type": "rotating",
+                "zones": [0],
+                "axis": [1.0, 0.0, -0.0],
+                "origin": [0.0, 1.2, 1.2],
+                "omega": 104.71975511965978,
+                "moving_mesh": True,
+            }
+        },
+        "boundary_conditions": {"BC_1": {"zones": [7], "type": "overset"}},
+    }
+
+Mesh morphing
+=============
+
+A known deformation of a surface in the mesh is propagated out into the volume using either radial basis function or inverse distance weighted interpolation. Deforming an aircraft wing or wind turbine blade to a static load shape are two uses of this functionality. Set up as an entry in ``model.<name>.fluid_zones`` with ``'type': 'rbf transform'`` or ``'type': 'idw transform'``.
+
+.. list-table::
+   :widths: 20 10 15 25 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``type``
+     - Yes
+     - --
+     - ``'rbf transform'`` | ``'idw transform'``
      - Selects the :ref:`interpolation<transform_interpolation>` method used.
-   * - 'base point fraction'
-     - No
-     - 
-     - Float
-     - Fraction of points included in the base set when using **'rbf multiscale'** 
-   * - 'alpha'
-     - No
-     - 
-     - Float
-     - Sets the support radius (the radius of influence) of the rbf surface points.
-   * - 'zone'
+   * - ``zones``
      - Yes
-     - 
+     - --
      - List of zone ID integers
-     - Sets a list of surface zones to deform
-   * - 'fixed zones'
-     - No
-     - 
-     - List of zone ID integers
-     - Sets the surface zones which remain fixed in position when using **`idw`**, useful if you have surfaces that are within the influence of the interpolation that should remain fixed.
-   * - 'func'
+     - Surface zones to deform.
+   * - ``func``
      - Yes
-     - 
+     - --
      - :ref:`Transform Function <transform_mesh_function>`
-     - A python function that describes the surface deformation to be propagated into the volume mesh. The function is called for each node on the surfaces specified in the 'zones' key.
-   * - 'basis'
+     - A python function that describes the surface deformation to be propagated into the volume mesh. Called for each node on the surfaces named in ``zones``.
+   * - ``support_radius``
      - No
-     - 
-     - `c0` | `c2` | `tps` | `gaussian`
-     - Selects the type of radial basis function used. Can be Welland's c0 or c2 function, thin plate spline (tps) or Gaussian.
-   * - 'tol'
+     - 1.0
+     - Float > 0
+     - Support radius (radius of influence) of the interpolation. Shared by both ``'rbf transform'`` and ``'idw transform'``; for IDW it is an alternative to ``stencil_size`` (see note below).
+   * - ``basis``
      - No
-     - 
-     - Float
-     - The maximum permissible distance error between the deformed surface shape and that obtained using the greedy **'rbf'** method. No more points will be added to the system once this tolerance is reached.
-   * - 'power'
+     - ``'c2'``
+     - ``'tps'`` | ``'thin_plate_spline'`` | ``'multiquadric'`` | ``'inverse_multiquadric'`` | ``'gaussian'`` | ``'linear'`` | ``'cubic'`` | ``'quintic'`` | ``'c0'`` | ``'c2'`` | ``'c4'`` | ``'c6'``
+     - RBF function type (``'rbf transform'`` only).
+   * - ``base_point_fraction``
      - No
-     - [3,5,10]
-     - List of int
-     - A list of three exponents used in the **`idw`** interpolation scheme.
-   * - 'n nearest'
+     - 1.0
+     - Float, 0 < x <= 1
+     - Fraction of points used as base points (``'rbf transform'`` only). ``1.0`` (the default) is full RBF; ``< 1.0`` is multiscale RBF — plain and multiscale RBF are a single ``'rbf transform'`` type, distinguished by this value.
+   * - ``stencil_size``
+     - No
+     - ``None``
+     - Positive integer
+     - Maximum stencil size (nearest-neighbour count), an alternative to ``support_radius`` (``'idw transform'`` only). Setting both ``support_radius`` and ``stencil_size`` explicitly is rejected as ambiguous.
+   * - ``power``
+     - No
+     - ``[3.0, 5.0, 10.0]``
+     - List of 3 floats
+     - Exponents used in the IDW interpolation scheme (``'idw transform'`` only).
+   * - ``n_nearest``
      - No
      - 100
-     - Int
-     - The number of nodes closest to the current point used to determine the **'idw'** interpolation weight.
-   * - 'deformation distance'
+     - Positive integer
+     - Number of nearest points used (``'idw transform'`` only).
+   * - ``deformation_distance``
      - No
-     - 1
-     - Float
-     - The distance over which the surface deformation is blended into the volume mesh.
-   * - 'blending stiffness'
+     - 1.0
+     - Float > 0
+     - Maximum deformation distance over which the surface deformation is blended into the volume mesh (``'idw transform'`` only).
+   * - ``blending_stiffness``
      - No
-     - 0.5
-     - Float
-     - The stiffness of the blending function used to propagate the **'idw'** interpolation of the surface deformation into the volume mesh.
+     - ``None``
+     - Float, 0 <= x <= 1
+     - Stiffness of the blending function (``'idw transform'`` only). Unlike the other IDW fields above, the C++ morpher reads this value unconditionally with no fallback, so it should always be given explicitly for an ``'idw transform'`` zone — there is no safe default to fall back on if it is omitted.
+   * - ``fixed_zones``
+     - No
+     - ``None``
+     - List of zone ID integers
+     - Surface zones which remain fixed in position (``'idw transform'`` only) — useful if you have surfaces within the interpolation's influence that should remain fixed.
+
+.. note::
+
+    There is no ``'tol'`` field for the greedy-RBF point-addition tolerance — ``RBFTransformConfig`` has no tolerance field and rejects unknown keys, so this option cannot be set.
+
+.. note::
+
+    The RBF C++ code also supports an optional ``use_local_rbf_nodes`` flag, restricting each partition's RBF solve to only the nodes it owns (a memory/performance optimisation for large parallel RBF problems). It is not part of the schema: no control deck sets it, every live RBF/IDW test case runs correctly using the full node set, and the C++ read is guarded (defaults to using all nodes when the key is absent), so leaving it unset changes nothing for any existing deck.
 
 .. _transform_interpolation:
 
 Interpolation method
-====================
-Selects the interpolation method used to propagate the surface deformation into the volume mesh. Three methods are available:
+=====================
+Selects the interpolation method used to propagate the surface deformation into the volume mesh. Two ``type`` values are available:
 
-**'rbf'** uses the 'greedy' method of `Allan et al <https://doi.org/10.1016/j.jcp.2009.12.006>`_. where the deformation is started with a subset of points and additional points are added until the surface deformation reaches the requested tolerance. 
+**'rbf transform'** with ``base_point_fraction`` at its default of ``1.0`` uses the 'greedy' method of `Allan et al <https://doi.org/10.1016/j.jcp.2009.12.006>`_, where the deformation is started with a subset of points and additional points are added until the surface deformation converges.
 
-**'rbf multiscale'** uses the `multiscale <https://doi.org/10.1016/j.jcp.2017.05.042>`_ rbf method where a subset of surface points with a fixed support radius are solved implicitly and the remaining points are solved explicitly with a support radius determined as part of the solution process. The fraction of points included in the base set can be set with **'base point fraction'**. The base set of points are assigned the support radius **'alpha'** and hence can have a wider sphere of influence than the remaining points which are used in the multiscale process.
+**'rbf transform'** with ``base_point_fraction`` set below ``1.0`` instead uses the `multiscale <https://doi.org/10.1016/j.jcp.2017.05.042>`_ RBF method, where a subset of surface points with a fixed support radius are solved implicitly and the remaining points are solved explicitly with a support radius determined as part of the solution process. The base set of points are assigned the ``support_radius`` and hence can have a wider sphere of influence than the remaining points which are used in the multiscale process.
 
 .. note::
 
-    Increasing the number of points in the base set and/or increasing alpha generally makes the surface deformation propagate further into the volume mesh reducing the likelihood of generating poor quality cells 
+    Increasing the number of points in the base set and/or increasing ``support_radius`` generally makes the surface deformation propagate further into the volume mesh, reducing the likelihood of generating poor quality cells.
 
-**'idw'** uses a simple inverse distance weighted interpolation.  The **`power`** parameter can provide a list of three exponents used in the IDW scheme. The first (p1) is applied to the interpolation weight of points close to the surface, the second (p2) to points which are the deformation distance away from the surface and the third (p3) is used to blend between the two extremes. 
+**'idw transform'** uses a simple inverse distance weighted interpolation. The **power** parameter provides a list of three exponents used in the IDW scheme. The first (p1) is applied to the interpolation weight of points close to the surface, the second (p2) to points which are the deformation distance away from the surface and the third (p3) is used to blend between the two extremes.
 
-:math:`wt_1 = (deformation distance / distance)^{p1}`
-:math:`wt_2 = (deformation distance / distance)^{p2}` 
-:math:`blend = ((deformation distance - distance) / deformation distance)^{p3}`
+:math:`wt_1 = (deformation\_distance / distance)^{p1}`
+:math:`wt_2 = (deformation\_distance / distance)^{p2}`
+:math:`blend = ((deformation\_distance - distance) / deformation\_distance)^{p3}`
 
 Then the weight is:
 
@@ -111,25 +293,22 @@ RBF Example
 
     import zutil
 
-    rotation = 10.0
+    alpha = 10.0
 
     def my_transform(x, y, z):
         v = [x, y, z]
-        v = zutil.rotate_vector(v, rotation, 0.0)
+        v = zutil.rotate_vector(v, alpha, 0.0)
         return {"v1": v[0], "v2": v[1], "v3": v[2]}
 
 
-    parameters = {
-            ...
-            "TR_1": {
-                "type": "rbf",
-                "zone": [4],
-                "func": my_transform,
-                "alpha": 200.0,
-                "basis": "c2",
-                "tol": 0.01,
-            },
-            ...
+    parameters["model"]["naca0012"]["fluid_zones"] = {
+        "TR_1": {
+            "type": "rbf transform",
+            "zones": [4],
+            "func": my_transform,
+            "support_radius": 200.0,
+            "basis": "c2",
+        }
     }
 
 RBF Multiscale Example
@@ -139,52 +318,50 @@ RBF Multiscale Example
 
     import zutil
 
-    rotation = 10.0
+    alpha = 10.0
 
     def my_transform(x, y, z):
         v = [x, y, z]
-        v = zutil.rotate_vector(v, rotation, 0.0)
+        v = zutil.rotate_vector(v, alpha, 0.0)
         return {"v1": v[0], "v2": v[1], "v3": v[2]}
 
-    parameters = {
-            ...
-            "TR_1": {
-                "type": "rbf multiscale",
-                "base point fraction": 0.1,
-                "zone": [4],
-                "func": my_transform,
-                "alpha": 200.0,
-                "basis": "c2",
-            },
-            ...
+
+    parameters["model"]["naca0012"]["fluid_zones"] = {
+        "TR_1": {
+            "type": "rbf transform",
+            "zones": [4],
+            "func": my_transform,
+            "support_radius": 200.0,
+            "basis": "c2",
+            "base_point_fraction": 0.1,
+        }
     }
 
 
-IDW  Example
-^^^^^^^^^^^^
+IDW Example
+^^^^^^^^^^^
 
 .. code-block:: python
 
     import zutil
 
-    rotation = 10.0
+    alpha = 10.0
 
     def my_transform(x, y, z):
         v = [x, y, z]
-        v = zutil.rotate_vector(v, rotation, 0.0)
+        v = zutil.rotate_vector(v, alpha, 0.0)
         return {"v1": v[0], "v2": v[1], "v3": v[2]}
 
-    parameters = {
-            ...
-            "TR_1": {
-                "type": "idw",
-                "power": [4.0, 8.0, 10.0],
-                "fixed zones": [1],
-                "n nearest": 500,
-                "deformation distance": 100.0,
-                "blending stiffness": 0.5,
-                "zone": [4],
-                "func": my_transform,
-            },
-            ...
+
+    parameters["model"]["naca0012"]["fluid_zones"] = {
+        "TR_1": {
+            "type": "idw transform",
+            "zones": [4],
+            "func": my_transform,
+            "fixed_zones": [1],
+            "n_nearest": 500,
+            "power": [4.0, 8.0, 10.0],
+            "deformation_distance": 100.0,
+            "blending_stiffness": 0.5,
+        }
     }

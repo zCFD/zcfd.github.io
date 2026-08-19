@@ -3,24 +3,55 @@
 Initial Conditions
 ^^^^^^^^^^^^^^^^^^
 
-An initial condition dictionary defines a fluid state. They are used to provide a reference initial state for the solution as well as specific conditions that can be assigned to :ref:`boundary conditions <boundary_conditions>`.
-
-Initial condition properties are defined using consecutively numbered blocks
+A reference-condition entry defines a fluid state. These entries live in
+the ``solver.reference_conditions`` dict, each keyed by a name
+(conventionally "IC_1", "IC_2", ...):
 
 .. code-block:: python
 
-    'IC_1' : {....},
-    'IC_2' : {....},
+    parameters["solver"]["reference_conditions"] = {
+        "IC_1": {....},
+        "IC_2": {....},
+    }
 
-By default zCFD will use the "IC_1" block  to provide initial flow field conditions for the simulation but this can be changed with the :ref:`'initial' <initial_state>` parameter.
+The same dict, and the same entry shape, serves three different roles:
+there is no structural split between "the initial condition" and "a
+reference condition":
 
-In addition to fully describing a set of conditions, zCFD allows you to specify :ref:`'reference conditions' <reference_conditions>` to be specified relative to a base set. This is typically used to set conditions for flow entering (inflow) or leaving (outflow) the domain.
+* :ref:`'initial_conditions' <initial_state>` on ``solver.initialisation``
+  names the entry used to fill the flow field at the start of the
+  simulation (the entry used is whichever name is given there — there is
+  no hard-coded "IC_1" default, it must be named explicitly).
+* :ref:`'reference' <reference_state>` on ``solver.initialisation`` names
+  the entry used to non-dimensionalise :ref:`force reporting <reporting>`.
+* A boundary condition's own ``condition`` field (see
+  :ref:`boundary conditions <boundary_conditions>`) names the entry used to
+  set flow entering (inflow/farfield) or leaving (outflow) the domain.
 
+Each entry is validated against a different pydantic model depending on
+``solver.equations.type`` — 'euler' entries reject viscosity/turbulence
+fields outright, 'viscous' entries add viscosity, and 'rans'/'les' entries
+add the full turbulence set. This routing is automatic; the deck just
+supplies the fields relevant to its equation type and the schema picks the
+right model.
 
-Another way of prescribing an initial condition is by defining a dynamic :ref:`'driving function' <driving_function>`, which on evaluation returns an initial condition dictionary. 
+One entry can also inherit from another by including a 'reference' key
+naming the base entry — this is resolved before validation (the fields are
+merged and overridden, then 'reference' is discarded), so it never reaches
+the C++ dict. This is how a lean, ratio-only entry (used for boundary
+conditions specified relative to a base flow state) is expressed without
+repeating every field. See :ref:`'reference conditions' <reference_conditions>`
+for the ratio-specific keywords ('total_pressure_ratio', etc.) available on
+every entry.
 
-.. list-table:: 
-   :widths: 25 10 10 20 30
+Another way of prescribing an initial condition is by defining a dynamic
+:ref:`'driving function' <driving_function>`, a python callable which on
+evaluation returns a reference-condition dict; when 'initial_conditions' is
+set to a callable, 'reference' must be set explicitly to name a static
+entry for non-dimensionalisation.
+
+.. list-table::
+   :widths: 22 15 12 15 36
    :header-rows: 1
 
    * - Keyword
@@ -30,90 +61,111 @@ Another way of prescribing an initial condition is by defining a dynamic :ref:`'
      - Description
    * - 'pressure'
      - Yes
-     - 
+     -
      - Float
      - Static pressure in Pascals. Used to compute density and set Total Energy in the Compressible solver.
    * - 'temperature'
      - Yes
-     - 
+     -
      - Float
      - Static temperature in Kelvin. Used to compute density and for dynamic viscosity scaling using Sutherlands law.
-   * - 'V'
-     - Yes
-     - 
+   * - 'v'
+     - No
+     - [0.0, 0.0, 0.0]
      - Dict
-     - See :ref:`Velocity <ic_v>` 
-   * - 'reynolds no'
-     - When 'viscosity' not set.
-     - 
-     - Float
-     - Used to calculate viscosity at supplied temperature
-   * - 'reference length'
+     - See :ref:`Velocity <ic_v>`. Optional — a zero-velocity entry is legal (e.g. a quiescent cavity's initial state); pair it with a different :ref:`reference <reference_state>` entry for non-dimensionalisation in that case.
+   * - 'reference_length'
      - No
-     - 1
+     - 1.0
      - Float
-     - Reference length to be used to calculate viscosity from the Reynolds number
+     - Reference length used to calculate viscosity from the Reynolds number. Only meaningful when 'reynolds_no' is set (viscous/RANS/LES equation types).
+   * - 'reynolds_no'
+     - When 'viscosity' not set (viscous/RANS/LES only)
+     -
+     - Float
+     - Used to calculate viscosity at the supplied temperature. Not valid for 'euler' equations.
    * - 'viscosity'
-     - When 'reynolds no' not set.
-     - 
+     - When 'reynolds_no' not set (viscous/RANS/LES only)
+     -
      - Float
-     - Sets the dynamic viscosity at the temperature with scaling provided by Sutherlands law defined in :ref:`material <materials>` section.
-   * - :ref:`'turbulence intensity' <ic_turb_intensity>`
-     - No
-     - 
+     - Sets the dynamic viscosity at the temperature, with scaling provided by Sutherlands law defined in :ref:`material <materials>` section. Not valid for 'euler' equations. Exactly one of 'reynolds_no'/'viscosity' must be given for viscous/RANS/LES equations, never both.
+   * - :ref:`'turbulence_intensity' <ic_turb_intensity>`
+     - Yes (RANS/LES only)
+     -
      - Float
-     - Turbulence intensity (%)
-   * - :ref:`'eddy viscosity ratio' <ic_turb_intensity>`
-     - No
-     - 0.01
+     - Turbulence intensity (fraction, e.g. 0.01 = 1%). Only valid for 'rans'/'les' equation types.
+   * - :ref:`'eddy_viscosity_ratio' <ic_turb_intensity>`
+     - Yes (RANS/LES only)
+     -
      - Float
-     - Ratio of dynamic viscosity to turbulent viscosity used to set the turbulence quantities
-   * - :ref:`'ambient turbulence intensity' <ic_turb_intensity>`
-     - No
-     - 0.1
-     - Float
-     - Value of background turbulence intensity (%) to maintain in fluid 
-   * - :ref:`'ambient eddy viscosity ratio' <ic_turb_intensity>`
-     - No
+     - Ratio of eddy viscosity to molecular viscosity used to set the turbulence quantities. Only valid for 'rans'/'les' equation types.
+   * - :ref:`'ambient_turbulence_intensity' <ic_turb_intensity>`
+     - No (RANS/LES only)
      - 1e-20
      - Float
-     - Value of background turbulence eddy viscosity ratio to maintain in fluid
+     - Value of background turbulence intensity to maintain in the fluid.
+   * - :ref:`'ambient_eddy_viscosity_ratio' <ic_turb_intensity>`
+     - No (RANS/LES only)
+     - 1e-20
+     - Float
+     - Value of background turbulence eddy viscosity ratio to maintain in the fluid.
    * - 'profile'
      - No
-     - 1e-20
+     - Not set
      - Dict
-     - See :ref:`Velocity Profile <ic_v_profile>` 
+     - See :ref:`Velocity Profile <ic_v_profile>`.
+   * - 'monitor'
+     - No
+     - Not set
+     - Dict
+     - Update/terminate/prefix contract used only when this entry's parent dict is itself a python :ref:`driving function <driving_function>` — not applicable to a static entry.
+   * - 'total_pressure_ratio' / 'total_temperature_ratio' / 'static_pressure_ratio'
+     - No
+     -
+     - Float
+     - Ratio relative to a base entry named by that entry's own 'reference' key. See :ref:`'reference conditions' <reference_conditions>`.
+
+.. note::
+    'turbulence_intensity' and 'eddy_viscosity_ratio' are required (no
+    default) for 'rans'/'les' equation types. 'ambient_turbulence_intensity'
+    defaults to 1e-20, matching 'ambient_eddy_viscosity_ratio' (also 1e-20
+    by default). Field names are snake_case throughout
+    ('turbulence_intensity', not 'turbulence intensity'; 'v', not 'V';
+    etc.).
 
 Example usage:
 
 .. code-block:: python
 
-    parameters = {
-    ..
-    "IC_1": {
-        "V": {"vector": [0.0, 2.5, 0.0] },
-        "ambient eddy viscosity ratio": 1e-20,
-        "ambient turbulence intensity": 1e-20,
-        "eddy viscosity ratio": 0.1,
-        "pressure": 101325.0,
-        "temperature": 273.15,
-        "turbulence intensity": 0.01,
-        "viscosity": 1.79e-05,
-    ..
-    },
+    parameters["solver"]["reference_conditions"] = {
+        "IC_1": {
+            "v": {
+                "vector": [1.0, 0.0, 0.0],
+                "mach": 0.15,
+            },
+            "pressure": 101325.0,
+            "temperature": 273.15,
+            "reynolds_no": 6.0e6,
+            "reference_length": 1.0,
+            "turbulence_intensity": 5.2e-2,
+            "eddy_viscosity_ratio": 1.0,
+            "ambient_turbulence_intensity": 5.2e-2,
+            "ambient_eddy_viscosity_ratio": 1.0,
+        },
+    }
 
 .. _ic_v:
 
 Velocity
 --------
-Velocity can be specified in two ways, either a vector or a vector and a Mach number. When Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and speed of sound at the pressure and temperature provided.
+Velocity can be specified in two ways: either a bare vector, or a vector and a Mach number. When a Mach number is specified the velocity direction is provided by the vector and the velocity magnitude is computed from the Mach number and the speed of sound at the pressure and temperature provided.
 
 For example to set a velocity of 50 mesh units/sec in the X direction:
 
 .. code-block:: python
 
     ..
-    "V" : {"vector": [50.0,0.0,0.0]}  
+    "v": {"vector": [50.0, 0.0, 0.0]}
     ..
 
 
@@ -122,7 +174,7 @@ Or to set a velocity of mach 0.2 in the X direction:
 .. code-block:: python
 
     ..
-    "V" : {"vector": [1.0,0.0,0.0], "mach": 0.2}  
+    "v": {"vector": [1.0, 0.0, 0.0], "mach": 0.2}
     ..
 
 
@@ -131,47 +183,49 @@ Or to set a velocity of mach 0.2 in the X direction:
 Viscosity
 ---------
 
-Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified.  This can be specified either as a dimensional quantity or by a Reynolds number and reference length
+Dynamic (shear, absolute or molecular) viscosity should be defined at the static temperature previously specified. This can be specified either as a dimensional quantity or by a Reynolds number and reference length. Both are only valid for 'viscous'/'rans'/'les' equation types — omit both for 'euler'.
 
 .. code-block:: python
 
     # Dynamic viscosity in dimensional units
-    'viscosity' : 1.83e-5,
+    "viscosity": 1.83e-5,
 
 or
 
 .. code-block:: python
 
     # Reynolds number
-    'reynolds No' : 5.0e6,
+    "reynolds_no": 5.0e6,
     # Reference length
-    'reference length' : 1.0,
+    "reference_length": 1.0,
 
 .. note::
 
      Reynolds number is defined as:
      :math:`Re=\frac{density * V * reference length}{viscosity}`
 
+Exactly one of 'reynolds_no'/'viscosity' must be set; setting both, or
+neither, is a validation error.
 
 .. _ic_turb_intensity:
 
 Turbulence intensity & Eddy viscosity
 -------------------------------------
 
-Turbulence intensity is defined as the ratio of velocity fluctuations :math:`u^{'}` to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high.
+Turbulence intensity is defined as the ratio of velocity fluctuations :math:`u^{'}` to the mean flow velocity. A turbulence intensity of 1% is considered low and greater than 10% is considered high. Both fields below are required for 'rans'/'les' equation types (no default) and not valid for 'euler'/'viscous'.
 
 .. code-block:: python
 
     # Turbulence intensity %
-    'turbulence intensity': 0.01,
+    "turbulence_intensity": 0.01,
     # Turbulence intensity for sustainment %
-    'ambient turbulence intensity': 0.01,
+    "ambient_turbulence_intensity": 0.01,
 
-The eddy viscosity ratio :math:`(\mu_t/\mu)` varies depending type of flow.
-For external flows this ratio varies from  0.1 to 1 (wind tunnel 1 to 10)
+The eddy viscosity ratio :math:`(\mu_t/\mu)` varies depending on the type of flow.
+For external flows this ratio varies from 0.1 to 1 (wind tunnel 1 to 10).
 
 For internal flows there is greater dependence on Reynolds number as the largest eddies in the flow are limited
-by the characteristic lengths of the geometry (e.g. The height of the channel or diameter of the pipe). Typical values are:
+by the characteristic lengths of the geometry (e.g. the height of the channel or diameter of the pipe). Typical values are:
 
 ======= ======= ====== ======== ======== ======== ===========
   Re      3000   5000   10,000   15,000   20,000   > 100,000
@@ -181,17 +235,37 @@ by the characteristic lengths of the geometry (e.g. The height of the channel or
 .. code-block:: python
 
     # Eddy viscosity ratio
-    'eddy viscosity ratio': 0.1,
+    "eddy_viscosity_ratio": 0.1,
     # Eddy viscosity ratio for sustainment
-    'ambient eddy viscosity ratio': 0.1,
+    "ambient_eddy_viscosity_ratio": 0.1,
+
+Both ambient fields default to **1.0e-20** — a near-zero numerical floor,
+not the freestream ``turbulence_intensity``/``eddy_viscosity_ratio``
+value. There is no fallback to the freestream turbulence level when these
+are unset; sustaining the ambient level at the freestream value requires
+setting them explicitly to the same value:
+
+.. code-block:: python
+
+    "reference_conditions": {
+        "IC_1": {
+            ..
+            "turbulence_intensity": 5.2e-2,
+            "eddy_viscosity_ratio": 1.0,
+            # Sustain ambient turbulence at the freestream level, rather
+            # than the 1.0e-20 default floor:
+            "ambient_turbulence_intensity": 5.2e-2,
+            "ambient_eddy_viscosity_ratio": 1.0,
+        }
+    },
 
 .. _ic_v_profile:
 
 Velocity Profile
 ----------------
-The user can also provide functions to specify a ‘wall-function’ - or the turbulence viscosity profile near a boundary.
+The user can also provide functions to specify a 'wall-function' — or the turbulence viscosity profile near a boundary.
 
-.. list-table:: 
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -202,40 +276,40 @@ The user can also provide functions to specify a ‘wall-function’ - or the tu
      - Description
    * - 'abl'
      - No
-     - 
+     -
      - Dict
-     - Specify an :ref:`ABL <ic_abl>`  (Atmospheric Boundary Layer)
+     - Specify an :ref:`ABL <ic_abl>` (Atmospheric Boundary Layer) profile.
    * - :ref:`'field' <ic_field>`
      - No
-     - 
+     -
      - File name
      - Specify a field of data that is used as a lookup for setting the flow conditions.
-   * - 'use wall distance'
+   * - 'use_wall_distance'
      - No
      - False
      - True/False
-     - Use wall distance in place of z coordinate in field during interpolation process. This can be used in setting the profile of flows on a terrain mesh with a variable ground location at the boundary
+     - Use wall distance in place of z coordinate in the field during interpolation. Can be used to set the profile of flows on a terrain mesh with a variable ground location at the boundary.
 
 
 .. _ic_field:
 
 field
 =====
-The file specified using the 'field' parameter should be in the ParaView/VTK VTP format. If should contain a node array with one or more of the following array names: ‘Pressure’, ‘Temperature’, ‘Velocity’, ‘TI’ and ‘EddyViscosity’. zCFD will then look up those values in the solution by looking up the nearest point in the VTP file.
+The file specified using the 'field' parameter should be in the ParaView/VTK VTP format. It should contain a node array with one or more of the following array names: 'Pressure', 'Temperature', 'Velocity', 'TI' and 'EddyViscosity'. zCFD will look up those values in the solution by finding the nearest point in the VTP file.
 
 .. code-block:: python
 
     ..
-    'profile' : {
-             'field' : 'inflow_field.vtp',
-             # Localise field using wall distance rather that z coordinate
-             'use wall distance' : True,
-            },
+    "profile": {
+        "field": "inflow_field.vtp",
+        # Localise field using wall distance rather than z coordinate
+        "use_wall_distance": True,
+    },
     ..
 
 .. note::
 
- Note the field will override the conditions specified previously therefore the user can specify only the conditions that are different from default.
+ The field overrides conditions specified elsewhere in the entry; the user can specify only the conditions that differ from default.
 
 
 .. _ic_abl:
@@ -243,7 +317,9 @@ The file specified using the 'field' parameter should be in the ParaView/VTK VTP
 ABL
 ---
 
-.. list-table:: 
+**Location:** ``solver.reference_conditions.<name>.profile.abl``
+
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -252,44 +328,61 @@ ABL
      - Default
      - Valid values
      - Description
-   * - 'roughness length'
+   * - 'roughness_length'
+     - Yes
+     -
+     - Float > 0
+     - A measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.
+   * - 'friction_velocity'
      - No
-     - 
-     - Float
-     - It is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.
-   * - 'friction velocity'
-     - No
-     - 
-     - Float
-     - Specify the friction velocity at the surface.
-   * - 'surface layer height'
-     - No
-     - 
-     - Float
+     -
+     - Float > 0
+     - Specify the friction velocity at the surface. At least one of 'friction_velocity'/'surface_layer_height' should be set.
+   * - 'surface_layer_height'
+     - No (compressible solver only)
+     -
+     - Float > 0
      - The surface layer height, also known as the aerodynamic or boundary layer height.
-   * - 'monin-obukhov length'
-     - No
-     - 
-     - Float
-     - The Monin-Obukhov length.
+   * - 'monin_obukhov_length'
+     - No (compressible solver only)
+     -
+     - Float, nonzero
+     - The Monin-Obukhov length. Negative values enable an unstable-stratification correction to the log-law profile; there is currently no stable-stratification (positive L) correction. Omit for neutral stability.
    * - 'tke'
-     - No
-     - 
-     - Float
-     - Set the turbulent kinetic energy.
-   * - 'z0'
-     - No
-     - 
-     - Float
-     - Set the z location of the ground rather than using the z coordinate in the mesh.
+     - No (compressible solver only)
+     -
+     - Float >= 0
+     - Reference turbulent kinetic energy. Only applied when 'friction_velocity' is also set; otherwise it is ignored (with a warning) and TKE is derived from wall distance instead.
    * - 'up'
-     - No
+     - No (compressible solver only)
      - [0,0,1]
-     - Vector
-     - Direction of gravity
+     - Unit vector
+     - Direction of "up", used with 'ground_level' to compute height above ground. This is independent of the fluid's gravity vector — nothing cross-checks that the two are anti-parallel.
+   * - 'ground_level'
+     - No (compressible solver only)
+     - 0.0
+     - Float >= 0
+     - Datum elevation of the ground, measured along 'up', subtracted before the log-law height is computed. This is unrelated to the aerodynamic roughness length ('roughness_length' above).
 
-roughness length
-================
+.. note::
+    'ground_level' is the canonical spelling; 'z0' is a legacy spelling
+    accepted for backward compatibility and normalised to 'ground_level'
+    automatically (the older name collided with the unrelated
+    roughness-length :math:`z_o` notation). 'up' is an independent vertical
+    direction vector, unrelated to the gravity vector set on the fluid
+    model.
+
+.. note::
+    'surface_layer_height', 'monin_obukhov_length', 'tke', 'up' and
+    'ground_level' are only accepted when the solver is compressible (or
+    'solver.solver_settings.type' is unset). The incompressible inflow
+    boundary condition reads only 'roughness_length' and
+    'friction_velocity' from this profile; setting any of the other five on
+    an incompressible deck is a validation error, since they would silently
+    have no effect on that solver's inflow.
+
+roughness_length
+=================
 
 Is a measure of the height at which the mean velocity of the wind becomes zero, due to the frictional effects between the air and the surface.
 
@@ -299,8 +392,8 @@ The roughness length depends on the surface characteristics of the terrain or ob
 
 The wall boundary mesh is assumed to be at the height of the roughness length rather than ground level and therefore the first cell height should not be smaller than the roughness length.
 
-friction velocity
-=================
+friction_velocity
+===================
 
 Friction velocity, often denoted as ":math:`u\star`" (pronounced "u-star"), is another important parameter in the study of atmospheric boundary layers. It represents the characteristic velocity of turbulent motions in the surface layer of the atmosphere, generated by the shear stress between the air and the Earth's surface.
 
@@ -326,12 +419,12 @@ where:
 
 The friction velocity provides a measure of the intensity of turbulence near the Earth's surface. It influences several atmospheric processes, including heat and moisture exchange, pollutant dispersion, and the formation of atmospheric boundary layer structures. The magnitude of the friction velocity depends on surface roughness, wind speed, and atmospheric stability, among other factors.
 
-surface layer height
-====================
+surface_layer_height
+======================
 The surface layer height, also known as the aerodynamic or boundary layer height, refers to the vertical extent of the atmospheric boundary layer near the Earth's surface. It represents the region where the physical properties, such as wind speed, temperature, humidity, and turbulence, are influenced by the underlying surface. The height of the surface layer is often estimated based on empirical relationships or atmospheric stability conditions. It can vary from a few meters to a few hundred meters above the ground, depending on factors such as surface roughness length, wind speed, and atmospheric stability. Additionally, the surface layer height can change diurnally, with variations due to daytime heating and nighttime cooling effects.
 
-monin-obukhov length
-====================
+monin_obukhov_length
+======================
 The Monin-Obukhov length, often denoted as "L", is a parameter used in the study of atmospheric boundary layers to characterise the stability of the air near the Earth's surface. It is named after the Russian scientists A. S. Monin and A. M. Obukhov, who made significant contributions to the understanding of turbulence and boundary layer physics.
 
 The Monin-Obukhov length is defined as the ratio of the potential temperature difference to the buoyancy flux. It is given by the following equation:
@@ -347,7 +440,6 @@ where:
 * :math:`g` is the acceleration due to gravity, and
 * :math:`w\theta` is the vertical flux of virtual potential temperature.
 
-The Monin-Obukhov length is an indicator of atmospheric stability. It quantifies the relationship between the mechanical production of turbulence due to wind shear and the buoyancy effects caused by vertical temperature gradients. Positive values of L indicate stable atmospheric conditions, while negative values indicate unstable conditions. A neutral atmosphere corresponds to L = 0.
+The Monin-Obukhov length is an indicator of atmospheric stability. It quantifies the relationship between the mechanical production of turbulence due to wind shear and the buoyancy effects caused by vertical temperature gradients. Positive values of L indicate stable atmospheric conditions, while negative values indicate unstable conditions. A neutral atmosphere corresponds to L = 0, but L = 0 itself is rejected as an input value — omit the key for neutral stability instead.
 
 The Monin-Obukhov length influences various atmospheric processes, such as turbulence structure, heat and moisture exchange, and dispersion of pollutants. It plays a significant role in determining the behaviour of the atmospheric boundary layer, including the vertical mixing of air masses and the development of turbulence. The value of L is influenced by factors such as surface properties, wind speed, temperature, and humidity gradients.
-

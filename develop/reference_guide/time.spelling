@@ -1,0 +1,3 @@
+source/reference_guide/time.rst:294: (linearised) ["linearized", "linearize"] The default implicit scheme, solving the full linearised system with the 
+source/reference_guide/time.rst:309: (lu) ["loo", "lieu", "Lu", "li", "l", "u", "leu", "lur", "lug", "flu", "lux", "Blu", "ls", "la", "ln"] lu-sgs
+source/reference_guide/time.rst:309: (sgs) ["sgd", "ss", "gs", "sags", "sis", "s gs", "SG"] lu-sgs

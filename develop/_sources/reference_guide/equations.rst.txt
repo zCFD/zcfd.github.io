@@ -3,24 +3,38 @@
 Equations
 ---------
 
-.. list-table:: 
-   :widths: 25 10 25 35
-   :header-rows: 1
+The ``equations`` block lives under the top-level ``solver`` key and selects
+the equation set to be solved:
 
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-   * - 'equations'
-     - Yes
-     - --
-     - Any of equation sets detailed below.
+.. code-block:: python
 
-The equations key selects the equation set to be solved.
+  parameters = {
+    "config_version": 2,
+    "solver": {
+      "equations": {
+        "type": "rans",
+        "turbulence": {"model": "sst"},
+      },
+      # ... numerical_scheme, fluid_properties, reference_conditions, ...
+    },
+  }
 
-The corresponding equation set options should also be defined in the control dictionary. The valid equation keys are shown in the table below.
+``type`` is case-insensitive at input (``"RANS"``, ``"rans"`` and ``"Rans"``
+all validate the same way), but its canonical, stored form is always
+lowercase.
 
-.. list-table:: 
+Whether the *compressible* or *incompressible* solver is used is a separate
+choice, made by ``solver.solver_settings.type`` (``"compressible"`` or
+``"incompressible"``), not by ``equations.type`` itself. The same
+``equations.type`` values (``"viscous"``, ``"rans"``, ``"les"``) are shared
+between both solvers — the incompressible solver simply accepts a handful of
+extra keys alongside them (see :ref:`Incompressible Viscous
+<equation_incomp_viscous>`). ``"euler"`` is the one exception: the
+incompressible solver has no Euler equation set, since inviscid,
+incompressible flow with no pressure-velocity coupling mechanism is not a
+physically meaningful system to solve.
+
+.. list-table::
    :widths: 10 60 10 10
    :header-rows: 1
 
@@ -35,187 +49,73 @@ The corresponding equation set options should also be defined in the control dic
    * - Viscous
      - Use the viscous flow equations. These are compressible, viscid flow equations which do not model turbulence.
      - :ref:`"viscous" <equation_viscous>`
-     - :ref:`"incomp viscous" <equation_incomp_viscous>`
+     - :ref:`"viscous" <equation_incomp_viscous>`
    * - RANS
      - Use the RANS (Reynolds-Averaged Navier-Stokes) equations in the simulation. These are compressible, viscid flow equations with additional terms included to account for the effect of turbulence on the flow without the expense of simulating the turbulent flow structures themselves.
      - :ref:`"rans" <equation_rans>`
-     - :ref:`"incomp rans" <equation_incomp_rans>`
+     - :ref:`"rans" <equation_incomp_rans>`
    * - LES
      - Use the Large Eddy Simulation (LES) equations.
      - :ref:`"les" <equation_les>`
-     - :ref:`"incomp les" <equation_incomp_les>`
-
-Example usage:
-
-.. code-block:: python
-
-  parameters = {
-    ..
-    # Use the euler equation set
-    'equations' : 'euler',
-    # Define the inputs for the 'euler' equation set
-    'euler': {..}
-    ..
-  }
+     - :ref:`"les" <equation_incomp_les>`
 
 .. _equation_common:
-
 
 Common Settings
 ^^^^^^^^^^^^^^^
 
-The following parameters are common for all of the equation sets.
+Every equation set shares two fields: ``type`` (above) and ``precondition``.
 
-.. list-table:: 
-   :widths: 20 10 10 20 
+.. list-table::
+   :widths: 20 10 10 20 40
    :header-rows: 1
 
    * - Keyword
      - Required
      - Default
      - Valid values
-   * - 'order'
+     - Description
+   * - ``type``
      - Yes
      - --
-     - 'first' | 'second' | 'euler_second'
-   * - 'first order cycles'
+     - ``"euler"`` | ``"viscous"`` | ``"rans"`` | ``"les"``
+     - Selects the equation set.
+   * - ``precondition``
      - No
-     - --
-     - Positive integer
-   * - 'linear gradients'
-     - No
-     - False
-     - True | False
-   * - 'leastsq gradients'
-     - No
-     - False
-     - True | False
-   * - 'inviscid flux scheme'
-     - Yes
-     - "Roe"
-     - "HLLC" | "Rusanov" | "Roe" | "Roe low diss" | "HLLC low diss"
-   * - 'reconstruction'
-     - No
-     - "muscl"
-     - "muscl" | "umuscl"
-   * - 'entropy fix'
-     - No
-     - "0.0"
-     - Float between 0.0 and 0.2
-   * - 'low dissipation sensor'
-     - No
-     - -- 
-     - "FD" | "NTS" | "DES" | "NONE"
-   * - 'dissipation sensor minimum'
-     - No
-     - -- 
-     - Float between 0.05 and 1.0
-   * - 'freeze limiter cycle'
-     - No
-     - -- 
-     - Positive integer
-   * - 'relax'
-     - Yes (for incompressible equation set)
-     - 0.5
-     - Positive float
-   * - 'turbulence'
-     - Yes (for 'les' or 'rans' equation set)
-     - {}
-     - See :ref:`"turbulence" <turbulence>`
+     - ``False``
+     - ``True`` | ``False``
+     - Enable low Mach number preconditioning.
 
-order
-=====
-Sets the order of the spatial discretisation. **'euler_second'** is second order for the flow variables and first order for the turbulence.
+precondition
+============
+Low-speed Mach preconditioning modifies the pseudo-time system to restore
+good conditioning at low Mach number, so it only has meaning where a
+pseudo-time loop exists: steady runs and dual time stepping. Under pure
+global time stepping there is no pseudo-time loop to precondition, so
+``precondition`` is not available there. ``False`` is always inert, so it
+never conflicts with a time-marching choice.
 
-first order cycles
-==================
-Specifies the number of cycles the solver will run with first order spatial discretisation. This can be used to improve stability at start up. If the solver is dual time stepping then the number of first order cycles is taken as the total number from the start of the simulation.
-
-Example usage:
-Run 500 cycles first order.
-
-.. code-block:: python
-
-  parameters = {
-    ..
-    'equations' : 'euler',
-    'euler': {
-      ...
-      'first order cycles': 500,
-      ...
-    }
-    ..
-  }
-
-linear gradients & leastsq gradients
-======================================
-By default zCFD uses a Weighted Green-Gauss gradient calculation. This can be switched to a standard Green-Gauss by setting **'linear gradients'** to True. Setting **'leastsq gradients'** to True will set the gradient calculation to Least Squares.
-
-
-inviscid flux scheme
-====================
-Picks the scheme to use for the inviscid flux. **HLLC** is good when running explicit, **Roe** is best for implicit and **Rusanov** is good for getting an implicit simulation going. The **Roe low diss** and **HLLC low diss** schemes can be used with LES or Hybrid RANS/LES
-
-low dissipation sensor
-======================
-The sensor decides *where* - and by *how much* - the dissipation of the **'Roe low diss'** / **'HLLC low diss'** scheme is reduced. In a resolved region the sensor returns a small value (down to **'dissipation sensor minimum'**) so the scheme approaches a low-dissipation central scheme; elsewhere it returns 1 so the full upwind dissipation needed for stability and shock capturing is retained.
-
-The three active sensors differ in *what they key off*:
-
-.. list-table::
-   :widths: 15 85
-   :header-rows: 1
-
-   * - Setting
-     - Notes
-   * - **'DES'**
-     - Uses the hybrid length-scale blending of the selected DES/DDES/IDDES model (the RANS-to-LES length-scale ratio). Low dissipation is enabled wherever the model has switched to its LES branch, so it follows the model's resolved-turbulence (LES) regions directly.
-   * - **'NTS'**
-     - Grid-resolution sensor after Travin/Xiao (see Xiao et al. INT J HEAT FLUID FL 51 (2015) pag. 141 https://doi.org/10.1016/j.ijheatfluidflow.2014.10.007). Activates low dissipation where the local grid is fine relative to the turbulence length scale and the flow is vortical, combined with the shock sensor via a probabilistic-OR. Tends to enable low dissipation over a broader region than **'DES'**.
-   * - **'FD'**
-     - Eddy-viscosity (DDES-shielding) sensor after Johnsen et al. JCP 229 (2010) pag. 1234, based on the local ratio :math:`r_d = (\nu + \nu_t) / (\lVert \nabla u \rVert \, \kappa^2 d^2)`. It retains the **full** dissipation wherever the modeled eddy viscosity :math:`\nu_t` is high (the shielded near-wall / RANS region) and only reduces dissipation once :math:`\nu_t` drops. Because activation is gated on the modeled :math:`\nu_t`, it will **not** reduce dissipation in resolved regions that still carry high modeled eddy viscosity.
-   * - **'NONE'**
-     - No sensor; uses the value set on **'dissipation sensor minimum'** everywhere.
-
-.. note::
-
-   If the requirement is *low dissipation in resolved regions regardless of the modeled eddy viscosity*, use **'DES'** or **'NTS'**. The **'FD'** sensor is gated on the modeled eddy viscosity :math:`\nu_t` (it follows the DDES shielding function), so in regions where the turbulence model still produces significant :math:`\nu_t` it retains full dissipation even when the flow is well resolved.
-
-.. note::
-
-   The **'DES'** and **'FD'** sensors derive from a RANS turbulence model (the hybrid length-scale ratio and the DDES shielding function respectively). When no RANS model is active - for example a pure LES run (``'les': 'WALE'``) or an inviscid/laminar run - these fields are not produced, so **'DES'** and **'FD'** fall back to treating the whole domain as fully resolved LES and apply the **'dissipation sensor minimum'** everywhere (the shock-protection term still raises the dissipation at shocks). For pure LES, **'NTS'** is the natural choice as it is grid based and does not require a RANS model.
-
-
-dissipation sensor minimum
-==========================
-Sets the minimum value that the dissipation term in the scheme is multiplied by when using the **'Roe low diss'** or **'HLLC low diss'** scheme. This allows you control the stability of the low diss scheme (smaller values reduce the dissipation and hence the stability of the scheme)
-
-freeze limiter cycle
-====================
-If set the values of the limiter used in the MUSCL reconstruction are frozen at the specified cycle. This can be useful in the latter stages of a simulation if noise from the limiter is causing the residual convergence to stall.
-
-relax
-=====
-The relaxation factor used on the flow equations in the incompressible solver. Increasing this will speed up convergence at the expense of stability and vice versa.
+Spatial discretisation is not part of ``equations``
+=====================================================
+Settings that only affect *how* the equations are marched to a solution —
+spatial order, the inviscid flux scheme, the limiter, gradient method,
+reconstruction scheme, low-dissipation sensor and multigrid — live on
+``solver.numerical_scheme`` instead. They are not part of the equations
+schema documented here: choosing an equation set changes *what* is being
+solved, not how the spatial discretisation of that system is carried out.
 
 .. _turbulence:
 
-turbulence
-==========
-The turbulence dictionary is required for the :ref:`"rans" <equation_rans>` and :ref:`"les" <equation_les>` equations sets.
+Turbulence
+^^^^^^^^^^
 
+The ``turbulence`` key is required for the :ref:`"rans" <equation_rans>`
+equation set. Its shape depends on the equation set: RANS uses the model
+documented in this section; LES uses a different, much smaller model
+documented under :ref:`"les" <equation_les>`.
 
-.. _equation_euler:
-
-Euler
-^^^^^
-
-Compressible Euler flow is inviscid (no viscosity and hence no turbulence).  The compressible Euler equations are appropriate when modelling flows where momentum significantly dominates viscosity - for example at very high speed. The computational mesh used for Euler flow does not need to resolve the flow detail in the boundary layer and hence will generally have far fewer cells than the corresponding viscous mesh would have.
-
-As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
-
-.. list-table:: 
-   :widths: 20 10 10 10 20
+.. list-table::
+   :widths: 20 10 10 20 40
    :header-rows: 1
 
    * - Keyword
@@ -223,238 +123,113 @@ As well as the :ref:`"common" <equation_common>` settings, the following setting
      - Default
      - Valid values
      - Description
-   * - 'precondition'
-     - Yes
-     - False
-     - True | False
-     - Use low speed mach preconditioner
-
-Example usage:
-
-.. code-block:: python
-
-  parameters = {
-    ..
-    # Use the euler equation set
-    'equations' : 'euler',
-    'euler' : {
-              'order' : 'second',
-              'first order cycles': 100,
-              # Cycle on which to freeze the limiter values
-              'freeze limiter cycle': 500,
-              # Use low speed mach preconditioner
-              'precondition' : True,
-              'Inviscid Flux Scheme': 'HLLC',
-            },
-  }
-
-.. _equation_viscous:
-
-Viscous
-^^^^^^^
-
-The viscous (laminar) equations model flow that is viscous but not turbulent.  The `Reynolds number <http://en.wikipedia.org/wiki/Reynolds_number>`_ of a flow regime determines whether or not the flow will be turbulent. 
-
-The computational mesh for a viscous flow has to resolve the boundary layer so will generally be larger than that used for an Euler simulation. A viscous simulation will run faster than a RANS simulation using the same mesh since fewer equations are being modelled.
-
-As well as the :ref:`"common" <equation_common>` settings, the following settings are available:
-
-.. list-table:: 
-   :widths: 20 10 10 10 20
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'precondition'
-     - Yes
-     - False
-     - True | False
-     - Use low speed mach preconditioner
-
-Example usage:
-
-.. code-block:: python
-
-  parameters = {
-    ..
-    # Use the viscous equation set
-    'equations' : 'viscous',
-    'viscous' : {
-                  'order' : 'second',
-                  'first order cycles': 100,
-                  # Use low speed mach preconditioner
-                  'precondition' : True,
-                  'linear gradients' : False,
-                  'Inviscid Flux Scheme': 'HLLC',
-                },
-    ..
-  }
-
-.. _equation_incomp_viscous:
-
-Incompressible Viscous
-^^^^^^^^^^^^^^^^^^^^^^
-
-Incompressible viscous equations follow the same structure as the compressible viscous equations with the addition of several parameters to address numerical challenges related to the orthogonality of the mesh.  Note that the **scheme** block is not required.
-
-.. list-table:: 
-   :widths: 20 10 10 10 20
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'relax'
-     - Yes
-     - 0.5
-     - Positive float
-     - The relaxation factor used on the flow equations in the incompressible solver.
-   * - 'correction'
-     - Yes
-     - 'over relaxed'
-     - 'none' | 'orthogonal' | 'minimum' | 'over relaxed'
-     - Selects the type of non-orthogonal correction to apply to the flow equations.
-   * - 'correction limiter
-     - Yes
-     - 0.5
-     - Float between 0.0 and 1.0
-     - Sets the limiter for the non-orthogonal correction. 1.0 applies the full correction, 0.0 turns off the correction.
-   * - 'gradient limiter type'
-     - Yes
-     - 'cell md'
-     - 'cell md' | 'cell'
-     - Selects the type of gradient limiter to apply to the flow equations. **cell_md** is more robust on highly non-orthogonal meshes. **cell** is less dissipative.
-   * - 'gradient limiter'
-     - Yes
-     - 0.5
-     - Float between 0.0 and 1.0
-     - Sets the coefficient for the gradient limiter. 1.0 is the most dissipative, 0.0 turns off the limiter.
-   * - 'max second order non orthogonal angle'
-     - Yes 
-     - 90.0
-     - Float between 0.0 and 90.0
-     - Sets the maximum non-orthogonal angle (in degrees) at which second order discretisation is used. Above this angle first order discretisation is used. 
-   * - 'order'
-     - Yes
-     - - 
-     - 'first' | 'second' | 'euler_second' | 'central'
-     - Sets the order of the spatial discretisation.
-   * - 'central blend'
-     - Yes
-     - 0.8
-     - Float between 0.0 and 1.0
-     - Coefficient of blending between first and second order terms. 
-
-Example usage:
-
-.. code-block:: python
-
-  parameters = {
-    ..
-    # Use the viscous equation set
-    'equations' : 'viscous',
-    'viscous' : {
-                  'relax' : 0.5,
-                  'correction' : 'over relaxed',
-                  'correction limiter' : 0.5,
-                  'gradient limiter type' : 'cell md',
-                  'gradient limiter' : 0.5,
-                  'max second order non orthogonal angle' : 70.0,
-                  'order' : 'second',
-                  'central blend' : 0.8,
-                  'first order cycles': 100,
-                  'linear gradients' : False,
-                  'Inviscid Flux Scheme': 'HLLC',
-                },
-    ..
-  }
-
-.. _equation_rans:
-
-RANS
-^^^^
-The fully turbulent (Reynolds Averaged Navier-Stokes Equations)
-
-As well as the :ref:`"common" <equation_common>` settings, the **'RANS'** equation set requires the additional **'turbulence'** dictionary, which can have the following parameters:
-
-.. list-table:: 
-   :widths: 20 10 10 10 20
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'les'
-     - Yes
-     - 'none'
-     - 'none' | 'DES" | 'DDES' | 'IDDES' | 'SAS'
-     - Selects the hybrid RANS/LES model.
-   * - 'model'
+   * - ``model``
      - Yes
      - --
-     - 'sst' | 'sas' | 'sa-neg' | 'sst-transition'
-     - Selects the RANS turbulence model 
-   * - 'approximate sa from sst results'
+     - ``"sst"`` | ``"sas"`` | ``"sa-neg"`` | ``"sst-transition"`` | ``"spalart-allmaras"``
+     - RANS turbulence model.
+   * - ``hybrid``
      - No
-     - 
-     - True | False
-     - Restart an SA-neg calculation from an SST solution
-   * - 'rotation correction'
+     - --
+     - ``"DES"`` | ``"DDES"`` | ``"IDDES"`` | ``"SAS"``
+     - Hybrid RANS/LES approach layered on top of ``model``.
+   * - ``limit_mut``
      - No
-     - False
-     - True | False
-     - Adds the rotation correction term to SST or SA-neg
-   * - 'limit gradient k'
+     - ``True``
+     - ``True`` | ``False``
+     - Limit eddy viscosity in the SST model.
+   * - ``limit_gradient_k``
      - No
-     - 
-     - Float from 0.01 to 1
-     - Activates the :math:`\tilde{\nu}` gradient limiter in the SA-neg model
-   * - 'qcr'
+     - --
+     - Float, 0.01 to 1.0
+     - Gradient limiter coefficient for turbulent kinetic energy.
+   * - ``qcr``
      - No
-     - Off
-     - 2000 | 2020 | 2021
-     - Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg
+     - --
+     - ``2000`` | ``2020`` | ``2021``
+     - Activates the non-linear QCR correction to the turbulent stress.
+   * - ``rotation_correction``
+     - No
+     - ``False``
+     - ``True`` | ``False``
+     - Adds the rotation correction term to SST or SA-neg.
+   * - ``relax``
+     - No
+     - ``0.5``
+     - Float, > 0.0 to 1.0
+     - Implicit relaxation factor for the incompressible turbulence solver.
+   * - ``production``
+     - No
+     - --
+     - ``"vorticity"`` | ``"strain-incompressible"`` | ``"strain-compressible"`` | ``"kato-launder"``
+     - Production term model for SST. See :ref:`Production Term Table <production_term_table>` below. **Currently broken end-to-end — see note below.**
+   * - ``les_cfl_limit``
+     - No
+     - --
+     - Float, >= 0.0
+     - CFL shield for the DES/DDES/IDDES hybrid branch. See below.
+   * - ``les_cfl_width``
+     - No
+     - --
+     - Float, > 0.0
+     - Width of the blend above ``les_cfl_limit``. See below.
 
+model
+=====
+Selects the RANS turbulence model.
 
-les
-===
-Selects the hybrid RANS/LES model in the RANS solver which is applied to the base model selected with the **"model"** key word.
-
-.. list-table:: 
+.. list-table::
    :widths: 30 70
    :header-rows: 1
 
    * - Setting
      - Notes
-   * - **'none'**
-     - Solve the RANS equations with no hybrid RANS/LES model
+   * - **'sst'**
+     - The Menter Shear Stress Transport Turbulence Model (https://turbmodels.larc.nasa.gov/sst.html)
+   * - **'spalart-allmaras'**
+     - Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
+   * - **'sa-neg'**
+     - Negative Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
+   * - **'sas'**
+     - Scale-Adaptive Simulation, run as a standalone RANS model
+   * - **'sst-transition'**
+     - The Langtry-Menter 4-equation Transitional SST Model (https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html)
+
+hybrid
+======
+Selects the hybrid RANS/LES model layered on top of the base model selected
+with ``model``. Omit the key entirely to solve pure RANS with no hybrid
+blending.
+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Setting
+     - Notes
    * - **'DES'**
      - Detached Eddy Simulation
    * - **'DDES'**
      - Delayed Detached Eddy Simulation
    * - **'IDDES'**
-     - Improved Delayed Detached Eddy Simulation 
+     - Improved Delayed Detached Eddy Simulation
    * - **'SAS'**
-     - Scale Adaptive Simulation
+     - Scale-Adaptive Simulation run as the hybrid branch of ``model``
 
-les cfl limit
+les_cfl_limit
 =============
-Convective CFL number at or below which the LES branch of a DES/DDES/IDDES model is left
-untouched. Defaults to **0.0**, which disables the CFL shield entirely.
+Convective CFL number at or below which the LES branch of a DES/DDES/IDDES
+model is left untouched. Omitted (the default), the CFL shield is disabled
+entirely.
 
-The LES branch replaces the modelled RANS stress with resolved eddies of the size of the local
-filter width :math:`\Delta`, but those eddies are only genuinely resolved if the time step can
-carry them, that is if the convective CFL number is of order one. Where the CFL is larger the
-model still drops the RANS stress, while the temporal discretisation cannot supply the resolved
-stress that should replace it. The eddy viscosity shielding function :math:`f_d` does not
-protect against this because it is built from :math:`r_d`, a purely spatial ratio.
+The LES branch replaces the modelled RANS stress with resolved eddies of the
+size of the local filter width :math:`\Delta`, but those eddies are only
+genuinely resolved if the time step can carry them, that is if the convective
+CFL number is of order one. Where the CFL is larger the model still drops the
+RANS stress, while the temporal discretisation cannot supply the resolved
+stress that should replace it. The eddy viscosity shielding function
+:math:`f_d` does not protect against this because it is built from
+:math:`r_d`, a purely spatial ratio.
 
 Setting a limit adds a second shield built from the cell CFL number,
 
@@ -465,88 +240,57 @@ Setting a limit adds a second shield built from the cell CFL number,
    f_{CFL} = \mathrm{smoothstep}\left(
    \mathrm{clamp}\left( \frac{\mathrm{CFL} - \mathrm{limit}}{\mathrm{width}}, 0, 1 \right) \right)
 
-which is combined with :math:`f_d` so that the more protective of the two wins. At
-:math:`f_{CFL} = 1` the hybrid length scale is exactly the RANS length scale, so the LES branch
-is fully suppressed. Because :math:`f_{CFL}` is exactly zero at or below the limit, a
-simulation whose CFL number is everywhere within the limit is unaffected.
+which is combined with :math:`f_d` so that the more protective of the two
+wins. At :math:`f_{CFL} = 1` the hybrid length scale is exactly the RANS
+length scale, so the LES branch is fully suppressed. Because :math:`f_{CFL}`
+is exactly zero at or below the limit, a simulation whose CFL number is
+everywhere within the limit is unaffected.
 
-The shield is only active for time accurate runs, that is dual time stepping or global time
-stepping, since a steady run has no meaningful real time step. It applies to the **'DES'**,
-**'DDES'** and **'IDDES'** settings only, not to **'SAS'** or **'WALE'**. Use the **lescfl**
-output variable to find where the CFL number exceeds the limit before enabling it.
+The shield is only active for time-accurate runs (``solver.time_settings``
+of type ``"unsteady"`` — either dual time stepping or global time stepping),
+since a steady run has no meaningful real time step. It applies to the
+``'DES'``, ``'DDES'`` and ``'IDDES'`` settings only, not to ``'SAS'`` or
+``'wale'``. Use the **lescfl** output variable to find where the CFL number
+exceeds the limit before enabling it.
 
-les cfl width
+les_cfl_width
 =============
-Width of the blend above **"les cfl limit"**. RANS is fully enforced at a CFL number of
-``limit + width``. Defaults to **1.0**. A wider blend gives a more gradual return to RANS,
-which is usually preferable since the shielded cells also revert to full upwind dissipation.
-
-model
-=====
-Selects the RANS turbulence model. 
-
-.. list-table:: 
-   :widths: 30 70
-   :header-rows: 1
-
-   * - Setting
-     - Notes
-   * - **'sst'**
-     - The Menter Shear Stress Transport Turbulence Model (https://turbmodels.larc.nasa.gov/sst.html)
-   * - **'sa'**
-     - Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
-   * - **'sa-neg'**
-     - Negative Spalart-Allmaras turbulence model (https://turbmodels.larc.nasa.gov/spalart.html)
-   * - **'sst-transition'**
-     - The Langtry-Menter 4-equation Transitional SST Model (https://turbmodels.larc.nasa.gov/langtrymenter_4eqn.html)
-
-
-limit gradient k
-================
-Activates the :math:`\tilde{\nu}` gradient limiter in the SA-neg model. This helps eliminate gradient under/over shoot in regions of poor mesh quality.
-
-The value should be between 0 and 1. **0** is off and **1** is maximum limiting.
+Width of the blend above ``les_cfl_limit``. RANS is fully enforced at a CFL
+number of ``limit + width``. A wider blend gives a more gradual return to
+RANS, which is usually preferable since the shielded cells also revert to
+full upwind dissipation.
 
 qcr
 ===
-Activates the non-linear QCR correction to the turbulent stress. Applicable to both SST and SA-neg. QCR has been shown to improve the prediction of separated corner flows, particularly on highly loaded wings. Three versions of the QCR model are available: `QCR 2000 <https://doi.org/10.1016/S0142-727X(00)00007-2>`_ ,  `QCR 2020 <https://doi.org/10.2514/1.J059683>`_ and `QCR 2021 <https://doi.org/10.1017/aer.2021.42>`_.
+Activates the non-linear QCR correction to the turbulent stress. Applicable
+to both SST and SA-neg. QCR has been shown to improve the prediction of
+separated corner flows, particularly on highly loaded wings. Three versions
+of the QCR model are available: `QCR 2000
+<https://doi.org/10.1016/S0142-727X(00)00007-2>`_, `QCR 2020
+<https://doi.org/10.2514/1.J059683>`_ and `QCR 2021
+<https://doi.org/10.1017/aer.2021.42>`_.
 
-
-Example RANS usage:
-===================
+Example RANS turbulence usage:
+===============================
 
 .. code-block:: python
 
-  parameters = {
-    ..
-    # Use the viscous equation set
-    'equations' : 'RANS',
-    'RANS': {
-                'order' : 'second',
-                'first order cycles': 100,
-                'freeze limiter cycle': 500,
-                'linear gradients' : False,
-                'leastsq gradients' : False,
-                'Inviscid Flux Scheme': 'HLLC',
-                'low dissipation sensor': 'DES',
-                'dissipation sensor minimum': 0.05,
-                'turbulence' : {
-                                  'model' : 'sst',
-                                  # No Hybrid RANS/LES
-                                  'les' : 'none',
-                                  'rotation correction': False,
-                                  'limit gradient k': 0.5
-                                  'qcr': 2020
-                                },
-               },
-    ...
+  parameters["solver"]["equations"] = {
+      "type": "rans",
+      "precondition": True,
+      "turbulence": {
+          "model": "sa-neg",
+          "hybrid": "IDDES",
+      },
   }
 
 Advanced parameters for turbulence models
-=========================================
-The following parameters can be used in the 'turbulence' dictionary to allow tuning of the turbulence models in zCFD. These are advanced parameters and shouldn't normally need to be adjusted.
+==========================================
+The following parameters can be used in the ``turbulence`` dictionary to
+allow tuning of the turbulence models in zCFD. These are advanced parameters
+and shouldn't normally need to be adjusted.
 
-.. list-table:: 
+.. list-table::
    :widths: 20 10 10 10 20
    :header-rows: 1
 
@@ -555,158 +299,318 @@ The following parameters can be used in the 'turbulence' dictionary to allow tun
      - Default
      - Valid values
      - Description
-   * - 'betastar'
+   * - ``betastar``
      - No
      - 0.09
      - Positive number
      - Constant in the dissipation term on the k equation in the SST model
-   * - 'cdes_kw'
+   * - ``cdes_kw``
      - No
      - 0.78
      - Positive number
      - The :math:`k - \omega` part of the blended :math:`C_{DES}` in SST
-   * - 'cdes_keps'
+   * - ``cdes_keps``
      - No
-     - 0.21
+     - 0.61
      - Positive number
      - The :math:`k - \epsilon` part of the blended :math:`C_{DES}` in SST
-   * - 'cd1'
+   * - ``cd1``
      - No
-     - 20
+     - 20.0
      - Positive number
      - Constant in the :math:`f_{dt}` blending function in DDES and IDDES
-   * - 'cd2'
+   * - ``cd2``
      - No
      - 3
      - Positive integer
      - Constant in the :math:`f_{dt}` blending function in DDES and IDDES
-   * - 'cw'
+   * - ``cw``
      - No
      - 0.15
      - Positive number
      - Constant in the length scale calculation in IDDES
-   * - 'a1'
+   * - ``a1``
      - No
      - 0.31
-     - Positive integer
+     - Positive number
      - Constant in the eddy viscosity limiter in SST
-   * - 'production'
-     - No
-     - 0
-     - Positive integer
-     - Selects the model for the production term in the SST model. See :ref:`Production Term Table <production_term_table>` below
-   * - 'rotation correction'
-     - No
-     - -
-     - True | False
-     - Adds the rotation correction term to SST or SA-neg
-   * - 'cdes'
+   * - ``cdes``
      - No
      - 0.65
      - Positive number
      - :math:`C_{DES}` constant used for SA-neg based hybrid RANS/LES models
-   * - 'ca1'
+   * - ``ca1``
      - No
      - 2.0
      - Positive number
-     - Constant in the production of the gamma equation in the transition model in the compressible solver
-   * - 'ca2'
+     - Constant in the production of the gamma equation in the transition model
+   * - ``ca2``
      - No
      - 0.06
      - Positive number
-     - Constant in the destruction term for gamma equation in the transition model in the compressible solver
-   * - 'ce1'
+     - Constant in the destruction term for the gamma equation in the transition model
+   * - ``ce1``
      - No
      - 1.0
      - Positive number
-     - Constant in the production of the epsilon equation in the transition model in the compressible solver
-   * - 'ce2'
+     - Constant in the production of the epsilon equation in the transition model
+   * - ``ce2``
      - No
      - 50.0
      - Positive number
-     - Constant in the destruction term for gamma equation in the transition model in the compressible solver
-   * - 'cthetat'
+     - Constant in the destruction term for the epsilon equation in the transition model
+   * - ``cthetat``
      - No
      - 0.03
      - Positive number
-     - Constant in the Re-theta transition correlation in the transition model in the compressible solver
-   * - 'sigmagamma'
+     - Constant in the Re-theta transition correlation in the transition model
+   * - ``sigmagamma``
      - No
      - 1.0
      - Positive number
-     - Constant in the transition model in the compressible solver
-   * - 'sigmathetat'
+     - Constant in the transition model
+   * - ``sigmathetat``
      - No
      - 2.0
      - Positive number
-     - Constant in the transition model in the compressible solver
-   * - 'limit gradient k'
+     - Constant in the transition model
+   * - ``separation_correction``
      - No
-     - 0.5
-     - Positive number
-     - Gradient limiter for the turbulent kinetic energy in the SA-neg model. A value of 0 turns off the limiter, 1 is maximum limiting
-   * - 'separation correction'
-     - No
-     - True | False
-     - Boolean
-     - Activates the separation correction for the transition model in the compressible solver
-   * - 'qcr'
-     - No
-     - -
-     - '2000' | '2020' | '2021'
-     - Selects the QCR model for the turbulence model in the compressible solver
-
-**'production'** can have the following values:
+     - ``True``
+     - ``True`` | ``False``
+     - Activates the separation correction for the transition model
 
 .. _production_term_table:
 
-.. list-table:: 
+**production** can have the following values:
+
+.. list-table::
   :widths: 30 70
   :header-rows: 1
 
   * - Setting
     - Notes
-  * - 0
-    - Selects the vorticity based production term (SST-V) :math:`P_m=\mu_t\Omega_v^2-\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
-  * - 1
-    - Selects the strain based production term for incompressible flows :math:`P_m=\mu_t S^2`
-  * - 2
-    - Selects the strain based production term for compressible flows :math:`P_m=\mu_t S^2 -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
-  * - 3
-    - Selects the Kato-Launder source term :math:`P_m=\mu_t S\Omega_v -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+  * - ``"vorticity"``
+    - The vorticity based production term (SST-V) :math:`P_m=\mu_t\Omega_v^2-\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+  * - ``"strain-incompressible"``
+    - The strain based production term for incompressible flows :math:`P_m=\mu_t S^2`
+  * - ``"strain-compressible"``
+    - The strain based production term for compressible flows :math:`P_m=\mu_t S^2 -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
+  * - ``"kato-launder"``
+    - The Kato-Launder source term :math:`P_m=\mu_t S\Omega_v -\frac{2}{3}\rho k \delta_{ij}\frac{\partial u_i}{\partial x_j}`
 
-Incompressible RANS
-^^^^^^^^^^^^^^^^^^^
-.. _equation_incomp_rans:
+When ``production`` is omitted, the solver build chooses for itself:
+``"kato-launder"`` for ``sst-transition``, ``"vorticity"`` otherwise.
 
-Incompressible RANS equations follow the same structure as the compressible RANS equations with in addition to the parameters described in the :ref:`Incompressible Viscous <equation_incomp_viscous>` section. Note that the **scheme** block is not required, and that the turbulence model can have a different relaxation parameter to the main equation block.
+.. warning::
 
-Example incompressible RANS usage:
-===================================   
+   Setting ``production`` explicitly does not currently work end-to-end. The
+   schema accepts and validates these string values, and also accepts
+   integer values 0-3, which it normalises to the equivalent string. The
+   C++ SST solver, however, reads ``production`` as an integer, so a deck
+   that sets this field does not reach the solver as intended. This is a
+   known, unresolved mismatch between the schema and the solver, not a
+   documentation gap — do not rely on ``production`` selecting anything
+   other than the build's own default until the solver is updated to read
+   the string names.
+
+.. _equation_euler:
+
+Euler
+^^^^^
+
+Compressible Euler flow is inviscid (no viscosity and hence no turbulence).
+The compressible Euler equations are appropriate when modelling flows where
+momentum significantly dominates viscosity - for example at very high speed.
+The computational mesh used for Euler flow does not need to resolve the flow
+detail in the boundary layer and hence will generally have far fewer cells
+than the corresponding viscous mesh would have.
+
+Euler only takes the :ref:`common <equation_common>` ``type`` and
+``precondition`` fields — there is no equation-specific configuration beyond
+that.
+
+Example usage:
 
 .. code-block:: python
 
-  parameters = {
-    ..
-    # Use the incompressible RANS equation set
-    'equations' : 'incomp RANS',  
-    'incomp RANS': {
-                    'relax' : 0.5,
-                    'correction' : 'over relaxed',
-                    'correction limiter' : 0.5,
-                    'gradient limiter type' : 'cell md',
-                    'gradient limiter' : 0.5,
-                    'max second order non orthogonal angle' : 70.0,
-                    'order' : 'second',
-                    'central blend' : 0.8,
-                    'first order cycles': 100,
-                   
-                    'turbulence' : {
-                                    'model' : 'sst',
-                                    'relax': 0.2,
-                                  },
-                  },
-    ...
+  parameters["solver"]["equations"] = {
+      "type": "euler",
+      "precondition": True,
+  }
+
+.. _equation_viscous:
+
+Viscous
+^^^^^^^
+
+The viscous (laminar) equations model flow that is viscous but not
+turbulent. The `Reynolds number
+<http://en.wikipedia.org/wiki/Reynolds_number>`_ of a flow regime determines
+whether or not the flow will be turbulent.
+
+The computational mesh for a viscous flow has to resolve the boundary layer
+so will generally be larger than that used for an Euler simulation. A
+viscous simulation will run faster than a RANS simulation using the same
+mesh since fewer equations are being modelled.
+
+Compressible Viscous only takes the :ref:`common <equation_common>` ``type``
+and ``precondition`` fields.
+
+Example usage:
+
+.. code-block:: python
+
+  parameters["solver"]["equations"] = {
+      "type": "viscous",
+      "precondition": True,
+  }
+
+.. _equation_incomp_viscous:
+
+Incompressible Viscous
+^^^^^^^^^^^^^^^^^^^^^^
+
+Selecting the incompressible solver (``solver.solver_settings.type ==
+"incompressible"``) adds the following keys alongside ``type`` and
+``precondition`` wherever ``equations.type`` is ``"viscous"``, ``"rans"`` or
+``"les"``.
+
+.. list-table::
+   :widths: 20 10 10 20 40
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``relax``
+     - No
+     - 0.5
+     - Float, 0.1 to 1.0
+     - Implicit relaxation factor for the flow equations.
+   * - ``correction``
+     - No
+     - ``"over_relaxed"``
+     - ``"none"`` | ``"orthogonal"`` | ``"minimum"`` | ``"over_relaxed"``
+     - Non-orthogonal correction method.
+   * - ``correction_limiter``
+     - No
+     - 0.5
+     - Float, 0.0 to 1.0
+     - Limiter for the non-orthogonal correction. 1.0 applies the full correction, 0.0 turns off the correction.
+   * - ``gradient_limiter_type``
+     - No
+     - ``"cellmd"``
+     - ``"cellmd"`` | ``"cell"``
+     - Type of gradient limiter. ``cellmd`` is more robust on highly non-orthogonal meshes; ``cell`` is less dissipative.
+   * - ``gradient_limiter``
+     - No
+     - 0.5
+     - Float, 0.0 to 1.0
+     - Coefficient for the gradient limiter. 1.0 is the most dissipative, 0.0 turns off the limiter.
+   * - ``max_second_order_non_orthogonal_angle``
+     - No
+     - 90.0
+     - Float, 0.0 to 90.0
+     - Maximum non-orthogonal angle (degrees) at which second order discretisation is used. Above this angle first order discretisation is used.
+   * - ``central_blend``
+     - No
+     - 0.8
+     - Float
+     - Coefficient of blending between first and second order terms.
+   * - ``solve_energy``
+     - No
+     - ``False``
+     - ``True`` | ``False``
+     - Solve the energy (temperature) transport equation.
+   * - ``scheme``
+     - No
+     - ``"coupled"``
+     - ``"coupled"`` | ``"simple"``
+     - Pressure-velocity coupling scheme. ``coupled`` solves a single block-4 [u,v,w,p] system per pseudo-time step; ``simple`` uses a segregated SIMPLE momentum predictor / pressure correction.
+   * - ``pressure_relax``
+     - No
+     - --
+     - Float, > 0.0 to 1.0
+     - SIMPLE pressure under-relaxation factor. Only used when ``scheme`` is ``"simple"``.
+   * - ``pressure_regularisation``
+     - No
+     - --
+     - Float, >= 0.0
+     - Diagonal regularisation of the SIMPLE pressure-correction Poisson operator (vanishes at convergence). Only used when ``scheme`` is ``"simple"``.
+   * - ``pressure_correction_limit``
+     - No
+     - --
+     - Float, > 0.0
+     - Limit factor applied to the SIMPLE pressure correction. Only used when ``scheme`` is ``"simple"``.
+   * - ``pin_pressure``
+     - No
+     - --
+     - ``True`` | ``False``
+     - Pin the SIMPLE pressure correction at a reference cell instead of the default constant-null-space + mean-removal gauge fix. Only used when ``scheme`` is ``"simple"``.
+
+Example usage:
+
+.. code-block:: python
+
+  parameters["solver"] = {
+      "solver_settings": {"type": "incompressible"},
+      "equations": {
+          "type": "viscous",
+      },
+      # ... numerical_scheme, fluid_properties, reference_conditions, ...
+  }
+
+.. _equation_rans:
+
+RANS
+^^^^
+
+The fully turbulent (Reynolds Averaged Navier-Stokes) equations.
+
+As well as the :ref:`common <equation_common>` settings, the ``"rans"``
+equation set requires the additional ``turbulence`` dictionary documented in
+:ref:`Turbulence <turbulence>` above.
+
+Example usage:
+
+.. code-block:: python
+
+  parameters["solver"]["equations"] = {
+      "type": "rans",
+      "precondition": True,
+      "turbulence": {
+          "model": "sst",
+          "rotation_correction": False,
+          "limit_gradient_k": 0.5,
+          "qcr": 2020,
+      },
+  }
+
+.. _equation_incomp_rans:
+
+Incompressible RANS
+^^^^^^^^^^^^^^^^^^^^
+
+Incompressible RANS equations combine the :ref:`Incompressible Viscous
+<equation_incomp_viscous>` fields with the ``turbulence`` dictionary from
+:ref:`Turbulence <turbulence>` above. Note that the turbulence model's own
+``relax`` can be set independently of the main equation block's ``relax``.
+
+Example usage:
+
+.. code-block:: python
+
+  parameters["solver"] = {
+      "solver_settings": {"type": "incompressible"},
+      "equations": {
+          "type": "rans",
+          "precondition": True,
+          "turbulence": {"model": "sst"},
+      },
+      # ... numerical_scheme, fluid_properties, reference_conditions, ...
   }
 
 .. _equation_les:
@@ -714,10 +618,29 @@ Example incompressible RANS usage:
 LES
 ^^^
 
-As well as the :ref:`"common" <equation_common>` settings, the **'LES'** equation set requires the additional **'turbulence'** dictionary, which can have the following parameters:
+Large Eddy Simulation resolves the energy-containing turbulent scales
+directly and only models the sub-grid scales below the mesh filter width.
+Unlike RANS, a non-hybrid LES run solves no additional transport equation
+for turbulence at all — the sub-grid-scale model is a runtime kernel inside
+the viscous solver library, not a separate set of turbulence equations. For
+this reason the ``"les"`` equation set is handled by the same solver code
+path as ``"viscous"``: choosing LES does not add turbulence-transport
+equations to the system being solved, it only switches on an SGS closure
+kernel within the viscous solve.
 
-.. list-table:: 
-   :widths: 20 10 10 10 20
+Hybrid RANS-LES methods are the exception, since they *do* carry a
+transport-equation RANS model underneath their LES branch (SST-IDDES, for
+example, still solves the SST k and :math:`\omega` equations). Those are
+configured through the :ref:`RANS <equation_rans>` equation set's
+``turbulence.hybrid`` field (``"DES"`` / ``"DDES"`` / ``"IDDES"`` / ``"SAS"``
+on top of ``model``), not through ``"les"``.
+
+The ``turbulence`` dictionary for the ``"les"`` equation set is therefore a
+much smaller, LES-specific model — it selects and configures the sub-grid
+model, and is unrelated to the RANS ``turbulence`` schema described above.
+
+.. list-table::
+   :widths: 20 10 10 20 40
    :header-rows: 1
 
    * - Keyword
@@ -725,70 +648,59 @@ As well as the :ref:`"common" <equation_common>` settings, the **'LES'** equatio
      - Default
      - Valid values
      - Description
-   * - 'les'
+   * - ``les``
      - Yes
-     - 'none'
-     - 'none' | 'WALE'
-     - Selects the hybrid RANS/LES model.
- 
+     - --
+     - ``"none"`` | ``"wale"``
+     - Sub-grid-scale model. ``none`` is implicit LES (no explicit SGS model); ``wale`` is the Wall-Adapting Local Eddy-viscosity model.
+   * - ``wall_damping``
+     - No
+     - --
+     - ``True`` | ``False``
+     - Enable wall damping for the LES model.
+   * - ``eps``
+     - No
+     - 0.41
+     - Positive number
+     - von Kármán constant for WALE near-wall scaling.
+   * - ``cw``
+     - No
+     - 0.325
+     - Positive number
+     - WALE model constant (subgrid viscosity coefficient).
 
-
-les
-===
-
-Selects the model for the subgrid eddy viscosity in the LES solver: either **"none"** for implicit LES or **"WALE"** to use the Wall Adapted Local Eddy Viscosity model.
-
+The whole ``turbulence`` dictionary is optional for LES; omitting it is
+equivalent to implicit LES with no SGS model.
 
 Example usage:
 
 .. code-block:: python
 
-  parameters = {
-    ..
-    # Use the viscous equation set
-    'equations' : 'LES',
-    'LES': {
-                'order' : 'second',
-                'first order cycles': 100,
-                'freeze limiter cycle': 500,
-                'linear gradients' : False,
-                'leastsq gradients' : False,
-                'Inviscid Flux Scheme': 'HLLC',
-                'low dissipation sensor': 'DES',
-                'dissipation sensor minimum': 0.05,
-                'turbulence' : {
-                                  'les' : 'none',
-                                },
-               },
-    ...
+  parameters["solver"]["equations"] = {
+      "type": "les",
+      "turbulence": {
+          "les": "wale",
+      },
   }
-
-Incompressible LES
-^^^^^^^^^^^^^^^^^^
 
 .. _equation_incomp_les:
 
-Incompressible LES equations follow the same structure as the compressible LES equations with the addition of the parameters described in the :ref:`Incompressible Viscous <equation_incomp_viscous>` section. Note that the scheme block is not required, and that the turbulence model can have a different relaxation parameter to the main equation block.
+Incompressible LES
+^^^^^^^^^^^^^^^^^^^
 
-Example incompressible LES usage:
-===================================
+Incompressible LES equations combine the :ref:`Incompressible Viscous
+<equation_incomp_viscous>` fields with the LES-specific ``turbulence``
+dictionary described in :ref:`LES <equation_les>` above.
+
+Example usage:
 
 .. code-block:: python
 
-  parameters = {
-    ..
-    # Use the incompressible LES equation set
-    'equations' : 'incomp LES',
-    'incomp LES': {
-                   'relax' : 0.7,
-                   'order' : 'second',
-                   'first order cycles': 100,
-                   'turbulence' : {
-                                   'les' : 'DES',
-                                   'relax' : 0.2,
-                                  },
+  parameters["solver"] = {
+      "solver_settings": {"type": "incompressible"},
+      "equations": {
+          "type": "les",
+          "turbulence": {"les": "wale"},
       },
-    ...
+      # ... numerical_scheme, fluid_properties, reference_conditions, ...
   }
-
-

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Mesh Transformation &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Mesh Transformation &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -36,14 +36,23 @@
             
   <section id="mesh-transformation">
 <span id="mesh-transform"></span><h1>Mesh Transformation<a class="headerlink" href="#mesh-transformation" title="Link to this heading">¶</a></h1>
-<p>This dictionary is used to setup an initial deformation of the mesh. Typically a known deformation of a surface in the mesh is propagated out into the volume using either radial basis function or inverse distance weighted interpolation. Deforming an aircraft wing or wind turbine blade to a static load shape are two uses of this functionality.</p>
+<p>zCFD has three distinct, independently-configured mechanisms for moving or deforming a mesh, all set up per model (i.e. per mesh) under <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Initial placement</strong> — a single static rotate/translate/scale of the whole mesh, applied once when the mesh is loaded. Set under <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.transforms</span></code>.</p></li>
+<li><p><strong>Dynamic rigid-body motion</strong> — a zone of cells rotating or translating relative to the rest of the mesh (a rotor, a moving overset component). Set as a <code class="docutils literal notranslate"><span class="pre">'rotating'</span></code> or <code class="docutils literal notranslate"><span class="pre">'translating'</span></code> entry in <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.fluid_zones</span></code>.</p></li>
+<li><p><strong>Mesh morphing</strong> — a known deformation of a surface (e.g. a wing or blade deflecting under load) propagated into the surrounding volume mesh using RBF or IDW interpolation. Set as an <code class="docutils literal notranslate"><span class="pre">'rbf</span> <span class="pre">transform'</span></code> or <code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> entry in <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.fluid_zones</span></code>.</p></li>
+</ul>
+<p>These are covered in turn below.</p>
+<section id="initial-placement">
+<h2>Initial placement<a class="headerlink" href="#initial-placement" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.transforms</span></code> sets a single static affine transform applied to the whole mesh when it is read, before the solver starts.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 23.5%" />
-<col style="width: 5.9%" />
-<col style="width: 11.8%" />
-<col style="width: 23.5%" />
-<col style="width: 35.3%" />
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 15.0%" />
+<col style="width: 25.0%" />
+<col style="width: 30.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Keyword</p></th>
@@ -54,93 +63,285 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘type’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>‘rbf’ | ‘rbf multiscale’ | ‘idw’</p></td>
-<td><p>Selects the <a class="reference internal" href="#transform-interpolation"><span class="std std-ref">interpolation</span></a> method used.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘base point fraction’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code></p></td>
 <td><p>No</p></td>
-<td></td>
-<td><p>Float</p></td>
-<td><p>Fraction of points included in the base set when using <strong>‘rbf multiscale’</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>4x4 list of lists, or numpy array</p></td>
+<td><p>Affine transformation matrix applied to the mesh at load time.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘alpha’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">scale</span></code></p></td>
 <td><p>No</p></td>
-<td></td>
-<td><p>Float</p></td>
-<td><p>Sets the support radius (the radius of influence) of the rbf surface points.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>List of zone ID integers</p></td>
-<td><p>Sets a list of surface zones to deform</p></td>
-</tr>
-<tr class="row-even"><td><p>‘fixed zones’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p>List of zone ID integers</p></td>
-<td><p>Sets the surface zones which remain fixed in position when using <strong>`idw`</strong>, useful if you have surfaces that are within the influence of the interpolation that should remain fixed.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘func’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p><a class="reference internal" href="../functions.html#transform-mesh-function"><span class="std std-ref">Transform Function</span></a></p></td>
-<td><p>A python function that describes the surface deformation to be propagated into the volume mesh. The function is called for each node on the surfaces specified in the ‘zones’ key.</p></td>
-</tr>
-<tr class="row-even"><td><p>‘basis’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p><cite>c0</cite> | <cite>c2</cite> | <cite>tps</cite> | <cite>gaussian</cite></p></td>
-<td><p>Selects the type of radial basis function used. Can be Welland’s c0 or c2 function, thin plate spline (tps) or Gaussian.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘tol’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p>Float</p></td>
-<td><p>The maximum permissible distance error between the deformed surface shape and that obtained using the greedy <strong>‘rbf’</strong> method. No more points will be added to the system once this tolerance is reached.</p></td>
-</tr>
-<tr class="row-even"><td><p>‘power’</p></td>
-<td><p>No</p></td>
-<td><p>[3,5,10]</p></td>
-<td><p>List of int</p></td>
-<td><p>A list of three exponents used in the <strong>`idw`</strong> interpolation scheme.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘n nearest’</p></td>
-<td><p>No</p></td>
-<td><p>100</p></td>
-<td><p>Int</p></td>
-<td><p>The number of nodes closest to the current point used to determine the <strong>‘idw’</strong> interpolation weight.</p></td>
-</tr>
-<tr class="row-even"><td><p>‘deformation distance’</p></td>
-<td><p>No</p></td>
-<td><p>1</p></td>
-<td><p>Float</p></td>
-<td><p>The distance over which the surface deformation is blended into the volume mesh.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘blending stiffness’</p></td>
-<td><p>No</p></td>
-<td><p>0.5</p></td>
-<td><p>Float</p></td>
-<td><p>The stiffness of the blending function used to propagate the <strong>‘idw’</strong> interpolation of the surface deformation into the volume mesh.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>List of 3 floats</p></td>
+<td><p>Per-axis <code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code> scale factors. Folded into <code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code> before the solver runs (see note below); an identity scale (<code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>) is a no-op.</p></td>
 </tr>
 </tbody>
 </table>
-<section id="interpolation-method">
-<span id="transform-interpolation"></span><h2>Interpolation method<a class="headerlink" href="#interpolation-method" title="Link to this heading">¶</a></h2>
-<p>Selects the interpolation method used to propagate the surface deformation into the volume mesh. Three methods are available:</p>
-<p><strong>‘rbf’</strong> uses the ‘greedy’ method of <a class="reference external" href="https://doi.org/10.1016/j.jcp.2009.12.006" target="_blank">Allan et al</a>. where the deformation is started with a subset of points and additional points are added until the surface deformation reaches the requested tolerance.</p>
-<p><strong>‘rbf multiscale’</strong> uses the <a class="reference external" href="https://doi.org/10.1016/j.jcp.2017.05.042" target="_blank">multiscale</a> rbf method where a subset of surface points with a fixed support radius are solved implicitly and the remaining points are solved explicitly with a support radius determined as part of the solution process. The fraction of points included in the base set can be set with <strong>‘base point fraction’</strong>. The base set of points are assigned the support radius <strong>‘alpha’</strong> and hence can have a wider sphere of influence than the remaining points which are used in the multiscale process.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Increasing the number of points in the base set and/or increasing alpha generally makes the surface deformation propagate further into the volume mesh reducing the likelihood of generating poor quality cells</p>
+<p><code class="docutils literal notranslate"><span class="pre">scale</span></code> and <code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code> are not two independent transforms applied by the mesh loader — only <code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code> is ever read at mesh-load time. If <code class="docutils literal notranslate"><span class="pre">scale</span></code> is given, it is composed into <code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code> (on top of any matrix already given) before the solver runs. Setting a non-identity <code class="docutils literal notranslate"><span class="pre">scale</span></code> with no <code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code> produces a pure diagonal scale matrix; giving both composes the scale on top of the existing matrix, it does not replace it.</p>
 </div>
-<p><strong>‘idw’</strong> uses a simple inverse distance weighted interpolation.  The <strong>`power`</strong> parameter can provide a list of three exponents used in the IDW scheme. The first (p1) is applied to the interpolation weight of points close to the surface, the second (p2) to points which are the deformation distance away from the surface and the third (p3) is used to blend between the two extremes.</p>
-<p><span class="math notranslate nohighlight">\(wt_1 = (deformation distance / distance)^{p1}\)</span>
-<span class="math notranslate nohighlight">\(wt_2 = (deformation distance / distance)^{p2}\)</span>
-<span class="math notranslate nohighlight">\(blend = ((deformation distance - distance) / deformation distance)^{p3}\)</span></p>
+<p>Build a rotation or translation matrix with the <code class="docutils literal notranslate"><span class="pre">zutil.transform</span></code> helpers (<code class="docutils literal notranslate"><span class="pre">rotate</span></code>, <code class="docutils literal notranslate"><span class="pre">translate</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span></code>), which each return/compose a 4x4 numpy array, and can be chained:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil.transform</span>
+
+<span class="c1"># Two 90-degree rotations about x, then 10 degrees about y, composed in order</span>
+<span class="n">mesh_transform</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">90.0</span><span class="p">)</span>
+<span class="n">mesh_transform</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">90.0</span><span class="p">,</span> <span class="n">mesh_transform</span><span class="p">)</span>
+<span class="n">mesh_transform</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">mesh_transform</span><span class="p">)</span>
+
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"transforms"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"transform_matrix"</span><span class="p">:</span> <span class="n">mesh_transform</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>A plain anisotropic mesh stretch needs only <code class="docutils literal notranslate"><span class="pre">scale</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"canopy_dacosta"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"transforms"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]},</span>
+    <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"canopy_dacosta.h5"</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The schema also defines a <code class="docutils literal notranslate"><span class="pre">transform_func</span></code> field on <code class="docutils literal notranslate"><span class="pre">transforms</span></code>, intended as a Python-callable hook for whole-mesh dynamic rigid motion. It is not currently read anywhere in the solver or launcher — no control deck in this repository sets it, and setting it has no effect. For dynamic rigid-body motion, use the <code class="docutils literal notranslate"><span class="pre">'rotating'</span></code>/<code class="docutils literal notranslate"><span class="pre">'translating'</span></code> fluid zone types below instead.</p>
+</div>
+</section>
+<section id="dynamic-rigid-body-motion">
+<h2>Dynamic rigid-body motion<a class="headerlink" href="#dynamic-rigid-body-motion" title="Link to this heading">¶</a></h2>
+<p>A zone of cells can be rotated or translated relative to the rest of the mesh by adding a <code class="docutils literal notranslate"><span class="pre">'rotating'</span></code> or <code class="docutils literal notranslate"><span class="pre">'translating'</span></code> entry to <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.fluid_zones</span></code>. This is used both for a simple rotating reference frame (e.g. a spinning cylinder or rotor in its own non-overset mesh) and, when combined with an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition and <code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code>, for a mesh that is physically re-cut and re-mapped against its background mesh every time step.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 15.0%" />
+<col style="width: 25.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'rotating'</span></code> | <code class="docutils literal notranslate"><span class="pre">'translating'</span></code></p></td>
+<td><p>Selects rigid rotation or rigid translation of the zone.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>List of zone ID integers</p></td>
+<td><p>Surface/volume zones the motion applies to.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axis</span></code></p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">'rotating'</span></code> only)</p></td>
+<td><p>–</p></td>
+<td><p>Normalised 3-vector</p></td>
+<td><p>Rotation axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">origin</span></code></p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">'rotating'</span></code> only)</p></td>
+<td><p>–</p></td>
+<td><p>3-vector</p></td>
+<td><p>Point the rotation axis passes through.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">omega</span></code></p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">'rotating'</span></code> only)</p></td>
+<td><p>–</p></td>
+<td><p>Float</p></td>
+<td><p>Angular velocity in rad/s.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code></p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">'translating'</span></code> only)</p></td>
+<td><p>–</p></td>
+<td><p>3-vector</p></td>
+<td><p>Translation velocity vector.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translation_function</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Python function</p></td>
+<td><p>Overrides <code class="docutils literal notranslate"><span class="pre">velocity</span></code> with a time-dependent translation velocity function (<code class="docutils literal notranslate"><span class="pre">'translating'</span></code> only).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p>Physically moves the mesh (requires this model to also declare an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition — see <a class="reference internal" href="overset.html#overset"><span class="std std-ref">overset</span></a>). Without an overset boundary, the zone still rotates/translates as a reference frame, but <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> has no additional effect.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ramp</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Dict</p></td>
+<td><p>Optional ramping of the motion at start-up. Not a validated sub-schema — no control deck in this repository sets it; check the C++ read site before relying on a specific shape.</p></td>
+</tr>
+</tbody>
+</table>
+<p>A rotating reference frame, with the mesh itself placed by an initial rotation (no overset boundary, so <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> is left at its default):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil.transform</span>
+
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"cylinder.h5"</span><span class="p">,</span>
+    <span class="s2">"transforms"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"transform_matrix"</span><span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">)},</span>
+    <span class="s2">"fluid_zones"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"rotating_zone"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rotating"</span><span class="p">,</span>
+            <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+            <span class="s2">"axis"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"origin"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">"omega"</span><span class="p">:</span> <span class="mf">17.453292519943297</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>An overset mesh that is actually rotated in place each time step (<code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code>, paired with an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition on the same model):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"cylinder_1"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"cylinder_origin.h5"</span><span class="p">,</span>
+    <span class="s2">"transforms"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"transform_matrix"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">"fluid_zones"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FZ_1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rotating"</span><span class="p">,</span>
+            <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">"axis"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">"origin"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span>
+            <span class="s2">"omega"</span><span class="p">:</span> <span class="mf">104.71975511965978</span><span class="p">,</span>
+            <span class="s2">"moving_mesh"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">}},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="mesh-morphing">
+<h2>Mesh morphing<a class="headerlink" href="#mesh-morphing" title="Link to this heading">¶</a></h2>
+<p>A known deformation of a surface in the mesh is propagated out into the volume using either radial basis function or inverse distance weighted interpolation. Deforming an aircraft wing or wind turbine blade to a static load shape are two uses of this functionality. Set up as an entry in <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.fluid_zones</span></code> with <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'rbf</span> <span class="pre">transform'</span></code> or <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'idw</span> <span class="pre">transform'</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 15.0%" />
+<col style="width: 25.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'rbf</span> <span class="pre">transform'</span></code> | <code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code></p></td>
+<td><p>Selects the <a class="reference internal" href="#transform-interpolation"><span class="std std-ref">interpolation</span></a> method used.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p>List of zone ID integers</p></td>
+<td><p>Surface zones to deform.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">func</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
+<td><p><a class="reference internal" href="../functions.html#transform-mesh-function"><span class="std std-ref">Transform Function</span></a></p></td>
+<td><p>A python function that describes the surface deformation to be propagated into the volume mesh. Called for each node on the surfaces named in <code class="docutils literal notranslate"><span class="pre">zones</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">support_radius</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
+<td><p>Float &gt; 0</p></td>
+<td><p>Support radius (radius of influence) of the interpolation. Shared by both <code class="docutils literal notranslate"><span class="pre">'rbf</span> <span class="pre">transform'</span></code> and <code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code>; for IDW it is an alternative to <code class="docutils literal notranslate"><span class="pre">stencil_size</span></code> (see note below).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basis</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'c2'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'tps'</span></code> | <code class="docutils literal notranslate"><span class="pre">'thin_plate_spline'</span></code> | <code class="docutils literal notranslate"><span class="pre">'multiquadric'</span></code> | <code class="docutils literal notranslate"><span class="pre">'inverse_multiquadric'</span></code> | <code class="docutils literal notranslate"><span class="pre">'gaussian'</span></code> | <code class="docutils literal notranslate"><span class="pre">'linear'</span></code> | <code class="docutils literal notranslate"><span class="pre">'cubic'</span></code> | <code class="docutils literal notranslate"><span class="pre">'quintic'</span></code> | <code class="docutils literal notranslate"><span class="pre">'c0'</span></code> | <code class="docutils literal notranslate"><span class="pre">'c2'</span></code> | <code class="docutils literal notranslate"><span class="pre">'c4'</span></code> | <code class="docutils literal notranslate"><span class="pre">'c6'</span></code></p></td>
+<td><p>RBF function type (<code class="docutils literal notranslate"><span class="pre">'rbf</span> <span class="pre">transform'</span></code> only).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">base_point_fraction</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
+<td><p>Float, 0 &lt; x &lt;= 1</p></td>
+<td><p>Fraction of points used as base points (<code class="docutils literal notranslate"><span class="pre">'rbf</span> <span class="pre">transform'</span></code> only). <code class="docutils literal notranslate"><span class="pre">1.0</span></code> (the default) is full RBF; <code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">1.0</span></code> is multiscale RBF — plain and multiscale RBF are a single <code class="docutils literal notranslate"><span class="pre">'rbf</span> <span class="pre">transform'</span></code> type, distinguished by this value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stencil_size</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Positive integer</p></td>
+<td><p>Maximum stencil size (nearest-neighbour count), an alternative to <code class="docutils literal notranslate"><span class="pre">support_radius</span></code> (<code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> only). Setting both <code class="docutils literal notranslate"><span class="pre">support_radius</span></code> and <code class="docutils literal notranslate"><span class="pre">stencil_size</span></code> explicitly is rejected as ambiguous.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">power</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[3.0,</span> <span class="pre">5.0,</span> <span class="pre">10.0]</span></code></p></td>
+<td><p>List of 3 floats</p></td>
+<td><p>Exponents used in the IDW interpolation scheme (<code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> only).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">n_nearest</span></code></p></td>
+<td><p>No</p></td>
+<td><p>100</p></td>
+<td><p>Positive integer</p></td>
+<td><p>Number of nearest points used (<code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> only).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deformation_distance</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
+<td><p>Float &gt; 0</p></td>
+<td><p>Maximum deformation distance over which the surface deformation is blended into the volume mesh (<code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> only).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blending_stiffness</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Float, 0 &lt;= x &lt;= 1</p></td>
+<td><p>Stiffness of the blending function (<code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> only). Unlike the other IDW fields above, the C++ morpher reads this value unconditionally with no fallback, so it should always be given explicitly for an <code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> zone — there is no safe default to fall back on if it is omitted.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fixed_zones</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>List of zone ID integers</p></td>
+<td><p>Surface zones which remain fixed in position (<code class="docutils literal notranslate"><span class="pre">'idw</span> <span class="pre">transform'</span></code> only) — useful if you have surfaces within the interpolation’s influence that should remain fixed.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is no <code class="docutils literal notranslate"><span class="pre">'tol'</span></code> field for the greedy-RBF point-addition tolerance — <code class="docutils literal notranslate"><span class="pre">RBFTransformConfig</span></code> has no tolerance field and rejects unknown keys, so this option cannot be set.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The RBF C++ code also supports an optional <code class="docutils literal notranslate"><span class="pre">use_local_rbf_nodes</span></code> flag, restricting each partition’s RBF solve to only the nodes it owns (a memory/performance optimisation for large parallel RBF problems). It is not part of the schema: no control deck sets it, every live RBF/IDW test case runs correctly using the full node set, and the C++ read is guarded (defaults to using all nodes when the key is absent), so leaving it unset changes nothing for any existing deck.</p>
+</div>
+</section>
+<section id="interpolation-method">
+<span id="transform-interpolation"></span><h2>Interpolation method<a class="headerlink" href="#interpolation-method" title="Link to this heading">¶</a></h2>
+<p>Selects the interpolation method used to propagate the surface deformation into the volume mesh. Two <code class="docutils literal notranslate"><span class="pre">type</span></code> values are available:</p>
+<p><strong>‘rbf transform’</strong> with <code class="docutils literal notranslate"><span class="pre">base_point_fraction</span></code> at its default of <code class="docutils literal notranslate"><span class="pre">1.0</span></code> uses the ‘greedy’ method of <a class="reference external" href="https://doi.org/10.1016/j.jcp.2009.12.006" target="_blank">Allan et al</a>, where the deformation is started with a subset of points and additional points are added until the surface deformation converges.</p>
+<p><strong>‘rbf transform’</strong> with <code class="docutils literal notranslate"><span class="pre">base_point_fraction</span></code> set below <code class="docutils literal notranslate"><span class="pre">1.0</span></code> instead uses the <a class="reference external" href="https://doi.org/10.1016/j.jcp.2017.05.042" target="_blank">multiscale</a> RBF method, where a subset of surface points with a fixed support radius are solved implicitly and the remaining points are solved explicitly with a support radius determined as part of the solution process. The base set of points are assigned the <code class="docutils literal notranslate"><span class="pre">support_radius</span></code> and hence can have a wider sphere of influence than the remaining points which are used in the multiscale process.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Increasing the number of points in the base set and/or increasing <code class="docutils literal notranslate"><span class="pre">support_radius</span></code> generally makes the surface deformation propagate further into the volume mesh, reducing the likelihood of generating poor quality cells.</p>
+</div>
+<p><strong>‘idw transform’</strong> uses a simple inverse distance weighted interpolation. The <strong>power</strong> parameter provides a list of three exponents used in the IDW scheme. The first (p1) is applied to the interpolation weight of points close to the surface, the second (p2) to points which are the deformation distance away from the surface and the third (p3) is used to blend between the two extremes.</p>
+<p><span class="math notranslate nohighlight">\(wt_1 = (deformation\_distance / distance)^{p1}\)</span>
+<span class="math notranslate nohighlight">\(wt_2 = (deformation\_distance / distance)^{p2}\)</span>
+<span class="math notranslate nohighlight">\(blend = ((deformation\_distance - distance) / deformation\_distance)^{p3}\)</span></p>
 <p>Then the weight is:</p>
 <p><span class="math notranslate nohighlight">\(wt = (wt1 * (1.0 - blend) + blend * wt2)\)</span></p>
 </section>
@@ -150,25 +351,22 @@
 <h3>RBF Example<a class="headerlink" href="#rbf-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil</span>
 
-<span class="n">rotation</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">10.0</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
 
-<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="o">...</span>
-        <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rbf"</span><span class="p">,</span>
-            <span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
-            <span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
-            <span class="s2">"basis"</span><span class="p">:</span> <span class="s2">"c2"</span><span class="p">,</span>
-            <span class="s2">"tol"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="o">...</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"fluid_zones"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rbf transform"</span><span class="p">,</span>
+        <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+        <span class="s2">"support_radius"</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
+        <span class="s2">"basis"</span><span class="p">:</span> <span class="s2">"c2"</span><span class="p">,</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -177,52 +375,50 @@
 <h3>RBF Multiscale Example<a class="headerlink" href="#rbf-multiscale-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil</span>
 
-<span class="n">rotation</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">10.0</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
-<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="o">...</span>
-        <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rbf multiscale"</span><span class="p">,</span>
-            <span class="s2">"base point fraction"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-            <span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
-            <span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
-            <span class="s2">"basis"</span><span class="p">:</span> <span class="s2">"c2"</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="o">...</span>
+
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"fluid_zones"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rbf transform"</span><span class="p">,</span>
+        <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+        <span class="s2">"support_radius"</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">,</span>
+        <span class="s2">"basis"</span><span class="p">:</span> <span class="s2">"c2"</span><span class="p">,</span>
+        <span class="s2">"base_point_fraction"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </section>
 <section id="idw-example">
-<h3>IDW  Example<a class="headerlink" href="#idw-example" title="Link to this heading">¶</a></h3>
+<h3>IDW Example<a class="headerlink" href="#idw-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil</span>
 
-<span class="n">rotation</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">10.0</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">my_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">rotate_vector</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"v1"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"v2"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"v3"</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
 
-<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="o">...</span>
-        <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"idw"</span><span class="p">,</span>
-            <span class="s2">"power"</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
-            <span class="s2">"fixed zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="s2">"n nearest"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-            <span class="s2">"deformation distance"</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
-            <span class="s2">"blending stiffness"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="o">...</span>
+
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"fluid_zones"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"TR_1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"idw transform"</span><span class="p">,</span>
+        <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="s2">"func"</span><span class="p">:</span> <span class="n">my_transform</span><span class="p">,</span>
+        <span class="s2">"fixed_zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"n_nearest"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s2">"power"</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span>
+        <span class="s2">"deformation_distance"</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="s2">"blending_stiffness"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>

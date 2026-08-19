@@ -21,7 +21,7 @@ This case is run as a steady state simulation, using an implicit time marching s
 
 Control Dictionary Breakdown
 ============================
-The setup for this case is very similar to the previous NACA0012 cases, but the control dictionary does feature some extra terms which can be useful for a more streamlined workflow.
+The setup for this case is very similar to the previous NACA0012 cases, but the control dictionary does feature some extra terms which can be useful for a more streamlined workflow. As in :ref:`Tutorial 1 <tutorial_1>`, settings are nested under a top-level `solver` key and a `model` key, one entry per mesh.
 
 Reference variables
 ^^^^^^^^^^^^^^^^^^^
@@ -52,10 +52,12 @@ Scale
 ^^^^^
 In this case a scaling is applied to convert the size of the mesh. The .h5 mesh file was generated with units of inches, whereas the flow conditions are specified in SI units, therefore a scaling of 0.0254 is applied to convert the mesh into metres. The z (spanwise) direction has been scaled to be 1 metre wide. The mesh has only a single cell in the z direction so no spanwise flow is expected - making the z extent of the mesh 1 metre simply means that the forces and moments reported by zCFD will already be per unit span.
 
+Mesh scaling is a property of a specific mesh, so it is set under that mesh's own entry in `model`, in a `transforms` sub-dictionary.
+
 .. code-block:: python
 
     # scale the mesh to match the experimental data
-   'scale' : [0.0254,0.0254,0.0254/0.127],
+    "transforms": {"scale": [0.0254, 0.0254, 0.0254 / 0.127]},
 
 
 Inflow vector
@@ -64,19 +66,19 @@ In this case we want to simulate the aerofoil operating at an angle of attack of
 
 .. code-block:: python
 
-   'IC_1' : {
-       'temperature': T,
-       'pressure': p,
-       'V': {
+   "IC_1": {
+       "temperature": T,
+       "pressure": p,
+       "v": {
            # calculate the inflow vector based on the angle of attack
-           'vector' : zutil.vector_from_angle(0.0,alpha,U),
+           "vector": zutil.vector_from_angle(0.0, alpha, U),
        },
-       'Reynolds No' : reynolds,
-       'Reference Length' : reference_length,
-       'turbulence intensity': 0.01,
-       'eddy viscosity ratio': 0.1,
-       'ambient turbulence intensity': 1e-20,
-       'ambient eddy viscosity ratio': 1e-20,
+       "reynolds no": reynolds,
+       "reference length": reference_length,
+       "turbulence intensity": 0.01,
+       "eddy viscosity ratio": 0.1,
+       "ambient turbulence intensity": 1e-20,
+       "ambient eddy viscosity ratio": 1e-20,
    },
 
 
@@ -118,17 +120,12 @@ You will notice that case is set to run for 1000 cycles but looking at the plots
 Performing a restart
 ^^^^^^^^^^^^^^^^^^^^
 
-To restart the solver we need to update the *'restart'* parameter in the control dictionary. If this is set to *False* the solver will always perform a fresh start, if it is *True* then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit *30p30n_steady.py* and change restart to *True*. You will also need to update *'cycles'* to 2000.
+To restart the solver we need to update the *'restart'* parameter, which lives under `solver.initialisation` in the control dictionary. If this is set to *False* the solver will always perform a fresh start, if it is *True* then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit *30p30n_steady.py* and change restart to *True*. You will also need to update *'cycles'* to 2000 - since this is a steady simulation, `cycles` lives under `solver.convergence_control`.
 
 .. code-block:: python
 
-    "restart": True,
-
-    'time marching' : { 
-        ...
-        'cycles' : 2000,
-        ...
-    }
+    parameters["solver"]["initialisation"]["restart"] = True
+    parameters["solver"]["convergence control"]["cycles"] = 2000
 
 
 By default zCFD will look for a results file with the same name as the current case file, appended with '_results.h5'. So in our case it will look for "30p30n_steady_results.h5". When you have edited the control dictionary go ahead and restart the simulation again using the same **run_zcfd** command:
@@ -143,12 +140,14 @@ Once the solver has finished rerun the cell in the notebook to examine the resid
   :width: 600
   :alt: Convergence
 
-.. If we wanted to restart from a differently named case, we can supply a path to the case in the *"restart casename"* argument. This should be the path to the `casename.py` file, with the `.py` extension removed. For example if we were restarting from a case called "30p30n_run", we could add the below to the dictionary. The solver would then look for *30p30n_run_results.h5* to restart from.
+.. If we wanted to restart from a differently named case, we can supply a path to the case in the *"restart_casename"* argument. This should be the path to the `casename.py` file, with the `.py` extension removed. For example if we were restarting from a case called "30p30n_run", we could add the below to the dictionary. The solver would then look for *30p30n_run_results.h5* to restart from.
 
 .. .. code-block:: python
 
-..     "restart": True,
-..     "restart casename": "30p30n_run",
+..     "initialisation": {
+..         "restart": True,
+..         "restart casename": "30p30n_run",
+..     },
 
 
 Plotting force convergence

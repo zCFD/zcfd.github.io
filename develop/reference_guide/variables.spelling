@@ -1,0 +1,32 @@
+source/reference_guide/variables.rst:58: (densitygrad) ["density grad", "density-grad", "density"] densitygrad
+source/reference_guide/variables.rst:67: (velocitynd) ["velocity"] velocitynd
+source/reference_guide/variables.rst:70: (velocitynearnd) ["rectilinearity"] velocitynearnd
+source/reference_guide/variables.rst:88: (densitylimiter) ["density limiter", "density-limiter", "densitometer"] densitylimiter
+source/reference_guide/variables.rst:91: (klimiter) ["limiter", "k limiter", "milliliter", "kimberlite", "millimeter"] klimiter
+source/reference_guide/variables.rst:94: (omegalimiter) ["omega limiter", "omega-limiter", "micromillimeter"] omegalimiter
+source/reference_guide/variables.rst:116: (vorticitynd) ["vorticity"] vorticitynd
+source/reference_guide/variables.rst:122: (Qcriterionnd) ["Criterion"] Qcriterionnd
+source/reference_guide/variables.rst:128: (helicitynd) ["telicity"] helicitynd
+source/reference_guide/variables.rst:134: (volupdate) ["vol update", "vol-update", "voluted"] cell_volupdate
+source/reference_guide/variables.rst:140: (cellcolour) ["cellulous"] cellcolour
+source/reference_guide/variables.rst:142: (colouring) ["coloring", "co louring", "co-louring", "couriering", "colorizing", "concurring", "coursing"] Partition/colouring index used by the mesh partitioner
+source/reference_guide/variables.rst:155: (roelowdissipation) ["disproportionation"] roelowdissipation
+source/reference_guide/variables.rst:316: (nuTilde) ["nu Tilde", "nu-tilde", "tilde"] nuTilde
+source/reference_guide/variables.rst:319: (walldistancezone) ["disallowance"] walldistancezone
+source/reference_guide/variables.rst:322: (sagradientlimiter)  sagradientlimiter
+source/reference_guide/variables.rst:325: (turbulencetimestep)  turbulencetimestep
+source/reference_guide/variables.rst:347: (walldistancezone) ["disallowance"] walldistancezone
+source/reference_guide/variables.rst:365: (nuTilde) ["nu Tilde", "nu-tilde", "tilde"] nuTilde
+source/reference_guide/variables.rst:381: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] euler / viscous / les / incomp viscous / incomp les
+source/reference_guide/variables.rst:381: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] euler / viscous / les / incomp viscous / incomp les
+source/reference_guide/variables.rst:384: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
+source/reference_guide/variables.rst:387: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
+source/reference_guide/variables.rst:390: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
+source/reference_guide/variables.rst:407: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
+source/reference_guide/variables.rst:407: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
+source/reference_guide/variables.rst:409: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
+source/reference_guide/variables.rst:409: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
+source/reference_guide/variables.rst:411: (modaldeformation) ["modal deformation", "modal-deformation", "malformation"] modaldeformation
+source/reference_guide/variables.rst:413: (meshvelocity) ["mesh velocity", "mesh-velocity", "velocity"] meshvelocity
+source/reference_guide/variables.rst:428: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"] ) that is never unioned into any equation type’s valid set, so these two names are rejected for every equation type, regardless of turbulence model.
+source/reference_guide/variables.rst:430: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"]  resolve to the same valid-variable set (LES-tier variables are unioned in for both), so the tier split above does not gate anything differently between the two.

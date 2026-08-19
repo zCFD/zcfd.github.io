@@ -1,0 +1,2 @@
+source/getting_started/quick_start_1.rst:39: (numerics) ["numeric", "numeric s"]  key (numerics, physics and output settings shared by the whole simulation) and a 
+source/getting_started/quick_start_1.rst:160: (initialised) ["initialized", "initialism", "initialed", "initialize", "initiated"]  tells the solver that at 0 cycles the entirety of the flow should be initialised to the 

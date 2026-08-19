@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Write Output &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Write Output &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -37,7 +37,7 @@
 <span id="id1"></span><h1>Write Output<a class="headerlink" href="#write-output" title="Link to this heading">¶</a></h1>
 <section id="id2">
 <h2>write output<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
-<p>Controls the frequency and contents of the files output into the <strong>output</strong> directory.</p>
+<p>Controls the frequency and contents of the files output into the <strong>output</strong> directory. This block lives at <code class="docutils literal notranslate"><span class="pre">solver.output_settings.solution</span></code> (it can also be overridden per mesh at <code class="docutils literal notranslate"><span class="pre">model.&lt;name&gt;.output_settings.solution</span></code>). Like every block under <code class="docutils literal notranslate"><span class="pre">output_settings</span></code>, it rejects unknown keys outright rather than silently ignoring a mistyped one.</p>
 <p id="output-dir">The <strong>output</strong> directory will be created in the working directory from which the solver is run and is named using the following format:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;</span><span class="n">_P</span><span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">mpi</span> <span class="n">ranks</span><span class="o">&gt;</span><span class="n">_OUTPUT</span>
 </pre></div>
@@ -58,86 +58,86 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>‘frequency’</p></td>
-<td><p>Yes</p></td>
-<td><p>Positive integer or <a class="reference internal" href="#output-frequency"><span class="std std-ref">{}</span></a></p></td>
+<td><p>No</p></td>
 <td><p>See <a class="reference internal" href="#output-frequency"><span class="std std-ref">“frequency”</span></a></p></td>
+<td><p>Dictionary; see <a class="reference internal" href="#output-frequency"><span class="std std-ref">“frequency”</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>‘format’</p></td>
-<td><p>Yes</p></td>
+<td><p>No</p></td>
 <td><p>‘vtk’</p></td>
-<td><p>‘none’ | ‘vtk’ | ‘ensight’</p></td>
+<td><p>‘none’ | ‘vtk’ | ‘ensight’ | ‘fwensight’ | ‘native’</p></td>
 </tr>
-<tr class="row-even"><td><p>‘scripts’</p></td>
+<tr class="row-even"><td><p>‘surface_variables’</p></td>
 <td><p>No</p></td>
-<td><p>[]</p></td>
-<td><p>List of catalyst script filenames</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘variable_name_alias’</p></td>
-<td><p>No</p></td>
-<td><p>{}</p></td>
-<td><p>Dict</p></td>
-</tr>
-<tr class="row-even"><td><p>‘surface variables’</p></td>
-<td><p>Yes</p></td>
-<td><p>[“p”, “T”, “rho”]</p></td>
+<td><p>None</p></td>
 <td><p>List of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">“variable”</span></a> names</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘volume variables’</p></td>
-<td><p>Yes</p></td>
-<td><p>[…]</p></td>
+<tr class="row-odd"><td><p>‘volume_variables’</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
 <td><p>List of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">“variable”</span></a> names</p></td>
 </tr>
-<tr class="row-even"><td><p>‘volume interpolate’</p></td>
+<tr class="row-even"><td><p>‘fwh_interpolate’</p></td>
 <td><p>No</p></td>
-<td></td>
-<td><p>List of surface file filenames</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘fwh interpolate’</p></td>
-<td><p>No</p></td>
-<td></td>
+<td><p>None</p></td>
 <td><p>List of .stl file filenames</p></td>
 </tr>
-<tr class="row-even"><td><p>‘fwh wall data’</p></td>
+<tr class="row-odd"><td><p>‘fwh_wall_data’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
 <td><p>True | False</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘compute average and rms’</p></td>
+<tr class="row-even"><td><p>‘write_restart’</p></td>
 <td><p>No</p></td>
-<td><p>False</p></td>
+<td><p>True</p></td>
 <td><p>True | False</p></td>
 </tr>
-<tr class="row-even"><td><p>‘average start time cycle’</p></td>
+<tr class="row-odd"><td><p>‘binary’</p></td>
 <td><p>No</p></td>
-<td></td>
-<td><p>Positive integer</p></td>
+<td><p>True</p></td>
+<td><p>True | False</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘immersed boundary surface’</p></td>
+<tr class="row-even"><td><p>‘precision’</p></td>
 <td><p>No</p></td>
-<td><p>[]</p></td>
+<td><p>‘single’</p></td>
+<td><p>‘single’ | ‘double’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘global_node_ids’</p></td>
+<td><p>No</p></td>
+<td><p>True</p></td>
+<td><p>True | False</p></td>
+</tr>
+<tr class="row-even"><td><p>‘immersed_boundary_surface’</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
 <td><p>List of dictionaries with “zone” and “stl” keys, specifying which immersed boundary zones will be mapped onto specified STL surfaces</p></td>
 </tr>
 </tbody>
 </table>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="o">..</span>
-  <span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'vtk'</span><span class="p">,</span>
-                <span class="s1">'surface variables'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
-                <span class="s1">'volume variables'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
-                <span class="s1">'volume interpolate'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'mesh.stl'</span><span class="p">],</span>
-                <span class="s1">'scripts'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'paraview_catalyst1.py'</span><span class="p">],</span>
-                <span class="s1">'variable_name_alias'</span> <span class="p">:</span> <span class="p">{</span> <span class="s2">"V"</span> <span class="p">:</span> <span class="s2">"VELOCITY"</span><span class="p">,</span> <span class="p">},</span>
-                <span class="s2">"frequency"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                <span class="s1">'compute average and rms'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s1">'average start time cycle'</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-                <span class="s2">"immersed boundary surface"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">"stl"</span><span class="p">:</span> <span class="s2">"body.stl"</span><span class="p">},</span>
-                                              <span class="p">{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">"stl"</span><span class="p">:</span> <span class="s2">"hub.stl"</span><span class="p">}],</span>
-
+  <span class="o">...</span>
+  <span class="s2">"solver"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="o">...</span>
+      <span class="s2">"output_settings"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"solution"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">,</span>
+              <span class="s2">"surface_variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">],</span>
+              <span class="s2">"volume_variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">],</span>
+              <span class="s2">"fwh_interpolate"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"fwh_surface1.stl"</span><span class="p">],</span>
+              <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s2">"volume_data"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                  <span class="s2">"surface_data"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
               <span class="p">},</span>
-  <span class="o">..</span>
-  <span class="p">}</span>
+              <span class="s2">"immersed_boundary_surface"</span><span class="p">:</span> <span class="p">[</span>
+                  <span class="p">{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">"stl"</span><span class="p">:</span> <span class="s2">"body.stl"</span><span class="p">},</span>
+                  <span class="p">{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">"stl"</span><span class="p">:</span> <span class="s2">"hub.stl"</span><span class="p">},</span>
+              <span class="p">],</span>
+          <span class="p">},</span>
+      <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="o">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <section id="format">
@@ -148,28 +148,17 @@
 <p>The .vtkhdf output format requires <a class="reference external" href="https://www.paraview.org/download/" target="_blank">ParaView 6.1.1</a> or later.</p>
 </div>
 </section>
-<section id="scripts">
-<h3>scripts<a class="headerlink" href="#scripts" title="Link to this heading">¶</a></h3>
-<p>zCFD is capable of calling ParaView catalyst scripts while running, this allows you to generate “in situ” visualisation output while the solver is running.</p>
-<p>This allows you to extract data as your simulation progresses without needing to store the full solution at every timestep. For instance a video of a slice through the dataset could be generated for an unsteady solution.</p>
-<p>For more information about Catalyst see: <a class="reference external" href="https://www.paraview.org/insitu/" target="_blank">https://www.paraview.org/insitu/</a></p>
-</section>
-<section id="variable-name-alias">
-<h3>variable_name_alias<a class="headerlink" href="#variable-name-alias" title="Link to this heading">¶</a></h3>
-<p>Maps the zCFD variable names to a different variable name in the output file.
-If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied.</p>
-</section>
 <section id="surface-variables">
-<h3>surface variables<a class="headerlink" href="#surface-variables" title="Link to this heading">¶</a></h3>
-<p>A list of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">variables</span></a> to output on the boundaries of the mesh. This is useful for visualisation of the flow variables on the wall of the mesh for post processing.
+<h3>surface_variables<a class="headerlink" href="#surface-variables" title="Link to this heading">¶</a></h3>
+<p>A list of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">variables</span></a> to output on the boundaries of the mesh. This is useful for visualisation of the flow variables on the wall of the mesh for post processing. Which variable names are valid depends on the equation type (and, for RANS, the turbulence model) being solved — see <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">Output Variables</span></a>.
 For the ‘vtk’ format the surface data is written to the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory with the file name:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;</span><span class="n">_</span><span class="o">&lt;</span><span class="n">boundary</span><span class="o">&gt;.</span><span class="n">vtkhdf</span>
 </pre></div>
 </div>
 </section>
 <section id="volume-variables">
-<h3>volume variables<a class="headerlink" href="#volume-variables" title="Link to this heading">¶</a></h3>
-<p>A list of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">variables</span></a> to output in a volumetric format.</p>
+<h3>volume_variables<a class="headerlink" href="#volume-variables" title="Link to this heading">¶</a></h3>
+<p>A list of <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">variables</span></a> to output in a volumetric format. Which variable names are valid depends on the equation type (and, for RANS, the turbulence model) being solved — see <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">Output Variables</span></a>.</p>
 <p>For the ‘vtk’ format the volume data is written to the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory with the file name:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">case_name</span><span class="o">&gt;.</span><span class="n">vtkhdf</span>
 </pre></div>
@@ -177,32 +166,46 @@ For the ‘vtk’ format the surface data is written to the <a class="reference 
 </section>
 <section id="volume-interpolate">
 <span id="id3"></span><h3>volume interpolate<a class="headerlink" href="#volume-interpolate" title="Link to this heading">¶</a></h3>
-<p>zCFD can interpolate volume data to a supplied surface or volume mesh. This parameter lets you set a list of filenames of surfaces and/or volume meshes to interpolate to. The supported file formats are VTK (vtu or vtp files) and STL.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>zCFD can interpolate volume data onto a supplied surface or volume mesh (VTK <code class="docutils literal notranslate"><span class="pre">.vtu</span></code>/<code class="docutils literal notranslate"><span class="pre">.vtp</span></code> or <code class="docutils literal notranslate"><span class="pre">.stl</span></code> files) — this is the mechanism that feeds monitor surfaces and downstream post-processing without needing to store the full solution at every timestep. The frequency at which this runs is configurable (see <a class="reference internal" href="#output-frequency"><span class="std std-ref">‘volume_interpolate’</span></a> below), but there is <strong>no schema field to list the target files</strong>: <code class="docutils literal notranslate"><span class="pre">SolutionModel</span></code> (<code class="docutils literal notranslate"><span class="pre">zutil/zutil/validate/schemas/output_schemas.py</span></code>) has no <code class="docutils literal notranslate"><span class="pre">volume_interpolate</span></code> key alongside <code class="docutils literal notranslate"><span class="pre">surface_variables</span></code>/<code class="docutils literal notranslate"><span class="pre">volume_variables</span></code>, even though the C++ side (<code class="docutils literal notranslate"><span class="pre">PythonExport.cxx</span></code>) reads a <code class="docutils literal notranslate"><span class="pre">volume_interpolate</span></code> file list directly from the <code class="docutils literal notranslate"><span class="pre">solution</span></code> dict. This gap is not called out in <code class="docutils literal notranslate"><span class="pre">developer_docs/input-deck.md</span></code>, so it is noted here: there is no way to set this key from a schema-valid control file.</p>
+</div>
 </section>
 <section id="fwh-interpolate">
-<h3>fwh interpolate<a class="headerlink" href="#fwh-interpolate" title="Link to this heading">¶</a></h3>
-<p>In addition to the ‘volume interpolate’ option (which outputs VTK files), zCFD is capable of writing volume interpolated data to HDF5 files for use in the <a class="reference internal" href="../fwh.html#fwh"><span class="std std-ref">zCFD Ffowcs-Williams Hawkings (FWH) solver</span></a>.
-This parameters lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
+<h3>fwh_interpolate<a class="headerlink" href="#fwh-interpolate" title="Link to this heading">¶</a></h3>
+<p>In addition to volume interpolation, zCFD is capable of writing volume interpolated data to HDF5 files for use in the <a class="reference internal" href="../fwh.html#fwh"><span class="std std-ref">zCFD Ffowcs-Williams Hawkings (FWH) solver</span></a>.
+This parameter lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
 The data is outputted to the <em>ACOUSTIC_DATA</em> sub-directory within the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory.</p>
 </section>
 <section id="fwh-wall-data">
-<h3>fwh wall data<a class="headerlink" href="#fwh-wall-data" title="Link to this heading">¶</a></h3>
+<h3>fwh_wall_data<a class="headerlink" href="#fwh-wall-data" title="Link to this heading">¶</a></h3>
 <p>This parameter controls whether wall data is outputted to a HDF5 file for use in the <a class="reference internal" href="../fwh.html#fwh"><span class="std std-ref">zCFD FWH solver</span></a>. The outputted file contains pressure data only, and is suitable for use as an impermeable surface in the zCFD FWH solver.
 The data is outputted to the <em>ACOUSTIC_DATA</em> sub-directory within the <a class="reference internal" href="#output-dir"><span class="std std-ref">output</span></a> directory.</p>
 </section>
-<section id="compute-average-and-rms">
-<h3>compute average and rms<a class="headerlink" href="#compute-average-and-rms" title="Link to this heading">¶</a></h3>
-<p>Enables computation of time averaged and RMS values for pressure, temperature and velocity. Enabling this adds these variables to the list of variables to be output automatically.</p>
-<p>This options only applies to <a class="reference internal" href="time.html#id9"><span class="std std-ref">unsteady</span></a> cases.</p>
+<section id="write-restart">
+<h3>write_restart<a class="headerlink" href="#write-restart" title="Link to this heading">¶</a></h3>
+<p>Whether to write <a class="reference internal" href="reference.html#restart"><span class="std std-ref">restartable</span></a> checkpoint files at all. Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to skip restart output entirely, regardless of the <code class="docutils literal notranslate"><span class="pre">'checkpoint'</span></code> frequency.</p>
 </section>
-<section id="average-start-time-cycle">
-<h3>average start time cycle<a class="headerlink" href="#average-start-time-cycle" title="Link to this heading">¶</a></h3>
-<p>If <strong>compute average and rms</strong> is True, this controls first real time cycle to start calculating the running average. This allows you to run the solver for a number of time cycles before you start calculating the average and RMS values.</p>
+<section id="binary">
+<h3>binary<a class="headerlink" href="#binary" title="Link to this heading">¶</a></h3>
+<p>Whether output files are written in binary (<code class="docutils literal notranslate"><span class="pre">True</span></code>, the default) or text form.</p>
+</section>
+<section id="precision">
+<h3>precision<a class="headerlink" href="#precision" title="Link to this heading">¶</a></h3>
+<p>Floating point precision used for output data: <code class="docutils literal notranslate"><span class="pre">'single'</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">'double'</span></code>.</p>
+</section>
+<section id="global-node-ids">
+<h3>global_node_ids<a class="headerlink" href="#global-node-ids" title="Link to this heading">¶</a></h3>
+<p>Retains the local-to-global node map so VTKHDF output can stitch partitions back together without a clean-to-grid filter in ParaView. Advanced option; leave at the default (<code class="docutils literal notranslate"><span class="pre">True</span></code>) unless you have a specific reason to disable it.</p>
 </section>
 <section id="immersed-boundary-surface">
-<h3>immersed boundary surface<a class="headerlink" href="#immersed-boundary-surface" title="Link to this heading">¶</a></h3>
+<h3>immersed_boundary_surface<a class="headerlink" href="#immersed-boundary-surface" title="Link to this heading">¶</a></h3>
 <p>If the case uses immersed wall boundary conditions then force reporting on those surfaces requires STL files to be provided per immersed wall zone. The solution is interpolated onto the points in the STL so the mesh needs to be at least as fine as the boundary otherwise the accuracy of the reported forces will be affected. Additionally the normals used to calculate output values will be calculated directly from the provided STL file. Therefore a user should either use a surrogate STL generated by <a class="reference internal" href="../zm3.html#zm3"><span class="std std-ref">zM3</span></a>, or ensure the provided STL file is watertight and has normals pointing into the body.</p>
 <p>The interpolated solution on the STL is also output at the same frequency as other surface data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Two <code class="docutils literal notranslate"><span class="pre">'write</span> <span class="pre">output'</span></code> keys have no schema equivalent at all and are unaccounted for in <code class="docutils literal notranslate"><span class="pre">developer_docs/input-deck.md</span></code>: <code class="docutils literal notranslate"><span class="pre">'scripts'</span></code> (the list of ParaView Catalyst script filenames for in-situ visualisation) and <code class="docutils literal notranslate"><span class="pre">'variable_name_alias'</span></code> (the dict mapping zCFD variable names to alternate output names). The C++ side (<code class="docutils literal notranslate"><span class="pre">OutputVTK.cxx</span></code>) reads both directly from the <code class="docutils literal notranslate"><span class="pre">solution</span></code> dict, but <code class="docutils literal notranslate"><span class="pre">SolutionModel</span></code> declares neither field, so a control file has no way to set them.</p>
+</div>
 </section>
 </section>
 <section id="frequency">
@@ -223,98 +226,121 @@ The data is outputted to the <em>ACOUSTIC_DATA</em> sub-directory within the <a 
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘volume data’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-even"><td><p>‘volume_data’</p></td>
+<td><p>No</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘surface data’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-odd"><td><p>‘surface_data’</p></td>
+<td><p>No</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-even"><td><p>‘volume interpolate’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-even"><td><p>‘volume_interpolate’</p></td>
+<td><p>No</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘fwh interpolate’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-odd"><td><p>‘fwh_interpolate’</p></td>
+<td><p>No</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-even"><td><p>‘fwh wall data’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-even"><td><p>‘fwh_wall_data’</p></td>
+<td><p>No</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘checkpoint’</p></td>
-<td><p>Yes</p></td>
+<td><p>No</p></td>
 <td><p>1.00E+08</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-even"><td><p>‘volume data start’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-even"><td><p>‘volume_data_start’</p></td>
+<td><p>No</p></td>
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘surface data start’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-odd"><td><p>‘surface_data_start’</p></td>
+<td><p>No</p></td>
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-even"><td><p>‘volume interpolate start’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-even"><td><p>‘volume_interpolate_start’</p></td>
+<td><p>No</p></td>
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘fwh interpolate start’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-odd"><td><p>‘fwh_interpolate_start’</p></td>
+<td><p>No</p></td>
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-even"><td><p>‘fwh wall data start’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-even"><td><p>‘fwh_wall_data_start’</p></td>
+<td><p>No</p></td>
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘checkpoint start’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-odd"><td><p>‘checkpoint_start’</p></td>
+<td><p>No</p></td>
 <td><p>1</p></td>
 <td><p>Positive integer</p></td>
 </tr>
 </tbody>
 </table>
-<p><strong>volume data</strong>, <strong>surface data</strong>, <strong>volume interpolate</strong>, <strong>fwh interpolate</strong>, <strong>fwh wall data</strong> and <strong>checkpoint</strong> control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The <strong>checkpoint</strong> option writes a <a class="reference internal" href="reference.html#restart"><span class="std std-ref">restartable</span></a> checkpoint of the flow solution at that point.</p>
-<p><strong>volume data start</strong>, <strong>surface data start</strong>, <strong>volume interpolate start</strong>, <strong>fwh interpolate start</strong>, <strong>fwh wall data start</strong> and <strong>checkpoint start</strong> specifies the first cycle that the solver should start writing that particular output.</p>
+<p><strong>volume_data</strong>, <strong>surface_data</strong>, <strong>volume_interpolate</strong>, <strong>fwh_interpolate</strong>, <strong>fwh_wall_data</strong> and <strong>checkpoint</strong> control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The <strong>checkpoint</strong> option writes a <a class="reference internal" href="reference.html#restart"><span class="std std-ref">restartable</span></a> checkpoint of the flow solution at that point (subject to <code class="docutils literal notranslate"><span class="pre">'write_restart'</span></code> above).</p>
+<p><strong>volume_data_start</strong>, <strong>surface_data_start</strong>, <strong>volume_interpolate_start</strong>, <strong>fwh_interpolate_start</strong>, <strong>fwh_wall_data_start</strong> and <strong>checkpoint_start</strong> specify the first cycle that the solver should start writing that particular output.</p>
+<p>A plain integer is still accepted in place of the dictionary: it is expanded to <code class="docutils literal notranslate"><span class="pre">surface_data</span></code>, <code class="docutils literal notranslate"><span class="pre">volume_data</span></code> and <code class="docutils literal notranslate"><span class="pre">checkpoint</span></code> all set to that value, with the rest left at their defaults.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>On systems with slower file I/O the overhead of writing data can slow the overall solve time, reducing the output frequency lets you address this.</p>
 </div>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="o">..</span>
-  <span class="s1">'write output'</span> <span class="p">:</span> <span class="p">{</span>
-                <span class="s1">'format'</span> <span class="p">:</span> <span class="s1">'vtk'</span><span class="p">,</span>
-                <span class="s1">'surface variables'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
-                <span class="s1">'volume variables'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'V'</span><span class="p">,</span><span class="s1">'p'</span><span class="p">],</span>
-                <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="c1"># Output visualisation files every 3 cycles</span>
-                    <span class="s2">"volume data"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="s2">"surface data"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="s2">"volume interpolate"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="s2">"checkpoint"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                    <span class="c1"># Start output every 3 cycles after 1 cycle (default = 1)</span>
-                    <span class="s2">"volume data start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">"surface data start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">"volume interpolate start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">"checkpoint start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="p">},</span>
+  <span class="o">...</span>
+  <span class="s2">"solver"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="o">...</span>
+      <span class="s2">"output_settings"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"solution"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">,</span>
+              <span class="s2">"surface_variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">],</span>
+              <span class="s2">"volume_variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">],</span>
+              <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="c1"># Output visualisation files every 3 cycles</span>
+                  <span class="s2">"volume_data"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">"surface_data"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">"volume_interpolate"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">"checkpoint"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="c1"># Start output every 3 cycles after cycle 1 (default = 1)</span>
+                  <span class="s2">"volume_data_start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s2">"surface_data_start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s2">"volume_interpolate_start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s2">"checkpoint_start"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
               <span class="p">},</span>
-  <span class="o">..</span>
-  <span class="p">}</span>
+          <span class="p">},</span>
+      <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="o">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="compute-average-and-rms-average-start-time-cycle">
+<h2>compute_average_and_rms / average_start_time_cycle<a class="headerlink" href="#compute-average-and-rms-average-start-time-cycle" title="Link to this heading">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The schema (<code class="docutils literal notranslate"><span class="pre">OutputModel</span></code> in <code class="docutils literal notranslate"><span class="pre">output_schemas.py</span></code>) places both fields — <code class="docutils literal notranslate"><span class="pre">compute_average_and_rms</span></code> (bool, default <code class="docutils literal notranslate"><span class="pre">False</span></code>) and <code class="docutils literal notranslate"><span class="pre">average_start_time_cycle</span></code> (int, default <code class="docutils literal notranslate"><span class="pre">0</span></code>) — directly on <code class="docutils literal notranslate"><span class="pre">output_settings</span></code>, as siblings of <code class="docutils literal notranslate"><span class="pre">solution</span></code> and <code class="docutils literal notranslate"><span class="pre">report</span></code>, rather than inside <code class="docutils literal notranslate"><span class="pre">solution</span></code>. Every C++ read site (<code class="docutils literal notranslate"><span class="pre">SolverData.cxx</span></code>, <code class="docutils literal notranslate"><span class="pre">ExplicitSolver.cxx</span></code>, <code class="docutils literal notranslate"><span class="pre">incomp/Coupled.cxx</span></code>) looks for <code class="docutils literal notranslate"><span class="pre">compute_average_and_rms</span></code> <strong>inside</strong> the <code class="docutils literal notranslate"><span class="pre">solution</span></code> dict instead, and <code class="docutils literal notranslate"><span class="pre">SolutionModel</span></code> rejects it there as an unknown key. Setting <code class="docutils literal notranslate"><span class="pre">compute_average_and_rms</span></code> at the location the schema requires (<code class="docutils literal notranslate"><span class="pre">output_settings.compute_average_and_rms</span></code>) therefore has no effect on the solve. This mismatch is not covered in <code class="docutils literal notranslate"><span class="pre">developer_docs/input-deck.md</span></code>’s “What’s left”, so it is noted here. <code class="docutils literal notranslate"><span class="pre">average_start_time_cycle</span></code> additionally has no C++ read site at all under any name — it has no effect regardless of where it is nested.</p>
+</div>
+<p>Schema-valid placement, for reference (validates, but see the warning above):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"output_settings"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"solution"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">},</span>
+    <span class="s2">"report"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"frequency"</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+    <span class="s2">"compute_average_and_rms"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"average_start_time_cycle"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>Enables computation of time averaged and RMS values for pressure, temperature and velocity. This only applies to <a class="reference internal" href="time.html#unsteady"><span class="std std-ref">unsteady</span></a> cases. <code class="docutils literal notranslate"><span class="pre">average_start_time_cycle</span></code> is intended to control the first real time cycle from which the running average is calculated, allowing the solver to run for a number of time cycles before averaging begins.</p>
 </section>
 </section>
 

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Tutorial 3: Time accurate solution &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -56,24 +56,24 @@
 <p>This case uses a similar control dictionary as the previous 30p30n steady state simulation, with the main difference being the time marching, and output regions of the file.</p>
 <section id="time-marching">
 <h3>Time Marching<a class="headerlink" href="#time-marching" title="Link to this heading">¶</a></h3>
-<p>To switch to a time accurate simulation we need to update the <em>“time marching”</em> dictionary. In the steady state <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a> case the <em>‘total time’</em> and <em>‘time step’</em> parameters were both set to 1.0, this causes the solver to run a single steady state timestep for the number of cycles defined by the <em>‘cycles’</em> parameter.</p>
-<p>We will now update these to run the time accurate simulation. To do this we set <em>‘total time’</em> to be 1.2, which means the simulation will be run for a total of 1.2 seconds. <em>‘time step’</em> is set to 0.002 seconds, this is the interval at which the solver will step time forwards. Which means we will have a total of 1.2 / 0.002 = 600
-total unsteady timesteps to perform.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
-    <span class="s1">'unsteady'</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'total time'</span> <span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
-        <span class="s1">'time step'</span> <span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
-        <span class="s1">'order'</span> <span class="p">:</span> <span class="s1">'second'</span><span class="p">,</span>
-        <span class="s1">'start'</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<p>To switch to a time accurate simulation we need to update the <em>time_settings</em> and <em>convergence_control</em> blocks. In the steady state <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a> case, <em>time_settings</em> was simply <code class="code docutils literal notranslate"><span class="pre">{&quot;type&quot;:</span> <span class="pre">&quot;steady&quot;}</span></code>, and all of the pacing lived in <em>convergence_control</em>.</p>
+<p>An unsteady, time accurate run instead declares a physical time layout on <em>time_settings</em>: <em>‘total_time’</em> is set to 1.2, meaning the simulation will be run for a total of 1.2 seconds, and <em>‘time_step’</em> is set to 0.002 seconds, the interval at which the solver steps time forwards. That gives a total of 1.2 / 0.002 = 600 unsteady timesteps to perform. The <em>‘kind’</em> key says <em>how</em> the solver advances between those timesteps - here <em>“dual time stepping”</em> - and it is this <em>kind</em> that decides whether <em>convergence_control</em> is used at all, since only dual time stepping (and steady runs) have an inner pseudo-time loop to pace.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"time settings"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"unsteady"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"dual time stepping"</span><span class="p">,</span>
+    <span class="s2">"total time"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
+    <span class="s2">"time step"</span><span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span>
+    <span class="s2">"order"</span><span class="p">:</span> <span class="s2">"second"</span><span class="p">,</span>
+    <span class="s2">"start"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">},</span>
+<span class="s2">"convergence control"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"scheme"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"implicit euler"</span><span class="p">},</span>
+    <span class="s2">"cfl"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"cfl"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">"cfl viscous factor"</span><span class="p">:</span> <span class="mf">1.0e-6</span><span class="p">,</span>
+        <span class="s2">"cfl ramp"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"exponential"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">,</span> <span class="s2">"initial"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}],</span>
     <span class="p">},</span>
-    <span class="s1">'scheme'</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'name'</span> <span class="p">:</span> <span class="s1">'implicit euler'</span><span class="p">,</span>
-        <span class="s1">'stage'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">},</span>
-     <span class="s2">"cfl"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-     <span class="s2">"cfl viscous factor"</span><span class="p">:</span> <span class="mf">1.0E-6</span><span class="p">,</span>
-     <span class="s2">"cfl ramp factor"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"initial"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">"growth"</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">},</span>
-     <span class="s2">"cycles"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">"cycles"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -82,8 +82,8 @@ total unsteady timesteps to perform.</p>
 </section>
 <section id="output">
 <span id="quick-start-3-output"></span><h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
-<p>The <em>‘write output’</em> dictionary in the control dictionary is a bit more complicated here than in <a class="reference internal" href="quick_start_1.html#tutorial-1"><span class="std std-ref">tutorial 1</span></a> or <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"write output"</span><span class="p">:</span> <span class="p">{</span>
+<p>The <em>solution</em> dictionary, nested under <cite>output_settings</cite>, is a bit more complicated here than in <a class="reference internal" href="quick_start_1.html#tutorial-1"><span class="std std-ref">tutorial 1</span></a> or <a class="reference internal" href="quick_start_2.html#tutorial-2"><span class="std std-ref">tutorial 2</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"solution"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">,</span>
     <span class="s2">"surface variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
     <span class="s2">"volume variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
@@ -103,13 +103,15 @@ total unsteady timesteps to perform.</p>
 </section>
 <section id="monitor-points">
 <h3>Monitor Points<a class="headerlink" href="#monitor-points" title="Link to this heading">¶</a></h3>
-<p>In order to capture the shedding frequencies of vortices behind the cylinder, we will place a monitor point in this region to append data to the report file. A monitor point will simply report the requested output variables, at the point defined within the flow. These results can be visualised alongside the force report in the output notebook.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"monitor"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">"MR_1"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"probe"</span><span class="p">,</span>
-        <span class="s2">"point"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span> <span class="mf">0.313</span><span class="p">],</span>
-        <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"cp"</span><span class="p">]</span>
-    <span class="p">}</span>
+<p>In order to capture the shedding frequencies of vortices behind the cylinder, we will place a monitor point in this region to append data to the report file. A monitor point will simply report the requested output variables, at the point defined within the flow. These results can be visualised alongside the force report in the output notebook. Monitor points are keyed on the report itself, so they nest under <cite>output_settings.report.monitor</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"report"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"frequency"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">"monitor"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"MR_1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"point"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span> <span class="mf">0.313</span><span class="p">],</span>
+            <span class="s2">"variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"cp"</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
 </div>

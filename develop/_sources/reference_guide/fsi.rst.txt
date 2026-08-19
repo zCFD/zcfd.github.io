@@ -1,10 +1,49 @@
 .. _fsi:
 
-Fluid-structure interaction 
+Fluid-structure interaction
 ---------------------------
-zCFD has the capability of simulating Fluid Structure Interaction (FSI) using both a modal model, as well as any generic full FEA program through the use of our generic coupling scheme.
+zCFD supports two fluid-structure interaction (FSI) coupling schemes: a built-in **modal model** driven by mode shapes imported from a Nastran modal analysis, and a **generic** loosely-coupled scheme for driving an external FEA solver through a user-supplied ``genericFSI.py`` script. Both schemes use the same underlying mesh-deformation machinery (RBF, RBF multiscale, or IDW - see :ref:`Mesh Transformation <mesh_transform>`) to propagate the motion of the coupled surface into the volume mesh.
 
-.. list-table:: 
+Where FSI settings live
+=======================
+An FSI coupling is attached to the wall boundary condition whose surface is the moving, coupled structural boundary, via that boundary condition's ``'fsi'`` key:
+
+.. code-block:: python
+
+    "model": {
+        "<case_name>": {
+            "boundary_conditions": {
+                "BC_FSI": {
+                    "zones": [1, 2, 3],
+                    "type": "wall",
+                    "kind": "slip",
+                    "fsi": {
+                        "type": "modal_model",  # or "generic_fsi"
+                        ...
+                    },
+                },
+                ...
+            },
+        }
+    },
+
+The ``'fsi'`` block is discriminated by its ``'type'`` key: ``'modal_model'`` selects the built-in Nastran modal-model coupling, ``'generic_fsi'`` selects the generic external-solver coupling. For the modal model, the moving zones are **not** repeated inside the ``'fsi'`` block - they are inherited from the owning boundary condition's own ``'zones'`` list. Generic FSI is the exception: it carries its own ``'zone'`` key (singular, unlike every other zone list in zCFD, which is why it stands out below).
+
+.. _fsi_restart:
+
+Restarting an FSI simulation
+=============================
+FSI restart behaviour is controlled by ``'restart'`` in the ``'initialisation'`` block - the same flag that governs restarting the flow solution (see :ref:`Initial Conditions <initial_conditions>`). The FSI coupling resolves this flag through the same model-block-then-solver-block precedence used everywhere else in zCFD: if the model that owns the FSI-coupled boundary condition sets its own ``'initialisation'`` block (i.e. under ``model.<case_name>.initialisation``), the ``'restart'`` value there takes priority; only when the model block does not set ``'initialisation'`` does the coupling fall back to the top-level ``solver.initialisation.restart``.
+
+This determines whether the modal model resumes its structural state (modal displacements and velocities, and, for the RBF transform, the previously built base-point set) from a previous run, so a per-model ``'initialisation'`` block, when present, is always the one that decides FSI restart - not the solver-level one.
+
+.. _fsi_modal_model:
+
+Modal model
+===========
+The modal model reduces the structural response to a small set of Nastran mode shapes, integrates the modal equations of motion (via a Newmark-beta scheme) forced by the aerodynamic pressure load, and maps the resulting modal deformation back onto the fluid surface and, via RBF or IDW, into the volume mesh.
+
+.. list-table::
    :widths: 20 5 10 20 30
    :header-rows: 1
 
@@ -14,175 +53,362 @@ zCFD has the capability of simulating Fluid Structure Interaction (FSI) using bo
      - Valid values
      - Description
    * - 'type'
+     - No
+     - 'modal_model'
+     - 'modal_model'
+     - Discriminator selecting the modal-model FSI driver.
+   * - 'file_format'
      - Yes
-     - 
-     - 'generic'
-     - FSI driver to be used when coupling to an FEA code
-   * - 'zone'
+     -
+     - 'nastran'
+     - Structural file format the mode shapes are read from.
+   * - 'nastran_casename'
      - Yes
-     - 
-     - List of zone ID integers
-     - Which boundaries within the aerodynamic mesh are moving structural boundaries
-   * - 'fixed zones'
+     -
+     - String
+     - Nastran case name, without file extension.
+   * - 'mode_mapping_max_distance'
      - Yes
-     - 
-     - List of zone ID integers
-     - Which boundaries should not be moved by any mesh deformation
-   * - 'transform type'
-     - Yes
-     - 
-     - 'rbf multiscale' | 'rbf' | 'IDW'
-     - Interpolation method to be used.
-   * - 'alpha'
-     - Yes
-     - 1
+     -
      - Float
-     - Support radius used by RBF
-   * - 'basis'
+     - Maximum distance allowed when mapping structural mode shapes onto the fluid surface.
+   * - 'fluid_force_scaling'
      - Yes
-     - 'c2'
-     - 'c2' | 'c4' | c0' | 'tps' | 'gaussian'
-     - Which basis function to use for RBF
-   * - 'base point fraction'
-     - Yes
-     - 0.1
+     -
      - Float
-     - Number of points to use in the reduced base set for rbf multiscale interpolation
-   * - 'tol'
+     - Scaling applied to the fluid pressure forces before they drive the modal equations of motion.
+   * - 'mode_list'
      - Yes
-     - 0.01
-     - Float
-     - Set the target error tolerance for the rbf interpolation
-   * - 'max error'
+     -
+     - List of int
+     - Which structural modes (by Nastran mode ID) to include in the coupling.
+   * - 'modal_damping'
      - Yes
-     - 0.1
-     - Float
-     - Set the maximum initial error tolerance for rbf interpolation
-   * - 'n nearest'
+     -
+     - List of float
+     - Modal damping ratio for each entry in 'mode_list', in the same order.
+   * - 'transform_type'
      - Yes
-     - 100
+     -
+     - 'rbf_multiscale' | 'idw'
+     - Selects the mesh-deformation scheme used to propagate the modal deformation into the volume mesh - see :ref:`RBF multiscale <fsi_modal_rbf>` and :ref:`IDW <fsi_modal_idw>` below.
+   * - 'support_radius'
+     - No
+     - 1.0
+     - Float > 0
+     - RBF/IDW support radius. Also sets the scale used to normalise mode shapes during mesh morphing.
+   * - 'scale'
+     - No
+     -
+     - List of 3 floats
+     - Scaling factors [x, y, z] applied to the mode shapes read from the Nastran file.
+   * - 'forcing'
+     - No
+     -
+     - Dict
+     - Optional external forcing applied to the modal equations of motion - see :ref:`External forcing <fsi_modal_forcing>` below.
+   * - 'mode_mapping_power'
+     - No
+     - 1.0
+     - Float > 0
+     - Inverse-distance power used when mapping structural mode shapes onto the fluid surface.
+   * - 'mode_mapping_pure_idw'
+     - No
+     - True
+     - True/False
+     - Use pure inverse-distance weighting (rather than a blended scheme) for the mode-shape mapping.
+   * - 'mode_mapping_n_nearest'
+     - No
+     - 4
      - Positive integer
-     - Number of points to be used in IDW interpolation
-   * - 'deformation distance'
-     - Yes
-     - 1
+     - Number of nearest structural points used to map each fluid surface point's mode shape.
+   * - 'recalculate_rbfs_alpha_fraction'
+     - No
+     - 0.0
+     - Float >= 0
+     - Deformation fraction of the RBF support radius at which the RBF base-point set is rebuilt. 0 never rebuilds it.
+   * - 'newmark_alpha'
+     - No
+     - 0.25
      - Float
-     - Set the maximum support radius for IDW interpolation
-   * - 'blending stiffness'
-     - Yes
+     - Alpha parameter of the Newmark-beta time integrator used to march the modal equations of motion.
+   * - 'newmark_delta'
+     - No
      - 0.5
      - Float
-     - Set the blending stiffness for the IDW interpolation
-   * - 'power'
-     - Yes
-     - [3.0,5.0,10.0]
-     - Set the IDW power for the nearfield and farfield boundaries, and the power between them.
-     - List of Float
-   * - 'user variables'
-     - No
-     - {}
-     - Dict of variables to values
-     - Custom parameters passed into the generic FSI code
-
-type
-====
-Specifies which FSI driver should be used when coupling to an FEA code, **'generic'**.
-This tells zCFD which FSI python file should be used to execute the FSI coupling:
-**'generic'** will use the **genericFSI.py** interface that should be implemented to meet your requirements. Out the box **genericFSI.py** will not perform any changes.
-
-zone
-====
-**zone** should be a list of zone IDs, these specify which surface is the moving FSI surface. This provides methods to extract surface normals, pressure forces, and cell centres from the specified cells, as well as allowing these surface points to drive mesh deformations in the volume mesh.
-
-For RBF, this must include any static zones, where the motion of a static zone is set to 0.
-
-fixed zones
-===========
-**fixed zones** should be a list of zone IDs, these specify surfaces which must remain fixed, such as an interface, periodic boundary, or symmetry plane, these surfaces will remain untouched by the IDW mesh motion interpolation.
+     - Delta parameter of the Newmark-beta time integrator used to march the modal equations of motion.
 
 .. note::
-    IDW only
 
-transform type
-==============
-In FSI simulations the active surface defined in the 'zone' block, will move relative to the rest of the mesh. In order to maintain a conformal volume mesh, these displacements must be interpolated into the volume mesh. **transform type** defines which interpolation scheme should be used. 
+    Unlike generic FSI, the modal model does not accept a ``'user_variables'`` dictionary - modal-model behaviour is controlled entirely by the keywords above.
 
+.. _fsi_modal_rbf:
 
-.. list-table:: 
-   :widths: 30 70
+RBF multiscale transform
+^^^^^^^^^^^^^^^^^^^^^^^^
+Set ``'transform_type': 'rbf_multiscale'`` to deform the volume mesh using the multiscale RBF scheme (see :ref:`Interpolation method <transform_interpolation>` for how RBF and RBF multiscale work).
+
+.. list-table::
+   :widths: 20 5 10 20 30
    :header-rows: 1
 
-   * - Setting
-     - Notes
-   * - **'rbf'**
-     - Radial Basis Functions require the solving of a linear system, where a continuous function is fitted between all points which defines the motion. This function can then be evaluated at other points within the domain to get the interpolated values.
-   * - **'rbf multiscale'**
-     - RBF multiscale uses the a multiscale algorithm using a varying support radius to reduce the number of nodes in the linear system, where as RBF uses a Greedy algorithm.
-   * - **'IDW'**
-     - Inverse Distance Weighting does not require the solving of a linear system, and instead represents a function using a weighted sum of nearby function values. 
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'basis'
+     - No
+     - 'c2'
+     - 'c2' | 'c4' | 'c0' | 'tps' | 'gaussian'
+     - RBF basis function used for the mesh deformation.
+   * - 'base_point_fraction'
+     - Yes
+     -
+     - Float, (0, 1]
+     - Fraction of surface points included in the reduced RBF base set.
+
+.. _fsi_modal_idw:
+
+IDW transform
+^^^^^^^^^^^^^
+Set ``'transform_type': 'idw'`` to deform the volume mesh using inverse distance weighting (see :ref:`Interpolation method <transform_interpolation>` for the IDW weighting formulae).
+
+.. list-table::
+   :widths: 20 5 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'power'
+     - Yes
+     -
+     - Float, or list of 3 floats
+     - IDW power(s) for the near-field and far-field regions, and the blend between them.
+   * - 'n_nearest'
+     - No
+     - 100
+     - Positive integer
+     - Number of nearest volume points used per surface point.
+   * - 'deformation_distance'
+     - No
+     - 1.0
+     - Float > 0
+     - Maximum region of influence for the IDW mapping.
+   * - 'blending_stiffness'
+     - No
+     - 0.5
+     - Float, [0, 1]
+     - Blending stiffness for the IDW interpolation.
+   * - 'fixed_zones'
+     - No
+     -
+     - List of zone ID integers
+     - Zones excluded from mesh deformation, such as an interface, periodic boundary, or symmetry plane.
+   * - 'stencil_size'
+     - No
+     -
+     - Positive integer
+     - Alternative to 'support_radius' for bounding the IDW stencil by node count instead of distance.
 
 .. note::
-    **'rbf multiscale'** has generally superseded the greedy algorithm, used in **'rbf'**, in terms of both speed performance and accuracy, so is the preferred RBF option. 
 
-alpha
-=====
-Only applies to **'rbf'** and **'rbf multiscale'** interpolation schemes.
+    'support_radius' and 'stencil_size' are alternative ways of bounding the IDW stencil - setting both explicitly is rejected as ambiguous.
 
-**'alpha'** sets the support radius used by the RBF. The Radial Basis Function used in RBF interpolation will have a set support radius defining the 1D shape of the function as a function of r. This determines the region of influence for the function. Compact functions such as C0, C2, C4 have a maximum radius, outside of which the influence of the RBF is 0. For functions with global influence such as Gaussian and TPS, alpha becomes the normalisation factor - i.e. when r = alpha, e = 1 if rbf = f(e).
+.. _fsi_modal_forcing:
 
-**'alpha'** should be larger than the maximum anticipated deformation.
+External forcing
+^^^^^^^^^^^^^^^^^
+An optional ``'forcing'`` block applies an additional external force to the modal equations of motion, independent of the aerodynamic pressure load.
 
-basis
-=====
-Only applies to **'rbf'** and **'rbf multiscale'** interpolation schemes.
+.. list-table::
+   :widths: 20 5 10 20 30
+   :header-rows: 1
 
-When performing RBF interpolation a specific function needs to be defined to create the interpolant. Compact functions such as C0, C2, C4 have a maximum region of influence, Gaussian and TPS have global influence.
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'location'
+     - Yes
+     -
+     - [x, y, z]
+     - Location at which the forcing is applied.
+   * - 'force'
+     - Yes
+     -
+     - [Fx, Fy, Fz], or a Python callable
+     - Constant force vector, or a callable returning one as a function of time.
+   * - 'frequency'
+     - Yes
+     -
+     - Float
+     - Forcing frequency.
 
-.. note::
-    For 99% of applications C2 works best
+Modal model example
+^^^^^^^^^^^^^^^^^^^^
+RBF multiscale coupling of a panel to a Nastran modal basis:
 
-base point fraction
-===================
-Only applies to **'rbf'** and **'rbf multiscale'** interpolation schemes.
+.. code-block:: python
 
-Solving the RBF system requires solving an NxN sized linear system, where N is the number of moving nodes- i.e. nodes on the surface [4] defined earlier. For large meshes this quickly becomes prohibitively expensive, therefor it is desirable to solve a reduced set of points. The Multiscale method is a 'reduced base set method' where the linear system is only solved on the base set of nodes, with the remaining nodes solved iteratively. **'base point fraction'** dictates how many nodes of the full set should be included in the base set. Setting the base point fraction to 1.0 returns a standard full RBF.
+    "boundary_conditions": {
+        "BC_FSI": {
+            "zones": [1, 2, 3],
+            "type": "wall",
+            "kind": "slip",
+            "fsi": {
+                "type": "modal_model",
+                "file_format": "nastran",
+                "nastran_casename": "panel_nm_0.04m",
+                "transform_type": "rbf_multiscale",
+                "base_point_fraction": 1.0,
+                "support_radius": 0.02,
+                "scale": [1.0, 1.0, 1.0],
+                "mode_mapping_max_distance": 0.01,
+                "fluid_force_scaling": 0.08 / 0.000166667,
+                "mode_list": [0, 4, 10, 13],
+                "modal_damping": [0.0, 0.0, 0.0, 0.0],
+            },
+        },
+    },
 
-tol
-===
-Only applies to **'rbf'** interpolation scheme.
+The same panel coupled with an IDW transform instead, with a set of surrounding zones held fixed:
 
-At each point selection step during Greedy selection, the interpolation problem is solved on the current base set of data. From this the error between the exact solution and interpolated solution for all points in the mesh is identified, this value is used as the initial guess for the 'worst' error within the mesh. Once the total error is below this tolerance, the greedy point selection is complete.
+.. code-block:: python
 
-max error
-=========
-Only applies to **'rbf'** interpolation scheme.
+    "boundary_conditions": {
+        "BC_FSI": {
+            "zones": [1, 2, 3],
+            "type": "wall",
+            "kind": "slip",
+            "fsi": {
+                "type": "modal_model",
+                "file_format": "nastran",
+                "nastran_casename": "panel_nm_0.04m",
+                "transform_type": "idw",
+                "power": [3.0, 8.0, 10.0],
+                "deformation_distance": 0.05,
+                "blending_stiffness": 0.0,
+                "n_nearest": 350,
+                "fixed_zones": [4, 5, 6, 7, 8, 9],
+                "scale": [1.0, 1.0, 1.0],
+                "mode_mapping_max_distance": 0.01,
+                "fluid_force_scaling": 0.08 / 0.000166667,
+                "mode_list": [0, 4, 10, 13],
+                "modal_damping": [0.0, 0.0, 0.0, 0.0],
+            },
+        },
+    },
 
-At each point selection step during Greedy selection, the interpolation problem is solved on the current base set of data. From this the error between the exact solution and interpolated solution for all points in the mesh is identified. If this error is greater than the max error specified here, an error message is thrown.
+.. _fsi_generic:
 
-n nearest
-=========
-Only applies to **'IDW'** interpolation scheme.
+Generic FSI
+===========
+Generic FSI is a loose (explicit) coupling to an external FEA program. Out of the box, ``genericFSI.py`` performs no changes - it is a hook to be implemented to exchange pressures, displacements and node coordinates with your own external solver.
 
-When using IDW mapping, the deformation of each surface point is mapped onto a set number of volume points, with the value determined by the weighted inverse distance between the donor and the recipient. 
+.. list-table::
+   :widths: 20 5 10 20 30
+   :header-rows: 1
 
-deformation distance
-====================
-Only applies to **'IDW'** interpolation scheme.
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - 'type'
+     - No
+     - 'generic_fsi'
+     - 'generic_fsi'
+     - Discriminator selecting the generic FSI driver.
+   * - 'zone'
+     - Yes
+     -
+     - List of zone ID integers
+     - Zones coupled to the external solver. Singular key name - unlike every other zone list in zCFD (including the modal model, where the zone list lives on the owning boundary condition), this matches the C++ read site exactly.
+   * - 'fixed_zones'
+     - No
+     -
+     - List of zone ID integers
+     - Zones excluded from mesh deformation.
+   * - 'transform_type'
+     - Yes
+     -
+     - 'rbf_multiscale' | 'rbf' | 'idw'
+     - Mesh-deformation transform used to propagate the coupled surface's displacements into the volume mesh.
+   * - 'support_radius'
+     - No
+     - 1.0
+     - Float
+     - RBF support radius. Only applies to 'rbf' and 'rbf_multiscale'.
+   * - 'basis'
+     - No
+     - 'c2'
+     - 'c4' | 'c2' | 'c0' | 'tps' | 'gaussian'
+     - RBF basis function. Only applies to 'rbf' and 'rbf_multiscale'.
+   * - 'base_point_fraction'
+     - No
+     - 0.1
+     - Float
+     - Fraction of points used as the reduced RBF base set. Only applies to 'rbf' and 'rbf_multiscale'.
+   * - 'tol'
+     - No
+     - 0.01
+     - Float
+     - Target error tolerance for the RBF interpolation. Only applies to 'rbf'.
+   * - 'max_error'
+     - No
+     - 0.1
+     - Float
+     - Maximum initial error tolerance for the RBF interpolation. Only applies to 'rbf'.
+   * - 'n_nearest'
+     - No
+     - 100
+     - Positive integer
+     - Number of nearest points used for IDW interpolation. Only applies to 'idw'.
+   * - 'deformation_distance'
+     - No
+     - 1.0
+     - Float
+     - Maximum support radius for IDW interpolation. Only applies to 'idw'.
+   * - 'blending_stiffness'
+     - No
+     - 0.5
+     - Float
+     - Blending stiffness for the IDW interpolation. Only applies to 'idw'.
+   * - 'power'
+     - No
+     - [3.0, 5.0, 10.0]
+     - List of 3 floats
+     - IDW power for the near-field and far-field boundaries, and the power between them. Only applies to 'idw'.
+   * - 'user_variables'
+     - No
+     -
+     - Dict
+     - Arbitrary variables passed through to ``genericFSI.py`` (for example time-marching or FSI control settings) - genuinely open-ended and not otherwise validated.
 
-Sets the maximum region of influence for the inverse distance weighting mapping. If there are fewer than "n" neighbours within a distance "d", then only neighbours within that distance are used.
+Generic FSI example
+^^^^^^^^^^^^^^^^^^^^
+.. code-block:: python
 
-blending stiffness
-==================
-Only applies to **'IDW'** interpolation scheme.
-
-Set the blending stiffness for the IDW interpolation.
-
-power
-=====
-Only applies to **'IDW'** interpolation scheme.
-
-Set the IDW power for the nearfield and farfield boundaries, and the power between them.
-
-user variables
-==============
-If you had additional variables for time marching scheme or FSI control (e.g. file names) you may want to pass as variables to the **genericFSI.py** script, these should be included in this dictionary.
+    "boundary_conditions": {
+        "BC_FSI": {
+            "zones": [1, 2, 3],
+            "type": "wall",
+            "kind": "slip",
+            "fsi": {
+                "type": "generic_fsi",
+                "zone": [1, 2, 3],
+                "fixed_zones": [4, 5, 6],
+                "transform_type": "idw",
+                "n_nearest": 100,
+                "deformation_distance": 1.0,
+                "blending_stiffness": 0.5,
+                "power": [3.0, 5.0, 10.0],
+                "user_variables": {"restart_file": "structure_state.dat"},
+            },
+        },
+    },

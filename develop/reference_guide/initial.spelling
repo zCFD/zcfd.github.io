@@ -1,0 +1,2 @@
+source/reference_guide/initial.rst:31: (pydantic) ["pedantic", "anticipant"] Each entry is validated against a different pydantic model depending on
+source/reference_guide/initial.rst:369: (normalised) ["normalized", "normalize"] accepted for backward compatibility and normalised to ‘ground_level’

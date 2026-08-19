@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Overset &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Overset &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -35,29 +35,28 @@
             
   <section id="overset">
 <span id="id1"></span><h1>Overset<a class="headerlink" href="#overset" title="Link to this heading">¶</a></h1>
-<p>zCFD is capable of automatically oversetting multiple meshes into a single simulation. To run an overset case you need to provide an <a class="reference internal" href="#override-file"><span class="std std-ref">override file</span></a>.</p>
-<section id="override-file">
-<span id="id2"></span><h2>Override file<a class="headerlink" href="#override-file" title="Link to this heading">¶</a></h2>
-<p>The override file tells zCFD which combinations of mesh and control dictionary to load and overset. The first entry in the list should be the background mesh, this is typically the largest of the meshes that the other meshes overlap with. The following entries in the list are then overset onto the background mesh when the solver starts. The meshes are overlapped in the order they appear in the list, starting with the background mesh.</p>
-<p>The list should be defined in a separate python file containing an <strong>override</strong> dictionary.</p>
-<p>Example <strong>override</strong> dictionary (e.g. override.py):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">override</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">'mesh_case_pair'</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s2">"background_mesh.h5"</span><span class="p">,</span> <span class="s2">"background.py"</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">"overset_1.h5"</span><span class="p">,</span> <span class="s2">"overset_1.py"</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">"overset_2.h5"</span><span class="p">,</span> <span class="s2">"overset_2.py"</span><span class="p">),</span>
-    <span class="p">]</span>
+<p>zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the control file’s top-level <code class="docutils literal notranslate"><span class="pre">model</span></code> key, each carrying its own <code class="docutils literal notranslate"><span class="pre">mesh</span></code> path, and each mesh that receives donor data from another mesh must declare an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition on its hole-cutting surface (see <a class="reference internal" href="#overset-bc"><span class="std std-ref">Overset boundary condition</span></a> below).</p>
+<section id="setting-up-an-overset-case">
+<span id="overset-setup"></span><h2>Setting up an overset case<a class="headerlink" href="#setting-up-an-overset-case" title="Link to this heading">¶</a></h2>
+<p>One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition whose <code class="docutils literal notranslate"><span class="pre">background</span></code> field names the donor model(s) (see below).</p>
+<p>Example <code class="docutils literal notranslate"><span class="pre">model</span></code> structure, adapted from <code class="docutils literal notranslate"><span class="pre">testcases/testcases/oversetmulticylinder/oversetmulticylinder.py</span></code> (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"background"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back1.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="s2">"refinement_region"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back2.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="s2">"cylinder_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back3.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="s2">"cylinder_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back3.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Running an overset case:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>&gt;<span class="w"> </span>run_zcfd<span class="w"> </span>-f<span class="w"> </span>override.py
+<p>Run the case with a plain:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>zCFD<span class="o">)</span>&gt;<span class="w"> </span>run_zcfd<span class="w"> </span>-c<span class="w"> </span>oversetmulticylinder.py
 </pre></div>
 </div>
+<p>All meshes are read from the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> key of each entry under <code class="docutils literal notranslate"><span class="pre">model</span></code>; no separate mesh/case file pairing and no command-line mesh argument is needed.</p>
 </section>
-<section id="mapping">
-<h2>Mapping<a class="headerlink" href="#mapping" title="Link to this heading">¶</a></h2>
-<p>The <strong>mapping</strong> dictionary sets additional mapping options for overset methods and should be defined in the background control file.</p>
+<section id="overset-boundary-condition">
+<span id="overset-bc"></span><h2>Overset boundary condition<a class="headerlink" href="#overset-boundary-condition" title="Link to this heading">¶</a></h2>
+<p>Overset mapping options are set directly on the boundary condition that marks a mesh’s overset (hole-cutting) surface, using <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'overset'</span></code> inside that model’s <code class="docutils literal notranslate"><span class="pre">boundary_conditions</span></code> block:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 23.8%" />
@@ -75,49 +74,96 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘idw from cells order’</p></td>
-<td><p>0</p></td>
-<td><p>–</p></td>
-<td><p>0 or 1</p></td>
-<td><p>Sets the order of accuracy for IDW mapping</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘number of additional overset active layers’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
-<td><p>0</p></td>
-<td><p>Positive integer</p></td>
-<td><p>Adds additional active cells to overlapped mesh</p></td>
+<td><p>–</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'overset'</span></code></p></td>
+<td><p>Marks this boundary as an overset (hole-cutting) surface.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘verbose logging’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">background</span></code></p></td>
 <td><p>No</p></td>
-<td><p>False</p></td>
-<td><p>True or False</p></td>
-<td><p>Enables detailed mapper diagnostic output</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Model name (string) or list of model names</p></td>
+<td><p>The model(s) whose mesh provides donor data at this boundary. When omitted, the solver falls back to legacy all-pairs connectivity (mapping against every preceding model).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">idw_from_cells_order</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0</p></td>
+<td><p>0 or 1</p></td>
+<td><p>Sets the order of accuracy for IDW mapping.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0</p></td>
+<td><p>Non-negative integer</p></td>
+<td><p>Adds additional active cells to the overlapped mesh near the blanking boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh_halo_layers</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0</p></td>
+<td><p>Non-negative integer</p></td>
+<td><p>Halo fringe layers around the hole when the overset mesh moves (0 treats every blanked cell as a halo; a value &gt; 0 is sufficient when the hole is re-cut every real time step).</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example usage:</p>
+<p>Example usage, adapted from a real multi-mesh overset testcase (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="o">..</span>
-  <span class="s1">'mapping'</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s1">'idw from cells order'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="s1">'number of additional overset active layers'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="s1">'verbose logging'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-  <span class="p">}</span>
-  <span class="o">..</span>
+    <span class="o">...</span>
+    <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"background"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back1.h5"</span><span class="p">,</span>
+            <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
+                <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span> <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"riemann"</span><span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">"refinement_region"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back2.h5"</span><span class="p">,</span>
+            <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
+                <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span>
+                    <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"background"</span><span class="p">],</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">"cylinder_1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back3.h5"</span><span class="p">,</span>
+            <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
+                <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span>
+                    <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"refinement_region"</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <section id="idw-from-cells-order">
-<h3>idw from cells order<a class="headerlink" href="#idw-from-cells-order" title="Link to this heading">¶</a></h3>
-<p>If <strong>‘idw from cells order’</strong> is set to 0, this provides a 0th order interpolation where we only utilise data from cell a mapped point is located within.  If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.</p>
+<h3>idw_from_cells_order<a class="headerlink" href="#idw-from-cells-order" title="Link to this heading">¶</a></h3>
+<p>If <strong>idw_from_cells_order</strong> is set to 0, this provides a 0th order interpolation where we only utilise data from the cell a mapped point is located within. If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.</p>
 </section>
-<section id="number-of-additional-overset-active-layers">
-<h3>number of additional overset active layers<a class="headerlink" href="#number-of-additional-overset-active-layers" title="Link to this heading">¶</a></h3>
-<p>Adds additional active cells which may have been made inactive by an overlapping mesh. If for example, we have a rotating domain, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering cells made inactive.  This will result in no mapping between background and overset meshes at these points.  To resolve this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and background meshes.  Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.</p>
+<section id="additional-active-layers">
+<h3>additional_active_layers<a class="headerlink" href="#additional-active-layers" title="Link to this heading">¶</a></h3>
+<p>Adds additional active cells which may have been made inactive by an overlapping mesh. If for example, we have a rotating domain, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering cells made inactive. This will result in no mapping between background and overset meshes at these points. To resolve this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and background meshes. Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.</p>
 </section>
-<section id="verbose-logging">
-<h3>verbose logging<a class="headerlink" href="#verbose-logging" title="Link to this heading">¶</a></h3>
-<p>When set to True, enables detailed diagnostic output for overset mapping operations. This includes per-mesh-pair mapping messages, time history copy notifications, mesh rotation angles, and the full list of missing data face coordinates. When False (the default), these are replaced with compact summary messages. The warning count for unmapped overset boundary faces is always shown regardless of this setting.</p>
+<section id="moving-mesh-halo-layers">
+<h3>moving_mesh_halo_layers<a class="headerlink" href="#moving-mesh-halo-layers" title="Link to this heading">¶</a></h3>
+<p>Relevant only when the overset mesh is itself moving (see the rotating/translating fluid zone motion types with <code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code> in <a class="reference internal" href="transforms.html#mesh-transform"><span class="std std-ref">Mesh Transformation</span></a>). Controls how many halo fringe layers are kept around the re-cut hole each time the mesh moves; a value of 0 treats every blanked cell as a halo, which is safe but conservative, while N &gt; 0 is sufficient when the hole is re-cut every real time step and avoids remapping cells that don’t need it.</p>
+</section>
+<section id="background">
+<h3>background<a class="headerlink" href="#background" title="Link to this heading">¶</a></h3>
+<p>Names the model(s) whose mesh supplies donor data at this overset boundary, and is used to derive the blanking priority order: models are topologically sorted so that a model always appears after the model(s) it declares as its background, with root meshes (no overset boundary conditions) placed first. Explicit specification is preferred over the <code class="docutils literal notranslate"><span class="pre">None</span></code> default — it avoids unnecessary mapper creation for non-overlapping mesh pairs. Accepts either a single model name or a list, as shown in the example above.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is no control-file option for detailed per-mesh-pair mapper diagnostics. The underlying C++ verbose-mapping flag exists, but nothing in the current control-file schema or launcher wires a value to it, so it cannot be enabled from a control deck.</p>
+</div>
 </section>
 </section>
 </section>

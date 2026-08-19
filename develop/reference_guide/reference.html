@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Settings &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Reference Settings &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -35,8 +35,17 @@
             
   <section id="reference-settings">
 <span id="reference"></span><h1>Reference Settings<a class="headerlink" href="#reference-settings" title="Link to this heading">¶</a></h1>
+<p>In control files using the nested schema (<code class="docutils literal notranslate"><span class="pre">config_version:</span> <span class="pre">2</span></code>), these
+settings live under the <code class="docutils literal notranslate"><span class="pre">solver</span></code> block (global defaults, shared by every
+mesh) and, where noted, can be overridden per mesh under
+<code class="docutils literal notranslate"><span class="pre">model.&lt;meshname&gt;</span></code>. Each subsection below states exactly where its
+keyword sits in that tree, matching
+<cite>zutil/zutil/validate/schemas/initialisation_schemas.py</cite>,
+<cite>solver_settings_schemas.py</cite> and <cite>transform_schemas.py</cite>, which are the
+source of truth the C++ solver reads.</p>
 <section id="reference-state">
 <span id="id1"></span><h2>Reference state<a class="headerlink" href="#reference-state" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.initialisation.reference</span></code></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -54,20 +63,35 @@
 <tbody>
 <tr class="row-even"><td><p>‘reference’</p></td>
 <td><p>No</p></td>
-<td><p>‘IC_1’</p></td>
-<td><p>“IC_?” where ? is an integer.</p></td>
+<td><p>Falls back to ‘initial_conditions’</p></td>
+<td><p>Name of an entry in <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">solver.reference_conditions</span></a> (str)</p></td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set reference state to IC_1</span>
-<span class="s1">'reference'</span><span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"initialisation"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="s2">"initial_conditions"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>Sets the <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Condition</span></a> which provides the reference quantities when non-dimensionalisation is applied to <a class="reference internal" href="report.html#reporting"><span class="std std-ref">force reporting.</span></a>
-“IC_?” must be a valid <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">initial conditions</span></a> dictionary  defined in the parameters file</p>
+<p>Sets the <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">reference condition</span></a> used to provide
+the reference quantities when non-dimensionalisation is applied to
+<a class="reference internal" href="report.html#reporting"><span class="std std-ref">force reporting</span></a>. “IC_1” (or whichever name is given) must
+be a valid entry defined in <code class="docutils literal notranslate"><span class="pre">solver.reference_conditions</span></code>.</p>
+<p>When ‘reference’ is omitted it falls back to the name given by
+‘initial_conditions’. It must be set explicitly when ‘initial_conditions’
+is a python callable (a <a class="reference internal" href="../functions.html#driving-function"><span class="std std-ref">‘driving function’</span></a>),
+since a callable has no static name to fall back on — a missing ‘reference’
+in that case is a validation error, not a silent default.</p>
+<p>If the reference condition named here has zero velocity (for example a
+quiescent cavity case), set ‘reference’ to point at a <em>different</em> reference
+condition that carries the physical velocity/Reynolds number, so the
+solver has something non-zero to non-dimensionalise against.</p>
 </section>
 <section id="initial-state">
 <span id="id2"></span><h2>Initial State<a class="headerlink" href="#initial-state" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.initialisation.initial_conditions</span></code> (global default),
+overridable per mesh at <code class="docutils literal notranslate"><span class="pre">model.&lt;meshname&gt;.initialisation.initial_conditions</span></code>.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -83,33 +107,45 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘name’</p></td>
-<td><p>No</p></td>
-<td><p>‘IC_1’</p></td>
-<td><p>“IC_?” where ? is an integer.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘func’</p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p>‘initial_conditions’</p></td>
+<td><p>Yes, unless ‘restart’ is True</p></td>
 <td><p>–</p></td>
-<td><p>An (optional) <a class="reference internal" href="../functions.html#initial-function"><span class="std std-ref">initial conditions function</span></a>.</p></td>
+<td><p>Name of an entry in <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">solver.reference_conditions</span></a> (str), or a python callable.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set initial state to IC_1</span>
-<span class="s2">"initial"</span><span class="p">:</span> <span class="p">{</span>
-  <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"IC_1"</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"initialisation"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"initial_conditions"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Sets which block <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">Initial Condition</span></a> block will be used to provide initial flow field conditions for the simulation.
-If <strong>‘func’</strong> is provided it will be used to provide the initial flow field variables on a cell-by-cell basis.</p>
+<p>Sets which entry of <a class="reference internal" href="initial.html#initial-conditions"><span class="std std-ref">solver.reference_conditions</span></a>
+is used to provide the initial flow field conditions for the simulation.
+If a python callable is provided instead of a name, it is called to provide
+the initial flow field variables (see the <a class="reference internal" href="../functions.html#driving-function"><span class="std std-ref">‘driving function’</span></a>
+form), and ‘reference’ must then be set explicitly (see <a class="reference internal" href="#reference-state"><span class="std std-ref">Reference state</span></a> above).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If the <strong>‘initial’</strong> entry is missing then the conditions default to the <a class="reference internal" href="#reference-state"><span class="std std-ref">reference</span></a> state.</p>
+<p>There is no implicit fallback: ‘initial_conditions’ must be set (to a
+name or a callable) unless ‘restart’ is True. Omitting it on a fresh
+(non-restart) run is a validation error.</p>
+</div>
+<p>Any mesh in the <code class="docutils literal notranslate"><span class="pre">model</span></code> block can override the solver-level defaults for
+initialisation and restart by supplying its own <code class="docutils literal notranslate"><span class="pre">initialisation</span></code> dict —
+useful in a multi-mesh (e.g. overset) case where only one mesh should
+restart, or where meshes start from different named conditions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Per-mesh override: this mesh restarts, others use the solver default</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"wing"</span><span class="p">][</span><span class="s2">"initialisation"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"initial_conditions"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="s2">"restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </section>
 <section id="scale-mesh">
 <span id="id3"></span><h2>Scale mesh<a class="headerlink" href="#scale-mesh" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">model.&lt;meshname&gt;.transforms.scale</span></code></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -127,32 +163,49 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <tbody>
 <tr class="row-even"><td><p>‘scale’</p></td>
 <td><p>No</p></td>
-<td><p>[1,1,1]</p></td>
-<td><p>[scaleX,scaleY,scaleZ] : Any list of positive floats with length 3</p></td>
+<td><p>Not set (no scaling applied)</p></td>
+<td><p>[scaleX, scaleY, scaleZ] : Any list of positive floats with length 3</p></td>
 </tr>
 </tbody>
 </table>
-<p>Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.</p>
+<p>Before being loaded into the solver, the mesh’s [x,y,z] location data is
+multiplied by this vector. The scale is folded into the mesh’s
+<a class="reference internal" href="#scale-mesh"><span class="std std-ref">transform matrix</span></a> (see below) before the mesh is read, so
+scaling and an explicit transform matrix compose correctly when both are
+supplied — the scale is applied first, then the transform matrix.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from mm to metres</span>
-<span class="s1">'scale'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">]</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"wing"</span><span class="p">][</span><span class="s2">"transforms"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]}</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale from inches to metres</span>
-<span class="s1">'scale'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">]</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"wing"</span><span class="p">][</span><span class="s2">"transforms"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span> <span class="mf">0.0254</span><span class="p">,</span> <span class="mf">0.0254</span><span class="p">]}</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale the mesh to be 10 times larger in y axis</span>
-<span class="s1">'scale'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale the mesh to be 50 times larger in x</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"canopy"</span><span class="p">][</span><span class="s2">"transforms"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]}</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see <em>Tab x</em>). When a mesh transform matrix is supplied as well as a scaling the scale is applied after the mesh transformation.</p>
+<p>The ‘scale’ parameter applies to the mesh only — not interpolated
+surface outputs etc.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A top-level ‘scale’ key directly on a model block (e.g.
+<code class="docutils literal notranslate"><span class="pre">'wing':</span> <span class="pre">{'scale':</span> <span class="pre">[...],</span> <span class="pre">...}</span></code>) is not a valid schema field. Even
+where such a key were read, <code class="docutils literal notranslate"><span class="pre">Mesh::readMesh</span></code> — the only Python-bound
+mesh-loading entry point — always calls <code class="docutils literal notranslate"><span class="pre">Mesh::partitionMesh</span></code> with
+<code class="docutils literal notranslate"><span class="pre">useBoundingBox</span></code> hard-coded to <code class="docutils literal notranslate"><span class="pre">false</span></code>, so the bounding-box-scaling
+code path is never invoked. The working capability — scaling mesh
+coordinates on load — lives at <code class="docutils literal notranslate"><span class="pre">transforms.scale</span></code> as shown above,
+which <em>is</em> read on the live mesh-loading path.</p>
 </div>
 <section id="mesh-transform-matrix">
 <h3>Mesh Transform Matrix<a class="headerlink" href="#mesh-transform-matrix" title="Link to this heading">¶</a></h3>
-<p>The mesh can be transformed using an <a class="reference external" href="https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html" target="_blank">affine transform</a> (<a class="reference external" href="https://en.wikipedia.org/wiki/Affine_transformation" target="_blank">Wikipedia</a>). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. Helper functions for rotations, translations and scalings are provided in zutil.transform. An example is given below:</p>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">model.&lt;meshname&gt;.transforms.transform_matrix</span></code></p>
+<p>The mesh can be transformed using an <a class="reference external" href="https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html" target="_blank">affine transform</a> (<a class="reference external" href="https://en.wikipedia.org/wiki/Affine_transformation" target="_blank">Wikipedia</a>). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array (or an equivalent nested list). Any number of transforms can be concatenated together to give the final position. Helper functions for rotations, translations and scalings are provided in <code class="docutils literal notranslate"><span class="pre">zutil.transform</span></code>. An example is given below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil.transform</span>
 
 <span class="n">A2B</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">)</span>
@@ -160,14 +213,23 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <span class="n">B2C</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">A2B</span><span class="p">)</span>
 <span class="n">C2D</span> <span class="o">=</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">B2C</span><span class="p">)</span>
 
-<span class="s2">"mesh transform matrix"</span><span class="p">:</span> <span class="n">C2D</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"wing"</span><span class="p">][</span><span class="s2">"transforms"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"transform_matrix"</span><span class="p">:</span> <span class="n">C2D</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>When using the zutil.transform helper functions transforms are applied in the order in which the user calls the functions. Rotations are considered using the same conventions as <a class="reference external" href="https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html" target="_blank">pytransform3d</a> and are interpreted as active and applied using the pre-multiplication convention. For more complex transformations <a class="reference external" href="https://dfki-ric.github.io/pytransform3d" target="_blank">pytransform3d</a> provides a comprehensive collection of python functions and can be easily interfaced with zCFD by simply passing the resulting transformation matrix to the solver.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">transforms</span></code> also accepts a <code class="docutils literal notranslate"><span class="pre">transform_func</span></code> key (a python callable
+intended to describe dynamic rigid mesh motion) in the schema. It is
+accepted at validation time but currently has no C++ consumer anywhere
+in the mesh or solver code — nothing reads it back out. Do not rely on
+it; use <code class="docutils literal notranslate"><span class="pre">transform_matrix</span></code> for initial placement as shown above.</p>
+</div>
 </section>
 </section>
 <section id="mesh-quality-remediation">
 <h2>Mesh Quality Remediation<a class="headerlink" href="#mesh-quality-remediation" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.solver_settings.mesh_quality_remediation_angle_threshold</span></code></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -183,17 +245,26 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘mesh quality remediation angle threshold’</p></td>
+<tr class="row-even"><td><p>‘mesh_quality_remediation_angle_threshold’</p></td>
 <td><p>No</p></td>
-<td><p>‘not set’</p></td>
-<td><p>0 - 180</p></td>
+<td><p>Not set</p></td>
+<td><p>0 - 180 (degrees)</p></td>
 </tr>
 </tbody>
 </table>
-<p>zCFD has the ability to detect poor quality cells in the mesh and fix them as first order in space. A poor quality cell is defined as one which has a face where the angle between the cell centre to cell centre vector and the face centre to cell centre vector is greater than that set using the <code class="code docutils literal notranslate"><span class="pre">'mesh</span> <span class="pre">quality</span> <span class="pre">remediation</span> <span class="pre">angle</span> <span class="pre">threshold'</span></code> key. When convergence issues are encountered due to mesh quality setting the angle threshold to around 75 degrees initially may allow the solver to run on the mesh. Ideally the mesh should be improved so the solution can be fully second order over the entire domain.</p>
+<p>zCFD has the ability to detect poor quality cells in the mesh and fix them as first order in space. A poor quality cell is defined as one which has a face where the angle between the cell centre to cell centre vector and the face centre to cell centre vector is greater than that set using this key. When convergence issues are encountered due to mesh quality, setting the angle threshold to around 75 degrees initially may allow the solver to run on the mesh. Ideally the mesh should be improved so the solution can be fully second order over the entire domain.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The schema field exists and validates, and the underlying C++ method
+(<code class="docutils literal notranslate"><span class="pre">Mesh::qualityCheck</span></code>) exists and is bound through to Python — but no
+current Python entry point calls it with this value. Setting this key
+validates cleanly today but has no observable effect on a solve; it is
+an open question whether to wire up a caller or remove the field.</p>
+</div>
 </section>
 <section id="partitioner">
 <h2>Partitioner<a class="headerlink" href="#partitioner" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.solver_settings.partitioner</span></code></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -211,15 +282,31 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <tbody>
 <tr class="row-even"><td><p>‘partitioner’</p></td>
 <td><p>No</p></td>
-<td><p>‘metis’</p></td>
-<td><p>[‘metis’]. The name of the partitioner to use.</p></td>
+<td><p>‘scotch’</p></td>
+<td><p>‘metis’ | ‘scotch’</p></td>
 </tr>
 </tbody>
 </table>
-<p>The ‘metis’ partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases</p>
+<p>The partitioner is used to split the computational mesh up so that the job can be run in parallel.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"solver_settings"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"compressible"</span><span class="p">,</span>
+    <span class="s2">"partitioner"</span><span class="p">:</span> <span class="s2">"metis"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid values are ‘metis’ and ‘scotch’; the default is ‘scotch’. Decks
+that need ‘metis’ specifically should set <code class="docutils literal notranslate"><span class="pre">&quot;partitioner&quot;:</span> <span class="pre">&quot;metis&quot;</span></code>
+explicitly rather than relying on the default.</p>
+</div>
 </section>
 <section id="restart">
 <span id="id4"></span><h2>Restart<a class="headerlink" href="#restart" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.initialisation.*</span></code> (global default), overridable per
+mesh at <code class="docutils literal notranslate"><span class="pre">model.&lt;meshname&gt;.initialisation.*</span></code>. ‘solution_smooth_cycles’ is a
+system setting rather than a restart-specific one, and lives separately at
+<code class="docutils literal notranslate"><span class="pre">solver.solver_settings.solution_smooth_cycles</span></code>.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -240,62 +327,73 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 <td><p>False</p></td>
 <td><p>True/False</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘restart casename’</p></td>
+<tr class="row-odd"><td><p>‘restart_casename’</p></td>
 <td><p>No</p></td>
-<td></td>
+<td><p>Current casename</p></td>
 <td><p>Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘restart ignore history’</p></td>
+<tr class="row-even"><td><p>‘restart_ignore_history’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
 <td><p>True/False: True to ignore the cycle history from restart file and begin the solve as specified in current control file.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘interpolate restart’</p></td>
+<tr class="row-odd"><td><p>‘interpolate_restart’</p></td>
 <td><p>No</p></td>
 <td><p>False</p></td>
-<td><p>True/False: True to interpolate restart results from a different mesh.</p></td>
+<td><p>True/False: True to interpolate restart results from a different mesh. Requires ‘restart_meshname’ and ‘restart_casename’ to both be set.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘restart meshname’</p></td>
-<td><p>No</p></td>
-<td><p>False</p></td>
-<td><p>The name of the mesh to interpolate the restart from.</p></td>
+<tr class="row-even"><td><p>‘restart_meshname’</p></td>
+<td><p>When ‘interpolate_restart’ is True</p></td>
+<td><p>–</p></td>
+<td><p>The name of the mesh to interpolate the restart from. A trailing ‘.h5’ is stripped automatically if supplied.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘solution smooth cycles’</p></td>
+<tr class="row-odd"><td><p>‘solution_smooth_cycles’</p></td>
 <td><p>No</p></td>
 <td><p>0</p></td>
-<td><p>Number of Laplace smoothing cycles to smooth initial mapped solution</p></td>
+<td><p>Number of Laplace smoothing cycles to smooth initial mapped solution. Set at <code class="docutils literal notranslate"><span class="pre">solver.solver_settings.solution_smooth_cycles</span></code>, not under ‘initialisation’.</p></td>
 </tr>
 </tbody>
 </table>
-<p>Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a &lt;casename&gt;_results.h5 file to load the restart, this can be overridden with the ‘restart casename’ parameter. The cycle history from the restart case can be ignored through the ‘restart ignore history’ option. To begin the current simulation using the &lt;casename&gt;_results.h5 specified in the current control dictionary but ignore the previous cycle history set this option to True.</p>
-<p>The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped on to a new mesh using the ‘interpolate restart’ parameter.</p>
+<p>Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a <code class="docutils literal notranslate"><span class="pre">&lt;casename&gt;_results.h5</span></code> file to load the restart; this can be overridden with ‘restart_casename’. The cycle history from the restart case can be ignored through ‘restart_ignore_history’. To begin the current simulation using the results file specified in the current control dictionary but ignore the previous cycle history, set this option to True.</p>
+<p>The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped onto a new mesh using ‘interpolate_restart’ — this requires both ‘restart_meshname’ and ‘restart_casename’ to be set, and the schema enforces that pairing at validation time, rather than leaving a missing name to fail later at solve time.</p>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from previous solution</span>
-<span class="s1">'restart'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="c1"># Load solution from case name 'my_case'</span>
-<span class="s1">'restart casename'</span><span class="p">:</span> <span class="s1">'my_case'</span><span class="p">,</span>
-<span class="s1">'restart ignore history'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from a previous solution, from case name 'cylinder_steady_start_init'</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"initialisation"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"initial_conditions"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="s2">"restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"restart_casename"</span><span class="p">:</span> <span class="s2">"cylinder_steady_start_init"</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from previous solution on a different mesh</span>
-<span class="s2">"interpolate restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="c1"># Interpolate restart from "different_mesh.h5"</span>
-<span class="s2">"restart meshname"</span><span class="p">:</span> <span class="s2">"different_mesh"</span><span class="p">,</span>
-<span class="c1"># Do not smooth initial solution</span>
-<span class="s2">"solution smooth cycles"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restart from a previous solution on a different mesh</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"initialisation"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"initial_conditions"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="s2">"restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"interpolate_restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"restart_meshname"</span><span class="p">:</span> <span class="s2">"different_mesh"</span><span class="p">,</span>
+    <span class="c1"># solution_smooth_cycles lives on solver_settings, not initialisation</span>
+<span class="p">}</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"solver_settings"</span><span class="p">][</span><span class="s2">"solution_smooth_cycles"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <section id="advanced-restart">
 <h3>Advanced Restart<a class="headerlink" href="#advanced-restart" title="Link to this heading">¶</a></h3>
-<p>It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate approximate initial field for SA-neg</span>
-<span class="s1">'approximate sa from sst results'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-</pre></div>
+<p>It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa; by default the turbulence field(s) are reset to zero. Generating an approximate initial field for SA-neg from Menter-SST results is not currently possible from a control file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The C++ read site for this capability is still live (<code class="docutils literal notranslate"><span class="pre">SolverBase.cxx</span></code>,
+reading <code class="docutils literal notranslate"><span class="pre">approximate_sa_from_sst_results</span></code> from
+<code class="docutils literal notranslate"><span class="pre">equations.turbulence</span></code>), but no field for it exists on the
+turbulence schema, which forbids extra keys — so there is currently no
+way to set this from a valid control file. Adding an
+<code class="docutils literal notranslate"><span class="pre">approximate_sa_from_sst_results</span></code> field to the turbulence model would
+restore it.</p>
 </div>
 </section>
 </section>
 <section id="safe-mode">
 <h2>Safe Mode<a class="headerlink" href="#safe-mode" title="Link to this heading">¶</a></h2>
+<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">solver.solver_settings.safe</span></code></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -318,10 +416,12 @@ If <strong>‘func’</strong> is provided it will be used to provide the initia
 </tr>
 </tbody>
 </table>
-<p>Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues</p>
+<p>Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues.</p>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Enable safe mode</span>
-<span class="s1">'safe'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"solver_settings"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"compressible"</span><span class="p">,</span>
+    <span class="s2">"safe"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>

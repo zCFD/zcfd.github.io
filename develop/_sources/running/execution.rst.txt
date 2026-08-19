@@ -104,20 +104,26 @@ The script can be executed from the zCFD environment as follows:
 If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.
 
 
-Overriding Mesh and Case Names
----------------------------------
-For more advanced simulations with overset meshes (see :ref:`overset<overset>`) an override dictionary can be supplied as an additional argument to the command-line, in interactive mode or within a batch submission script, to specify multiple meshes and associated control dictionaries:
+Multiple Meshes and Overset Cases
+----------------------------------
+A case with more than one mesh (see :ref:`overset<overset>`) is run from a single control dictionary: each mesh is a named entry under the top-level ``model`` key, run together with the same ``run_zcfd -c <case_name>`` invocation used for a single-mesh case — there is no separate ``-p``/mesh argument or override file for these cases.
 
-.. code-block:: bash
-
-    run_zcfd -n 2 -d gpu -f <override_file>
-
-An example override.py file for a background domain with a single rotating turbine would be:
+An example control dictionary for a background domain with a single rotating turbine:
 
 .. code-block:: python
 
-    override = {'mesh_case_pair': [('background.h5', 'background.py'),
-                                   ('turbine.h5', 'turbine.py')]}
+    parameters = {
+        "config_version": 2,
+        "solver": {....},
+        "model": {
+            "background": {"mesh": "background.h5", ....},
+            "turbine": {"mesh": "turbine.h5", ....},
+        },
+    }
+
+.. code-block:: bash
+
+    run_zcfd -n 2 -d gpu -c <case_name>
 
 
 Batch Queue Submission

@@ -1,0 +1,1 @@
+source/getting_started/overset_tutorial.rst:198: (traintunnel) ["train tunnel", "train-tunnel", "intramundane"] To plot the entry pressure gradient over time, copy the following Python code into a file ‘create_plot.py’. The pressure monitor is defined on the “background” (tunnel) mesh, so its report is written to “traintunnel_OUTPUT/background/background_report.csv”:

@@ -2,13 +2,25 @@
 .. _reference:
 
 Reference Settings
-------------------
+-------------------
+
+In control files using the nested schema (``config_version: 2``), these
+settings live under the ``solver`` block (global defaults, shared by every
+mesh) and, where noted, can be overridden per mesh under
+``model.<meshname>``. Each subsection below states exactly where its
+keyword sits in that tree, matching
+`zutil/zutil/validate/schemas/initialisation_schemas.py`,
+`solver_settings_schemas.py` and `transform_schemas.py`, which are the
+source of truth the C++ solver reads.
+
 .. _reference_state:
 
 Reference state
 ^^^^^^^^^^^^^^^
 
-.. list-table:: 
+**Location:** ``solver.initialisation.reference``
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -18,24 +30,41 @@ Reference state
      - Valid values
    * - 'reference'
      - No
-     - 'IC_1'
-     - "IC\_?" where ? is an integer. 
+     - Falls back to 'initial_conditions'
+     - Name of an entry in :ref:`solver.reference_conditions <initial_conditions>` (str)
 
 .. code-block:: python
 
-    # set reference state to IC_1
-    'reference': 'IC_1',
+    parameters["solver"]["initialisation"] = {
+        "reference": "IC_1",
+        "initial_conditions": "IC_1",
+    }
 
-Sets the :ref:`Initial Condition <initial_conditions>` which provides the reference quantities when non-dimensionalisation is applied to :ref:`force reporting. <reporting>`
-"IC\_?" must be a valid :ref:`initial conditions <initial_conditions>` dictionary  defined in the parameters file
+Sets the :ref:`reference condition <initial_conditions>` used to provide
+the reference quantities when non-dimensionalisation is applied to
+:ref:`force reporting <reporting>`. "IC_1" (or whichever name is given) must
+be a valid entry defined in ``solver.reference_conditions``.
 
+When 'reference' is omitted it falls back to the name given by
+'initial_conditions'. It must be set explicitly when 'initial_conditions'
+is a python callable (a :ref:`'driving function' <driving_function>`),
+since a callable has no static name to fall back on — a missing 'reference'
+in that case is a validation error, not a silent default.
+
+If the reference condition named here has zero velocity (for example a
+quiescent cavity case), set 'reference' to point at a *different* reference
+condition that carries the physical velocity/Reynolds number, so the
+solver has something non-zero to non-dimensionalise against.
 
 .. _initial_state:
 
 Initial State
 ^^^^^^^^^^^^^
 
-.. list-table:: 
+**Location:** ``solver.initialisation.initial_conditions`` (global default),
+overridable per mesh at ``model.<meshname>.initialisation.initial_conditions``.
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -43,34 +72,50 @@ Initial State
      - Required
      - Default
      - Valid values
-   * - 'name'
-     - No
-     - 'IC_1'
-     - "IC\_?" where ? is an integer. 
-   * - 'func'
-     - No
+   * - 'initial_conditions'
+     - Yes, unless 'restart' is True
      - --
-     - An (optional) :ref:`initial conditions function <initial_function>`.
+     - Name of an entry in :ref:`solver.reference_conditions <initial_conditions>` (str), or a python callable.
 
 .. code-block:: python
 
     # set initial state to IC_1
-    "initial": {
-      "name": "IC_1"
+    parameters["solver"]["initialisation"] = {
+        "initial_conditions": "IC_1",
     }
 
-Sets which block :ref:`Initial Condition <initial_conditions>` block will be used to provide initial flow field conditions for the simulation.
-If **'func'** is provided it will be used to provide the initial flow field variables on a cell-by-cell basis.
+Sets which entry of :ref:`solver.reference_conditions <initial_conditions>`
+is used to provide the initial flow field conditions for the simulation.
+If a python callable is provided instead of a name, it is called to provide
+the initial flow field variables (see the :ref:`'driving function' <driving_function>`
+form), and 'reference' must then be set explicitly (see :ref:`Reference state <reference_state>` above).
 
 .. note::
-  If the **'initial'** entry is missing then the conditions default to the :ref:`reference <reference_state>` state.
+  There is no implicit fallback: 'initial_conditions' must be set (to a
+  name or a callable) unless 'restart' is True. Omitting it on a fresh
+  (non-restart) run is a validation error.
+
+Any mesh in the ``model`` block can override the solver-level defaults for
+initialisation and restart by supplying its own ``initialisation`` dict —
+useful in a multi-mesh (e.g. overset) case where only one mesh should
+restart, or where meshes start from different named conditions.
+
+.. code-block:: python
+
+    # Per-mesh override: this mesh restarts, others use the solver default
+    parameters["model"]["wing"]["initialisation"] = {
+        "initial_conditions": "IC_1",
+        "restart": True,
+    }
 
 .. _scale_mesh:
 
 Scale mesh
 ^^^^^^^^^^
 
-.. list-table:: 
+**Location:** ``model.<meshname>.transforms.scale``
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -80,36 +125,52 @@ Scale mesh
      - Valid values
    * - 'scale'
      - No
-     - [1,1,1]
-     - [scaleX,scaleY,scaleZ] : Any list of positive floats with length 3
+     - Not set (no scaling applied)
+     - [scaleX, scaleY, scaleZ] : Any list of positive floats with length 3
 
-Before being loaded in to the solver, the mesh’s [x,y,z] location data is multiplied by this vector.
+Before being loaded into the solver, the mesh's [x,y,z] location data is
+multiplied by this vector. The scale is folded into the mesh's
+:ref:`transform matrix <scale_mesh>` (see below) before the mesh is read, so
+scaling and an explicit transform matrix compose correctly when both are
+supplied — the scale is applied first, then the transform matrix.
 
 Example usage:
 
 .. code-block:: python
 
     # Scale from mm to metres
-    'scale': [0.001,0.001,0.001]
+    parameters["model"]["wing"]["transforms"] = {"scale": [0.001, 0.001, 0.001]}
 
 .. code-block:: python
 
     # Scale from inches to metres
-    'scale': [0.0254,0.0254,0.0254]
+    parameters["model"]["wing"]["transforms"] = {"scale": [0.0254, 0.0254, 0.0254]}
 
 .. code-block:: python
 
-    # Scale the mesh to be 10 times larger in y axis
-    'scale' : [1,10,1]
+    # Scale the mesh to be 50 times larger in x
+    parameters["model"]["canopy"]["transforms"] = {"scale": [50.0, 1.0, 1.0]}
 
 .. note::
-    The ‘scale’ parameter applies to the mesh only - not interpolated surface outputs etc. (see *Tab x*). When a mesh transform matrix is supplied as well as a scaling the scale is applied after the mesh transformation.
+    The 'scale' parameter applies to the mesh only — not interpolated
+    surface outputs etc.
 
+.. note::
+    A top-level 'scale' key directly on a model block (e.g.
+    ``'wing': {'scale': [...], ...}``) is not a valid schema field. Even
+    where such a key were read, ``Mesh::readMesh`` — the only Python-bound
+    mesh-loading entry point — always calls ``Mesh::partitionMesh`` with
+    ``useBoundingBox`` hard-coded to ``false``, so the bounding-box-scaling
+    code path is never invoked. The working capability — scaling mesh
+    coordinates on load — lives at ``transforms.scale`` as shown above,
+    which *is* read on the live mesh-loading path.
 
 Mesh Transform Matrix
 **********************
 
-The mesh can be transformed using an `affine transform <https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia <https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array. Any number of transforms can be concatenated together to give the final position. Helper functions for rotations, translations and scalings are provided in zutil.transform. An example is given below:
+**Location:** ``model.<meshname>.transforms.transform_matrix``
+
+The mesh can be transformed using an `affine transform <https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html>`_ (`Wikipedia <https://en.wikipedia.org/wiki/Affine_transformation>`_). Here the upper left 3 x 3 matrix describes a rotation, reflection, scaling or shear (or any combination of) and the 4th column a translation. This 4 x 4 matrix must be supplied as a 4 x 4 numpy array (or an equivalent nested list). Any number of transforms can be concatenated together to give the final position. Helper functions for rotations, translations and scalings are provided in ``zutil.transform``. An example is given below:
 
 .. code-block:: python
 
@@ -120,15 +181,23 @@ The mesh can be transformed using an `affine transform <https://www.brainvoyager
      B2C = zutil.transform.scale([0.1, 0.1, 0.1], A2B)
      C2D = zutil.transform.translate([0.0, 0.0, 0.0], [-1.0, 0.0, 0.0], B2C)
 
-     "mesh transform matrix": C2D
+     parameters["model"]["wing"]["transforms"] = {"transform_matrix": C2D}
 
 When using the zutil.transform helper functions transforms are applied in the order in which the user calls the functions. Rotations are considered using the same conventions as `pytransform3d <https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html>`__ and are interpreted as active and applied using the pre-multiplication convention. For more complex transformations `pytransform3d <https://dfki-ric.github.io/pytransform3d>`__ provides a comprehensive collection of python functions and can be easily interfaced with zCFD by simply passing the resulting transformation matrix to the solver.
 
-     
+.. note::
+    ``transforms`` also accepts a ``transform_func`` key (a python callable
+    intended to describe dynamic rigid mesh motion) in the schema. It is
+    accepted at validation time but currently has no C++ consumer anywhere
+    in the mesh or solver code — nothing reads it back out. Do not rely on
+    it; use ``transform_matrix`` for initial placement as shown above.
+
 Mesh Quality Remediation
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. list-table:: 
+**Location:** ``solver.solver_settings.mesh_quality_remediation_angle_threshold``
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -136,18 +205,26 @@ Mesh Quality Remediation
      - Required
      - Default
      - Valid values
-   * - 'mesh quality remediation angle threshold'
+   * - 'mesh_quality_remediation_angle_threshold'
      - No
-     - 'not set'
-     - 0 - 180
+     - Not set
+     - 0 - 180 (degrees)
 
-zCFD has the ability to detect poor quality cells in the mesh and fix them as first order in space. A poor quality cell is defined as one which has a face where the angle between the cell centre to cell centre vector and the face centre to cell centre vector is greater than that set using the :code:`'mesh quality remediation angle threshold'` key. When convergence issues are encountered due to mesh quality setting the angle threshold to around 75 degrees initially may allow the solver to run on the mesh. Ideally the mesh should be improved so the solution can be fully second order over the entire domain.
+zCFD has the ability to detect poor quality cells in the mesh and fix them as first order in space. A poor quality cell is defined as one which has a face where the angle between the cell centre to cell centre vector and the face centre to cell centre vector is greater than that set using this key. When convergence issues are encountered due to mesh quality, setting the angle threshold to around 75 degrees initially may allow the solver to run on the mesh. Ideally the mesh should be improved so the solution can be fully second order over the entire domain.
 
-     
+.. note::
+    The schema field exists and validates, and the underlying C++ method
+    (``Mesh::qualityCheck``) exists and is bound through to Python — but no
+    current Python entry point calls it with this value. Setting this key
+    validates cleanly today but has no observable effect on a solve; it is
+    an open question whether to wire up a caller or remove the field.
+
 Partitioner
 ^^^^^^^^^^^
 
-.. list-table:: 
+**Location:** ``solver.solver_settings.partitioner``
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -157,23 +234,34 @@ Partitioner
      - Valid values
    * - 'partitioner'
      - No
-     - 'metis'
-     - ['metis']. The name of the partitioner to use.
+     - 'scotch'
+     - 'metis' | 'scotch'
 
-The 'metis' partitioner is used to split the computational mesh up so that the job can be run in parallel.  Other partitioners will be added in future code releases
+The partitioner is used to split the computational mesh up so that the job can be run in parallel.
 
-.. .. code-block:: python
+.. code-block:: python
 
-..     # Optional (default 'metis'):
-..     # partitioner type
-..     'partitioner' : 'metis',
+    parameters["solver"]["solver_settings"] = {
+        "type": "compressible",
+        "partitioner": "metis",
+    }
+
+.. note::
+    Valid values are 'metis' and 'scotch'; the default is 'scotch'. Decks
+    that need 'metis' specifically should set ``"partitioner": "metis"``
+    explicitly rather than relying on the default.
 
 .. _restart:
 
 Restart
 ^^^^^^^
 
-.. list-table:: 
+**Location:** ``solver.initialisation.*`` (global default), overridable per
+mesh at ``model.<meshname>.initialisation.*``. 'solution_smooth_cycles' is a
+system setting rather than a restart-specific one, and lives separately at
+``solver.solver_settings.solution_smooth_cycles``.
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -185,64 +273,74 @@ Restart
      - No
      - False
      - True/False
-   * - 'restart casename'
+   * - 'restart_casename'
      - No
-     - 
+     - Current casename
      - Optionally supply the name of a case to restart from that case, if not supplied then the current casename will be used.
-   * - 'restart ignore history'
+   * - 'restart_ignore_history'
      - No
      - False
      - True/False: True to ignore the cycle history from restart file and begin the solve as specified in current control file.
-   * - 'interpolate restart'
+   * - 'interpolate_restart'
      - No
      - False
-     - True/False: True to interpolate restart results from a different mesh.
-   * - 'restart meshname'
-     - No
-     - False
-     - The name of the mesh to interpolate the restart from.
-   * - 'solution smooth cycles'
+     - True/False: True to interpolate restart results from a different mesh. Requires 'restart_meshname' and 'restart_casename' to both be set.
+   * - 'restart_meshname'
+     - When 'interpolate_restart' is True
+     - --
+     - The name of the mesh to interpolate the restart from. A trailing '.h5' is stripped automatically if supplied.
+   * - 'solution_smooth_cycles'
      - No
      - 0
-     - Number of Laplace smoothing cycles to smooth initial mapped solution
+     - Number of Laplace smoothing cycles to smooth initial mapped solution. Set at ``solver.solver_settings.solution_smooth_cycles``, not under 'initialisation'.
 
-Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a <casename>_results.h5 file to load the restart, this can be overridden with the 'restart casename' parameter. The cycle history from the restart case can be ignored through the 'restart ignore history' option. To begin the current simulation using the <casename>_results.h5 specified in the current control dictionary but ignore the previous cycle history set this option to True.
+Restart allows you to load a solution from a previous run and continue the solver from that point. By default the solver will look for a ``<casename>_results.h5`` file to load the restart; this can be overridden with 'restart_casename'. The cycle history from the restart case can be ignored through 'restart_ignore_history'. To begin the current simulation using the results file specified in the current control dictionary but ignore the previous cycle history, set this option to True.
 
-The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped on to a new mesh using the 'interpolate restart' parameter.
+The default restart assumes that the same mesh is used. Alternatively, a solution from another mesh can be mapped onto a new mesh using 'interpolate_restart' — this requires both 'restart_meshname' and 'restart_casename' to be set, and the schema enforces that pairing at validation time, rather than leaving a missing name to fail later at solve time.
 
 Example usage:
 
 .. code-block:: python
 
-    # Restart from previous solution
-    'restart': True,
-    # Load solution from case name 'my_case'
-    'restart casename': 'my_case',
-    'restart ignore history': False,
-
+    # Restart from a previous solution, from case name 'cylinder_steady_start_init'
+    parameters["solver"]["initialisation"] = {
+        "initial_conditions": "IC_1",
+        "restart": True,
+        "restart_casename": "cylinder_steady_start_init",
+    }
 
 .. code-block:: python
 
-    # Restart from previous solution on a different mesh
-    "interpolate restart": True,
-    # Interpolate restart from "different_mesh.h5" 
-    "restart meshname": "different_mesh",
-    # Do not smooth initial solution
-    "solution smooth cycles": 0,
+    # Restart from a previous solution on a different mesh
+    parameters["solver"]["initialisation"] = {
+        "initial_conditions": "IC_1",
+        "restart": True,
+        "interpolate_restart": True,
+        "restart_meshname": "different_mesh",
+        # solution_smooth_cycles lives on solver_settings, not initialisation
+    }
+    parameters["solver"]["solver_settings"]["solution_smooth_cycles"] = 0
 
 Advanced Restart
 ****************
-It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa, however by default the turbulence field(s) are reset to zero. An approximate initial solution for the SA-neg model can be generated from Menter-SST results by adding the key
 
-.. code-block:: python
+It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa; by default the turbulence field(s) are reset to zero. Generating an approximate initial field for SA-neg from Menter-SST results is not currently possible from a control file.
 
-    # Generate approximate initial field for SA-neg
-    'approximate sa from sst results': True,
+.. note::
+    The C++ read site for this capability is still live (``SolverBase.cxx``,
+    reading ``approximate_sa_from_sst_results`` from
+    ``equations.turbulence``), but no field for it exists on the
+    turbulence schema, which forbids extra keys — so there is currently no
+    way to set this from a valid control file. Adding an
+    ``approximate_sa_from_sst_results`` field to the turbulence model would
+    restore it.
 
 Safe Mode
 ^^^^^^^^^
 
-.. list-table:: 
+**Location:** ``solver.solver_settings.safe``
+
+.. list-table::
    :widths: 25 10 25 35
    :header-rows: 1
 
@@ -255,11 +353,13 @@ Safe Mode
      - False
      - True/False
 
-Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues
+Safe mode turns on extra checks and provides diagnosis in the case of solver stability issues.
 
 Example usage:
 
 .. code-block:: python
 
-    # Enable safe mode
-    'safe': True,
+    parameters["solver"]["solver_settings"] = {
+        "type": "compressible",
+        "safe": True,
+    }

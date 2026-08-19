@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -36,11 +36,37 @@
             
   <section id="boundary-conditions">
 <span id="id1"></span><h1>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading">¶</a></h1>
-<p>Boundary condition properties are defined using consecutively numbered blocks.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
-<span class="s1">'BC_2'</span> <span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+<p>Boundary conditions are a dict of named blocks nested under the mesh’s model
+entry, at <code class="docutils literal notranslate"><span class="pre">model.&lt;mesh_name&gt;.boundary_conditions</span></code>. Each block is keyed by
+an arbitrary name (conventionally <code class="docutils literal notranslate"><span class="pre">BC_1</span></code>, <code class="docutils literal notranslate"><span class="pre">BC_2</span></code>, …) and is itself a
+dict describing one boundary condition.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"config_version"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"solver"</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"naca0012"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"naca0012_0449.h5"</span><span class="p">,</span>
+            <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
+                <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">},</span>
+                <span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
+                    <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+                    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"riemann"</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+<p>Every boundary condition block requires a <strong>type</strong> (which BC kernel handles
+these zones) and <strong>zones</strong> (which mesh zones it applies to). Most types also
+require a <strong>kind</strong>, which selects between variants of that type with their
+own extra fields — for example a wall’s <code class="docutils literal notranslate"><span class="pre">kind</span></code> chooses between <code class="docutils literal notranslate"><span class="pre">slip</span></code>,
+<code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">slip</span></code> and <code class="docutils literal notranslate"><span class="pre">wall</span> <span class="pre">function</span></code>; the fields available below <code class="docutils literal notranslate"><span class="pre">kind</span></code>
+change with the choice.</p>
 <p>zCFD supports the following boundary condition types:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -60,57 +86,91 @@
 <td><p>Farfield boundaries with automatic inflow/outflow detection</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#bc-inflow"><span class="std std-ref">Inflow</span></a></p></td>
-<td><p>Pressure or massflow inflow boundaries</p></td>
+<td><p>Pressure, condition-driven or massflow inflow boundaries</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#bc-outflow"><span class="std std-ref">Outflow</span></a></p></td>
-<td><p>Pressure or massflow outflow boundaries</p></td>
+<td><p>Pressure, massflow or radial-pressure-gradient outflow boundaries</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#bc-symmetry"><span class="std std-ref">Symmetry</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#bc-mass-flow"><span class="std std-ref">Mass Flow</span></a></p></td>
+<td><p>Standalone mass-flow boundary condition</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#bc-symmetry"><span class="std std-ref">Symmetry</span></a></p></td>
 <td><p>Mirror boundary condition</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#bc-overset"><span class="std std-ref">Overset</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#bc-overset"><span class="std std-ref">Overset</span></a></p></td>
 <td><p>The boundary of a mesh to be overset on a background mesh</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#bc-periodic"><span class="std std-ref">Periodic</span></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#bc-periodic"><span class="std std-ref">Periodic</span></a></p></td>
 <td><p>Repeating boundary condition, with flow from one periodic boundary mapped to the other.</p></td>
 </tr>
 </tbody>
 </table>
-<section id="ref-and-zone">
-<h2>“ref” and “zone”<a class="headerlink" href="#ref-and-zone" title="Link to this heading">¶</a></h2>
-<p>Boundary conditions can be mapped to the mesh in two ways, depending on the mesh format used. Some mesh formats (for example Fluent) will have boundaries tagged with an integer (wall = 3, etc). These can be referenced directly using the <strong>“ref”</strong> keyword in your boundary condition definition. Alternatively, the mesh format may contain explicitly numbered zones (which can be determined by inspecting the mesh).  In this case, the user can specify the list of zone numbers for each boundary condition using the <strong>“zone”</strong> keyword.</p>
-<p>For example to apply BC_1 to boundaries tagged with value 3:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-          <span class="o">..</span>
-<span class="p">}</span>
-<span class="o">..</span>
-</pre></div>
-</div>
-<p>Or to apply BC_1 to boundaries to zones with IDs 0,1,2 &amp; 3:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>
-<span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
-          <span class="o">..</span>
-<span class="p">}</span>
-<span class="o">..</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If a <strong>‘zone’</strong> entry is provided it will override the IDs specified in <strong>‘refs’</strong></p>
-</div>
+<section id="zones">
+<h2>Zones<a class="headerlink" href="#zones" title="Link to this heading">¶</a></h2>
+<p>Every boundary condition block requires a <strong>zones</strong> keyword: a list of
+integer zone IDs from the mesh that this BC applies to. The exact zone
+numbering is determined by the mesh format and mesh generation tool used —
+inspect the mesh (for example with the tool that generated it) to determine
+which zone numbers correspond to which physical boundary.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26.3%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 31.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>List of integers</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
+</tr>
+</tbody>
+</table>
 <section id="wall">
 <span id="id2"></span><h3>Wall<a class="headerlink" href="#wall" title="Link to this heading">¶</a></h3>
-<p>Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e <span class="math notranslate nohighlight">\((y^{+} \leq 1)\)</span>) otherwise automatic wall functions should be used. This behaviour is chosen by setting <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> in the wall specification below.  Optionally it is possible to set wall velocity, roughness and temperature.</p>
-<p><code class="code docutils literal notranslate"><span class="pre">'type'</span></code> allows you to choose between a standard <code class="code docutils literal notranslate"><span class="pre">'wall'</span></code> definition or <code class="code docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">wall'</span></code> boundaries. Immersed wall boundaries are <em>only</em> supported with meshes created by the using <a class="reference internal" href="../zm3.html#zm3"><span class="std std-ref">zM3</span></a> mesh generator.  The zM3 mesh generator will determine vectors to represent the underlying geometry within the 3D Cartesian mesh. It will also generate additional information such as locations where data is to be sampled in order to define conditions at the geometry surface, and the subsequent halo boundary values.</p>
+<p>Wall boundaries in zCFD can be either slip walls, no-slip walls, or use
+automatic wall functions. No-slip walls are appropriate when the mesh is
+able to fully resolve the boundary layer (i.e. <span class="math notranslate nohighlight">\(y^{+} \leq 1\)</span>),
+otherwise automatic wall functions should be used. This behaviour is chosen
+by setting <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> in the wall specification below. Optionally it is
+possible to set wall velocity, roughness, temperature and an FSI modal
+model.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">'type'</span></code> allows you to choose between a standard <code class="code docutils literal notranslate"><span class="pre">'wall'</span></code>
+definition or <code class="code docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">wall'</span></code> boundaries. Immersed wall boundaries
+are <em>only</em> supported with meshes created using the <a class="reference internal" href="../zm3.html#zm3"><span class="std std-ref">zM3</span></a> mesh
+generator. The zM3 mesh generator will determine vectors to represent the
+underlying geometry within the 3D Cartesian mesh. It will also generate
+additional information such as locations where data is to be sampled in
+order to define conditions at the geometry surface, and the subsequent halo
+boundary values.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>Immersed wall boundaries</strong> supports <code class="code docutils literal notranslate"><span class="pre">'type'</span></code> of <code class="code docutils literal notranslate"><span class="pre">'slip'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'noslip'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'wallfunction'</span></code>.</p>
-<p>If <code class="code docutils literal notranslate"><span class="pre">'slip'</span></code> conditions are chosen, there will be zero momentum normal to the underlying geometry.</p>
-<p>If <code class="code docutils literal notranslate"><span class="pre">'noslip'</span></code> conditions are chosen, any values computed near the wall will linearly extrapolated from the donor (sample) point location associated with that point.  This can potentially cause sensitivity and early flow separation in strong pressure gradients.  Again, this can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.</p>
-<p>If <code class="code docutils literal notranslate"><span class="pre">'wallfunction'</span></code> conditions are chosen, any values computed near the wall will be based on the Musker wall model, which closely represents the flow along a flat plate in zero pressure gradient.  As such, there are fundamental limitations on the accuracy of this model with highly curved surfaces and strong pressure gradients.  This can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">'slip'</span></code> conditions are chosen, there will be zero momentum
+normal to the wall.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">'no</span> <span class="pre">slip'</span></code> conditions are chosen, the no-slip condition is
+applied directly (mesh must resolve down to <span class="math notranslate nohighlight">\(y^{+} \sim 1\)</span>). For an
+immersed wall, values computed near the wall are linearly extrapolated
+from the donor (sample) point location associated with that point — this
+can potentially cause sensitivity and early flow separation in strong
+pressure gradients, alleviated to some extent with mesh refinement at
+additional computational cost.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> conditions are chosen, any values computed
+near the wall will be based on the Musker wall model, which closely
+represents the flow along a flat plate in zero pressure gradient. As
+such, there are fundamental limitations on the accuracy of this model
+with highly curved surfaces and strong pressure gradients, alleviated to
+some extent with mesh refinement at additional computational cost.</p>
 </div>
 <table class="docutils align-default">
 <colgroup>
@@ -129,79 +189,66 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
 <td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
 <td></td>
 <td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
 </tr>
-<tr class="row-even"><td><p>‘type’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p>‘wall’ or ‘immersed wall’</p></td>
-<td><p>Specifies a solid wall boundary which defaults to adiabatic unless a temperature is specified</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘kind’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘slip’, ‘noslip’, ‘wallfunction’</p></td>
-<td><p>Specifies the type of wall boundary condition. Slip - zero viscosity wall boundary. noslip - viscous wall with y+ ~ 1 mesh resolution, wallfunction - viscous wall with automatic handling of mesh resolution between y+~1 to y+ &gt; 100</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'wall'</span></code> or <code class="docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">wall'</span></code></p></td>
+<td><p>Specifies a solid wall boundary, adiabatic unless a temperature is specified</p></td>
 </tr>
-<tr class="row-even"><td><p>‘immersed normal type’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
 <td><p>No</p></td>
-<td><p>‘STL’</p></td>
-<td><p>‘STL’ or ‘immersed boundary vector’</p></td>
-<td><p>For ‘immersed wall’ types. Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'no</span> <span class="pre">slip'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'slip'</span></code>, <code class="docutils literal notranslate"><span class="pre">'no</span> <span class="pre">slip'</span></code>, <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code></p></td>
+<td><p>Specifies the wall model. slip - zero-normal-momentum wall. no slip - viscous wall requiring <span class="math notranslate nohighlight">\(y^+ \sim 1\)</span> mesh resolution. wall function - viscous wall with automatic handling of mesh resolution between <span class="math notranslate nohighlight">\(y^+ \sim 1\)</span> and <span class="math notranslate nohighlight">\(y^+ &gt; 100\)</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>‘roughness’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">immersed_wall_normal_type</span></code></p></td>
 <td><p>No</p></td>
-<td></td>
-<td><p>See  <a class="reference internal" href="#bc-roughness"><span class="std std-ref">roughness</span></a></p></td>
-<td><p>Specifies the surface roughness. If not specified the wall is specified as perfectly smooth. This requires the wall boundary condition kind to be set to <strong>wallfunction</strong>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'STL'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'STL'</span></code> or <code class="docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">boundary</span> <span class="pre">vector'</span></code></p></td>
+<td><p>Only for <code class="docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">wall'</span></code>. Specifies how the geometry unit normals are determined (directly from the STL, or approximated by the vector from the face centre to the nearest surface point)</p></td>
 </tr>
-<tr class="row-even"><td><p>‘v’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p>See <a class="reference internal" href="#bc-velocity"><span class="std std-ref">velocity</span></a></p></td>
-<td><p>Wall velocity specification.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘temperature’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">roughness</span></code></p></td>
 <td><p>No</p></td>
 <td></td>
-<td><p>See <a class="reference internal" href="#bc-temperature"><span class="std std-ref">temperature</span></a></p></td>
-<td><p>Specifies the wall temperature for an isothermal wall. If not specified the wall is treated as adiabatic</p></td>
+<td><p>See <a class="reference internal" href="#bc-roughness"><span class="std std-ref">Roughness</span></a></p></td>
+<td><p>Surface roughness model. If not specified the wall is perfectly smooth</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>See <a class="reference internal" href="#bc-velocity"><span class="std std-ref">Velocity</span></a></p></td>
+<td><p>Wall velocity specification, for surfaces in relative motion</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>See <a class="reference internal" href="#bc-temperature"><span class="std std-ref">Temperature</span></a></p></td>
+<td><p>Wall temperature. If not specified the wall is treated as adiabatic</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fsi</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>See <a class="reference internal" href="#bc-wall-fsi"><span class="std std-ref">FSI</span></a></p></td>
+<td><p>FSI modal model coupling this wall to a structural solve</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example Wall BC with roughness and temperature set:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-          <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'wall'</span><span class="p">,</span>
-          <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'slip'</span><span class="p">,</span>
-          <span class="s1">'roughness'</span> <span class="p">:</span> <span class="p">{</span>
-                        <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'height'</span><span class="p">,</span>
-                        <span class="s1">'scalar'</span> <span class="p">:</span> <span class="mf">0.001</span>
-                        <span class="p">},</span>
-          <span class="s1">'temperature'</span> <span class="p">:</span> <span class="p">{</span>
-                          <span class="c1"># Temperature in Kelvin</span>
-                          <span class="s1">'scalar'</span> <span class="p">:</span> <span class="mf">280.0</span><span class="p">,</span>
-                          <span class="p">},</span>
-          <span class="p">},</span>
+<p>Example no-slip wall (<cite>testcases/testcases/naca0012/Naca0012_base.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">},</span>
 </pre></div>
 </div>
-<p>Example Immersed Boundary Wall BC:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span> <span class="p">:</span> <span class="p">{</span>
-          <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-          <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'immersed wall'</span><span class="p">,</span>
-          <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'wallfunction'</span><span class="p">,</span>
-          <span class="s1">'immersed normal type'</span> <span class="p">:</span> <span class="s1">'STL'</span><span class="p">,</span>
-        <span class="p">},</span>
+<p>Example immersed wall with a slip condition (<cite>testcases/testcases/euler_rotating_cylinder/cylinderIB.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"immersed_wall"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"immersed wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"slip"</span><span class="p">},</span>
+</pre></div>
+</div>
+<p>Example immersed wall using a wall function (<cite>testcases/testcases/EVE/EVE_steady.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"aircraft"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"immersed wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">},</span>
 </pre></div>
 </div>
 </section>
@@ -225,35 +272,51 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘type’</p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p>Yes</p></td>
 <td></td>
-<td><p>‘height’ or ‘length’</p></td>
-<td><p>Specify how roughness is being specified.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'height'</span></code> or <code class="docutils literal notranslate"><span class="pre">'length'</span></code></p></td>
+<td><p>How the roughness magnitude is being specified</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘scalar’</p></td>
-<td><p>No</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">scalar</span></code></p></td>
+<td><p>No (one of <code class="docutils literal notranslate"><span class="pre">scalar</span></code>/<code class="docutils literal notranslate"><span class="pre">field</span></code> required)</p></td>
 <td></td>
 <td><p>Positive float</p></td>
-<td><p>Specify the value of roughness length or height in mesh units</p></td>
+<td><p>Value of roughness length or height, in mesh units</p></td>
 </tr>
-<tr class="row-even"><td><p>‘field’</p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">field</span></code></p></td>
+<td><p>No (one of <code class="docutils literal notranslate"><span class="pre">scalar</span></code>/<code class="docutils literal notranslate"><span class="pre">field</span></code> required)</p></td>
 <td></td>
 <td><p>Valid filename</p></td>
-<td><p>Specify the name of a file that defines a roughness field.  This file needs to contain a node array called Roughness that is used to set the value by finding the nearest point to the mesh location.</p></td>
+<td><p>Name of a VTP file containing a node array called <code class="docutils literal notranslate"><span class="pre">Roughness</span></code>, used to set the value by nearest-point lookup</p></td>
 </tr>
 </tbody>
 </table>
-<p>Roughness can be specified as either a ‘height’ or ‘length’.</p>
-<p>Roughness <strong>length</strong> is defined as the height at which the mean velocity profile of the flow is zero. In other words, at this distant above the surface, the flow is considered to be effectively smooth, and the velocity distribution approaches a logarithmic law.</p>
-<p>Roughness <strong>height</strong> refers to the average height or magnitude of surface roughness elements on a solid boundary.  It represents the scale of irregularities or protrusions on the surface, which disrupt the smooth flow and create additional drag or turbulence. Examples of roughness elements include bumps, ridges, or rough surface textures.</p>
-<p>This value can be given as a single <strong>scaler</strong> value or a <strong>field</strong> file can be provided. This should be a VTP file containing a node array called “Roughness”. The roughness at each boundary face is then set by finding the nearest point to the face centre on the supplied VTK file with the roughness value looked up in a node based scalar array called ‘Roughness’</p>
+<p>Exactly one of <code class="docutils literal notranslate"><span class="pre">scalar</span></code> or <code class="docutils literal notranslate"><span class="pre">field</span></code> must be set — neither both nor
+neither is accepted.</p>
+<p>Roughness <strong>length</strong> is the height at which the mean velocity profile of the
+flow is zero — beyond this distance from the surface, the flow is
+considered effectively smooth and the velocity distribution approaches a
+logarithmic law.</p>
+<p>Roughness <strong>height</strong> is the average height or magnitude of surface
+roughness elements on a solid boundary — the scale of irregularities or
+protrusions on the surface that disrupt the smooth flow and create
+additional drag or turbulence.</p>
+<p>Example (<cite>testcases/testcases/plate/plate_medium_wf_rough.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">][</span><span class="s2">"roughness"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"height"</span><span class="p">,</span>
+    <span class="s2">"scalar"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <section id="velocity">
 <span id="bc-velocity"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading">¶</a></h2>
-<p>The velocity keywords are used to apply a surface velocity, this is used to model cases with surfaces in relative motion. e.g. a car moving over a road surface or rotating tyre surface. The wall boundary condition supports either a <strong>linear</strong> velocity or a <strong>rotating</strong> one</p>
-<p>The options for the <strong>‘linear’</strong> dictionary are:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">velocity</span></code> keyword applies a surface velocity, used to model cases
+with surfaces in relative motion, e.g. a car moving over a road surface or a
+rotating tyre. The wall boundary condition supports either a <strong>linear</strong>
+velocity or a <strong>rotating</strong> one, selected by its own <code class="docutils literal notranslate"><span class="pre">type</span></code> field.</p>
+<p>The options for the <strong>linear</strong> velocity are:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -271,13 +334,19 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘vector’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>[x, y, z]: vector of numbers</p></td>
-<td><p>Sets the velocity vector for the translation motion of the surface.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'linear'</span></code></p></td>
+<td><p>Selects a linear (translational) wall velocity</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘mach’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code></p></td>
+<td><p>Direction of the translation velocity</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mach</span></code></p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>Number</p></td>
@@ -285,7 +354,7 @@
 </tr>
 </tbody>
 </table>
-<p>The options for the <strong>‘rotating’</strong> dictionary are:</p>
+<p>The options for the <strong>rotating</strong> velocity are:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -303,60 +372,59 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘axis’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>[x, y, z]: vector of numbers</p></td>
-<td><p>Sets the axis of rotation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'rotating'</span></code></p></td>
+<td><p>Selects a rotational wall velocity</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘origin’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axis</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>[x, y, z]: vector of numbers</p></td>
-<td><p>Sets the origin of the rotation axis</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code>: unit vector</p></td>
+<td><p>Axis of rotation</p></td>
 </tr>
-<tr class="row-even"><td><p>‘omega’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">center</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code></p></td>
+<td><p>Origin (centre point) of the rotation axis</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">omega</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
 <td><p>Number</p></td>
-<td><p>Sets the rotational velocity of the rotation in radians per second</p></td>
+<td><p>Angular velocity of the rotation, in radians per second</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example Linear Velocity Boundary Wall BC:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-         <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'wall'</span><span class="p">,</span>
-         <span class="s1">'kind'</span><span class="p">:</span> <span class="s2">"noslip',</span>
-         <span class="s1">'v'</span><span class="p">:</span> <span class="p">{</span>
-               <span class="s1">'linear'</span><span class="p">:</span> <span class="p">{</span>
-                          <span class="s1">'vector'</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                          <span class="s1">'mach'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="c1"># optional override to vector magnitude</span>
-                         <span class="p">},</span>
-              <span class="p">},</span>
-         <span class="p">},</span>
+<p>Example linear wall velocity (<cite>testcases/testcases/plate/plate_medium_moving_wall.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">][</span><span class="s2">"velocity"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span>
+    <span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">34.72</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>Example Rotating Velocity Boundary Wall BC:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_1'</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-         <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'wall'</span><span class="p">,</span>
-         <span class="s1">'kind'</span><span class="p">:</span> <span class="s2">"wallfunction',</span>
-         <span class="s1">'v'</span><span class="p">:</span> <span class="p">{</span>
-               <span class="s1">'rotating'</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="s1">'axis'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="s1">'origin'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="s1">'omega'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="c1"># radians per second</span>
-                           <span class="p">},</span>
-              <span class="p">},</span>
-         <span class="p">},</span>
+<p>Example rotating wall velocity (<cite>testcases/testcases/wheel/wheel_base.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"moving_wheel"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">,</span>
+    <span class="s2">"velocity"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"rotating"</span><span class="p">,</span>
+        <span class="s2">"axis"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.9988</span><span class="p">,</span> <span class="mf">0.0498</span><span class="p">],</span>
+        <span class="s2">"center"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6593</span><span class="p">,</span> <span class="mf">0.2533</span><span class="p">],</span>
+        <span class="s2">"omega"</span><span class="p">:</span> <span class="n">rot_rate</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">},</span>
 </pre></div>
 </div>
 </section>
 <section id="temperature">
 <span id="bc-temperature"></span><h2>Temperature<a class="headerlink" href="#temperature" title="Link to this heading">¶</a></h2>
-<p>The temperature keywords are used to apply a surface temperature. A scalar temperature can be applied to the whole boundary or a VTP file provided containing a temperature <strong>‘field’</strong>. When using a <strong>‘field’</strong> The temperature at each boundary face is set by finding the nearest point to the face centre on the supplied VTP file with the temperature value looked up in a node based scalar array called ‘Temperature’</p>
-<p>The options for the <strong>‘temperature’</strong> dictionary are:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">temperature</span></code> keyword applies a surface temperature. Either a scalar
+value (Kelvin) or the string <code class="docutils literal notranslate"><span class="pre">'adiabatic'</span></code> is given directly as the value
+of <code class="docutils literal notranslate"><span class="pre">temperature</span></code>.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -374,106 +442,57 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘scalar’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>number</p></td>
-<td><p>Specify the value of wall temperature in Kelvin</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘field’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
 <td><p>No</p></td>
-<td></td>
-<td><p>Valid filename</p></td>
-<td><p>Specify the name of a file that defines a temperature field.  This file needs to contain a node array called <em>Temperature</em> that is used to set the value by finding the nearest point to the mesh location for an isothermal wall.</p></td>
+<td><p>unset (adiabatic)</p></td>
+<td><p>Number (Kelvin) or <code class="docutils literal notranslate"><span class="pre">'adiabatic'</span></code></p></td>
+<td><p>Wall temperature. If unset, the wall is adiabatic</p></td>
 </tr>
 </tbody>
 </table>
-<section id="farfield">
-<span id="bc-farfield"></span><h3>Farfield<a class="headerlink" href="#farfield" title="Link to this heading">¶</a></h3>
-<p>Farfield boundary conditions are typically used for external flow simulations and automatically switch for inflows or outflows. This boundary condition cannot be used with the incompressible solver. The farfield boundary automatically determines whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by referring to an <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 21.1%" />
-<col style="width: 10.5%" />
-<col style="width: 10.5%" />
-<col style="width: 21.1%" />
-<col style="width: 36.8%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Keyword</p></th>
-<th class="head"><p>Required</p></th>
-<th class="head"><p>Default</p></th>
-<th class="head"><p>Valid values</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
-<td></td>
-<td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
-</tr>
-<tr class="row-even"><td><p>‘type’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>‘farfield’</p></td>
-<td><p>This sets the type of boundary condition to be associated with the zones.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘kind’</p></td>
-<td><p>Yes</p></td>
-<td><p>‘riemann’</p></td>
-<td><p>‘riemann’, ‘pressure’, ‘supersonic’ or ‘preconditioned’</p></td>
-<td><dl class="simple">
-<dt>This sets the specific model used for the farfield boundary condition:</dt><dd><ul class="simple">
-<li><p><em>riemann</em> uses riemann invariants to provide a non reflecting inflow with a pressure outflow.</p></li>
-<li><p><em>pressure</em> uses a pressure boundary condition for both inflow (downstream pressure) and outflow (user specified pressure).</p></li>
-<li><p><em>supersonic</em> uses a supersonic boundary conditions by using upstream conditions for both inflow and outflow.</p></li>
-<li><p><em>preconditioned</em> uses a preconditioned variant of the riemann boundary condition.</p></li>
-</ul>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="row-even"><td><p>‘condition’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>String reference to IC</p></td>
-<td><p>Set the reference flow conditions block that relates to these boundaries, see <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">IC_*</span></a>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Example boundary condition block for a farfield boundary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_2'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="c1"># Zone type tag</span>
-         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-         <span class="c1"># Optional: Specific zone boundary condition override</span>
-         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
-         <span class="c1"># Required: Boundary condition type</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'farfield'</span><span class="p">,</span>
-         <span class="c1"># Required: Kind of farfield options (riemann, pressure or supersonic)</span>
-         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'riemann'</span><span class="p">,</span>
-         <span class="c1"># Required: Farfield conditions</span>
-         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
-         <span class="c1"># Optional: Atmospheric Boundary Layer</span>
- <span class="p">},</span>
+<p>Example (<cite>testcases/testcases/cavity/buoyancy_cavity_ra1e5_central.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">T_hot</span><span class="p">},</span>   <span class="c1"># T_hot = 310.0</span>
+<span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">T_cold</span><span class="p">},</span>  <span class="c1"># T_cold = 290.0</span>
 </pre></div>
 </div>
 </section>
-<section id="inflow">
-<span id="bc-inflow"></span><h3>Inflow<a class="headerlink" href="#inflow" title="Link to this heading">¶</a></h3>
-<p>zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
-Massflow ratio is nondimensional where <span class="math notranslate nohighlight">\(A_{in}\)</span> is defined in mesh units. Given <span class="math notranslate nohighlight">\(massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})\)</span></p>
+<section id="fsi">
+<span id="bc-wall-fsi"></span><h2>FSI<a class="headerlink" href="#fsi" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">fsi</span></code> keyword attaches a fluid-structure-interaction modal model to a
+wall boundary (any <code class="docutils literal notranslate"><span class="pre">kind</span></code>), coupling the wall’s motion to a structural
+solve. The full set of FSI model parameters is documented separately in
+<a class="reference internal" href="fsi.html#fsi"><span class="std std-ref">Fluid-structure interaction</span></a>; this section only shows how it
+attaches to a wall BC.</p>
+<p>Example (<cite>testcases/testcases/shockplatefsi/shockplatefsi.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_FSI"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="n">fsi_zones</span><span class="p">,</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"slip"</span><span class="p">,</span>
+    <span class="s2">"fsi"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"modal_model"</span><span class="p">,</span>
+        <span class="s2">"file_format"</span><span class="p">:</span> <span class="s2">"nastran"</span><span class="p">,</span>
+        <span class="s2">"nastran_casename"</span><span class="p">:</span> <span class="s2">"panel_nm_0.04m"</span><span class="p">,</span>
+        <span class="s2">"transform_type"</span><span class="p">:</span> <span class="s2">"rbf_multiscale"</span><span class="p">,</span>
+        <span class="s2">"base_point_fraction"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">"support_radius"</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
+        <span class="s2">"scale"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="s2">"mode_mapping_max_distance"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="s2">"fluid_force_scaling"</span><span class="p">:</span> <span class="mf">0.08</span> <span class="o">/</span> <span class="mf">0.000166667</span><span class="p">,</span>
+        <span class="s2">"mode_list"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">],</span>
+        <span class="s2">"modal_damping"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
 </div>
+<section id="farfield">
+<span id="bc-farfield"></span><h3>Farfield<a class="headerlink" href="#farfield" title="Link to this heading">¶</a></h3>
+<p>Farfield boundary conditions are typically used for external flow
+simulations and automatically switch between inflow and outflow. This
+boundary condition cannot be used with the incompressible solver. The
+farfield boundary automatically determines whether the flow is locally an
+inflow or an outflow by solving a Riemann equation (for <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'riemann'</span></code>
+and <code class="docutils literal notranslate"><span class="pre">'preconditioned'</span></code>). The conditions on the farfield boundary are set
+by referring to a <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">reference condition</span></a> block.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21.1%" />
@@ -491,110 +510,416 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
 <td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
 <td></td>
 <td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
 </tr>
-<tr class="row-even"><td><p>‘type’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘inflow’</p></td>
-<td><p>This sets the type of boundary condition to be associated with the zones.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'farfield'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘kind’</p></td>
-<td><p>Yes</p></td>
-<td><p>‘default’</p></td>
-<td><p>‘default’ or ‘massflow’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'riemann'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'riemann'</span></code>, <code class="docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="docutils literal notranslate"><span class="pre">'supersonic'</span></code> or <code class="docutils literal notranslate"><span class="pre">'preconditioned'</span></code></p></td>
 <td><dl class="simple">
-<dt>This sets the how the user wants to specify the inflow boundary condition:</dt><dd><ul class="simple">
-<li><p><em>default</em>. Pressure inflow. Velocity and density are calculated from the user provided total pressure ratio and total temperature ratio set in the reference <strong>condition</strong>. The direction of the velocity vector uses the surface normal but a specific direction can also be provided by the user. Local static pressure is used to compute a local mach number from the total pressure ratio. If the user specifies a mach number this is used to set the static pressure from the total pressure ratio.</p></li>
-<li><p><em>massflow</em> The velocity is set from the massflow set in the reference <strong>condition</strong>.</p></li>
+<dt>Model used for the farfield boundary:</dt><dd><ul class="simple">
+<li><p><em>riemann</em> uses Riemann invariants for a non-reflecting inflow with a pressure outflow.</p></li>
+<li><p><em>pressure</em> uses a pressure boundary condition for both inflow (downstream pressure) and outflow (user-specified pressure).</p></li>
+<li><p><em>supersonic</em> uses upstream conditions for both inflow and outflow.</p></li>
+<li><p><em>preconditioned</em> is a preconditioned variant of the Riemann boundary condition.</p></li>
 </ul>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td><p>‘condition’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">condition</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>String reference to IC</p></td>
-<td><p>Set the reference flow conditions block that relates to these boundaries, see <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">IC_*</span></a>.</p></td>
+<td><p>String reference to a reference condition</p></td>
+<td><p>Reference flow condition block for these boundaries — see <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">reference conditions</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sponge_layer_damping</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>See <a class="reference internal" href="#bc-sponge-layer-damping"><span class="std std-ref">Sponge Layer Damping</span></a></p></td>
+<td><p>Optional sponge layer damping applied near this boundary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">driver</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>See <a class="reference internal" href="#bc-force-driver"><span class="std std-ref">Force Driver</span></a></p></td>
+<td><p>Optional automatic driver that adjusts the inflow to target a force coefficient</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example boundary condition for setting up a <strong>pressure</strong> inflow condition based on flow conditions defined in <em>IC_2</em>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_3'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'inflow'</span><span class="p">,</span>
-         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'default'</span><span class="p">,</span>
-         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_2'</span><span class="p">,</span>
-         <span class="p">},</span>
-<span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'temperature'</span> <span class="p">:</span> <span class="mf">293.0</span><span class="p">,</span>
-         <span class="s1">'pressure'</span> <span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-         <span class="s1">'V'</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-              <span class="s1">'Mach'</span> <span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
-              <span class="p">},</span>
-         <span class="s1">'Reynolds No'</span> <span class="p">:</span> <span class="mf">1.0e6</span><span class="p">,</span>
-         <span class="s1">'Reference Length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">'turbulence intensity'</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-         <span class="s1">'eddy viscosity ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="p">},</span>
-<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'reference'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
-         <span class="s1">'total temperature ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">'total pressure ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="c1"># Optional - specify mach number to set</span>
-         <span class="c1"># static pressure at inflow from total pressure</span>
-         <span class="s1">'mach'</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<p>Example farfield with <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'riemann'</span></code> (<cite>testcases/testcases/naca0012/Naca0012_base.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span> <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"riemann"</span><span class="p">},</span>
+</pre></div>
+</div>
+<p>Example farfield with <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'pressure'</span></code> (<cite>testcases/testcases/naca0012/n0012_449_ale_rot.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
+    <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_2"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"pressure"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'supersonic'</span></code> and <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'preconditioned'</span></code> are valid schema values
+but no current testcase exercises either — both are constructed the same
+way, just with <code class="docutils literal notranslate"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;supersonic&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;preconditioned&quot;</span></code>
+substituted above.</p>
+</section>
+</section>
+<section id="sponge-layer-damping">
+<span id="bc-sponge-layer-damping"></span><h2>Sponge Layer Damping<a class="headerlink" href="#sponge-layer-damping" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26.3%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 31.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">distance</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Distance over which damping is applied</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">damping_factor</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Damping factor magnitude</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">condition</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>String reference to a reference condition</p></td>
+<td><p>Reference condition the sponge layer damps toward</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example (<cite>testcases/testcases/traintunnel/traintunnel.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"riemann"</span><span class="p">,</span>
+    <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="s2">"sponge_layer_damping"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"distance"</span><span class="p">:</span> <span class="mf">20.0</span><span class="p">,</span>
+        <span class="s2">"damping_factor"</span><span class="p">:</span> <span class="mf">2.037495</span><span class="p">,</span>
+        <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
 </div>
-<p>Example boundary condition for setting up a <strong>massflow</strong> inflow condition based on flow conditions defined in <em>IC_2</em>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_3'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'inflow'</span><span class="p">,</span>
-         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'massflow'</span><span class="p">,</span>
-         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_2'</span><span class="p">,</span>
-<span class="p">},</span>
-<span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'temperature'</span> <span class="p">:</span> <span class="mf">293.0</span><span class="p">,</span>
-         <span class="s1">'pressure'</span> <span class="p">:</span> <span class="mf">101325.0</span><span class="p">,</span>
-         <span class="s1">'V'</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-              <span class="s1">'Mach'</span> <span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span>
-              <span class="p">},</span>
-         <span class="s1">'Reynolds No'</span> <span class="p">:</span> <span class="mf">1.0e6</span><span class="p">,</span>
-         <span class="s1">'Reference Length'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">'turbulence intensity'</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-         <span class="s1">'eddy viscosity ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-<span class="p">},</span>
-<span class="s1">'IC_2'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'reference'</span> <span class="p">:</span> <span class="s1">'IC_1'</span><span class="p">,</span>
-         <span class="s1">'total temperature ratio'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="s1">'mass flow rate'</span> <span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
-<span class="p">},</span>
+</section>
+<section id="force-driver">
+<span id="bc-force-driver"></span><h2>Force Driver<a class="headerlink" href="#force-driver" title="Link to this heading">¶</a></h2>
+<p>Drives a farfield boundary’s inflow conditions to target a specific force
+coefficient by adjusting a control variable (angle of attack or velocity
+magnitude). Declare <em>what</em> you want (target, value, control mode); the
+runtime controller handles the feedback loop.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26.3%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 31.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">target</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>String</p></td>
+<td><p>Report column name to target (e.g. <code class="docutils literal notranslate"><span class="pre">'wall_Ftz'</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">target_value</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Target value for the force component</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">force_report</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>String</p></td>
+<td><p>Name of the force report block (e.g. <code class="docutils literal notranslate"><span class="pre">'FR_1'</span></code>) to read forces from</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">control</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'angle_of_attack'</span></code> or <code class="docutils literal notranslate"><span class="pre">'velocity_magnitude'</span></code></p></td>
+<td><p>Control variable to adjust</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_value</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0.0</p></td>
+<td><p>Number</p></td>
+<td><p>Starting value for the control variable (AoA: degrees, velocity: Mach)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_increment</span></code></p></td>
+<td><p>No</p></td>
+<td><p>2.0</p></td>
+<td><p>Number &gt; 0</p></td>
+<td><p>Maximum change per update</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">relaxation_factor</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0.75</p></td>
+<td><p>0 &lt; Number &lt;= 2.0</p></td>
+<td><p>Under-relaxation factor for updates</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_period</span></code></p></td>
+<td><p>No</p></td>
+<td><p>200</p></td>
+<td><p>Integer &gt; 0</p></td>
+<td><p>Cycles between control variable updates</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">settling_period</span></code></p></td>
+<td><p>No</p></td>
+<td><p>500</p></td>
+<td><p>Integer &gt;= 0</p></td>
+<td><p>Initial cycles before the first update</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">convergence_tolerance</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0e-4</p></td>
+<td><p>Number &gt; 0</p></td>
+<td><p>Target error tolerance for convergence</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">smoothing_window</span></code></p></td>
+<td><p>No</p></td>
+<td><p>20</p></td>
+<td><p>Integer &gt; 0</p></td>
+<td><p>Moving-average window for force smoothing</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example (<cite>testcases/testcases/naca0012/n0012_897_cL_target_1_imp.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
+    <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_2"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"riemann"</span><span class="p">,</span>
+    <span class="s2">"driver"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"target"</span><span class="p">:</span> <span class="s2">"wall_Ftz"</span><span class="p">,</span>
+        <span class="s2">"target_value"</span><span class="p">:</span> <span class="mf">1.0778</span><span class="p">,</span>
+        <span class="s2">"force_report"</span><span class="p">:</span> <span class="s2">"FR_1"</span><span class="p">,</span>
+        <span class="s2">"control"</span><span class="p">:</span> <span class="s2">"angle_of_attack"</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The native <code class="docutils literal notranslate"><span class="pre">driver</span></code> block validates and registers correctly, but the
+angle-of-attack control mode does not engage at runtime for at least one
+known case: it reports zero update every cycle instead of converging
+alpha onto the target. This is a known solver-wiring gap, not a
+documentation error — do not rely on <code class="docutils literal notranslate"><span class="pre">driver</span></code> for angle-of-attack
+control until it is fixed.</p>
+</div>
+<section id="inflow">
+<span id="bc-inflow"></span><h3>Inflow<a class="headerlink" href="#inflow" title="Link to this heading">¶</a></h3>
+<p>zCFD supports three kinds of inflow boundary condition, selected using the
+<code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> key: <code class="docutils literal notranslate"><span class="pre">'default'</span></code>, <code class="docutils literal notranslate"><span class="pre">'pressure'</span></code> and <code class="docutils literal notranslate"><span class="pre">'massflow'</span></code>. All
+three refer to a <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">reference condition</span></a> via the
+<code class="docutils literal notranslate"><span class="pre">reference</span></code> keyword (<strong>not</strong> <code class="docutils literal notranslate"><span class="pre">condition</span></code> — that keyword is farfield’s).
+By default the flow direction is normal to the boundary; the <code class="docutils literal notranslate"><span class="pre">'pressure'</span></code>
+kind can override this with an explicit direction vector.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The massflow rate needs to be specified in kg/s and can only be used if
+the mesh is in metres. Massflow ratio is nondimensional, where
+<span class="math notranslate nohighlight">\(A_{in}\)</span> is defined in mesh units:
+<span class="math notranslate nohighlight">\(massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})\)</span>.</p>
+</div>
+<p>Common fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>List of integers</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'inflow'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'default'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'default'</span></code>, <code class="docutils literal notranslate"><span class="pre">'pressure'</span></code> or <code class="docutils literal notranslate"><span class="pre">'massflow'</span></code></p></td>
+<td><p>Selects how the inflow state is specified</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
+<td><p>No (required in practice — see kinds below)</p></td>
+<td></td>
+<td><p>String reference to a reference condition</p></td>
+<td><p>Reference condition supplying the base state for ratio fields</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'default'</span></code> (condition-driven inflow — the incompressible solver’s
+velocity inlet; carries no extra fields beyond the common ones above):</p>
+<p>Example (<cite>testcases/testcases/naca0012/n0012_449_a10p0_incomp.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"inflow"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"default"</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">},</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'pressure'</span></code> — velocity and density are derived from a total
+pressure ratio and total temperature ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">total_pressure_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
+<td><p>Number</p></td>
+<td><p>Total pressure ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">total_temperature_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
+<td><p>Number</p></td>
+<td><p>Total temperature ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code> (setting this — even at its default — requires <code class="docutils literal notranslate"><span class="pre">reference</span></code> to be set)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">static_pressure_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Static pressure ratio (requires <code class="docutils literal notranslate"><span class="pre">reference</span></code> if set)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">direction</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code>: unit vector</p></td>
+<td><p>Overrides the default surface-normal flow direction</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example (<cite>testcases/testcases/pipe/pipe_total_p_ratio.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"pipe"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_2"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"inflow"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"pressure"</span><span class="p">,</span>
+    <span class="s2">"total_pressure_ratio"</span><span class="p">:</span> <span class="n">inlet_total_p_ratio</span><span class="p">,</span>
+    <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+    <span class="s2">"total_temperature_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'massflow'</span></code> — the velocity is set from a mass flow rate or ratio:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mass_flow_rate</span></code></p></td>
+<td><p>No (exactly one of <code class="docutils literal notranslate"><span class="pre">mass_flow_rate</span></code>/<code class="docutils literal notranslate"><span class="pre">mass_flow_ratio</span></code>)</p></td>
+<td></td>
+<td><p>Number (kg/s)</p></td>
+<td><p>Direct mass flow rate</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mass_flow_ratio</span></code></p></td>
+<td><p>No (exactly one of <code class="docutils literal notranslate"><span class="pre">mass_flow_rate</span></code>/<code class="docutils literal notranslate"><span class="pre">mass_flow_ratio</span></code>)</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Mass flow ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code> (requires <code class="docutils literal notranslate"><span class="pre">reference</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example using a rate (<cite>testcases/testcases/pipe/pipe_massflow.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_rate"</span><span class="p">:</span> <span class="n">massflow</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>Example using a ratio (<cite>testcases/testcases/pipe/pipe_massflowratio.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_ratio"</span><span class="p">:</span> <span class="n">inlet_mass_flow_ratio</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span> <span class="s2">"total_temperature_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 </pre></div>
 </div>
 </section>
 <section id="outflow">
 <span id="bc-outflow"></span><h3>Outflow<a class="headerlink" href="#outflow" title="Link to this heading">¶</a></h3>
-<p>Pressure or massflow outflow boundaries are specified in a similar manner to the <a class="reference internal" href="#inflow">Inflow</a> boundary. They can be of <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>.
-When the boundary condition <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> is either <code class="code docutils literal notranslate"><span class="pre">'pressure'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code>, the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions it refers to must set a static pressure ratio. When the boundary condition <code class="code docutils literal notranslate"><span class="pre">'kind'</span></code> is <code class="code docutils literal notranslate"><span class="pre">'massflow'</span></code>, a mass flow ratio or mass flow rate must be set in the <code class="code docutils literal notranslate"><span class="pre">'IC_'</span></code> conditions. Note the mass flow ratio is defined relative to the condition set in the <code class="code docutils literal notranslate"><span class="pre">'reference'</span></code> key.</p>
+<p>Pressure, massflow, or radial-pressure-gradient outflow boundaries,
+specified in a similar manner to <a class="reference internal" href="#inflow">Inflow</a>. All refer to a
+<a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">reference condition</span></a> via <code class="docutils literal notranslate"><span class="pre">reference</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
-Massflow ratio is nondimensional where <span class="math notranslate nohighlight">\(A_{out}\)</span> is defined in mesh units. Given <span class="math notranslate nohighlight">\(massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})\)</span></p>
+<p>The massflow rate needs to be specified in kg/s and can only be used if
+the mesh is in metres. Massflow ratio is nondimensional, where
+<span class="math notranslate nohighlight">\(A_{out}\)</span> is defined in mesh units:
+<span class="math notranslate nohighlight">\(massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})\)</span>.</p>
 </div>
+<p>Common fields:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21.1%" />
@@ -612,67 +937,233 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
 <td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
 <td></td>
 <td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
 </tr>
-<tr class="row-even"><td><p>‘type’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘outflow’</p></td>
-<td><p>This sets the type of boundary condition to be associated with the zones.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'outflow'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘kind’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘pressure’ or ‘massflow’ or ‘radial pressure gradient’</p></td>
-<td><dl class="simple">
-<dt>This sets how the user wants to specify the outflow conditions:</dt><dd><ul class="simple">
-<li><p><em>pressure</em> Sets the pressure at the outflow using the user specified static pressure ratio set in the reference <strong>condition</strong>.</p></li>
-<li><p><em>massflow</em> Scales the local velocity so that the total integrated massflow across all the zones meets the user specified value.</p></li>
-</ul>
-</dd>
-</dl>
-</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'pressure'</span></code>, <code class="docutils literal notranslate"><span class="pre">'massflow'</span></code> or <code class="docutils literal notranslate"><span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code></p></td>
+<td><p>Selects how the outflow state is specified</p></td>
 </tr>
-<tr class="row-even"><td><p>‘condition’</p></td>
-<td><p>Yes</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
+<td><p>No</p></td>
 <td></td>
-<td><p>String reference to IC</p></td>
-<td><p>Set the reference flow conditions block that relates to these boundaries, see <a class="reference internal" href="reference_conditions.html#reference-conditions"><span class="std std-ref">IC_*</span></a>.</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘reference radius’</p></td>
-<td><p>Yes</p></td>
-<td></td>
-<td><p>Number</p></td>
-<td></td>
+<td><p>String reference to a reference condition</p></td>
+<td><p>Reference condition supplying the base state for ratio fields</p></td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_4'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="c1"># Zone type tag</span>
-         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-         <span class="c1"># Optional: Specific zone boundary condition override</span>
-         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
-         <span class="c1"># Boundary condition type</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'outflow'</span><span class="p">,</span>
-         <span class="c1"># Kind of outflow 'pressure, 'massflow' or 'radial pressure gradient'</span>
-         <span class="s1">'kind'</span> <span class="p">:</span> <span class="s1">'pressure'</span><span class="p">,</span>
-         <span class="c1"># Required only when using 'radial pressure gradient'</span>
-         <span class="c1"># Radius at which the static pressure ratio is defined</span>
-         <span class="s1">'reference radius'</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-         <span class="c1"># Outflow conditions</span>
-         <span class="s1">'condition'</span> <span class="p">:</span> <span class="s1">'IC_2'</span><span class="p">,</span>
-         <span class="p">},</span>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'pressure'</span></code> — the exit pressure is set from a static pressure
+ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code>, or directly via <code class="docutils literal notranslate"><span class="pre">pressure</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">static_pressure_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td><p>1.0</p></td>
+<td><p>Number</p></td>
+<td><p>Static pressure ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pressure</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number &gt; 0</p></td>
+<td><p>Direct exit pressure, overriding the ratio</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pressure_ramp</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Dict</p></td>
+<td><p>Pressure ramping parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">total_temperature_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Total temperature ratio (requires <code class="docutils literal notranslate"><span class="pre">reference</span></code> if set)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example (<cite>testcases/testcases/pipe/pipe_static_p_ratio_outflow.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"outflow"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"pressure"</span><span class="p">,</span>
+    <span class="s2">"static_pressure_ratio"</span><span class="p">:</span> <span class="n">outlet_static_p_ratio</span><span class="p">,</span>
+    <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+<span class="p">},</span>
 </pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'massflow'</span></code> — scales the local velocity so the integrated mass
+flow across all zones matches the requested value:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mass_flow_rate</span></code></p></td>
+<td><p>No (exactly one of <code class="docutils literal notranslate"><span class="pre">mass_flow_rate</span></code>/<code class="docutils literal notranslate"><span class="pre">mass_flow_ratio</span></code>)</p></td>
+<td></td>
+<td><p>Number (kg/s)</p></td>
+<td><p>Direct mass flow rate</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mass_flow_ratio</span></code></p></td>
+<td><p>No (exactly one of <code class="docutils literal notranslate"><span class="pre">mass_flow_rate</span></code>/<code class="docutils literal notranslate"><span class="pre">mass_flow_ratio</span></code>)</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Mass flow ratio relative to <code class="docutils literal notranslate"><span class="pre">reference</span></code> (requires <code class="docutils literal notranslate"><span class="pre">reference</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">total_temperature_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Total temperature ratio (requires <code class="docutils literal notranslate"><span class="pre">reference</span></code> if set)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example using a rate (<cite>testcases/testcases/pipe/pipe_massflow_outflow.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_rate"</span><span class="p">:</span> <span class="n">massflow</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>Example using a ratio (<cite>testcases/testcases/pipe/pipe_massflowratio_outflow.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_ratio"</span><span class="p">:</span> <span class="n">inlet_mass_flow_ratio</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'radial</span> <span class="pre">pressure</span> <span class="pre">gradient'</span></code> — like <code class="docutils literal notranslate"><span class="pre">'pressure'</span></code>, but the static
+pressure ratio is defined at a specified radius rather than uniformly:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reference_radius</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Radius at which the static pressure ratio is defined</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">total_temperature_ratio</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Total temperature ratio (requires <code class="docutils literal notranslate"><span class="pre">reference</span></code> if set)</p></td>
+</tr>
+</tbody>
+</table>
+<p>No current testcase exercises this kind; the following is a schema-accurate
+illustration rather than a real deck excerpt:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_4"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"outflow"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"radial pressure gradient"</span><span class="p">,</span>
+    <span class="s2">"reference_radius"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</section>
+<section id="mass-flow">
+<span id="bc-mass-flow"></span><h3>Mass Flow<a class="headerlink" href="#mass-flow" title="Link to this heading">¶</a></h3>
+<p>A standalone boundary condition (<code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">'mass</span> <span class="pre">flow'</span></code>) that sets a mass
+flow rate directly, with no <code class="docutils literal notranslate"><span class="pre">kind</span></code> and no reference condition — distinct
+from the inflow/outflow <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'massflow'</span></code> variants above.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21.1%" />
+<col style="width: 10.5%" />
+<col style="width: 10.5%" />
+<col style="width: 21.1%" />
+<col style="width: 36.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Valid values</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>List of integers</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'mass</span> <span class="pre">flow'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mass_flow</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>Number</p></td>
+<td><p>Mass flow rate</p></td>
+</tr>
+</tbody>
+</table>
+<p>No current testcase uses this BC type; the following is a schema-accurate
+illustration rather than a real deck excerpt:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"mass flow"</span><span class="p">,</span> <span class="s2">"mass_flow"</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">},</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a deliberate spelling duplicate of the inflow and outflow
+<code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'massflow'</span></code> variants above — the same underlying concept has
+two different names: <code class="docutils literal notranslate"><span class="pre">'mass</span> <span class="pre">flow'</span></code> as a top-level <code class="docutils literal notranslate"><span class="pre">type</span></code> here, and
+<code class="docutils literal notranslate"><span class="pre">'massflow'</span></code> as a <code class="docutils literal notranslate"><span class="pre">kind</span></code> there. Both spellings are valid; unifying
+them would require a coordinated schema and C++ change.</p>
 </div>
 </section>
 <section id="symmetry">
@@ -694,44 +1185,41 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
 <td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
 <td></td>
 <td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
 </tr>
-<tr class="row-even"><td><p>‘type’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘symmetry’</p></td>
-<td><p>This sets the type of boundary condition to be associated with the zones.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'symmetry'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example symmetry boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_5'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'ref'</span> <span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'symmetry'</span><span class="p">,</span>
-<span class="p">},</span>
+<p>Example (<cite>testcases/testcases/naca0012/Naca0012_base.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
 </pre></div>
 </div>
 </section>
 <section id="periodic">
 <span id="bc-periodic"></span><h3>Periodic<a class="headerlink" href="#periodic" title="Link to this heading">¶</a></h3>
-<p>This boundary condition needs to be specified in pairs with opposing transformations. The transforms specified should map each zone onto each other.</p>
+<p>This boundary condition needs to be specified in pairs with opposing
+transformations. The transforms specified should map each zone onto the
+matching zone.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Each periodic boundary needs to provide the correct vector to the opposite matching boundary.</p>
+<p>Each periodic boundary needs to provide the correct transform to the
+opposite matching boundary.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The incompressible solver (‘incomp viscous’ / ‘incomp rans’ / ‘incomp les’) only supports the <strong>‘linear’</strong> (translational) periodic kind. <strong>‘rotated’</strong> periodic boundaries are only supported by the compressible solver.</p>
+<p>The incompressible solver (<code class="docutils literal notranslate"><span class="pre">solver_settings.type:</span> <span class="pre">'incompressible'</span></code>)
+only supports the <strong>‘linear’</strong> (translational) periodic kind.
+<strong>‘rotated’</strong> periodic boundaries are only supported by the
+compressible solver.</p>
 </div>
 <table class="docutils align-default">
 <colgroup>
@@ -750,33 +1238,33 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
 <td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
 <td></td>
 <td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
 </tr>
-<tr class="row-even"><td><p>‘type’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘periodic’</p></td>
-<td><p>This sets the type of boundary condition to be associated with the zones.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'periodic'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘kind’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘rotated’ or ‘linear’ dictionary (see below)</p></td>
-<td><p>The definition of the periodic transformations, can either be a ‘rotated’ or ‘linear’ dictionary (see note above on incompressible-solver support)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'rotated'</span></code> or <code class="docutils literal notranslate"><span class="pre">'linear'</span></code></p></td>
+<td><p>Selects the periodic transformation type (see note above on incompressible-solver support)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform</span></code></p></td>
+<td><p>Yes</p></td>
+<td></td>
+<td><p>See below</p></td>
+<td><p>The periodic transformation, shape depends on <code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<p>The options for the <strong>‘linear’</strong> dictionary are:</p>
+<p>The options for the <strong>‘linear’</strong> <code class="docutils literal notranslate"><span class="pre">transform</span></code> are:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -794,28 +1282,24 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘vector’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>[x, y, z]: vector of numbers</p></td>
-<td><p>Defines the translation vector to map this zone onto the matching periodic zone</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code></p></td>
+<td><p>Translation vector mapping this zone onto the matching periodic zone</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example linear periodic boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_6'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'periodic'</span><span class="p">,</span>
-         <span class="s1">'kind'</span> <span class="p">:</span> <span class="p">{</span>
-                  <span class="c1"># Linear periodic settings</span>
-                  <span class="s1">'linear'</span> <span class="p">:</span> <span class="p">{</span>
-                             <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-                             <span class="p">},</span>
-          <span class="p">},</span>
+<p>Example linear periodic boundary condition (<cite>testcases/testcases/cavity/re400_periodic.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"periodic"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span>
+    <span class="s2">"transform"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]},</span>
 <span class="p">},</span>
 </pre></div>
 </div>
-<p>The options for the <strong>‘rotated’</strong> dictionary are (compressible solver only — see note above):</p>
+<p>The options for the <strong>‘rotated’</strong> <code class="docutils literal notranslate"><span class="pre">transform</span></code> are (compressible solver only — see note above):</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -833,45 +1317,44 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘axis’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axis</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>[x, y, z]: vector of numbers</p></td>
-<td><p>Defines the axis of rotation used to map this boundary onto the matching periodic zone</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code>: unit vector</p></td>
+<td><p>Axis of rotation mapping this boundary onto the matching periodic zone</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘origin’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">origin</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>[x, y, z]: vector of numbers</p></td>
-<td><p>Defines the origin of the axis of rotation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code></p></td>
+<td><p>Origin of the axis of rotation</p></td>
 </tr>
-<tr class="row-even"><td><p>‘theta’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">theta</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
 <td><p>Number</p></td>
-<td><p>Defines the angle of rotation about the axis (in radians)</p></td>
+<td><p>Angle of rotation about the axis, in radians</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example rotated periodic boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_6'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'periodic'</span><span class="p">,</span>
-         <span class="s1">'kind'</span> <span class="p">:</span> <span class="p">{</span>
-                  <span class="c1"># Rotated periodic settings</span>
-                  <span class="s1">'rotated'</span> <span class="p">:</span> <span class="p">{</span>
-                              <span class="s1">'theta'</span> <span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">120.0</span><span class="p">),</span>
-                              <span class="s1">'axis'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-                              <span class="s1">'origin'</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-                              <span class="p">},</span>
-                <span class="p">},</span>
-<span class="p">}</span>
+<p>Example rotated periodic boundary condition (<cite>testcases/testcases/IEA15MW/IEA_15MW_10p59.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_4"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"periodic"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"rotated"</span><span class="p">,</span>
+    <span class="s2">"transform"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"theta"</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">120.0</span><span class="p">),</span>
+        <span class="s2">"axis"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="s2">"origin"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">},</span>
 </pre></div>
 </div>
 </section>
 <section id="overset">
 <span id="bc-overset"></span><h3>Overset<a class="headerlink" href="#overset" title="Link to this heading">¶</a></h3>
-<p>The overset boundary condition should be applied to the boundaries of a mesh to be overset on top of a larger background mesh.</p>
+<p>The overset boundary condition should be applied to the boundaries of a
+mesh to be overset on top of a larger background mesh.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21.1%" />
@@ -889,31 +1372,50 @@ Massflow ratio is nondimensional where <span class="math notranslate nohighlight
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘ref’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
 <td><p>Yes</p></td>
-<td></td>
-<td><p>Integer</p></td>
-<td><p>Mesh reference defined by this boundary condition</p></td>
-</tr>
-<tr class="row-odd"><td><p>‘zone’</p></td>
-<td><p>No</p></td>
 <td></td>
 <td><p>List of integers</p></td>
-<td><p>Specifies list of mesh zones defined by this boundary condition</p></td>
+<td><p>Mesh zone IDs this boundary condition applies to</p></td>
 </tr>
-<tr class="row-even"><td><p>‘type’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td></td>
-<td><p>‘overset’</p></td>
-<td><p>This sets the type of boundary condition to be associated with the zones.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'overset'</span></code></p></td>
+<td><p>Boundary condition type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">background</span></code></p></td>
+<td><p>No</p></td>
+<td><p>unset (falls back to all-pairs connectivity)</p></td>
+<td><p>Model name, list of model names, or unset</p></td>
+<td><p>Model(s) whose mesh provides donor data at this boundary. Used to derive the blanking priority order — models are topologically sorted so a model always appears after the model(s) it names as background. When unset, the solver falls back to all-pairs connectivity against every preceding model in the topological order; explicit specification is preferred, as it avoids unnecessary mapper creation for non-overlapping mesh pairs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">idw_from_cells_order</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0</p></td>
+<td><p>Integer &gt;= 0</p></td>
+<td><p>Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0</p></td>
+<td><p>Integer &gt;= 0</p></td>
+<td><p>Number of additional active cell layers near the blanking boundary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh_halo_layers</span></code></p></td>
+<td><p>No</p></td>
+<td><p>0</p></td>
+<td><p>Integer &gt;= 0</p></td>
+<td><p>Halo fringe layers around the hole when the overset mesh moves (0 = treat every blanked cell as a halo; N &gt; 0 is sufficient when the hole is re-cut every real time step)</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example overset boundary condition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'BC_7'</span> <span class="p">:</span> <span class="p">{</span>
-         <span class="s1">'zone'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
-         <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'overset'</span><span class="p">,</span>
-<span class="p">},</span>
+<p>Example without an explicit background (<cite>testcases/testcases/euler_rotating_cylinder/euler_rotating_cylinder.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">},</span>
+</pre></div>
+</div>
+<p>Example with an explicit background model (<cite>testcases/testcases/oversetmulticylinder/oversetmulticylinder.py</cite>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span> <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"background"</span><span class="p">]},</span>
 </pre></div>
 </div>
 </section>

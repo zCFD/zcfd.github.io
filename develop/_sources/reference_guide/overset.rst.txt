@@ -2,41 +2,41 @@
 
 Overset
 -------
-zCFD is capable of automatically oversetting multiple meshes into a single simulation. To run an overset case you need to provide an :ref:`override file <override_file>`.
+zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the control file's top-level ``model`` key, each carrying its own ``mesh`` path, and each mesh that receives donor data from another mesh must declare an ``'overset'`` boundary condition on its hole-cutting surface (see :ref:`Overset boundary condition <overset_bc>` below).
 
-.. _override_file:
+.. _overset_setup:
 
-Override file
-=============
-The override file tells zCFD which combinations of mesh and control dictionary to load and overset. The first entry in the list should be the background mesh, this is typically the largest of the meshes that the other meshes overlap with. The following entries in the list are then overset onto the background mesh when the solver starts. The meshes are overlapped in the order they appear in the list, starting with the background mesh.
+Setting up an overset case
+============================
+One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an ``'overset'`` boundary condition whose ``background`` field names the donor model(s) (see below).
 
-The list should be defined in a separate python file containing an **override** dictionary.
-
-Example **override** dictionary (e.g. override.py):
+Example ``model`` structure, adapted from ``testcases/testcases/oversetmulticylinder/oversetmulticylinder.py`` (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):
 
 .. code-block:: python
 
-    override = {
-        'mesh_case_pair': [
-            ("background_mesh.h5", "background.py"),
-            ("overset_1.h5", "overset_1.py"),
-            ("overset_2.h5", "overset_2.py"),
-        ]
+    "model": {
+        "background": {"mesh": "back1.h5", ...},
+        "refinement_region": {"mesh": "back2.h5", ...},
+        "cylinder_1": {"mesh": "back3.h5", ...},
+        "cylinder_2": {"mesh": "back3.h5", ...},
     }
 
-
-Running an overset case:
+Run the case with a plain:
 
 .. code-block:: bash
 
-    (zCFD)> run_zcfd -f override.py 
+    (zCFD)> run_zcfd -c oversetmulticylinder.py
 
-Mapping
-=======
+All meshes are read from the ``mesh`` key of each entry under ``model``; no separate mesh/case file pairing and no command-line mesh argument is needed.
 
-The **mapping** dictionary sets additional mapping options for overset methods and should be defined in the background control file. 
+.. _overset_bc:
 
-.. list-table:: 
+Overset boundary condition
+===========================
+
+Overset mapping options are set directly on the boundary condition that marks a mesh's overset (hole-cutting) surface, using ``'type': 'overset'`` inside that model's ``boundary_conditions`` block:
+
+.. list-table::
    :widths: 25 10 20 20 30
    :header-rows: 1
 
@@ -45,48 +45,90 @@ The **mapping** dictionary sets additional mapping options for overset methods a
      - Default
      - Valid values
      - Description
-   * - 'idw from cells order'
-     - 0
-     - --
-     - 0 or 1
-     - Sets the order of accuracy for IDW mapping
-   * - 'number of additional overset active layers'
+   * - ``type``
      - Yes
-     - 0
-     - Positive integer
-     - Adds additional active cells to overlapped mesh
-   * - 'verbose logging'
+     - --
+     - ``'overset'``
+     - Marks this boundary as an overset (hole-cutting) surface.
+   * - ``background``
      - No
-     - False
-     - True or False
-     - Enables detailed mapper diagnostic output
+     - ``None``
+     - Model name (string) or list of model names
+     - The model(s) whose mesh provides donor data at this boundary. When omitted, the solver falls back to legacy all-pairs connectivity (mapping against every preceding model).
+   * - ``idw_from_cells_order``
+     - No
+     - 0
+     - 0 or 1
+     - Sets the order of accuracy for IDW mapping.
+   * - ``additional_active_layers``
+     - No
+     - 0
+     - Non-negative integer
+     - Adds additional active cells to the overlapped mesh near the blanking boundary.
+   * - ``moving_mesh_halo_layers``
+     - No
+     - 0
+     - Non-negative integer
+     - Halo fringe layers around the hole when the overset mesh moves (0 treats every blanked cell as a halo; a value > 0 is sufficient when the hole is re-cut every real time step).
 
-
-Example usage:
+Example usage, adapted from a real multi-mesh overset testcase (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):
 
 .. code-block:: python
 
   parameters = {
-    ..
-    'mapping': {
-        'idw from cells order': 0,
-        'number of additional overset active layers': 0,
-        'verbose logging': False,
-    }
-    ..
+      ...
+      "model": {
+          "background": {
+              "mesh": "back1.h5",
+              "boundary_conditions": {
+                  "BC_1": {"zones": [9, 11], "type": "symmetry"},
+                  "BC_2": {"zones": [10], "type": "farfield", "condition": "IC_1", "kind": "riemann"},
+              },
+          },
+          "refinement_region": {
+              "mesh": "back2.h5",
+              "boundary_conditions": {
+                  "BC_1": {"zones": [9, 11], "type": "symmetry"},
+                  "BC_2": {
+                      "zones": [10],
+                      "type": "overset",
+                      "background": ["background"],
+                  },
+              },
+          },
+          "cylinder_1": {
+              "mesh": "back3.h5",
+              "boundary_conditions": {
+                  "BC_1": {"zones": [11, 12], "type": "symmetry"},
+                  "BC_2": {
+                      "zones": [13],
+                      "type": "overset",
+                      "background": ["refinement_region"],
+                  },
+                  "BC_3": {"zones": [10], "type": "wall", "kind": "no slip"},
+              },
+          },
+      },
+      ...
   }
 
 
-idw from cells order
-^^^^^^^^^^^^^^^^^^^^
-If **'idw from cells order'** is set to 0, this provides a 0th order interpolation where we only utilise data from cell a mapped point is located within.  If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.
+idw_from_cells_order
+^^^^^^^^^^^^^^^^^^^^^
+If **idw_from_cells_order** is set to 0, this provides a 0th order interpolation where we only utilise data from the cell a mapped point is located within. If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.
 
-number of additional overset active layers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Adds additional active cells which may have been made inactive by an overlapping mesh. If for example, we have a rotating domain, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering cells made inactive.  This will result in no mapping between background and overset meshes at these points.  To resolve this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and background meshes.  Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.
+additional_active_layers
+^^^^^^^^^^^^^^^^^^^^^^^^
+Adds additional active cells which may have been made inactive by an overlapping mesh. If for example, we have a rotating domain, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering cells made inactive. This will result in no mapping between background and overset meshes at these points. To resolve this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and background meshes. Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.
 
-verbose logging
-^^^^^^^^^^^^^^^
-When set to True, enables detailed diagnostic output for overset mapping operations. This includes per-mesh-pair mapping messages, time history copy notifications, mesh rotation angles, and the full list of missing data face coordinates. When False (the default), these are replaced with compact summary messages. The warning count for unmapped overset boundary faces is always shown regardless of this setting.
+moving_mesh_halo_layers
+^^^^^^^^^^^^^^^^^^^^^^^
+Relevant only when the overset mesh is itself moving (see the rotating/translating fluid zone motion types with ``moving_mesh: True`` in :ref:`Mesh Transformation <mesh_transform>`). Controls how many halo fringe layers are kept around the re-cut hole each time the mesh moves; a value of 0 treats every blanked cell as a halo, which is safe but conservative, while N > 0 is sufficient when the hole is re-cut every real time step and avoids remapping cells that don't need it.
 
+background
+^^^^^^^^^^
+Names the model(s) whose mesh supplies donor data at this overset boundary, and is used to derive the blanking priority order: models are topologically sorted so that a model always appears after the model(s) it declares as its background, with root meshes (no overset boundary conditions) placed first. Explicit specification is preferred over the ``None`` default — it avoids unnecessary mapper creation for non-overlapping mesh pairs. Accepts either a single model name or a list, as shown in the example above.
 
+.. note::
+
+    There is no control-file option for detailed per-mesh-pair mapper diagnostics. The underlying C++ verbose-mapping flag exists, but nothing in the current control-file schema or launcher wires a value to it, so it cannot be enabled from a control deck.

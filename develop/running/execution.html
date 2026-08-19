@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Running zCFD &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Running zCFD &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -41,7 +41,7 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#command-line-execution" id="id2">Command Line Execution</a></p></li>
 <li><p><a class="reference internal" href="#input-validation" id="id3">Input Validation</a></p></li>
-<li><p><a class="reference internal" href="#overriding-mesh-and-case-names" id="id4">Overriding Mesh and Case Names</a></p></li>
+<li><p><a class="reference internal" href="#multiple-meshes-and-overset-cases" id="id4">Multiple Meshes and Overset Cases</a></p></li>
 <li><p><a class="reference internal" href="#batch-queue-submission" id="id5">Batch Queue Submission</a></p></li>
 </ul>
 </nav>
@@ -122,15 +122,21 @@
 </div>
 <p>If the -m option is given with a mesh file the script will check whether any zones specified as lists to boundary conditions, transforms or reports in the input exist in the mesh.</p>
 </section>
-<section id="overriding-mesh-and-case-names">
-<h2>Overriding Mesh and Case Names<a class="headerlink" href="#overriding-mesh-and-case-names" title="Link to this heading">¶</a></h2>
-<p>For more advanced simulations with overset meshes (see <a class="reference internal" href="../reference_guide/overset.html#overset"><span class="std std-ref">overset</span></a>) an override dictionary can be supplied as an additional argument to the command-line, in interactive mode or within a batch submission script, to specify multiple meshes and associated control dictionaries:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span>gpu<span class="w"> </span>-f<span class="w"> </span>&lt;override_file&gt;
+<section id="multiple-meshes-and-overset-cases">
+<h2>Multiple Meshes and Overset Cases<a class="headerlink" href="#multiple-meshes-and-overset-cases" title="Link to this heading">¶</a></h2>
+<p>A case with more than one mesh (see <a class="reference internal" href="../reference_guide/overset.html#overset"><span class="std std-ref">overset</span></a>) is run from a single control dictionary: each mesh is a named entry under the top-level <code class="docutils literal notranslate"><span class="pre">model</span></code> key, run together with the same <code class="docutils literal notranslate"><span class="pre">run_zcfd</span> <span class="pre">-c</span> <span class="pre">&lt;case_name&gt;</span></code> invocation used for a single-mesh case — there is no separate <code class="docutils literal notranslate"><span class="pre">-p</span></code>/mesh argument or override file for these cases.</p>
+<p>An example control dictionary for a background domain with a single rotating turbine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"config_version"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"solver"</span><span class="p">:</span> <span class="p">{</span><span class="o">....</span><span class="p">},</span>
+    <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"background"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"background.h5"</span><span class="p">,</span> <span class="o">....</span><span class="p">},</span>
+        <span class="s2">"turbine"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"turbine.h5"</span><span class="p">,</span> <span class="o">....</span><span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>An example override.py file for a background domain with a single rotating turbine would be:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">override</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'mesh_case_pair'</span><span class="p">:</span> <span class="p">[(</span><span class="s1">'background.h5'</span><span class="p">,</span> <span class="s1">'background.py'</span><span class="p">),</span>
-                               <span class="p">(</span><span class="s1">'turbine.h5'</span><span class="p">,</span> <span class="s1">'turbine.py'</span><span class="p">)]}</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>-d<span class="w"> </span>gpu<span class="w"> </span>-c<span class="w"> </span>&lt;case_name&gt;
 </pre></div>
 </div>
 </section>

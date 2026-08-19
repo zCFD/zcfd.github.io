@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 5: Overset Meshes &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Tutorial 5: Overset Meshes &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -43,53 +43,57 @@
 <li><p>There may be components in relative motion, such as a train entering a tunnel.  In this case the mesh for the train can overset the background mesh for the tunnel, and the train can move into the tunnel without the need for any new mesh generation.  The solver takes care of the changing mesh mapping across the boundary as the train moves, including preservation of the solution accuracy with a region of overlapping meshes.</p></li>
 <li><p>There may already be a high quality mesh for an aircraft or a cityscape, and we want to include a new component or a new building without regenerating the entire mesh. It may be simpler to include any changes into a new mesh of a small region, and apply it like a patch as an overset mesh.</p></li>
 </ul>
-<p>This is called an overset mesh technique, and is supported by zCFD.  In all cases, the flow solutions are calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy.  zCFD will support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large numbers of overset meshes in each simulation.  The order of the sequence of meshes specified by the user determines which mesh is active in each part of the flow domain.  zCFD automatically manages the data exchange between all meshes, including parallel partitions.</p>
+<p>This is called an overset mesh technique, and is supported by zCFD.  In all cases, the flow solutions are calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy.  zCFD will support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large numbers of overset meshes in each simulation.  Each overset boundary condition can name the mesh(es) it takes donor data from, and the solver uses this to work out which mesh is active in each part of the flow domain.  zCFD automatically manages the data exchange between all meshes, including parallel partitions.</p>
 <section id="example-1-multiple-overset-cylinder-test-case">
 <span id="example1multipleoversetcylindertestcase"></span><h2>Example 1 - Multiple Overset Cylinder Test Case<a class="headerlink" href="#example-1-multiple-overset-cylinder-test-case" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/oversetmulticylinder_meshes.png" id="overset-multi-pic"><img alt="Two cylinders, with overlapping near-field overset conformal meshes (Back 3 and Back 4), where both near-field meshes overset the regular Cartesian Back 2 mesh, which in turn oversets the coarse Back 1 mesh." class="align-center" id="overset-multi-pic" src="../_images/oversetmulticylinder_meshes.png" width="600" />
 </a>
-<p>There are 4 (mesh, control dictionary) pairs of input files.  These are listed in a special “override” file called “oversetmulticylinder.py” used for overset cases:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">override</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'mesh_case_pair'</span><span class="p">:</span> <span class="p">[(</span><span class="s1">'back1.h5'</span><span class="p">,</span> <span class="s1">'back1'</span><span class="p">),</span>
-                               <span class="p">(</span><span class="s1">'back2.h5'</span><span class="p">,</span> <span class="s1">'back2'</span><span class="p">),</span>
-                               <span class="p">(</span><span class="s1">'back3.h5'</span><span class="p">,</span> <span class="s1">'back3'</span><span class="p">),</span>
-                               <span class="p">(</span><span class="s1">'back3.h5'</span><span class="p">,</span> <span class="s1">'back4'</span><span class="p">)]}</span>
+<p>There are 4 meshes involved in this case. A single control dictionary called “oversetmulticylinder.py” declares one named entry per mesh under its top-level <code class="docutils literal notranslate"><span class="pre">model</span></code> key, each entry carrying its own <code class="docutils literal notranslate"><span class="pre">mesh</span></code> path:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"background"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back1.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="s2">"refinement_region"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back2.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="s2">"cylinder_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back3.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="s2">"cylinder_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back3.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>Note that in this case, the “back3.h5” mesh defining a cylinder has been used twice.  This is OK, because the “back3.py” and “back4.py” control dictionaries each apply a different transformation (down and up along the y-axis respectively).  The solver knows that the meshes are used for different solutions, in different parts of the flow domain.  Also note that the translated mesh for “back4” overlaps the translated mesh for “back3” (the mesh between the two cylinders). This is also OK because the solver knows that “back4” oversets “back3”, which oversets “back2” and “back1”.  In each case, the active solution is the one on the top-level oversetting mesh.</p>
+<p>Note that in this case, the “back3.h5” mesh defining a cylinder has been used twice, once for “cylinder_1” and once for “cylinder_2”. This is OK, because the “cylinder_1” and “cylinder_2” model entries each apply a different transformation (down and up along the y-axis respectively). The solver knows that the meshes are used for different solutions, in different parts of the flow domain. Also note that the translated mesh for “cylinder_1” overlaps the translated mesh for “cylinder_2” (the mesh between the two cylinders). This is also OK because each model entry’s overset boundary condition explicitly names its own background mesh - the solver builds “cylinder_1” and “cylinder_2” oversetting “refinement_region”, which oversets “background”. In each case, the active solution is the one on the top-level oversetting mesh.</p>
 <p>The files for running the case are available for download <a class="reference external" href="https://zcfd.zenotech.com/tutorials/5/oversetmulticylinder.zip" target="_blank">here</a>.</p>
-<p>For each of the meshes, a transformation has been defined in the corresponding control file, for example the “back1.h5” mesh is moved according to the transformation defined by the following lines in the “back1.py” control dictionary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"mesh transform matrix"</span><span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span>
-    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">]</span>
-<span class="p">),</span>
+<p>For each of the meshes, a transformation has been defined under that mesh’s <code class="docutils literal notranslate"><span class="pre">transforms</span></code> key, for example the “background” entry (the “back1.h5” mesh) is moved according to the transformation defined by the following lines:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"transforms"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"transform matrix"</span><span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">},</span>
 </pre></div>
 </div>
-<p>This tells the solver to use the inbuilt transformation function in zutil to translate the mesh down in the z-axis by 1.5 units.  The lowest level mesh (i.e. that does not overset any other meshes) does not require any other modification, providing that the order of solution spatial accuracy supported by the meshes that overset it are that same as its own accuracy.  For all of the meshes that overset at least one other mesh, a special boundary condition must be applied to any zone (boundary) where information is to be exchanged between meshes.  For example, in “back3.py” the following line is used:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zone"</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">},</span>
+<p>This tells the solver to use the inbuilt transformation function in zutil to translate the mesh down in the z-axis by 1.5 units. The lowest level mesh (i.e. that does not overset any other meshes) does not require any other modification, providing that the order of solution spatial accuracy supported by the meshes that overset it are that same as its own accuracy. For all of the meshes that overset at least one other mesh, a special boundary condition must be applied to any zone (boundary) where information is to be exchanged between meshes. For example, in the “cylinder_2” entry the following line is used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span> <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"refinement_region"</span><span class="p">]},</span>
 </pre></div>
 </div>
-<p>For the “back3.h5” mesh, zone 13 (comprising boundary faces excluding symmetry planes and the cylinder surface) is designated as an overset boundary. This means the solver will interpolate and exchange data between this zone and the background mesh (“back2.h5”). The software automatically calculates the necessary mapping and interpolation coefficients to preserve the spatial accuracy of the overset solution.</p>
+<p>For the “cylinder_2” model (the “back3.h5” mesh, translated down in y), zone 13 (comprising boundary faces excluding symmetry planes and the cylinder surface) is designated as an overset boundary, and its <code class="docutils literal notranslate"><span class="pre">background</span></code> field names “refinement_region” as the donor mesh it exchanges data with. Naming the background mesh explicitly like this is the preferred form: it tells the solver exactly which mesh pairs need a mapper built, rather than falling back to checking every preceding mesh in the model dictionary for overlap. The software automatically calculates the necessary mapping and interpolation coefficients to preserve the spatial accuracy of the overset solution.</p>
 <p>The “Multiple Overset Cylinder” test case runs in a few minutes on a GPU, with the simple command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-f<span class="w"> </span>oversetmulticylinder.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-c<span class="w"> </span>oversetmulticylinder.py
 </pre></div>
 </div>
-<p>The usual command line arguments specifying the mesh and the case name are not required as they are replaced with the list in the “override” dictionary specified within the “oversetmulticylinder.py” file.</p>
+<p>The usual command line arguments specifying the mesh are not required (and are ignored if given) - all four meshes are read from the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> key of each entry under <code class="docutils literal notranslate"><span class="pre">model</span></code> in “oversetmulticylinder.py”.</p>
 <p>When complete, the following outputs should be produced:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_P1_OUTPUT
-back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_report.csv
-back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_results.h5
-back<span class="o">[</span><span class="m">1</span>,2,3,4<span class="o">]</span>_status.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>oversetmulticylinder_OUTPUT/background/
+oversetmulticylinder_OUTPUT/refinement_region/
+oversetmulticylinder_OUTPUT/cylinder_1/
+oversetmulticylinder_OUTPUT/cylinder_2/
 oversetmulticylinder.log
-oversetmulticylinder_report.ipynb
+oversetmulticylinder_status.yaml
 </pre></div>
 </div>
-<p>Where the [1,2,3,4] indicates that the file or directory exists for each overset solution separately.   From a post-processing perspective, overset grids offer a significant advantage: independent solutions that only exchange boundary data during computation. This independence can save post-processing time and memory, as not all solution files are needed to analyse specific regions. However, a separate step is necessary to combine these independent solutions for domain-wide processing, such as extracting cross-sections. ParaView can be used to illustrate this combination process.</p>
+<p>Each of the four model subdirectories under “oversetmulticylinder_OUTPUT” contains that mesh’s own report, checkpoint and volume/surface solution files (e.g. “cylinder_1/cylinder_1_report.csv”, “cylinder_1/cylinder_1.vtkhdf”), named after the model’s key in the control dictionary rather than the mesh filename. From a post-processing perspective, overset grids offer a significant advantage: independent solutions that only exchange boundary data during computation. This independence can save post-processing time and memory, as not all solution files are needed to analyse specific regions. However, a separate step is necessary to combine these independent solutions for domain-wide processing, such as extracting cross-sections. ParaView can be used to illustrate this combination process.</p>
 </section>
 <section id="post-processing-using-paraview">
 <span id="postprocessingusingparaview"></span><h2>Post-processing using ParaView<a class="headerlink" href="#post-processing-using-paraview" title="Link to this heading">¶</a></h2>
 <p>To combine the 4 overset meshes into a single solution that can be operated on as though it were a single object, we use the “Append Datasets” filter in ParaView.</p>
 <ul class="simple">
 <li><p>Launch ParaView so that you can load the solution files (locally or remotely).</p></li>
-<li><p>Load the 4 files “back*_P1_OUTPUT/back*.vtkhdf” for * = 1,2,3 and 4.</p></li>
+<li><p>Load the 4 files “oversetmulticylinder_OUTPUT/background/background.vtkhdf”, “…/refinement_region/refinement_region.vtkhdf”, “…/cylinder_1/cylinder_1.vtkhdf” and “…/cylinder_2/cylinder_2.vtkhdf”.</p></li>
 <li><p>Highlight all 4 files on the navigation tree (on the left) and select “Filters &gt; Append Datasets”.  This will create a new item in the navigation tree called “AppendDatasets1” that acts on all four datasets at once.</p></li>
 <li><p>The volumetric data output for this case contains a variable called “overset” which is 0 or 1 for any cell in the meshes. 0 means that the cell has been overset by another mesh, and 1 means that the cell is the active cell in that location.  Use the “Filters &gt; Threshold” filter to select only the cells in the “AppendDatasets1” combined dataset that have an “overset” value of 1 (do this by changing the lower threshold value from 0 to 1).  This will create a new item in the navigation tree called “Threshold1” excluding any cells that have been overset by cells in another mesh.</p></li>
 <li><p>Use the “Filters &gt; Cell Data to Point Data” filter to interpolate the cell data from “Threshold1” to the mesh nodes.  This makes subsequent interpolation operations in ParaView more accurate.  This will create a new item in the navigation tree called “CellDatatoPointData1”.</p></li>
@@ -98,7 +102,7 @@ oversetmulticylinder_report.ipynb
 </ul>
 <p>Other post-processing steps such as streamlines or animations will also work with overset meshes in the same manner.   If the meshes are in relative motion throughout an unsteady simulation, ParaView will automatically update their positions.</p>
 <ul class="simple">
-<li><p>[Optional] The “back2” solution will show through behind the “back3” and “back4” overset solutions because of the holes where the cylinders are.  Any solution is non-physical, and an easy way to mask this effect is to insert some simple geometry to show the location of the cylinders.  Use “Sources &gt; Cylinder” to create a unit diameter cylinder at [0,0,0] and rotate it 90 degrees about the x-axis, then translate it in the y-axis by -0.8 in y to put it into place.  Repeat, but with a translation of +0.8 for the other cylinder.</p></li>
+<li><p>[Optional] The “refinement_region” solution will show through behind the “cylinder_1” and “cylinder_2” overset solutions because of the holes where the cylinders are.  Any solution is non-physical, and an easy way to mask this effect is to insert some simple geometry to show the location of the cylinders.  Use “Sources &gt; Cylinder” to create a unit diameter cylinder at [0,0,0] and rotate it 90 degrees about the x-axis, then translate it in the y-axis by -0.8 in y to put it into place.  Repeat, but with a translation of +0.8 for the other cylinder.</p></li>
 <li><p>[Optional] The above steps will produce the image below:</p></li>
 </ul>
 <a class="reference internal image-reference" href="../_images/postprocessing_using_paraview_raw.png"><img alt="../_images/postprocessing_using_paraview_raw.png" class="align-center" src="../_images/postprocessing_using_paraview_raw.png" width="600" />
@@ -117,50 +121,54 @@ The simulation set up follows that described in Section 7.6 of Railway applicati
 <p>The input control dictionary for the train in this case also shows how to programmatically define the motion of a mesh in time:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">linear_accel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"time step"</span><span class="p">]</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"time_step"</span><span class="p">]</span>
     <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">69.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">1.5</span><span class="p">:</span>
         <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">69.4</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"velocity"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">u</span><span class="p">)}</span>
 </pre></div>
 </div>
-<p>This function returns the velocity to be applied to a fluid zone, which is then defined by:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'FZ_1'</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'translating'</span><span class="p">,</span>
-        <span class="s1">'zone'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-        <span class="s1">'vector'</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-        <span class="s1">'mach'</span><span class="p">:</span> <span class="mf">69.4</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.4</span> <span class="o">*</span> <span class="mi">287</span> <span class="o">*</span> <span class="p">(</span><span class="mf">277.7777</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)),</span>
-        <span class="s1">'translation function'</span><span class="p">:</span> <span class="n">linear_accel</span><span class="p">,</span>
+<p>This function returns the velocity to be applied to a fluid zone, which is then defined under the “train” mesh’s <code class="docutils literal notranslate"><span class="pre">model</span></code> entry by:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"FZ_1"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"translating"</span><span class="p">,</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+    <span class="s2">"velocity"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">69.4</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">"translation function"</span><span class="p">:</span> <span class="n">linear_accel</span><span class="p">,</span>
+    <span class="s2">"moving mesh"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
-<p>The motion is applied to the mesh because of the keyword ‘moving mesh’ in the ‘time marching’ section of the control dictionary.  This will force a recalculation of the physical location of the mesh, including the recalculation of any overset mappings, every real time step.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"time marching"</span><span class="p">:</span> <span class="p">{</span>
-     <span class="s2">"unsteady"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"total time"</span><span class="p">:</span> <span class="mf">3.6</span><span class="p">,</span>
-                  <span class="s2">"time step"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
-                  <span class="s2">"order"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-     <span class="s2">"scheme"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"implicit euler"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-     <span class="s2">"cfl"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-     <span class="s2">"cycles"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-     <span class="s2">"moving mesh"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
- <span class="p">},</span>
+<p>The fluid zone’s <code class="docutils literal notranslate"><span class="pre">velocity</span></code> is a single vector in m/s - there is no separate <code class="docutils literal notranslate"><span class="pre">vector</span></code>/<code class="docutils literal notranslate"><span class="pre">mach</span></code> split for a translating zone. The <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> field is set directly on the fluid zone; setting it is only permitted when the same mesh also declares an overset boundary condition (as the “train” mesh does, for the zone where it exchanges data with the tunnel background mesh), since a moving mesh with nowhere to overset is meaningless. Setting <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> forces a recalculation of the physical location of the mesh, including the recalculation of any overset mappings, every real time step.</p>
+<p>The unsteady time-marching settings that apply to the whole case live under the control dictionary’s top-level <code class="docutils literal notranslate"><span class="pre">solver</span></code> key, split between <code class="docutils literal notranslate"><span class="pre">time_settings</span></code> (what is being marched) and <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code> (how each step converges):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"time settings"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"unsteady"</span><span class="p">,</span>
+    <span class="s2">"total time"</span><span class="p">:</span> <span class="mf">3.6</span><span class="p">,</span>
+    <span class="s2">"time step"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+    <span class="s2">"order"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"start"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">},</span>
+<span class="s2">"convergence control"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"scheme"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"implicit euler"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="s2">"cfl"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="s2">"cycles"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">},</span>
 </pre></div>
 </div>
 <p>The meshes and control files for the train and the tunnel can be downloaded from <a class="reference external" href="https://zcfd.zenotech.com/tutorials/5/traintunnel.zip" target="_blank">here</a>.</p>
 <p>The train tunnel case is larger than the previous case in this tutorial: the train mesh has 1.31m cells and the tunnel has 7.35m cells.  To run this case in implicit mode on a GPU will require approximately 48GB RAM.</p>
 <p>The case can be run with the command</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-f<span class="w"> </span>override_roe.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-c<span class="w"> </span>traintunnel.py
 </pre></div>
 </div>
 </section>
 <section id="post-processing">
 <span id="postprocessing"></span><h2>Post-processing<a class="headerlink" href="#post-processing" title="Link to this heading">¶</a></h2>
-<p>To plot the entry pressure gradient over time, copy the following Python code into a file ‘create_plot.py’:</p>
+<p>To plot the entry pressure gradient over time, copy the following Python code into a file ‘create_plot.py’. The pressure monitor is defined on the “background” (tunnel) mesh, so its report is written to “traintunnel_OUTPUT/background/background_report.csv”:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute maximum entry pressure gradient dp/dt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">ts</span> <span class="o">=</span> <span class="mf">0.001</span>
-<span class="n">file_name</span> <span class="o">=</span> <span class="s2">"tunnel_roe_report.csv"</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s2">"traintunnel_OUTPUT/background/background_report.csv"</span>
 <span class="n">p_data</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
     <span class="n">line</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>

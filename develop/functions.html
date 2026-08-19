@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>zCFD Functions &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>zCFD Functions &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="_static/documentation_options.js?v=39041cef"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="_static/fav.png"/>
@@ -107,8 +107,8 @@
 </section>
 <section id="ramp-cfl-function">
 <span id="ramp-function"></span><h2>Ramp CFL Function<a class="headerlink" href="#ramp-cfl-function" title="Link to this heading">¶</a></h2>
-<p>There may be cases where more detailed control of the CFL number is desired - for example in some aerodynamic simulations where a specific physical event occurs at a given time.  The CFL Ramp function lets you do this.</p>
-<p>The ramp function returns a single floating point number (the CFL number) and can also be used to update elements of the ‘cfl’ Python object such as cfl.min_cfl, cfl.max_cfl, cfl.current_cfl, cfl.coarse_cfl, cfl.transport_cfl, cfl.cfl_ramp, cfl.cfl_pmg, or cfl.transport_cfl_pmg.</p>
+<p>The named shapes in <a class="reference internal" href="reference_guide/time.html#cfl-control"><span class="std std-ref">cfl_ramp</span></a> cover most cases. Where the CFL needs to respond to something they cannot express, <code class="docutils literal notranslate"><span class="pre">cfl_ramp</span></code> accepts a Python callable instead of the list.</p>
+<p>The function is called once per pseudo-time cycle as <code class="docutils literal notranslate"><span class="pre">f(cycle,</span> <span class="pre">current_cfl)</span></code>, and returns the CFL for that cycle. The result is clamped to the <code class="docutils literal notranslate"><span class="pre">cfl</span></code> target.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -119,48 +119,44 @@
 <td><p>Provide a dynamic CFL number</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Valid for parameter</strong></p></td>
-<td><p><a class="reference internal" href="reference_guide/time.html#cfl-control"><span class="std std-ref">ramp func</span></a></p></td>
+<td><p><a class="reference internal" href="reference_guide/time.html#cfl-control"><span class="std std-ref">cfl_ramp</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Parameters</strong></p></td>
-<td><p>solve_cycle, real_time_cycle, cfl</p></td>
+<td><p>solve_cycle, current_cfl</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Returns</strong></p></td>
-<td><p>cfl: float</p></td>
+<td><p>float, or a dictionary of <code class="docutils literal notranslate"><span class="pre">cfl</span></code> / <code class="docutils literal notranslate"><span class="pre">cfl_turbulence</span></code> / <code class="docutils literal notranslate"><span class="pre">cfl_coarse</span></code></p></td>
 </tr>
 </tbody>
 </table>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom function to ramp CFL based on cycle, updates the cfl object variables and returns a CFL</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">my_cfl_ramp</span><span class="p">(</span><span class="n">solve_cycle</span><span class="p">,</span> <span class="n">real_time_cycle</span><span class="p">,</span> <span class="n">cfl</span><span class="p">):</span>
-  <span class="n">cfl</span><span class="o">.</span><span class="n">min_cfl</span> <span class="o">=</span> <span class="mf">1.0</span>
-  <span class="n">cfl</span><span class="o">.</span><span class="n">max_cfl</span> <span class="o">=</span> <span class="mf">10.0</span>
-  <span class="n">cfl</span><span class="o">.</span><span class="n">cfl_ramp</span> <span class="o">=</span> <span class="mf">1.005</span>
-  <span class="n">cfl_transport</span> <span class="o">=</span> <span class="mf">5.0</span>
-  <span class="k">if</span> <span class="n">solve_cycle</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
-      <span class="n">cfl_new</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cfl</span><span class="o">.</span><span class="n">min_cfl</span> <span class="o">*</span> <span class="n">cfl</span><span class="o">.</span><span class="n">cfl_ramp</span> <span class="o">**</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solve_cycle</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">cfl</span><span class="o">.</span><span class="n">max_cfl</span><span class="p">)</span>
-      <span class="n">cfl</span><span class="o">.</span><span class="n">transport_cfl</span> <span class="o">=</span> <span class="n">cfl_transport</span> <span class="o">*</span> <span class="n">cfl_new</span> <span class="o">/</span> <span class="n">cfl</span><span class="o">.</span><span class="n">max_cfl</span>
-      <span class="k">return</span> <span class="n">cfl_new</span>
-
-  <span class="k">elif</span> <span class="n">solve_cycle</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
-      <span class="n">cfl</span><span class="o">.</span><span class="n">transport_cfl</span> <span class="o">=</span> <span class="mf">7.5</span>
-      <span class="n">cfl</span><span class="o">.</span><span class="n">max_cfl</span> <span class="o">=</span> <span class="mf">15.0</span>
-      <span class="k">return</span> <span class="mf">15.0</span>
-
-  <span class="k">else</span><span class="p">:</span>
-      <span class="n">cfl</span><span class="o">.</span><span class="n">transport_cfl</span> <span class="o">=</span> <span class="mf">10.0</span>
-      <span class="n">cfl</span><span class="o">.</span><span class="n">max_cfl</span> <span class="o">=</span> <span class="mf">30.0</span>
-      <span class="k">return</span> <span class="mf">30.0</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hold a low CFL until the shock has settled, then step up</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_cfl_ramp</span><span class="p">(</span><span class="n">solve_cycle</span><span class="p">,</span> <span class="n">current_cfl</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">solve_cycle</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="mf">1.005</span> <span class="o">**</span> <span class="p">(</span><span class="n">solve_cycle</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">solve_cycle</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">15.0</span>
+    <span class="k">return</span> <span class="mf">30.0</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
  <span class="o">...</span>
- <span class="s1">'time marching'</span><span class="p">:</span> <span class="p">{</span>
+ <span class="s2">"solver"</span><span class="p">:</span> <span class="p">{</span>
    <span class="o">...</span>
-   <span class="s1">'ramp func'</span><span class="p">:</span> <span class="n">my_cfl_ramp</span><span class="p">,</span>
+   <span class="s2">"convergence control"</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">"cfl"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"cfl"</span><span class="p">:</span> <span class="mf">30.0</span><span class="p">,</span> <span class="s2">"cfl ramp"</span><span class="p">:</span> <span class="n">my_cfl_ramp</span><span class="p">},</span>
+     <span class="o">...</span>
+     <span class="p">}</span>
    <span class="o">...</span>
    <span class="p">}</span>
  <span class="o">...</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+<p>Returning a dictionary drives the turbulence and coarse-level CFL targets alongside the mean-flow one. Any key left out keeps the value from the control dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_cfl_ramp</span><span class="p">(</span><span class="n">solve_cycle</span><span class="p">,</span> <span class="n">current_cfl</span><span class="p">):</span>
+    <span class="n">cfl</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="mf">1.005</span> <span class="o">**</span> <span class="p">(</span><span class="n">solve_cycle</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">30.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"cfl"</span><span class="p">:</span> <span class="n">cfl</span><span class="p">,</span> <span class="s2">"cfl_turbulence"</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cfl</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>

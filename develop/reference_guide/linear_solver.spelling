@@ -1,0 +1,2 @@
+source/reference_guide/linear_solver.rst:8: (lu) ["loo", "lieu", "Lu", "li", "l", "u", "leu", "lur", "lug", "flu", "lux", "Blu", "ls", "la", "ln"]  is set to “implicit euler” or “lu-sgs”.
+source/reference_guide/linear_solver.rst:8: (sgs) ["sgd", "ss", "gs", "sags", "sis", "s gs", "SG"]  is set to “implicit euler” or “lu-sgs”.

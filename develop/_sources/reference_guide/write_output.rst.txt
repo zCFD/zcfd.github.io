@@ -6,19 +6,19 @@ Write Output
 write output
 ============
 
-Controls the frequency and contents of the files output into the **output** directory.
+Controls the frequency and contents of the files output into the **output** directory. This block lives at ``solver.output_settings.solution`` (it can also be overridden per mesh at ``model.<name>.output_settings.solution``). Like every block under ``output_settings``, it rejects unknown keys outright rather than silently ignoring a mistyped one.
 
 .. _output_dir:
 
 The **output** directory will be created in the working directory from which the solver is run and is named using the following format:
 
 .. code-block:: python
-    
+
     <case_name>_P<number of mpi ranks>_OUTPUT
 
 
-.. list-table:: 
-   :widths: 20 10 10 20 
+.. list-table::
+   :widths: 20 10 10 20
    :header-rows: 1
 
    * - Keyword
@@ -26,52 +26,48 @@ The **output** directory will be created in the working directory from which the
      - Default
      - Valid values
    * - 'frequency'
-     - Yes
-     - Positive integer or :ref:`{} <output_frequency>` 
-     - See :ref:`"frequency" <output_frequency>` 
+     - No
+     - See :ref:`"frequency" <output_frequency>`
+     - Dictionary; see :ref:`"frequency" <output_frequency>`
    * - 'format'
-     - Yes
+     - No
      - 'vtk'
-     - 'none' | 'vtk' | 'ensight'
-   * - 'scripts'
+     - 'none' | 'vtk' | 'ensight' | 'fwensight' | 'native'
+   * - 'surface_variables'
      - No
-     - []
-     - List of catalyst script filenames
-   * - 'variable_name_alias'
-     - No
-     - {}
-     - Dict
-   * - 'surface variables'
-     - Yes
-     - ["p", "T", "rho"]
+     - None
      - List of :ref:`"variable" <output_variables>` names
-   * - 'volume variables'
-     - Yes
-     - [...]
+   * - 'volume_variables'
+     - No
+     - None
      - List of :ref:`"variable" <output_variables>` names
-   * - 'volume interpolate'
+   * - 'fwh_interpolate'
      - No
-     - 
-     - List of surface file filenames
-   * - 'fwh interpolate'
-     - No
-     - 
+     - None
      - List of .stl file filenames
-   * - 'fwh wall data'
+   * - 'fwh_wall_data'
      - No
      - False
      - True | False
-   * - 'compute average and rms'
+   * - 'write_restart'
      - No
-     - False
+     - True
      - True | False
-   * - 'average start time cycle'
+   * - 'binary'
      - No
-     - 
-     - Positive integer
-   * - 'immersed boundary surface'
+     - True
+     - True | False
+   * - 'precision'
      - No
-     - []
+     - 'single'
+     - 'single' | 'double'
+   * - 'global_node_ids'
+     - No
+     - True
+     - True | False
+   * - 'immersed_boundary_surface'
+     - No
+     - None
      - List of dictionaries with "zone" and "stl" keys, specifying which immersed boundary zones will be mapped onto specified STL surfaces
 
 
@@ -80,100 +76,104 @@ Example usage:
 .. code-block:: python
 
   parameters = {
-    ..
-    'write output' : {
-                  'format' : 'vtk',
-                  'surface variables': ['V','p'],
-                  'volume variables' : ['V','p'],
-                  'volume interpolate' : ['mesh.stl'],
-                  'scripts' : ['paraview_catalyst1.py'],
-                  'variable_name_alias' : { "V" : "VELOCITY", },
-                  "frequency": 500,
-                  'compute average and rms': True,
-                  'average start time cycle': 1000,
-                  "immersed boundary surface": [{"zone": 7, "stl": "body.stl"},
-                                                {"zone": 9, "stl": "hub.stl"}],
-
+    ...
+    "solver": {
+        ...
+        "output_settings": {
+            "solution": {
+                "format": "vtk",
+                "surface_variables": ["V", "p"],
+                "volume_variables": ["V", "p"],
+                "fwh_interpolate": ["fwh_surface1.stl"],
+                "frequency": {
+                    "volume_data": 500,
+                    "surface_data": 500,
                 },
-    ..
-    }
+                "immersed_boundary_surface": [
+                    {"zone": 7, "stl": "body.stl"},
+                    {"zone": 9, "stl": "hub.stl"},
+                ],
+            },
+        },
+    },
+    ...
+  }
 
 format
 ^^^^^^
-Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in VTK HDF format (.vtkhdf) for reading into `ParaView <https://www.paraview.org>`_. 
+Selects the file format to output the data in. Using 'none' as format will output no files. 'vtk' outputs in VTK HDF format (.vtkhdf) for reading into `ParaView <https://www.paraview.org>`_.
 
 .. note::
 
     The .vtkhdf output format requires `ParaView 6.1.1 <https://www.paraview.org/download/>`_ or later.
 
-.. 'ensight' is EnSight Gold format.
+.. 'ensight', 'fwensight' and 'native' are additional formats accepted by the schema.
 
-scripts
-^^^^^^^
-zCFD is capable of calling ParaView catalyst scripts while running, this allows you to generate "in situ" visualisation output while the solver is running.
-
-This allows you to extract data as your simulation progresses without needing to store the full solution at every timestep. For instance a video of a slice through the dataset could be generated for an unsteady solution.
-
-For more information about Catalyst see: https://www.paraview.org/insitu/
-
-
-variable_name_alias
-^^^^^^^^^^^^^^^^^^^
-Maps the zCFD variable names to a different variable name in the output file. 
-If downstream processes need variables named using a specific convention a naming alias dictionary can be supplied.
-
-surface variables
-^^^^^^^^^^^^^^^^^
-A list of :ref:`variables <output_variables>` to output on the boundaries of the mesh. This is useful for visualisation of the flow variables on the wall of the mesh for post processing.
+surface_variables
+^^^^^^^^^^^^^^^^^^
+A list of :ref:`variables <output_variables>` to output on the boundaries of the mesh. This is useful for visualisation of the flow variables on the wall of the mesh for post processing. Which variable names are valid depends on the equation type (and, for RANS, the turbulence model) being solved — see :ref:`Output Variables <output_variables>`.
 For the 'vtk' format the surface data is written to the :ref:`output <output_dir>` directory with the file name:
 
 .. code-block:: python
-    
+
     <case_name>_<boundary>.vtkhdf
 
-volume variables
-^^^^^^^^^^^^^^^^^
-A list of :ref:`variables <output_variables>` to output in a volumetric format.
+volume_variables
+^^^^^^^^^^^^^^^^^^
+A list of :ref:`variables <output_variables>` to output in a volumetric format. Which variable names are valid depends on the equation type (and, for RANS, the turbulence model) being solved — see :ref:`Output Variables <output_variables>`.
 
 For the 'vtk' format the volume data is written to the :ref:`output <output_dir>` directory with the file name:
 
 .. code-block:: python
-    
+
     <case_name>.vtkhdf
 
 .. _volume_interpolate:
 
 volume interpolate
-^^^^^^^^^^^^^^^^^^
-zCFD can interpolate volume data to a supplied surface or volume mesh. This parameter lets you set a list of filenames of surfaces and/or volume meshes to interpolate to. The supported file formats are VTK (vtu or vtp files) and STL. 
+^^^^^^^^^^^^^^^^^^^
 
-fwh interpolate
-^^^^^^^^^^^^^^^^^^
-In addition to the 'volume interpolate' option (which outputs VTK files), zCFD is capable of writing volume interpolated data to HDF5 files for use in the :ref:`zCFD Ffowcs-Williams Hawkings (FWH) solver <fwh>`.
-This parameters lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
+.. warning::
+
+    zCFD can interpolate volume data onto a supplied surface or volume mesh (VTK ``.vtu``/``.vtp`` or ``.stl`` files) — this is the mechanism that feeds monitor surfaces and downstream post-processing without needing to store the full solution at every timestep. The frequency at which this runs is configurable (see :ref:`'volume_interpolate' <output_frequency>` below), but there is **no schema field to list the target files**: ``SolutionModel`` (``zutil/zutil/validate/schemas/output_schemas.py``) has no ``volume_interpolate`` key alongside ``surface_variables``/``volume_variables``, even though the C++ side (``PythonExport.cxx``) reads a ``volume_interpolate`` file list directly from the ``solution`` dict. This gap is not called out in ``developer_docs/input-deck.md``, so it is noted here: there is no way to set this key from a schema-valid control file.
+
+fwh_interpolate
+^^^^^^^^^^^^^^^^
+In addition to volume interpolation, zCFD is capable of writing volume interpolated data to HDF5 files for use in the :ref:`zCFD Ffowcs-Williams Hawkings (FWH) solver <fwh>`.
+This parameter lets you list the filenames of surfaces to interpolate to for HDF5 file output. The files specifying the surfaces must be .STLs. The outputted files contain density, velocity and pressure data only, and are suitable for use as permeable surfaces in the zCFD FWH solver.
 The data is outputted to the *ACOUSTIC_DATA* sub-directory within the :ref:`output <output_dir>` directory.
 
 
-fwh wall data
-^^^^^^^^^^^^^
+fwh_wall_data
+^^^^^^^^^^^^^^
 This parameter controls whether wall data is outputted to a HDF5 file for use in the :ref:`zCFD FWH solver <fwh>`. The outputted file contains pressure data only, and is suitable for use as an impermeable surface in the zCFD FWH solver.
 The data is outputted to the *ACOUSTIC_DATA* sub-directory within the :ref:`output <output_dir>` directory.
 
-compute average and rms
-^^^^^^^^^^^^^^^^^^^^^^^
-Enables computation of time averaged and RMS values for pressure, temperature and velocity. Enabling this adds these variables to the list of variables to be output automatically.
+write_restart
+^^^^^^^^^^^^^^
+Whether to write :ref:`restartable <restart>` checkpoint files at all. Set to ``False`` to skip restart output entirely, regardless of the ``'checkpoint'`` frequency.
 
-This options only applies to :ref:`unsteady <unsteady>` cases.
+binary
+^^^^^^
+Whether output files are written in binary (``True``, the default) or text form.
 
-average start time cycle
-^^^^^^^^^^^^^^^^^^^^^^^^
-If **compute average and rms** is True, this controls first real time cycle to start calculating the running average. This allows you to run the solver for a number of time cycles before you start calculating the average and RMS values.
+precision
+^^^^^^^^^
+Floating point precision used for output data: ``'single'`` (default) or ``'double'``.
 
-immersed boundary surface
-^^^^^^^^^^^^^^^^^^^^^^^^^
+global_node_ids
+^^^^^^^^^^^^^^^^
+Retains the local-to-global node map so VTKHDF output can stitch partitions back together without a clean-to-grid filter in ParaView. Advanced option; leave at the default (``True``) unless you have a specific reason to disable it.
+
+immersed_boundary_surface
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 If the case uses immersed wall boundary conditions then force reporting on those surfaces requires STL files to be provided per immersed wall zone. The solution is interpolated onto the points in the STL so the mesh needs to be at least as fine as the boundary otherwise the accuracy of the reported forces will be affected. Additionally the normals used to calculate output values will be calculated directly from the provided STL file. Therefore a user should either use a surrogate STL generated by :ref:`zM3 <zm3>`, or ensure the provided STL file is watertight and has normals pointing into the body.
 
 The interpolated solution on the STL is also output at the same frequency as other surface data.
+
+.. note::
+
+    Two ``'write output'`` keys have no schema equivalent at all and are unaccounted for in ``developer_docs/input-deck.md``: ``'scripts'`` (the list of ParaView Catalyst script filenames for in-situ visualisation) and ``'variable_name_alias'`` (the dict mapping zCFD variable names to alternate output names). The C++ side (``OutputVTK.cxx``) reads both directly from the ``solution`` dict, but ``SolutionModel`` declares neither field, so a control file has no way to set them.
 
 .. _output_frequency:
 
@@ -182,67 +182,69 @@ Frequency
 
 Sets how frequently the solver should output the flow solution. A single integer value will control output of both the volume and surface data output. A dictionary value here allows for fine grained control over the frequency with which each individual output is done. If the solver is running an unsteady simulation then this is the frequency of the real time step otherwise the pseudo cycle.
 
-.. list-table:: 
-   :widths: 20 10 10 20 
+.. list-table::
+   :widths: 20 10 10 20
    :header-rows: 1
 
    * - Keyword
      - Required
      - Default
      - Valid values
-   * - 'volume data'
-     - Yes
+   * - 'volume_data'
+     - No
      - 1.00E+08
      - Positive integer
-   * - 'surface data'
-     - Yes
+   * - 'surface_data'
+     - No
      - 1.00E+08
      - Positive integer
-   * - 'volume interpolate'
-     - Yes
+   * - 'volume_interpolate'
+     - No
      - 1.00E+08
-     - Positive integer  
-   * - 'fwh interpolate'
-     - Yes
+     - Positive integer
+   * - 'fwh_interpolate'
+     - No
      - 1.00E+08
-     - Positive integer  
-   * - 'fwh wall data'
-     - Yes
+     - Positive integer
+   * - 'fwh_wall_data'
+     - No
      - 1.00E+08
-     - Positive integer  
+     - Positive integer
    * - 'checkpoint'
-     - Yes
+     - No
      - 1.00E+08
-     - Positive integer  
-   * - 'volume data start'
-     - Yes
+     - Positive integer
+   * - 'volume_data_start'
+     - No
      - 1
-     - Positive integer 
-   * - 'surface data start'
-     - Yes
+     - Positive integer
+   * - 'surface_data_start'
+     - No
      - 1
-     - Positive integer 
-   * - 'volume interpolate start'
-     - Yes
+     - Positive integer
+   * - 'volume_interpolate_start'
+     - No
      - 1
-     - Positive integer 
-   * - 'fwh interpolate start'
-     - Yes
+     - Positive integer
+   * - 'fwh_interpolate_start'
+     - No
      - 1
-     - Positive integer 
-   * - 'fwh wall data start'
-     - Yes
+     - Positive integer
+   * - 'fwh_wall_data_start'
+     - No
      - 1
-     - Positive integer 
-   * - 'checkpoint start'
-     - Yes
+     - Positive integer
+   * - 'checkpoint_start'
+     - No
      - 1
-     - Positive integer 
+     - Positive integer
 
 
-**volume data**, **surface data**, **volume interpolate**, **fwh interpolate**, **fwh wall data** and **checkpoint** control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The **checkpoint** option writes a :ref:`restartable <restart>` checkpoint of the flow solution at that point.  
+**volume_data**, **surface_data**, **volume_interpolate**, **fwh_interpolate**, **fwh_wall_data** and **checkpoint** control the frequency at which the solution data of the given type is written. The frequency is specified as the solver cycle number. The **checkpoint** option writes a :ref:`restartable <restart>` checkpoint of the flow solution at that point (subject to ``'write_restart'`` above).
 
-**volume data start**, **surface data start**, **volume interpolate start**, **fwh interpolate start**, **fwh wall data start** and **checkpoint start** specifies the first cycle that the solver should start writing that particular output.
+**volume_data_start**, **surface_data_start**, **volume_interpolate_start**, **fwh_interpolate_start**, **fwh_wall_data_start** and **checkpoint_start** specify the first cycle that the solver should start writing that particular output.
+
+A plain integer is still accepted in place of the dictionary: it is expanded to ``surface_data``, ``volume_data`` and ``checkpoint`` all set to that value, with the rest left at their defaults.
 
 .. note::
     On systems with slower file I/O the overhead of writing data can slow the overall solve time, reducing the output frequency lets you address this.
@@ -253,23 +255,48 @@ Example usage:
 .. code-block:: python
 
   parameters = {
-    ..
-    'write output' : {
-                  'format' : 'vtk',
-                  'surface variables': ['V','p'],
-                  'volume variables' : ['V','p'],
-                  "frequency": {
-                      # Output visualisation files every 3 cycles
-                      "volume data": 3,
-                      "surface data": 3,
-                      "volume interpolate": 3,
-                      "checkpoint": 3,
-                      # Start output every 3 cycles after 1 cycle (default = 1)
-                      "volume data start": 1,
-                      "surface data start": 1,
-                      "volume interpolate start": 1,
-                      "checkpoint start": 1,
-                  },
+    ...
+    "solver": {
+        ...
+        "output_settings": {
+            "solution": {
+                "format": "vtk",
+                "surface_variables": ["V", "p"],
+                "volume_variables": ["V", "p"],
+                "frequency": {
+                    # Output visualisation files every 3 cycles
+                    "volume_data": 3,
+                    "surface_data": 3,
+                    "volume_interpolate": 3,
+                    "checkpoint": 3,
+                    # Start output every 3 cycles after cycle 1 (default = 1)
+                    "volume_data_start": 1,
+                    "surface_data_start": 1,
+                    "volume_interpolate_start": 1,
+                    "checkpoint_start": 1,
                 },
-    ..
-    }
+            },
+        },
+    },
+    ...
+  }
+
+compute_average_and_rms / average_start_time_cycle
+====================================================
+
+.. warning::
+
+    The schema (``OutputModel`` in ``output_schemas.py``) places both fields — ``compute_average_and_rms`` (bool, default ``False``) and ``average_start_time_cycle`` (int, default ``0``) — directly on ``output_settings``, as siblings of ``solution`` and ``report``, rather than inside ``solution``. Every C++ read site (``SolverData.cxx``, ``ExplicitSolver.cxx``, ``incomp/Coupled.cxx``) looks for ``compute_average_and_rms`` **inside** the ``solution`` dict instead, and ``SolutionModel`` rejects it there as an unknown key. Setting ``compute_average_and_rms`` at the location the schema requires (``output_settings.compute_average_and_rms``) therefore has no effect on the solve. This mismatch is not covered in ``developer_docs/input-deck.md``'s "What's left", so it is noted here. ``average_start_time_cycle`` additionally has no C++ read site at all under any name — it has no effect regardless of where it is nested.
+
+Schema-valid placement, for reference (validates, but see the warning above):
+
+.. code-block:: python
+
+    "output_settings": {
+        "solution": {"format": "vtk"},
+        "report": {"frequency": 10},
+        "compute_average_and_rms": True,
+        "average_start_time_cycle": 1000,
+    },
+
+Enables computation of time averaged and RMS values for pressure, temperature and velocity. This only applies to :ref:`unsteady <unsteady>` cases. ``average_start_time_cycle`` is intended to control the first real time cycle from which the running average is calculated, allowing the solver to run for a number of time cycles before averaging begins.

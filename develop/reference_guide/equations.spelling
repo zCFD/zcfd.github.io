@@ -1,0 +1,2 @@
+source/reference_guide/equations.rst:409: (normalises) ["normalizes", "manorialism"] integer values 0-3, which it normalises to the equivalent string. The
+source/reference_guide/equations.rst:542: (regularisation) ["regularization", "regulations", "regulation", "singularization", "reregistration"] Diagonal regularisation of the SIMPLE pressure-correction Poisson operator (vanishes at convergence). Only used when 

@@ -3,17 +3,43 @@
 Boundary Conditions
 -------------------
 
-Boundary condition properties are defined using consecutively numbered blocks.
+Boundary conditions are a dict of named blocks nested under the mesh's model
+entry, at ``model.<mesh_name>.boundary_conditions``. Each block is keyed by
+an arbitrary name (conventionally ``BC_1``, ``BC_2``, ...) and is itself a
+dict describing one boundary condition.
 
 .. code-block:: python
 
-    'BC_1' : {....},
-    'BC_2' : {....},
+    parameters = {
+        "config_version": 2,
+        "solver": {...},
+        "model": {
+            "naca0012": {
+                "mesh": "naca0012_0449.h5",
+                "boundary_conditions": {
+                    "BC_1": {"zones": [2, 3], "type": "symmetry"},
+                    "BC_2": {"zones": [4], "type": "wall", "kind": "no slip"},
+                    "BC_3": {
+                        "zones": [1],
+                        "type": "farfield",
+                        "condition": "IC_1",
+                        "kind": "riemann",
+                    },
+                },
+            }
+        },
+    }
 
+Every boundary condition block requires a **type** (which BC kernel handles
+these zones) and **zones** (which mesh zones it applies to). Most types also
+require a **kind**, which selects between variants of that type with their
+own extra fields — for example a wall's ``kind`` chooses between ``slip``,
+``no slip`` and ``wall function``; the fields available below ``kind``
+change with the choice.
 
-zCFD supports the following boundary condition types: 
+zCFD supports the following boundary condition types:
 
-.. list-table:: 
+.. list-table::
    :widths: 20 80
    :header-rows: 1
 
@@ -24,9 +50,11 @@ zCFD supports the following boundary condition types:
    * - :ref:`Farfield <bc_farfield>`
      - Farfield boundaries with automatic inflow/outflow detection
    * - :ref:`Inflow <bc_inflow>`
-     - Pressure or massflow inflow boundaries
+     - Pressure, condition-driven or massflow inflow boundaries
    * - :ref:`Outflow <bc_outflow>`
-     - Pressure or massflow outflow boundaries
+     - Pressure, massflow or radial-pressure-gradient outflow boundaries
+   * - :ref:`Mass Flow <bc_mass_flow>`
+     - Standalone mass-flow boundary condition
    * - :ref:`Symmetry <bc_symmetry>`
      - Mirror boundary condition
    * - :ref:`Overset <bc_overset>`
@@ -35,35 +63,29 @@ zCFD supports the following boundary condition types:
      - Repeating boundary condition, with flow from one periodic boundary mapped to the other.
 
 
-"ref" and "zone"
-^^^^^^^^^^^^^^^^
-Boundary conditions can be mapped to the mesh in two ways, depending on the mesh format used. Some mesh formats (for example Fluent) will have boundaries tagged with an integer (wall = 3, etc). These can be referenced directly using the **"ref"** keyword in your boundary condition definition. Alternatively, the mesh format may contain explicitly numbered zones (which can be determined by inspecting the mesh).  In this case, the user can specify the list of zone numbers for each boundary condition using the **"zone"** keyword.
+Zones
+^^^^^
 
-For example to apply BC_1 to boundaries tagged with value 3: 
+Every boundary condition block requires a **zones** keyword: a list of
+integer zone IDs from the mesh that this BC applies to. The exact zone
+numbering is determined by the mesh format and mesh generation tool used —
+inspect the mesh (for example with the tool that generated it) to determine
+which zone numbers correspond to which physical boundary.
 
-.. code-block:: python
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
 
-    .. 
-    'BC_1' : {
-              'ref' : 3,
-              ..
-    }
-    ..
-
-Or to apply BC_1 to boundaries to zones with IDs 0,1,2 & 3:
-
-.. code-block:: python
-
-    ..
-    'BC_1' : {
-              'zone' : [0,1,2,3],
-              ..
-    }
-    ..
-
-.. note::
-
-    If a **'zone'** entry is provided it will override the IDs specified in **'refs'**
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
 
 
 .. _wall:
@@ -71,27 +93,45 @@ Or to apply BC_1 to boundaries to zones with IDs 0,1,2 & 3:
 Wall
 ====
 
-Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automatic wall functions. No-slip walls are appropriate when the mesh is able to fully resolve the boundary layer (i.e :math:`(y^{+} \leq 1)`) otherwise automatic wall functions should be used. This behaviour is chosen by setting :code:`'kind'` in the wall specification below.  Optionally it is possible to set wall velocity, roughness and temperature.
+Wall boundaries in zCFD can be either slip walls, no-slip walls, or use
+automatic wall functions. No-slip walls are appropriate when the mesh is
+able to fully resolve the boundary layer (i.e. :math:`y^{+} \leq 1`),
+otherwise automatic wall functions should be used. This behaviour is chosen
+by setting :code:`'kind'` in the wall specification below. Optionally it is
+possible to set wall velocity, roughness, temperature and an FSI modal
+model.
 
-:code:`'type'` allows you to choose between a standard :code:`'wall'` definition or :code:`'immersed wall'` boundaries. Immersed wall boundaries are *only* supported with meshes created by the using :ref:`zM3 <zm3>` mesh generator.  The zM3 mesh generator will determine vectors to represent the underlying geometry within the 3D Cartesian mesh. It will also generate additional information such as locations where data is to be sampled in order to define conditions at the geometry surface, and the subsequent halo boundary values.
-
+:code:`'type'` allows you to choose between a standard :code:`'wall'`
+definition or :code:`'immersed wall'` boundaries. Immersed wall boundaries
+are *only* supported with meshes created using the :ref:`zM3 <zm3>` mesh
+generator. The zM3 mesh generator will determine vectors to represent the
+underlying geometry within the 3D Cartesian mesh. It will also generate
+additional information such as locations where data is to be sampled in
+order to define conditions at the geometry surface, and the subsequent halo
+boundary values.
 
 .. note::
 
-    **Immersed wall boundaries** supports :code:`'type'` of :code:`'slip'`, :code:`'noslip'` or :code:`'wallfunction'`.
+    If :code:`'slip'` conditions are chosen, there will be zero momentum
+    normal to the wall.
 
-    If :code:`'slip'` conditions are chosen, there will be zero momentum normal to the underlying geometry.
+    If :code:`'no slip'` conditions are chosen, the no-slip condition is
+    applied directly (mesh must resolve down to :math:`y^{+} \sim 1`). For an
+    immersed wall, values computed near the wall are linearly extrapolated
+    from the donor (sample) point location associated with that point — this
+    can potentially cause sensitivity and early flow separation in strong
+    pressure gradients, alleviated to some extent with mesh refinement at
+    additional computational cost.
 
-    If :code:`'noslip'` conditions are chosen, any values computed near the wall will linearly extrapolated from the donor (sample) point location associated with that point.  This can potentially cause sensitivity and early flow separation in strong pressure gradients.  Again, this can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.
+    If :code:`'wall function'` conditions are chosen, any values computed
+    near the wall will be based on the Musker wall model, which closely
+    represents the flow along a flat plate in zero pressure gradient. As
+    such, there are fundamental limitations on the accuracy of this model
+    with highly curved surfaces and strong pressure gradients, alleviated to
+    some extent with mesh refinement at additional computational cost.
 
 
-    If :code:`'wallfunction'` conditions are chosen, any values computed near the wall will be based on the Musker wall model, which closely represents the flow along a flat plate in zero pressure gradient.  As such, there are fundamental limitations on the accuracy of this model with highly curved surfaces and strong pressure gradients.  This can be alleviated to some extent with mesh refinement, however, this is associated with additional computational cost.
-
-
-
-
-
-.. list-table:: 
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -100,84 +140,73 @@ Wall boundaries in zCFD can be either slip walls, no-slip walls, or use automati
      - Default
      - Valid values
      - Description
-   * - 'ref'
+   * - ``zones``
      - Yes
-     - 
-     - Integer
-     - Mesh reference defined by this boundary condition 
-   * - 'zone'
-     - No
-     - 
+     -
      - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
-   * - 'type'
-     - No
-     - 
-     - 'wall' or 'immersed wall'
-     - Specifies a solid wall boundary which defaults to adiabatic unless a temperature is specified
-   * - 'kind'
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
      - Yes
-     - 
-     - 'slip', 'noslip', 'wallfunction'
-     - Specifies the type of wall boundary condition. Slip - zero viscosity wall boundary. noslip - viscous wall with y+ ~ 1 mesh resolution, wallfunction - viscous wall with automatic handling of mesh resolution between y+~1 to y+ > 100
-   * - 'immersed normal type'
+     -
+     - ``'wall'`` or ``'immersed wall'``
+     - Specifies a solid wall boundary, adiabatic unless a temperature is specified
+   * - ``kind``
      - No
-     - 'STL'
-     - 'STL' or 'immersed boundary vector'
-     - For 'immersed wall' types. Specifies how the geometry unit normals are specified (from the STL directly or approximated by the vector from the face centre to the nearest surface point)
-   * - 'roughness'
+     - ``'no slip'``
+     - ``'slip'``, ``'no slip'``, ``'wall function'``
+     - Specifies the wall model. slip - zero-normal-momentum wall. no slip - viscous wall requiring :math:`y^+ \sim 1` mesh resolution. wall function - viscous wall with automatic handling of mesh resolution between :math:`y^+ \sim 1` and :math:`y^+ > 100`
+   * - ``immersed_wall_normal_type``
      - No
-     - 
-     - See  :ref:`roughness <bc_roughness>` 
-     - Specifies the surface roughness. If not specified the wall is specified as perfectly smooth. This requires the wall boundary condition kind to be set to **wallfunction**.
-   * - 'v'
+     - ``'STL'``
+     - ``'STL'`` or ``'immersed boundary vector'``
+     - Only for ``'immersed wall'``. Specifies how the geometry unit normals are determined (directly from the STL, or approximated by the vector from the face centre to the nearest surface point)
+   * - ``roughness``
      - No
-     - 
-     - See :ref:`velocity <bc_velocity>`
-     - Wall velocity specification.
-   * - 'temperature'
+     -
+     - See :ref:`Roughness <bc_roughness>`
+     - Surface roughness model. If not specified the wall is perfectly smooth
+   * - ``velocity``
      - No
-     - 
-     - See :ref:`temperature <bc_temperature>` 
-     - Specifies the wall temperature for an isothermal wall. If not specified the wall is treated as adiabatic
+     -
+     - See :ref:`Velocity <bc_velocity>`
+     - Wall velocity specification, for surfaces in relative motion
+   * - ``temperature``
+     - No
+     -
+     - See :ref:`Temperature <bc_temperature>`
+     - Wall temperature. If not specified the wall is treated as adiabatic
+   * - ``fsi``
+     - No
+     -
+     - See :ref:`FSI <bc_wall_fsi>`
+     - FSI modal model coupling this wall to a structural solve
 
 
-Example Wall BC with roughness and temperature set:
+Example no-slip wall (`testcases/testcases/naca0012/Naca0012_base.py`):
 
 .. code-block:: python
 
-    'BC_1' : {
-              'ref' : 3,
-              'type' : 'wall',
-              'kind' : 'slip',
-              'roughness' : {
-                            'type' : 'height',
-                            'scalar' : 0.001
-                            },
-              'temperature' : {
-                              # Temperature in Kelvin
-                              'scalar' : 280.0,
-                              },
-              },
+    "BC_2": {"zones": [4], "type": "wall", "kind": "no slip"},
 
-Example Immersed Boundary Wall BC:
+Example immersed wall with a slip condition (`testcases/testcases/euler_rotating_cylinder/cylinderIB.py`):
 
 .. code-block:: python
 
-    'BC_1' : {
-              'ref' : 3,
-              'type' : 'immersed wall',
-              'kind' : 'wallfunction',
-              'immersed normal type' : 'STL',
-            },
+    "immersed_wall": {"zones": [7], "type": "immersed wall", "kind": "slip"},
+
+Example immersed wall using a wall function (`testcases/testcases/EVE/EVE_steady.py`):
+
+.. code-block:: python
+
+    "aircraft": {"zones": [7], "type": "immersed wall", "kind": "wall function"},
+
 
 .. _bc_roughness:
 
 Roughness
 ^^^^^^^^^
 
-
-.. list-table:: 
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -186,29 +215,43 @@ Roughness
      - Default
      - Valid values
      - Description
-   * - 'type'
-     - No
-     - 
-     - 'height' or 'length'
-     - Specify how roughness is being specified.  
-   * - 'scalar'
-     - No
-     - 
+   * - ``type``
+     - Yes
+     -
+     - ``'height'`` or ``'length'``
+     - How the roughness magnitude is being specified
+   * - ``scalar``
+     - No (one of ``scalar``/``field`` required)
+     -
      - Positive float
-     - Specify the value of roughness length or height in mesh units
-   * - 'field'
-     - No
-     - 
+     - Value of roughness length or height, in mesh units
+   * - ``field``
+     - No (one of ``scalar``/``field`` required)
+     -
      - Valid filename
-     - Specify the name of a file that defines a roughness field.  This file needs to contain a node array called Roughness that is used to set the value by finding the nearest point to the mesh location.
+     - Name of a VTP file containing a node array called ``Roughness``, used to set the value by nearest-point lookup
 
-Roughness can be specified as either a 'height' or 'length'. 
+Exactly one of ``scalar`` or ``field`` must be set — neither both nor
+neither is accepted.
 
-Roughness **length** is defined as the height at which the mean velocity profile of the flow is zero. In other words, at this distant above the surface, the flow is considered to be effectively smooth, and the velocity distribution approaches a logarithmic law. 
+Roughness **length** is the height at which the mean velocity profile of the
+flow is zero — beyond this distance from the surface, the flow is
+considered effectively smooth and the velocity distribution approaches a
+logarithmic law.
 
-Roughness **height** refers to the average height or magnitude of surface roughness elements on a solid boundary.  It represents the scale of irregularities or protrusions on the surface, which disrupt the smooth flow and create additional drag or turbulence. Examples of roughness elements include bumps, ridges, or rough surface textures.
+Roughness **height** is the average height or magnitude of surface
+roughness elements on a solid boundary — the scale of irregularities or
+protrusions on the surface that disrupt the smooth flow and create
+additional drag or turbulence.
 
-This value can be given as a single **scaler** value or a **field** file can be provided. This should be a VTP file containing a node array called "Roughness". The roughness at each boundary face is then set by finding the nearest point to the face centre on the supplied VTK file with the roughness value looked up in a node based scalar array called 'Roughness'
+Example (`testcases/testcases/plate/plate_medium_wf_rough.py`):
+
+.. code-block:: python
+
+    parameters["model"]["background"]["boundary_conditions"]["BC_3"]["roughness"] = {
+        "type": "height",
+        "scalar": 0.001,
+    }
 
 
 .. _bc_velocity:
@@ -216,12 +259,14 @@ This value can be given as a single **scaler** value or a **field** file can be 
 Velocity
 ^^^^^^^^
 
-The velocity keywords are used to apply a surface velocity, this is used to model cases with surfaces in relative motion. e.g. a car moving over a road surface or rotating tyre surface. The wall boundary condition supports either a **linear** velocity or a **rotating** one
+The ``velocity`` keyword applies a surface velocity, used to model cases
+with surfaces in relative motion, e.g. a car moving over a road surface or a
+rotating tyre. The wall boundary condition supports either a **linear**
+velocity or a **rotating** one, selected by its own ``type`` field.
 
+The options for the **linear** velocity are:
 
-The options for the **'linear'** dictionary are:
-
-.. list-table:: 
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -230,20 +275,25 @@ The options for the **'linear'** dictionary are:
      - Default
      - Valid values
      - Description
-   * - 'vector'
+   * - ``type``
      - Yes
-     - 
-     - [x, y, z]: vector of numbers
-     - Sets the velocity vector for the translation motion of the surface. 
-   * - 'mach'
+     -
+     - ``'linear'``
+     - Selects a linear (translational) wall velocity
+   * - ``vector``
+     - Yes
+     -
+     - ``[x, y, z]``
+     - Direction of the translation velocity
+   * - ``mach``
      - No
-     - 
+     -
      - Number
      - Overrides the magnitude of the translation velocity vector
 
-The options for the **'rotating'** dictionary are:
+The options for the **rotating** velocity are:
 
-.. list-table:: 
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -252,66 +302,63 @@ The options for the **'rotating'** dictionary are:
      - Default
      - Valid values
      - Description
-   * - 'axis'
+   * - ``type``
      - Yes
-     - 
-     - [x, y, z]: vector of numbers
-     - Sets the axis of rotation
-   * - 'origin'
+     -
+     - ``'rotating'``
+     - Selects a rotational wall velocity
+   * - ``axis``
      - Yes
-     - 
-     - [x, y, z]: vector of numbers
-     - Sets the origin of the rotation axis
-   * - 'omega'
+     -
+     - ``[x, y, z]``: unit vector
+     - Axis of rotation
+   * - ``center``
      - Yes
-     - 
+     -
+     - ``[x, y, z]``
+     - Origin (centre point) of the rotation axis
+   * - ``omega``
+     - Yes
+     -
      - Number
-     - Sets the rotational velocity of the rotation in radians per second
+     - Angular velocity of the rotation, in radians per second
 
-Example Linear Velocity Boundary Wall BC:
-
-.. code-block:: python
-
-    'BC_1': {
-             'zone': [1], 
-             'type': 'wall', 
-             'kind': "noslip',
-             'v': {
-                   'linear': {
-                              'vector': [1.0,0,0], 
-                              'mach': 0.5, # optional override to vector magnitude
-                             },
-                  },
-             },
-
-Example Rotating Velocity Boundary Wall BC:
+Example linear wall velocity (`testcases/testcases/plate/plate_medium_moving_wall.py`):
 
 .. code-block:: python
 
-    'BC_1': {
-             'zone': [7], 
-             'type': 'wall', 
-             'kind': "wallfunction',
-             'v': {
-                   'rotating': {
-                                'axis': [-1,0,0], 
-                                'origin': [0,0,0],
-                                'omega': 10, # radians per second
-                               },
-                  },
-             },
+    parameters["model"]["background"]["boundary_conditions"]["BC_3"]["velocity"] = {
+        "type": "linear",
+        "vector": [34.72, 0.0, 0.0],
+    }
+
+Example rotating wall velocity (`testcases/testcases/wheel/wheel_base.py`):
+
+.. code-block:: python
+
+    "moving_wheel": {
+        "zones": [14, 20],
+        "type": "wall",
+        "kind": "wall function",
+        "velocity": {
+            "type": "rotating",
+            "axis": [0.0, -0.9988, 0.0498],
+            "center": [0.0, -0.6593, 0.2533],
+            "omega": rot_rate,
+        },
+    },
+
 
 .. _bc_temperature:
 
 Temperature
 ^^^^^^^^^^^
 
-The temperature keywords are used to apply a surface temperature. A scalar temperature can be applied to the whole boundary or a VTP file provided containing a temperature **'field'**. When using a **'field'** The temperature at each boundary face is set by finding the nearest point to the face centre on the supplied VTP file with the temperature value looked up in a node based scalar array called 'Temperature'
+The ``temperature`` keyword applies a surface temperature. Either a scalar
+value (Kelvin) or the string ``'adiabatic'`` is given directly as the value
+of ``temperature``.
 
-
-The options for the **'temperature'** dictionary are:
-
-.. list-table:: 
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -320,16 +367,53 @@ The options for the **'temperature'** dictionary are:
      - Default
      - Valid values
      - Description
-   * - 'scalar'
-     - Yes
-     - 
-     - number
-     - Specify the value of wall temperature in Kelvin
-   * - 'field'
+   * - ``temperature``
      - No
-     - 
-     - Valid filename
-     - Specify the name of a file that defines a temperature field.  This file needs to contain a node array called *Temperature* that is used to set the value by finding the nearest point to the mesh location for an isothermal wall.
+     - unset (adiabatic)
+     - Number (Kelvin) or ``'adiabatic'``
+     - Wall temperature. If unset, the wall is adiabatic
+
+Example (`testcases/testcases/cavity/buoyancy_cavity_ra1e5_central.py`):
+
+.. code-block:: python
+
+    "BC_1": {"zones": [1], "type": "wall", "kind": "no slip", "temperature": T_hot},   # T_hot = 310.0
+    "BC_2": {"zones": [2], "type": "wall", "kind": "no slip", "temperature": T_cold},  # T_cold = 290.0
+
+
+.. _bc_wall_fsi:
+
+FSI
+^^^
+
+The ``fsi`` keyword attaches a fluid-structure-interaction modal model to a
+wall boundary (any ``kind``), coupling the wall's motion to a structural
+solve. The full set of FSI model parameters is documented separately in
+:ref:`Fluid-structure interaction <fsi>`; this section only shows how it
+attaches to a wall BC.
+
+Example (`testcases/testcases/shockplatefsi/shockplatefsi.py`):
+
+.. code-block:: python
+
+    "BC_FSI": {
+        "zones": fsi_zones,
+        "type": "wall",
+        "kind": "slip",
+        "fsi": {
+            "type": "modal_model",
+            "file_format": "nastran",
+            "nastran_casename": "panel_nm_0.04m",
+            "transform_type": "rbf_multiscale",
+            "base_point_fraction": 1.0,
+            "support_radius": 0.02,
+            "scale": [1.0, 1.0, 1.0],
+            "mode_mapping_max_distance": 0.01,
+            "fluid_force_scaling": 0.08 / 0.000166667,
+            "mode_list": [0, 4, 10, 13],
+            "modal_damping": [0.0, 0.0, 0.0, 0.0],
+        },
+    },
 
 
 .. _bc_farfield:
@@ -337,312 +421,13 @@ The options for the **'temperature'** dictionary are:
 Farfield
 ========
 
-Farfield boundary conditions are typically used for external flow simulations and automatically switch for inflows or outflows. This boundary condition cannot be used with the incompressible solver. The farfield boundary automatically determines whether the flow is locally an inflow or an outflow by solving a Riemann equation. The conditions on the farfield boundary are set by referring to an :code:`'IC_'` block. In addition to this an atmospheric boundary layer profile or a turbulence profile may be set.
-
-
-.. list-table:: 
-   :widths: 20 10 10 20 35
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'ref'
-     - Yes
-     - 
-     - Integer
-     - Mesh reference defined by this boundary condition 
-   * - 'zone'
-     - No
-     - 
-     - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
-   * - 'type'
-     - Yes
-     - 
-     - 'farfield'
-     - This sets the type of boundary condition to be associated with the zones.
-   * - 'kind'
-     - Yes
-     - 'riemann'
-     - 'riemann', 'pressure', 'supersonic' or 'preconditioned'
-     - This sets the specific model used for the farfield boundary condition:
-            * *riemann* uses riemann invariants to provide a non reflecting inflow with a pressure outflow. 
-            * *pressure* uses a pressure boundary condition for both inflow (downstream pressure) and outflow (user specified pressure). 
-            * *supersonic* uses a supersonic boundary conditions by using upstream conditions for both inflow and outflow. 
-            * *preconditioned* uses a preconditioned variant of the riemann boundary condition.
-   * - 'condition'
-     - Yes
-     - 
-     - String reference to IC
-     - Set the reference flow conditions block that relates to these boundaries, see :ref:`IC_* <reference_conditions>`.
-
-
-Example boundary condition block for a farfield boundary:
-
-.. code-block:: python
-
-    'BC_2' : {
-             # Zone type tag
-             'ref' : 9,
-             # Optional: Specific zone boundary condition override
-             'zone' : [0,1,2,3],
-             # Required: Boundary condition type
-             'type' : 'farfield',
-             # Required: Kind of farfield options (riemann, pressure or supersonic)
-             'kind' : 'riemann',
-             # Required: Farfield conditions
-             'condition' : 'IC_1',
-             # Optional: Atmospheric Boundary Layer
-     },
-
-
-.. _bc_inflow:
-
-Inflow
-======
-
-zCFD can specify two kinds of inflow boundary condition: pressure or massflow, selected using the :code:`'kind'` key. When using the pressure inflow the boundary condition is specified by a total pressure ratio and a total temperature ratio that needs to be defined by the condition this refers to. When using the massflow condition a total temperature ratio and mass flow ratio or a mass flow rate is required. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key. By default the flow direction is normal to the boundary but either a single vector or a python function can be used to specify the inflow normal vector of each face on the surface.
-
-.. note::
-    
-    The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
-    Massflow ratio is nondimensional where :math:`A_{in}` is defined in mesh units. Given :math:`massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})`
-
-.. list-table:: 
-   :widths: 20 10 10 20 35
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'ref'
-     - Yes
-     - 
-     - Integer
-     - Mesh reference defined by this boundary condition 
-   * - 'zone'
-     - No
-     - 
-     - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
-   * - 'type'
-     - Yes
-     - 
-     - 'inflow'
-     - This sets the type of boundary condition to be associated with the zones.
-   * - 'kind'
-     - Yes
-     - 'default'
-     - 'default' or 'massflow'
-     - This sets the how the user wants to specify the inflow boundary condition: 
-            * *default*. Pressure inflow. Velocity and density are calculated from the user provided total pressure ratio and total temperature ratio set in the reference **condition**. The direction of the velocity vector uses the surface normal but a specific direction can also be provided by the user. Local static pressure is used to compute a local mach number from the total pressure ratio. If the user specifies a mach number this is used to set the static pressure from the total pressure ratio.
-            * *massflow* The velocity is set from the massflow set in the reference **condition**.
-   * - 'condition'
-     - Yes
-     - 
-     - String reference to IC
-     - Set the reference flow conditions block that relates to these boundaries, see :ref:`IC_* <reference_conditions>`.
-
-
-Example boundary condition for setting up a **pressure** inflow condition based on flow conditions defined in *IC_2*:
-
-.. code-block:: python
-
-    'BC_3' : {
-             'ref' : 4,
-             'type' : 'inflow',
-             'kind' : 'default',
-             'condition' : 'IC_2',
-             },
-    'IC_1' : {
-             'temperature' : 293.0,
-             'pressure' : 101325.0,
-             'V': {
-                  'vector' : [1.0,0.0,0.0],
-                  'Mach' : 0.20,
-                  },
-             'Reynolds No' : 1.0e6,
-             'Reference Length' : 1.0,
-             'turbulence intensity' : 0.1,
-             'eddy viscosity ratio' : 1.0,
-             },
-    'IC_2' : {
-             'reference' : 'IC_1',
-             'total temperature ratio' : 1.0,
-             'total pressure ratio' : 1.0,
-             # Optional - specify mach number to set 
-             # static pressure at inflow from total pressure
-             'mach' : 0.1,
-    },
-
-
-Example boundary condition for setting up a **massflow** inflow condition based on flow conditions defined in *IC_2*:
-
-.. code-block:: python
-
-    'BC_3' : {
-             'ref' : 4,
-             'type' : 'inflow',
-             'kind' : 'massflow',
-             'condition' : 'IC_2',
-    },
-    'IC_1' : {
-             'temperature' : 293.0,
-             'pressure' : 101325.0,
-             'V': {
-                  'vector' : [1.0,0.0,0.0],
-                  'Mach' : 0.20,
-                  },
-             'Reynolds No' : 1.0e6,
-             'Reference Length' : 1.0,
-             'turbulence intensity' : 0.1,
-             'eddy viscosity ratio' : 1.0,
-    },
-    'IC_2' : {
-             'reference' : 'IC_1',
-             'total temperature ratio' : 1.0,
-             'mass flow rate' : 10.0,
-    },
-
-
-
-.. _bc_outflow:
-
-Outflow
-=======
-
-Pressure or massflow outflow boundaries are specified in a similar manner to the `Inflow`_ boundary. They can be of :code:`'kind'` :code:`'pressure'`, :code:`'radial pressure gradient'` or :code:`'massflow'`.
-When the boundary condition :code:`'kind'` is either :code:`'pressure'` or :code:`'radial pressure gradient'`, the :code:`'IC_'` conditions it refers to must set a static pressure ratio. When the boundary condition :code:`'kind'` is :code:`'massflow'`, a mass flow ratio or mass flow rate must be set in the :code:`'IC_'` conditions. Note the mass flow ratio is defined relative to the condition set in the :code:`'reference'` key.
-
-.. note::
-    
-    The massflow rate needs to specified in kg/s and can only be used if the mesh is in metres.
-    Massflow ratio is nondimensional where :math:`A_{out}` is defined in mesh units. Given :math:`massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})`
-
-.. list-table:: 
-   :widths: 20 10 10 20 35
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'ref'
-     - Yes
-     - 
-     - Integer
-     - Mesh reference defined by this boundary condition 
-   * - 'zone'
-     - No
-     - 
-     - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
-   * - 'type'
-     - Yes
-     - 
-     - 'outflow'
-     - This sets the type of boundary condition to be associated with the zones.
-   * - 'kind'
-     - Yes
-     - 
-     - 'pressure' or 'massflow' or 'radial pressure gradient'
-     - This sets how the user wants to specify the outflow conditions:
-            * *pressure* Sets the pressure at the outflow using the user specified static pressure ratio set in the reference **condition**.
-            * *massflow* Scales the local velocity so that the total integrated massflow across all the zones meets the user specified value.  
-   * - 'condition'
-     - Yes
-     - 
-     - String reference to IC
-     - Set the reference flow conditions block that relates to these boundaries, see :ref:`IC_* <reference_conditions>`.
-   * - 'reference radius'
-     - Yes
-     - 
-     - Number
-     - 
-
-
-.. code-block:: python
-
-    'BC_4' : {
-             # Zone type tag
-             'ref' : 5,
-             # Optional: Specific zone boundary condition override
-             'zone' : [0,1,2,3],
-             # Boundary condition type
-             'type' : 'outflow',
-             # Kind of outflow 'pressure, 'massflow' or 'radial pressure gradient'
-             'kind' : 'pressure',
-             # Required only when using 'radial pressure gradient'
-             # Radius at which the static pressure ratio is defined
-             'reference radius' : 1.0,
-             # Outflow conditions
-             'condition' : 'IC_2',
-             },
-
-
-
-.. _bc_symmetry:
-
-Symmetry
-========
-
-.. list-table:: 
-   :widths: 20 10 10 20 35
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - 'ref'
-     - Yes
-     - 
-     - Integer
-     - Mesh reference defined by this boundary condition 
-   * - 'zone'
-     - No
-     - 
-     - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
-   * - 'type'
-     - Yes
-     - 
-     - 'symmetry'
-     - This sets the type of boundary condition to be associated with the zones.
-
-
-Example symmetry boundary condition:
-
-.. code-block:: python
-
-    'BC_5' : {
-             'ref' : 7,
-             'type' : 'symmetry',
-    },
-
-
-.. _bc_periodic:
-
-Periodic
-========
-
-This boundary condition needs to be specified in pairs with opposing transformations. The transforms specified should map each zone onto each other. 
-
-.. note::
-
-    Each periodic boundary needs to provide the correct vector to the opposite matching boundary.
-
-.. note::
-
-    The incompressible solver ('incomp viscous' / 'incomp rans' / 'incomp les') only supports the **'linear'** (translational) periodic kind. **'rotated'** periodic boundaries are only supported by the compressible solver.
-
+Farfield boundary conditions are typically used for external flow
+simulations and automatically switch between inflow and outflow. This
+boundary condition cannot be used with the incompressible solver. The
+farfield boundary automatically determines whether the flow is locally an
+inflow or an outflow by solving a Riemann equation (for ``kind: 'riemann'``
+and ``'preconditioned'``). The conditions on the farfield boundary are set
+by referring to a :ref:`reference condition <reference_conditions>` block.
 
 .. list-table::
    :widths: 20 10 10 20 35
@@ -653,30 +438,70 @@ This boundary condition needs to be specified in pairs with opposing transformat
      - Default
      - Valid values
      - Description
-   * - 'ref'
+   * - ``zones``
      - Yes
-     -
-     - Integer
-     - Mesh reference defined by this boundary condition
-   * - 'zone'
-     - No
      -
      - List of integers
-     - Specifies list of mesh zones defined by this boundary condition
-   * - 'type'
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
      - Yes
      -
-     - 'periodic'
-     - This sets the type of boundary condition to be associated with the zones.
-   * - 'kind'
+     - ``'farfield'``
+     - Boundary condition type
+   * - ``kind``
+     - No
+     - ``'riemann'``
+     - ``'riemann'``, ``'pressure'``, ``'supersonic'`` or ``'preconditioned'``
+     - Model used for the farfield boundary:
+            * *riemann* uses Riemann invariants for a non-reflecting inflow with a pressure outflow.
+            * *pressure* uses a pressure boundary condition for both inflow (downstream pressure) and outflow (user-specified pressure).
+            * *supersonic* uses upstream conditions for both inflow and outflow.
+            * *preconditioned* is a preconditioned variant of the Riemann boundary condition.
+   * - ``condition``
      - Yes
      -
-     - 'rotated' or 'linear' dictionary (see below)
-     - The definition of the periodic transformations, can either be a 'rotated' or 'linear' dictionary (see note above on incompressible-solver support)
+     - String reference to a reference condition
+     - Reference flow condition block for these boundaries — see :ref:`reference conditions <reference_conditions>`
+   * - ``sponge_layer_damping``
+     - No
+     -
+     - See :ref:`Sponge Layer Damping <bc_sponge_layer_damping>`
+     - Optional sponge layer damping applied near this boundary
+   * - ``driver``
+     - No
+     -
+     - See :ref:`Force Driver <bc_force_driver>`
+     - Optional automatic driver that adjusts the inflow to target a force coefficient
 
-The options for the **'linear'** dictionary are:
+Example farfield with ``kind: 'riemann'`` (`testcases/testcases/naca0012/Naca0012_base.py`):
 
-.. list-table:: 
+.. code-block:: python
+
+    "BC_3": {"zones": [1], "type": "farfield", "condition": "IC_1", "kind": "riemann"},
+
+Example farfield with ``kind: 'pressure'`` (`testcases/testcases/naca0012/n0012_449_ale_rot.py`):
+
+.. code-block:: python
+
+    parameters["model"]["naca0012"]["boundary_conditions"]["BC_3"] = {
+        "zones": [1],
+        "type": "farfield",
+        "condition": "IC_2",
+        "kind": "pressure",
+    }
+
+``kind: 'supersonic'`` and ``kind: 'preconditioned'`` are valid schema values
+but no current testcase exercises either — both are constructed the same
+way, just with ``"kind": "supersonic"`` or ``"kind": "preconditioned"``
+substituted above.
+
+
+.. _bc_sponge_layer_damping:
+
+Sponge Layer Damping
+^^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -685,32 +510,50 @@ The options for the **'linear'** dictionary are:
      - Default
      - Valid values
      - Description
-   * - 'vector'
+   * - ``distance``
      - Yes
-     - 
-     - [x, y, z]: vector of numbers
-     - Defines the translation vector to map this zone onto the matching periodic zone
+     -
+     - Number
+     - Distance over which damping is applied
+   * - ``damping_factor``
+     - Yes
+     -
+     - Number
+     - Damping factor magnitude
+   * - ``condition``
+     - Yes
+     -
+     - String reference to a reference condition
+     - Reference condition the sponge layer damps toward
 
+Example (`testcases/testcases/traintunnel/traintunnel.py`):
 
-Example linear periodic boundary condition:
- 
 .. code-block:: python
 
-    'BC_6' : {
-             'zone' : [1],
-             'type' : 'periodic',
-             'kind' : {
-                      # Linear periodic settings
-                      'linear' : {
-                                 'vector' : [1.0,0.0,0.0],
-                                 },
-              },
+    "BC_2": {
+        "zones": [12],
+        "type": "farfield",
+        "kind": "riemann",
+        "condition": "IC_1",
+        "sponge_layer_damping": {
+            "distance": 20.0,
+            "damping_factor": 2.037495,
+            "condition": "IC_1",
+        },
     },
 
 
-The options for the **'rotated'** dictionary are (compressible solver only — see note above):
+.. _bc_force_driver:
 
-.. list-table:: 
+Force Driver
+^^^^^^^^^^^^
+
+Drives a farfield boundary's inflow conditions to target a specific force
+coefficient by adjusting a control variable (angle of attack or velocity
+magnitude). Declare *what* you want (target, value, control mode); the
+runtime controller handles the feedback loop.
+
+.. list-table::
    :widths: 25 10 10 20 30
    :header-rows: 1
 
@@ -719,50 +562,111 @@ The options for the **'rotated'** dictionary are (compressible solver only — s
      - Default
      - Valid values
      - Description
-   * - 'axis'
+   * - ``target``
      - Yes
-     - 
-     - [x, y, z]: vector of numbers
-     - Defines the axis of rotation used to map this boundary onto the matching periodic zone
-   * - 'origin'
+     -
+     - String
+     - Report column name to target (e.g. ``'wall_Ftz'``)
+   * - ``target_value``
      - Yes
-     - 
-     - [x, y, z]: vector of numbers
-     - Defines the origin of the axis of rotation
-   * - 'theta'
-     - Yes
-     - 
+     -
      - Number
-     - Defines the angle of rotation about the axis (in radians)
+     - Target value for the force component
+   * - ``force_report``
+     - Yes
+     -
+     - String
+     - Name of the force report block (e.g. ``'FR_1'``) to read forces from
+   * - ``control``
+     - Yes
+     -
+     - ``'angle_of_attack'`` or ``'velocity_magnitude'``
+     - Control variable to adjust
+   * - ``initial_value``
+     - No
+     - 0.0
+     - Number
+     - Starting value for the control variable (AoA: degrees, velocity: Mach)
+   * - ``max_increment``
+     - No
+     - 2.0
+     - Number > 0
+     - Maximum change per update
+   * - ``relaxation_factor``
+     - No
+     - 0.75
+     - 0 < Number <= 2.0
+     - Under-relaxation factor for updates
+   * - ``update_period``
+     - No
+     - 200
+     - Integer > 0
+     - Cycles between control variable updates
+   * - ``settling_period``
+     - No
+     - 500
+     - Integer >= 0
+     - Initial cycles before the first update
+   * - ``convergence_tolerance``
+     - No
+     - 1.0e-4
+     - Number > 0
+     - Target error tolerance for convergence
+   * - ``smoothing_window``
+     - No
+     - 20
+     - Integer > 0
+     - Moving-average window for force smoothing
 
-
-
-Example rotated periodic boundary condition:
+Example (`testcases/testcases/naca0012/n0012_897_cL_target_1_imp.py`):
 
 .. code-block:: python
 
-    'BC_6' : {
-             'zone' : [1],
-             'type' : 'periodic',
-             'kind' : {
-                      # Rotated periodic settings
-                      'rotated' : {
-                                  'theta' : math.radians(120.0),
-                                  'axis' : [1.0,0.0,0.0],
-                                  'origin' : [-1.0,0.0,0.0],
-                                  },
-                    },
+    parameters["model"]["naca0012"]["boundary_conditions"]["BC_3"] = {
+        "zones": [2, 3, 5],
+        "type": "farfield",
+        "condition": "IC_2",
+        "kind": "riemann",
+        "driver": {
+            "target": "wall_Ftz",
+            "target_value": 1.0778,
+            "force_report": "FR_1",
+            "control": "angle_of_attack",
+        },
     }
 
+.. note::
 
-.. _bc_overset:
+    The native ``driver`` block validates and registers correctly, but the
+    angle-of-attack control mode does not engage at runtime for at least one
+    known case: it reports zero update every cycle instead of converging
+    alpha onto the target. This is a known solver-wiring gap, not a
+    documentation error — do not rely on ``driver`` for angle-of-attack
+    control until it is fixed.
 
-Overset
-=======
 
-The overset boundary condition should be applied to the boundaries of a mesh to be overset on top of a larger background mesh.
+.. _bc_inflow:
 
-.. list-table:: 
+Inflow
+======
+
+zCFD supports three kinds of inflow boundary condition, selected using the
+:code:`'kind'` key: ``'default'``, ``'pressure'`` and ``'massflow'``. All
+three refer to a :ref:`reference condition <reference_conditions>` via the
+``reference`` keyword (**not** ``condition`` — that keyword is farfield's).
+By default the flow direction is normal to the boundary; the ``'pressure'``
+kind can override this with an explicit direction vector.
+
+.. note::
+
+    The massflow rate needs to be specified in kg/s and can only be used if
+    the mesh is in metres. Massflow ratio is nondimensional, where
+    :math:`A_{in}` is defined in mesh units:
+    :math:`massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})`.
+
+Common fields:
+
+.. list-table::
    :widths: 20 10 10 20 35
    :header-rows: 1
 
@@ -771,28 +675,547 @@ The overset boundary condition should be applied to the boundaries of a mesh to 
      - Default
      - Valid values
      - Description
-   * - 'ref'
+   * - ``zones``
      - Yes
-     - 
-     - Integer
-     - Mesh reference defined by this boundary condition 
-   * - 'zone'
-     - No
-     - 
+     -
      - List of integers
-     - Specifies list of mesh zones defined by this boundary condition 
-   * - 'type'
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
      - Yes
-     - 
-     - 'overset'
-     - This sets the type of boundary condition to be associated with the zones.
+     -
+     - ``'inflow'``
+     - Boundary condition type
+   * - ``kind``
+     - No
+     - ``'default'``
+     - ``'default'``, ``'pressure'`` or ``'massflow'``
+     - Selects how the inflow state is specified
+   * - ``reference``
+     - No (required in practice — see kinds below)
+     -
+     - String reference to a reference condition
+     - Reference condition supplying the base state for ratio fields
 
+``kind: 'default'`` (condition-driven inflow — the incompressible solver's
+velocity inlet; carries no extra fields beyond the common ones above):
 
-Example overset boundary condition:
+Example (`testcases/testcases/naca0012/n0012_449_a10p0_incomp.py`):
 
 .. code-block:: python
 
-    'BC_7' : {
-             'zone': [1,2,3,4],
-             'type' : 'overset',
+    "BC_3": {"zones": [1], "type": "inflow", "kind": "default", "reference": "IC_1"},
+
+``kind: 'pressure'`` — velocity and density are derived from a total
+pressure ratio and total temperature ratio relative to ``reference``:
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``total_pressure_ratio``
+     - No
+     - 1.0
+     - Number
+     - Total pressure ratio relative to ``reference``
+   * - ``total_temperature_ratio``
+     - No
+     - 1.0
+     - Number
+     - Total temperature ratio relative to ``reference`` (setting this — even at its default — requires ``reference`` to be set)
+   * - ``static_pressure_ratio``
+     - No
+     -
+     - Number
+     - Static pressure ratio (requires ``reference`` if set)
+   * - ``direction``
+     - No
+     -
+     - ``[x, y, z]``: unit vector
+     - Overrides the default surface-normal flow direction
+
+Example (`testcases/testcases/pipe/pipe_total_p_ratio.py`):
+
+.. code-block:: python
+
+    parameters["model"]["pipe"]["boundary_conditions"]["BC_2"] = {
+        "zones": [3],
+        "type": "inflow",
+        "kind": "pressure",
+        "total_pressure_ratio": inlet_total_p_ratio,
+        "reference": "IC_1",
+        "total_temperature_ratio": 1.0,
+    }
+
+``kind: 'massflow'`` — the velocity is set from a mass flow rate or ratio:
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``mass_flow_rate``
+     - No (exactly one of ``mass_flow_rate``/``mass_flow_ratio``)
+     -
+     - Number (kg/s)
+     - Direct mass flow rate
+   * - ``mass_flow_ratio``
+     - No (exactly one of ``mass_flow_rate``/``mass_flow_ratio``)
+     -
+     - Number
+     - Mass flow ratio relative to ``reference`` (requires ``reference``)
+
+Example using a rate (`testcases/testcases/pipe/pipe_massflow.py`):
+
+.. code-block:: python
+
+    "kind": "massflow", "mass_flow_rate": massflow, "reference": "IC_1",
+
+Example using a ratio (`testcases/testcases/pipe/pipe_massflowratio.py`):
+
+.. code-block:: python
+
+    "kind": "massflow", "mass_flow_ratio": inlet_mass_flow_ratio, "reference": "IC_1", "total_temperature_ratio": 1.0,
+
+
+.. _bc_outflow:
+
+Outflow
+=======
+
+Pressure, massflow, or radial-pressure-gradient outflow boundaries,
+specified in a similar manner to `Inflow`_. All refer to a
+:ref:`reference condition <reference_conditions>` via ``reference``.
+
+.. note::
+
+    The massflow rate needs to be specified in kg/s and can only be used if
+    the mesh is in metres. Massflow ratio is nondimensional, where
+    :math:`A_{out}` is defined in mesh units:
+    :math:`massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})`.
+
+Common fields:
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'outflow'``
+     - Boundary condition type
+   * - ``kind``
+     - Yes
+     -
+     - ``'pressure'``, ``'massflow'`` or ``'radial pressure gradient'``
+     - Selects how the outflow state is specified
+   * - ``reference``
+     - No
+     -
+     - String reference to a reference condition
+     - Reference condition supplying the base state for ratio fields
+
+``kind: 'pressure'`` — the exit pressure is set from a static pressure
+ratio relative to ``reference``, or directly via ``pressure``:
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``static_pressure_ratio``
+     - No
+     - 1.0
+     - Number
+     - Static pressure ratio relative to ``reference``
+   * - ``pressure``
+     - No
+     -
+     - Number > 0
+     - Direct exit pressure, overriding the ratio
+   * - ``pressure_ramp``
+     - No
+     -
+     - Dict
+     - Pressure ramping parameters
+   * - ``total_temperature_ratio``
+     - No
+     -
+     - Number
+     - Total temperature ratio (requires ``reference`` if set)
+
+Example (`testcases/testcases/pipe/pipe_static_p_ratio_outflow.py`):
+
+.. code-block:: python
+
+    "BC_3": {
+        "zones": [2],
+        "type": "outflow",
+        "kind": "pressure",
+        "static_pressure_ratio": outlet_static_p_ratio,
+        "reference": "IC_1",
     },
+
+``kind: 'massflow'`` — scales the local velocity so the integrated mass
+flow across all zones matches the requested value:
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``mass_flow_rate``
+     - No (exactly one of ``mass_flow_rate``/``mass_flow_ratio``)
+     -
+     - Number (kg/s)
+     - Direct mass flow rate
+   * - ``mass_flow_ratio``
+     - No (exactly one of ``mass_flow_rate``/``mass_flow_ratio``)
+     -
+     - Number
+     - Mass flow ratio relative to ``reference`` (requires ``reference``)
+   * - ``total_temperature_ratio``
+     - No
+     -
+     - Number
+     - Total temperature ratio (requires ``reference`` if set)
+
+Example using a rate (`testcases/testcases/pipe/pipe_massflow_outflow.py`):
+
+.. code-block:: python
+
+    "kind": "massflow", "mass_flow_rate": massflow, "reference": "IC_1",
+
+Example using a ratio (`testcases/testcases/pipe/pipe_massflowratio_outflow.py`):
+
+.. code-block:: python
+
+    "kind": "massflow", "mass_flow_ratio": inlet_mass_flow_ratio, "reference": "IC_1",
+
+``kind: 'radial pressure gradient'`` — like ``'pressure'``, but the static
+pressure ratio is defined at a specified radius rather than uniformly:
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``reference_radius``
+     - Yes
+     -
+     - Number
+     - Radius at which the static pressure ratio is defined
+   * - ``total_temperature_ratio``
+     - No
+     -
+     - Number
+     - Total temperature ratio (requires ``reference`` if set)
+
+No current testcase exercises this kind; the following is a schema-accurate
+illustration rather than a real deck excerpt:
+
+.. code-block:: python
+
+    "BC_4": {
+        "zones": [5],
+        "type": "outflow",
+        "kind": "radial pressure gradient",
+        "reference_radius": 1.0,
+        "reference": "IC_1",
+    },
+
+
+.. _bc_mass_flow:
+
+Mass Flow
+=========
+
+A standalone boundary condition (``type: 'mass flow'``) that sets a mass
+flow rate directly, with no ``kind`` and no reference condition — distinct
+from the inflow/outflow ``kind: 'massflow'`` variants above.
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'mass flow'``
+     - Boundary condition type
+   * - ``mass_flow``
+     - Yes
+     -
+     - Number
+     - Mass flow rate
+
+No current testcase uses this BC type; the following is a schema-accurate
+illustration rather than a real deck excerpt:
+
+.. code-block:: python
+
+    "BC_2": {"zones": [3], "type": "mass flow", "mass_flow": 10.0},
+
+.. note::
+
+    This is a deliberate spelling duplicate of the inflow and outflow
+    ``kind: 'massflow'`` variants above — the same underlying concept has
+    two different names: ``'mass flow'`` as a top-level ``type`` here, and
+    ``'massflow'`` as a ``kind`` there. Both spellings are valid; unifying
+    them would require a coordinated schema and C++ change.
+
+
+.. _bc_symmetry:
+
+Symmetry
+========
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'symmetry'``
+     - Boundary condition type
+
+Example (`testcases/testcases/naca0012/Naca0012_base.py`):
+
+.. code-block:: python
+
+    "BC_1": {"zones": [2, 3], "type": "symmetry"},
+
+
+.. _bc_periodic:
+
+Periodic
+========
+
+This boundary condition needs to be specified in pairs with opposing
+transformations. The transforms specified should map each zone onto the
+matching zone.
+
+.. note::
+
+    Each periodic boundary needs to provide the correct transform to the
+    opposite matching boundary.
+
+.. note::
+
+    The incompressible solver (``solver_settings.type: 'incompressible'``)
+    only supports the **'linear'** (translational) periodic kind.
+    **'rotated'** periodic boundaries are only supported by the
+    compressible solver.
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'periodic'``
+     - Boundary condition type
+   * - ``kind``
+     - Yes
+     -
+     - ``'rotated'`` or ``'linear'``
+     - Selects the periodic transformation type (see note above on incompressible-solver support)
+   * - ``transform``
+     - Yes
+     -
+     - See below
+     - The periodic transformation, shape depends on ``kind``
+
+The options for the **'linear'** ``transform`` are:
+
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``vector``
+     - Yes
+     -
+     - ``[x, y, z]``
+     - Translation vector mapping this zone onto the matching periodic zone
+
+Example linear periodic boundary condition (`testcases/testcases/cavity/re400_periodic.py`):
+
+.. code-block:: python
+
+    "BC_3": {
+        "zones": [11],
+        "type": "periodic",
+        "kind": "linear",
+        "transform": {"vector": [0.0, 0.0, 1.0]},
+    },
+
+The options for the **'rotated'** ``transform`` are (compressible solver only — see note above):
+
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``axis``
+     - Yes
+     -
+     - ``[x, y, z]``: unit vector
+     - Axis of rotation mapping this boundary onto the matching periodic zone
+   * - ``origin``
+     - Yes
+     -
+     - ``[x, y, z]``
+     - Origin of the axis of rotation
+   * - ``theta``
+     - Yes
+     -
+     - Number
+     - Angle of rotation about the axis, in radians
+
+Example rotated periodic boundary condition (`testcases/testcases/IEA15MW/IEA_15MW_10p59.py`):
+
+.. code-block:: python
+
+    "BC_4": {
+        "zones": [5],
+        "type": "periodic",
+        "kind": "rotated",
+        "transform": {
+            "theta": math.radians(120.0),
+            "axis": [1.0, 0.0, 0.0],
+            "origin": [0.0, 0.0, 0.0],
+        },
+    },
+
+
+.. _bc_overset:
+
+Overset
+=======
+
+The overset boundary condition should be applied to the boundaries of a
+mesh to be overset on top of a larger background mesh.
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'overset'``
+     - Boundary condition type
+   * - ``background``
+     - No
+     - unset (falls back to all-pairs connectivity)
+     - Model name, list of model names, or unset
+     - Model(s) whose mesh provides donor data at this boundary. Used to derive the blanking priority order — models are topologically sorted so a model always appears after the model(s) it names as background. When unset, the solver falls back to all-pairs connectivity against every preceding model in the topological order; explicit specification is preferred, as it avoids unnecessary mapper creation for non-overlapping mesh pairs
+   * - ``idw_from_cells_order``
+     - No
+     - 0
+     - Integer >= 0
+     - Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)
+   * - ``additional_active_layers``
+     - No
+     - 0
+     - Integer >= 0
+     - Number of additional active cell layers near the blanking boundary
+   * - ``moving_mesh_halo_layers``
+     - No
+     - 0
+     - Integer >= 0
+     - Halo fringe layers around the hole when the overset mesh moves (0 = treat every blanked cell as a halo; N > 0 is sufficient when the hole is re-cut every real time step)
+
+Example without an explicit background (`testcases/testcases/euler_rotating_cylinder/euler_rotating_cylinder.py`):
+
+.. code-block:: python
+
+    "BC_2": {"zones": [7], "type": "overset"},
+
+Example with an explicit background model (`testcases/testcases/oversetmulticylinder/oversetmulticylinder.py`):
+
+.. code-block:: python
+
+    "BC_2": {"zones": [10], "type": "overset", "background": ["background"]},

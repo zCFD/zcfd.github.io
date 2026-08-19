@@ -1,0 +1,4 @@
+source/reference_guide/report.rst:259: (Ftf) ["Ft", "Ff", "Ftp", "Fth", "Ft f"] _Ftf[x,y,z] and 
+source/reference_guide/report.rst:259: (Mtf) ["Mt", "Mt f", "Mtg", "Mf"] _Mtf[x,y,z]
+source/reference_guide/report.rst:262: (Tq) ["T", "Q", "Te", "Eq", "Sq", "Ti", "Ta", "Tl", "Tc", "Tu", "Tm", "Th", "Tb", "Ty"] _Tq and 
+source/reference_guide/report.rst:262: (Tqp) ["Twp", "Tsp", "Tip", "Tap", "Top", "Typ", "TQM"] _Tqp (thrust, torque and power about the rotation axis) — there is no keyword to configure these; they appear whenever the reported zones belong to a rotating boundary.

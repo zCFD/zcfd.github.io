@@ -1,0 +1,6 @@
+source/reference_guide/materials.rst:71: (Boussinesq) ["Bossiness", "Bounciness", "Business", "Sinuousness"]  — Boussinesq buoyancy coefficient 
+source/reference_guide/materials.rst:159: (Boussinesq) ["Bossiness", "Bounciness", "Business", "Sinuousness"]  set, gravity affects nothing (no buoyancy source is built), so it is not gated on the Boussinesq fields the way they are gated on it.
+source/reference_guide/materials.rst:162: (coeff) ["cuff", "coff"] thermal_expansion_coeff and boussinesq_buoyancy_reference_density
+source/reference_guide/materials.rst:162: (boussinesq) ["bossiness", "bounciness", "business", "sinuousness"] thermal_expansion_coeff and boussinesq_buoyancy_reference_density
+source/reference_guide/materials.rst:163: (Boussinesq) ["Bossiness", "Bounciness", "Business", "Sinuousness"] These configure Boussinesq buoyancy on the incompressible solver. 
+source/reference_guide/materials.rst:163: (linearised) ["linearized", "linearize"]  sets the reference density the buoyancy approximation is linearised about, and (like 

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 4: FWH Solver &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Tutorial 4: FWH Solver &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -47,25 +47,27 @@
 </a>
 <p>The FWH surface encloses the noise generating near-field region, but does not intersect the wake, in order to avoid spurious pseudo-sound [<a class="reference internal" href="#tutorial-3-citations"><span class="std std-ref">1</span></a>, <a class="reference internal" href="#tutorial-3-citations"><span class="std std-ref">2</span></a>] .</p>
 <p>There’s also a prepared control dictionary, <em>cylinder_fwh.py</em>. This is identical to tutorials 3’s <em>cylinder.py</em> apart from the output section, which is detailed below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"write output"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">,</span>
-    <span class="s2">"surface variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
-    <span class="s2">"volume variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
-    <span class="s2">"fwh interpolate"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"fwh_surface1.stl"</span><span class="p">],</span>
-    <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"fwh interpolate"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">"volume data"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="s2">"surface data"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"output settings"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"solution"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"vtk"</span><span class="p">,</span>
+        <span class="s2">"surface variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
+        <span class="s2">"volume variables"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"V"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"T"</span><span class="p">,</span> <span class="s2">"rho"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"cp"</span><span class="p">],</span>
+        <span class="s2">"fwh interpolate"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"fwh_surface1.stl"</span><span class="p">],</span>
+        <span class="s2">"frequency"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"fwh interpolate"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"volume data"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">"surface data"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
 </div>
-<p>In this case, we have chosen to output <em>fwh interpolate</em> data every single timestep, using the <em>fwh_surface1.stl</em> FWH surface definition file. Volume and surface data is much less frequent, since we already have all this data from when we ran <em>cylinder.py</em> <a class="reference internal" href="quick_start_3.html#tutorial-3"><span class="std std-ref">above</span></a>.</p>
-<p>For the FWH tutorial we have also updated the <em>‘time marching’</em> section to run the simulation for 4 seconds, rather than 1.2. We run the CFD simulation in the normal way, using the command below.</p>
+<p>This <code class="docutils literal notranslate"><span class="pre">output_settings.solution</span></code> block sits under the <code class="docutils literal notranslate"><span class="pre">solver</span></code> key of the control dictionary, alongside <code class="docutils literal notranslate"><span class="pre">equations</span></code>, <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code> and the other <a class="reference internal" href="#fwhtutorialrunfwh"><span class="std std-ref">solver settings</span></a> inherited from <em>cylinder.py</em>. In this case, we have chosen to output <em>fwh_interpolate</em> data every single timestep, using the <em>fwh_surface1.stl</em> FWH surface definition file. Volume and surface data is much less frequent, since we already have all this data from when we ran <em>cylinder.py</em> <a class="reference internal" href="quick_start_3.html#tutorial-3"><span class="std std-ref">above</span></a>.</p>
+<p>For the FWH tutorial we have also updated the <code class="docutils literal notranslate"><span class="pre">solver.time_settings</span></code> block to run the simulation for 4 seconds, rather than 1.2. We run the CFD simulation in the normal way, using the command below.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_zcfd<span class="w"> </span>-m<span class="w"> </span>cylinder.h5<span class="w"> </span>-c<span class="w"> </span>cylinder_fwh.py
 </pre></div>
 </div>
-<p>When we’ve run the CFD simulation of the cylinder, we should be able to see the FWH interpolated data in <em>‘cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5’</em>. There is also a corresponding <em>xdmf</em> file, <em>‘cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.xdmf’</em>, which allows us to open the FWH surface in ParaView and see the pressure, velocity and density at each cell centre varying with simulation time. Use the ParaView <em>Time</em> controls to adjust the simulation time being viewed. You may find that changing the <em>view style</em> to <em>Point Gaussian</em> and increasing the <em>Gaussian Radius</em> in the <em>Properties</em> sidebar makes the cell values easier to see.</p>
+<p>When we’ve run the CFD simulation of the cylinder, we should be able to see the FWH interpolated data in <em>‘cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5’</em>. There is also a corresponding <em>xdmf</em> file, <em>‘cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.xdmf’</em>, which allows us to open the FWH surface in ParaView and see the pressure, velocity and density at each cell centre varying with simulation time. Use the ParaView <em>Time</em> controls to adjust the simulation time being viewed. You may find that changing the <em>view style</em> to <em>Point Gaussian</em> and increasing the <em>Gaussian Radius</em> in the <em>Properties</em> sidebar makes the cell values easier to see.</p>
 </section>
 <section id="running-the-zcfd-fwh-solver">
 <h2>Running the zCFD FWH solver<a class="headerlink" href="#running-the-zcfd-fwh-solver" title="Link to this heading">¶</a></h2>
@@ -80,8 +82,8 @@
 </figcaption>
 </figure>
 <p>To use the <cite>run_fwh</cite> utility we need three inputs - a <a class="reference internal" href="../fwh.html#runfwhzcfdparameters"><span class="std std-ref">zCFD control file</span></a>, a <a class="reference internal" href="../fwh.html#runfwhrefcond"><span class="std std-ref">reference condition</span></a> specification and an <a class="reference internal" href="../fwh.html#runfwhobserverscsv"><span class="std std-ref">observers .csv file</span></a>.</p>
-<p>The zCFD control file is simply the control file for the zCFD simulation we used to create the FWH surface data - in this case, <em>cylinder_fwh.py</em>. <em>run_fwh</em> reads <em>cylinder_fwh.py</em> and can see that we have a single FWH surface, with data stored at <em>‘cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5’</em>.</p>
-<p>Next, we have to define a <em>reference condition</em>. In external flow simulations of this type, the <em>run_fwh</em> <em>reference condition</em> is the freestream conditions, defined as a zCFD <a class="reference internal" href="../reference_guide/initial.html#initial-conditions"><span class="std std-ref">IC block</span></a>. In this case, the freestream conditions are already defined in <em>cylinder_fwh.py</em> to define the farfield boundary condition, so we can simply use <em>‘IC_1’</em> for the <em>run_fwh</em> reference condition.</p>
+<p>The zCFD control file is simply the control file for the zCFD simulation we used to create the FWH surface data - in this case, <em>cylinder_fwh.py</em>. <em>run_fwh</em> reads <em>cylinder_fwh.py</em> and can see that we have a single FWH surface, with data stored at <em>‘cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5’</em>.</p>
+<p>Next, we have to define a <em>reference condition</em>. In external flow simulations of this type, the <em>run_fwh</em> <em>reference condition</em> is the freestream conditions, defined as a zCFD <a class="reference internal" href="../reference_guide/initial.html#initial-conditions"><span class="std std-ref">reference condition block</span></a> under <code class="docutils literal notranslate"><span class="pre">solver.reference_conditions</span></code>. In this case, the freestream conditions are already defined in <em>cylinder_fwh.py</em> to define the farfield boundary condition, so we can simply use <em>‘IC_1’</em> for the <em>run_fwh</em> reference condition.</p>
 <p>Lastly, we need to define the name and location of our observers in a <code class="code docutils literal notranslate"><span class="pre">.csv</span></code> file. The centre of the cylinder in the CFD mesh is at (0.25,0,0), and we want <em>Obs1</em> to always be (0,0,20) metres  away from the cylinder centre during the FWH simulation. The file <code class="code docutils literal notranslate"><span class="pre">Observers.csv</span></code> (included in the tutorial <a class="reference internal" href="#runningzcfdwithfwhout"><span class="std std-ref">.zip file</span></a>) therefore contains the following:</p>
 <div class="highlight-default notranslate" id="fwhtutorialobscsv"><div class="highlight"><pre><span></span><span class="n">Obs1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>  <span class="mf">20.0</span>
 </pre></div>
@@ -91,6 +93,10 @@
 </pre></div>
 </div>
 <p>Running this command prints output to screen and to the <cite>cylinder_fwh.fwh.log</cite> file, and outputs the FWH calculated pressure history at <em>Obs1</em> to <cite>cylinder_fwh.fwh.Obs1.csv</cite>. In the case where there are multiple noise sources, the contribution of noise to each source is broken out, with the total observed noise also reported. Suggested post-processing is introduced <a class="reference internal" href="#fwhtutorialpp"><span class="std std-ref">below</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run_fwh</span></code> command-line interface takes a zCFD control file, a reference-condition name and an observers <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file, whatever the control file’s <code class="docutils literal notranslate"><span class="pre">config_version</span></code>. The FWH tools read the control dictionary’s raw parameters directly, rather than through the same schema-validated path as the solver: the <code class="docutils literal notranslate"><span class="pre">run_fwh</span></code> helper module has not been updated for the current control-file format and references a class that no longer exists in <code class="docutils literal notranslate"><span class="pre">zutil.fileutils</span></code>. Check your local installation’s release notes for the current status of these tools.</p>
+</div>
 </section>
 </section>
 <section id="using-the-fwh-python-module">
@@ -149,7 +155,7 @@
 <span class="n">surfaces</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"surf1"</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">"motion"</span><span class="p">:</span> <span class="n">surfaceMotion</span><span class="p">,</span>
-        <span class="s2">"fileName"</span><span class="p">:</span> <span class="s2">"./cylinder_fwh_P1_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5"</span><span class="p">,</span>
+        <span class="s2">"fileName"</span><span class="p">:</span> <span class="s2">"./cylinder_fwh_OUTPUT/ACOUSTIC_DATA/fwh_surface1_FWHData.h5"</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 <span class="n">observers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Obs1"</span><span class="p">:</span> <span class="n">obs1Motion</span><span class="p">,</span> <span class="s2">"Obs2"</span><span class="p">:</span> <span class="n">obs2Motion</span><span class="p">}</span>
@@ -174,7 +180,7 @@ We set <em>Obs2</em> to be stationary in the FWH reference frame, and to be coin
 </section>
 <section id="running-the-fwh-solver">
 <h3>Running the FWH solver<a class="headerlink" href="#running-the-fwh-solver" title="Link to this heading">¶</a></h3>
-<p>The python code above is replicated in <em>‘run_fwh_solver.py</em>’. To run the FWH solver, we simply run the command below from within the <a class="reference internal" href="../running/execution.html#zcfd-command"><span class="std std-ref">zCFD command-line environment</span></a>. You may need to change the <code class="code docutils literal notranslate"><span class="pre">surfaces[&quot;surf1&quot;][&quot;fileName&quot;]</span></code> parameter depending on how many ranks you used in your zCFD run.</p>
+<p>The python code above is replicated in <em>‘run_fwh_solver.py</em>’. To run the FWH solver, we simply run the command below from within the <a class="reference internal" href="../running/execution.html#zcfd-command"><span class="std std-ref">zCFD command-line environment</span></a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>run_fwh_solver.py
 </pre></div>
 </div>

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 2: Steady State RANS &#8212; zCFD User Guide v2025.11.13331-252-g2f509c documentation</title>
+    <title>Tutorial 2: Steady State RANS &#8212; zCFD User Guide v2025.11.13331-253-g5fdad documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=654cf8bf"></script>
+    <script src="../_static/documentation_options.js?v=39041cef"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -54,7 +54,7 @@
 <p>This case is run as a steady state simulation, using an implicit time marching scheme. The Reynolds Averaged Navier-Stokes equations are solved using Menter’s SST turbulence model with wall functions.</p>
 <section id="control-dictionary-breakdown">
 <h2>Control Dictionary Breakdown<a class="headerlink" href="#control-dictionary-breakdown" title="Link to this heading">¶</a></h2>
-<p>The setup for this case is very similar to the previous NACA0012 cases, but the control dictionary does feature some extra terms which can be useful for a more streamlined workflow.</p>
+<p>The setup for this case is very similar to the previous NACA0012 cases, but the control dictionary does feature some extra terms which can be useful for a more streamlined workflow. As in <a class="reference internal" href="quick_start_1.html#tutorial-1"><span class="std std-ref">Tutorial 1</span></a>, settings are nested under a top-level <cite>solver</cite> key and a <cite>model</cite> key, one entry per mesh.</p>
 <section id="reference-variables">
 <h3>Reference variables<a class="headerlink" href="#reference-variables" title="Link to this heading">¶</a></h3>
 <p>At the top of the control file, the key variables for the case- Reynolds number, Mach number, temperature etc… are all hard coded, and then referred to later in the script. In cases where you might want to run many simulations with slightly different values to change, this can be an effective way to ensure consistency with variables. Additionally this allows implicit values such as the reference velocity, and freestream Mach to be calculated automatically in the script.</p>
@@ -82,27 +82,28 @@
 <section id="scale">
 <h3>Scale<a class="headerlink" href="#scale" title="Link to this heading">¶</a></h3>
 <p>In this case a scaling is applied to convert the size of the mesh. The .h5 mesh file was generated with units of inches, whereas the flow conditions are specified in SI units, therefore a scaling of 0.0254 is applied to convert the mesh into metres. The z (spanwise) direction has been scaled to be 1 metre wide. The mesh has only a single cell in the z direction so no spanwise flow is expected - making the z extent of the mesh 1 metre simply means that the forces and moments reported by zCFD will already be per unit span.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># scale the mesh to match the experimental data</span>
-<span class="s1">'scale'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="p">,</span><span class="mf">0.0254</span><span class="o">/</span><span class="mf">0.127</span><span class="p">],</span>
+<p>Mesh scaling is a property of a specific mesh, so it is set under that mesh’s own entry in <cite>model</cite>, in a <cite>transforms</cite> sub-dictionary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># scale the mesh to match the experimental data</span>
+<span class="s2">"transforms"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0254</span><span class="p">,</span> <span class="mf">0.0254</span><span class="p">,</span> <span class="mf">0.0254</span> <span class="o">/</span> <span class="mf">0.127</span><span class="p">]},</span>
 </pre></div>
 </div>
 </section>
 <section id="inflow-vector">
 <h3>Inflow vector<a class="headerlink" href="#inflow-vector" title="Link to this heading">¶</a></h3>
 <p>In this case we want to simulate the aerofoil operating at an angle of attack of 4 degrees. Rather than rotating the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation. The <code class="code docutils literal notranslate"><span class="pre">zutil</span></code> function <code class="code docutils literal notranslate"><span class="pre">vector_from_angle()</span></code> calculates the inflow vector given an x-z angle of attack, x-y angle of attack and flow speed.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'IC_1'</span> <span class="p">:</span> <span class="p">{</span>
-    <span class="s1">'temperature'</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
-    <span class="s1">'pressure'</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
-    <span class="s1">'V'</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"IC_1"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+    <span class="s2">"pressure"</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span>
+    <span class="s2">"v"</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># calculate the inflow vector based on the angle of attack</span>
-        <span class="s1">'vector'</span> <span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">U</span><span class="p">),</span>
+        <span class="s2">"vector"</span><span class="p">:</span> <span class="n">zutil</span><span class="o">.</span><span class="n">vector_from_angle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">U</span><span class="p">),</span>
     <span class="p">},</span>
-    <span class="s1">'Reynolds No'</span> <span class="p">:</span> <span class="n">reynolds</span><span class="p">,</span>
-    <span class="s1">'Reference Length'</span> <span class="p">:</span> <span class="n">reference_length</span><span class="p">,</span>
-    <span class="s1">'turbulence intensity'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-    <span class="s1">'eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="s1">'ambient turbulence intensity'</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
-    <span class="s1">'ambient eddy viscosity ratio'</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s2">"reynolds no"</span><span class="p">:</span> <span class="n">reynolds</span><span class="p">,</span>
+    <span class="s2">"reference length"</span><span class="p">:</span> <span class="n">reference_length</span><span class="p">,</span>
+    <span class="s2">"turbulence intensity"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s2">"eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s2">"ambient turbulence intensity"</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
+    <span class="s2">"ambient eddy viscosity ratio"</span><span class="p">:</span> <span class="mf">1e-20</span><span class="p">,</span>
 <span class="p">},</span>
 </pre></div>
 </div>
@@ -135,14 +136,9 @@
 <p>You will notice that case is set to run for 1000 cycles but looking at the plots, it looks like the residuals are still converging. So we will now restart the solver from where we finished and run on for another 1000 cycles.</p>
 <section id="performing-a-restart">
 <h3>Performing a restart<a class="headerlink" href="#performing-a-restart" title="Link to this heading">¶</a></h3>
-<p>To restart the solver we need to update the <em>‘restart’</em> parameter in the control dictionary. If this is set to <em>False</em> the solver will always perform a fresh start, if it is <em>True</em> then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit <em>30p30n_steady.py</em> and change restart to <em>True</em>. You will also need to update <em>‘cycles’</em> to 2000.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"restart"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-
-<span class="s1">'time marching'</span> <span class="p">:</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">'cycles'</span> <span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
-    <span class="o">...</span>
-<span class="p">}</span>
+<p>To restart the solver we need to update the <em>‘restart’</em> parameter, which lives under <cite>solver.initialisation</cite> in the control dictionary. If this is set to <em>False</em> the solver will always perform a fresh start, if it is <em>True</em> then a results file will be read in and the solve will start based on the data in that file. To enable the restart edit <em>30p30n_steady.py</em> and change restart to <em>True</em>. You will also need to update <em>‘cycles’</em> to 2000 - since this is a steady simulation, <cite>cycles</cite> lives under <cite>solver.convergence_control</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"initialisation"</span><span class="p">][</span><span class="s2">"restart"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"convergence control"</span><span class="p">][</span><span class="s2">"cycles"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2000</span>
 </pre></div>
 </div>
 <p>By default zCFD will look for a results file with the same name as the current case file, appended with ‘_results.h5’. So in our case it will look for “30p30n_steady_results.h5”. When you have edited the control dictionary go ahead and restart the simulation again using the same <strong>run_zcfd</strong> command:</p>
