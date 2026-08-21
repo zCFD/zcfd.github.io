@@ -95,15 +95,6 @@ global time stepping there is no pseudo-time loop to precondition, so
 ``precondition`` is not available there. ``False`` is always inert, so it
 never conflicts with a time-marching choice.
 
-Spatial discretisation is not part of ``equations``
-=====================================================
-Settings that only affect *how* the equations are marched to a solution —
-spatial order, the inviscid flux scheme, the limiter, gradient method,
-reconstruction scheme, low-dissipation sensor and multigrid — live on
-``solver.numerical_scheme`` instead. They are not part of the equations
-schema documented here: choosing an equation set changes *what* is being
-solved, not how the spatial discretisation of that system is carried out.
-
 .. _turbulence:
 
 Turbulence
@@ -704,3 +695,50 @@ Example usage:
       },
       # ... numerical_scheme, fluid_properties, reference_conditions, ...
   }
+
+
+.. _numerical_scheme:
+
+Numerical scheme
+^^^^^^^^^^^^^^^^
+
+``solver.numerical_scheme`` holds the spatial discretisation applied to the
+equation set: the order of the reconstruction and how many cycles to hold it
+at first order, the limiter, the gradient method, the inviscid flux scheme
+and its low-dissipation sensor, and multigrid.
+
+freeze_limiter_cycle
+====================
+If set the values of the limiter used in the MUSCL reconstruction are frozen at the end of the specified cycle and held fixed for the rest of the pseudo time solve. This can be useful in the latter stages of a solve if noise from the limiter is causing the residual convergence to stall: a small number of cells whose limiter switches between iterations can hold the residual at a noise floor that more cycles will never clear.
+
+The cycle is counted within the **current pseudo time solve**:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 40 30
+
+   * - Time marching
+     - The pseudo time solve is
+     - Limiter is
+   * - Steady
+     - the whole run
+     - frozen from cycle N to the end
+   * - Dual time, the ``start`` cycles
+     - the start-up cycles at real time cycle 0
+     - frozen from cycle N to the end of that phase
+   * - Dual time, each real time step
+     - that real time step
+     - live for cycles 1 to N, frozen for the rest of the step
+   * - ``kind: "global timestepping"``
+     - --
+     - never frozen; the setting is ignored
+
+For dual time stepping the limiter is therefore released and re-computed at the start of every real time step, so each step's snapshot reflects that step's solution and mesh position. **N must be less than** ``cycles`` or the snapshot is taken too late to influence that step's solution; a warning is issued if it is not.
+
+Global time stepping advances one physical time step per cycle, so there is no pseudo time solve for the freeze to be scoped to and no later opportunity to refresh the snapshot. The setting is ignored and a warning is issued.
+
+The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.
+
+Freezing is deferred while the spatial discretisation is still first order, for example during ``first_order_cycles``, because a first order reconstruction has no limiter values to store.
+
+``moving_mesh`` is supported: the mesh only moves at the end of a real time step and the limiter is re-computed after the move, so a snapshot is never used at a mesh position it was not taken at. A ``modal_model`` FSI coupling is the exception, because it deforms the mesh from within the pseudo time loop; a warning is issued if both are set.

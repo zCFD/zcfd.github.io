@@ -33,7 +33,7 @@ This reference guide documents the keys available in a zCFD control dictionary a
             "initialisation": {:ref:`... <reference_state>`},
             "time_settings": {:ref:`... <time>`},
             "convergence_control": {:ref:`... <time>`},
-            "numerical_scheme": {:ref:`... <equations>`},
+            "numerical_scheme": {:ref:`... <numerical_scheme>`},
             "output_settings": {
                 "report": {:ref:`... <reporting>`},
                 "solution": {:ref:`... <write_output>`},
