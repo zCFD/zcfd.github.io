@@ -140,7 +140,7 @@ Dual time stepping
 ====================
 Dual time stepping (DTS) advances the solution in physical time, with an inner pseudo-time convergence loop run at each physical time step to converge that step before advancing. Time integration is based on the solution at the current physical time step and the contribution of previous physical time steps, represented by a Backward Difference Formula; ``order`` controls the order of this formula.
 
-``start`` provides the option of initialising a DTS simulation with a number of steady-state pseudo-time cycles before physical time-stepping begins.
+``start`` provides the option of initialising a DTS simulation with a number of steady-state pseudo-time cycles before physical time-stepping begins. These run at real-time cycle 0 with no physical time derivative, so they are the same solve as a ``"steady"`` run of the same length; physical time stepping begins at real-time cycle 1, where the time integration order builds up from first order to ``order``. Restarting a DTS case from the results of a steady run (or from a results file written at the end of the start phase) skips real-time cycle 0 and begins time-accurate stepping at once, using the restart field as the time history.
 
 The pseudo-time scheme, CFL and cycle count for each physical step are configured in ``convergence_control``, exactly as for a steady run — see :ref:`Convergence Control <convergence_control>` below.
 

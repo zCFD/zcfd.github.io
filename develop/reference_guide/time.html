@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-269-gb492c1 documentation</title>
+    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-270-g601c5a documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=a4063e33"></script>
+    <script src="../_static/documentation_options.js?v=e7b583c1"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -169,7 +169,7 @@
 <section id="dual-time-stepping">
 <span id="running-unsteady"></span><h3>Dual time stepping<a class="headerlink" href="#dual-time-stepping" title="Link to this heading">¶</a></h3>
 <p>Dual time stepping (DTS) advances the solution in physical time, with an inner pseudo-time convergence loop run at each physical time step to converge that step before advancing. Time integration is based on the solution at the current physical time step and the contribution of previous physical time steps, represented by a Backward Difference Formula; <code class="docutils literal notranslate"><span class="pre">order</span></code> controls the order of this formula.</p>
-<p><code class="docutils literal notranslate"><span class="pre">start</span></code> provides the option of initialising a DTS simulation with a number of steady-state pseudo-time cycles before physical time-stepping begins.</p>
+<p><code class="docutils literal notranslate"><span class="pre">start</span></code> provides the option of initialising a DTS simulation with a number of steady-state pseudo-time cycles before physical time-stepping begins. These run at real-time cycle 0 with no physical time derivative, so they are the same solve as a <code class="docutils literal notranslate"><span class="pre">&quot;steady&quot;</span></code> run of the same length; physical time stepping begins at real-time cycle 1, where the time integration order builds up from first order to <code class="docutils literal notranslate"><span class="pre">order</span></code>. Restarting a DTS case from the results of a steady run (or from a results file written at the end of the start phase) skips real-time cycle 0 and begins time-accurate stepping at once, using the restart field as the time history.</p>
 <p>The pseudo-time scheme, CFL and cycle count for each physical step are configured in <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code>, exactly as for a steady run — see <a class="reference internal" href="#convergence-control"><span class="std std-ref">Convergence Control</span></a> below.</p>
 <p>Example usage:</p>
 <p>The unsteady laminar cylinder test case sheds a vortex street with a specific Strouhal number. We want to run the simulation for 4 seconds of physical time, with a small enough time step to capture the unsteady shedding phenomenon, and 20 pseudo-time cycles of multistage Runge-Kutta per physical step to converge each step:</p>
