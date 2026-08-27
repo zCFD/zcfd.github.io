@@ -1,5 +1,7 @@
-source/reference_guide/boundary.rst:494: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] but no current testcase exercises either — both are constructed the same
-source/reference_guide/boundary.rst:589: (AoA) ["AA", "AMA", "ABA", "AAA", "Aa", "Anoa", "Ana", "Ala", "Aga", "Goa", "Moa", "Aha", "Aba", "Boa", "Aka"] Starting value for the control variable (AoA: degrees, velocity: Mach)
-source/reference_guide/boundary.rst:945: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase exercises this kind; the following is a schema-accurate
-source/reference_guide/boundary.rst:993: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase uses this BC type; the following is a schema-accurate
-source/reference_guide/boundary.rst:1199: (neighbour) ["neighbor"] Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)
+source/reference_guide/boundary.rst:393: (realised) ["realized", "released"] corrected, so the realised wall shear stress is the intended
+source/reference_guide/boundary.rst:399: (viscosities) ["viscounties", "viscosity", "viscidities", "positivities"]  is the face temperature, so the two viscosities were already
+source/reference_guide/boundary.rst:517: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] but no current testcase exercises either — both are constructed the same
+source/reference_guide/boundary.rst:612: (AoA) ["AA", "AMA", "ABA", "AAA", "Aa", "Anoa", "Ana", "Ala", "Aga", "Goa", "Moa", "Aha", "Aba", "Boa", "Aka"] Starting value for the control variable (AoA: degrees, velocity: Mach)
+source/reference_guide/boundary.rst:968: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase exercises this kind; the following is a schema-accurate
+source/reference_guide/boundary.rst:1016: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase uses this BC type; the following is a schema-accurate
+source/reference_guide/boundary.rst:1222: (neighbour) ["neighbor"] Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)

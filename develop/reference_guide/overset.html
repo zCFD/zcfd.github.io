@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Overset &#8212; zCFD User Guide v2025.11.13331-268-g33414 documentation</title>
+    <title>Overset &#8212; zCFD User Guide v2025.11.13331-269-gb492c1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=816a175a"></script>
+    <script src="../_static/documentation_options.js?v=a4063e33"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -39,7 +39,7 @@
 <section id="setting-up-an-overset-case">
 <span id="overset-setup"></span><h2>Setting up an overset case<a class="headerlink" href="#setting-up-an-overset-case" title="Link to this heading">¶</a></h2>
 <p>One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition whose <code class="docutils literal notranslate"><span class="pre">background</span></code> field names the donor model(s) (see below).</p>
-<p>Example <code class="docutils literal notranslate"><span class="pre">model</span></code> structure, adapted from <code class="docutils literal notranslate"><span class="pre">testcases/testcases/oversetmulticylinder/oversetmulticylinder.py</span></code> (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):</p>
+<p>Example <code class="docutils literal notranslate"><span class="pre">model</span></code> structure (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"background"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back1.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
     <span class="s2">"refinement_region"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back2.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>

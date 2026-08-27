@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-268-g33414 documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-269-gb492c1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=816a175a"></script>
+    <script src="../_static/documentation_options.js?v=a4063e33"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -239,15 +239,15 @@ some extent with mesh refinement at additional computational cost.</p>
 </tr>
 </tbody>
 </table>
-<p>Example no-slip wall (<cite>testcases/testcases/naca0012/Naca0012_base.py</cite>):</p>
+<p>Example no-slip wall:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">},</span>
 </pre></div>
 </div>
-<p>Example immersed wall with a slip condition (<cite>testcases/testcases/euler_rotating_cylinder/cylinderIB.py</cite>):</p>
+<p>Example immersed wall with a slip condition:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"immersed_wall"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"immersed wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"slip"</span><span class="p">},</span>
 </pre></div>
 </div>
-<p>Example immersed wall using a wall function (<cite>testcases/testcases/EVE/EVE_steady.py</cite>):</p>
+<p>Example immersed wall using a wall function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"aircraft"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"immersed wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">},</span>
 </pre></div>
 </div>
@@ -302,7 +302,7 @@ logarithmic law.</p>
 roughness elements on a solid boundary — the scale of irregularities or
 protrusions on the surface that disrupt the smooth flow and create
 additional drag or turbulence.</p>
-<p>Example (<cite>testcases/testcases/plate/plate_medium_wf_rough.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">][</span><span class="s2">"roughness"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"height"</span><span class="p">,</span>
     <span class="s2">"scalar"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
@@ -398,14 +398,14 @@ velocity or a <strong>rotating</strong> one, selected by its own <code class="do
 </tr>
 </tbody>
 </table>
-<p>Example linear wall velocity (<cite>testcases/testcases/plate/plate_medium_moving_wall.py</cite>):</p>
+<p>Example linear wall velocity:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">][</span><span class="s2">"velocity"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span>
     <span class="s2">"vector"</span><span class="p">:</span> <span class="p">[</span><span class="mf">34.72</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Example rotating wall velocity (<cite>testcases/testcases/wheel/wheel_base.py</cite>):</p>
+<p>Example rotating wall velocity:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"moving_wheel"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span>
@@ -422,9 +422,12 @@ velocity or a <strong>rotating</strong> one, selected by its own <code class="do
 </section>
 <section id="temperature">
 <span id="bc-temperature"></span><h2>Temperature<a class="headerlink" href="#temperature" title="Link to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">temperature</span></code> keyword applies a surface temperature. Either a scalar
-value (Kelvin) or the string <code class="docutils literal notranslate"><span class="pre">'adiabatic'</span></code> is given directly as the value
-of <code class="docutils literal notranslate"><span class="pre">temperature</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">temperature</span></code> keyword applies a surface temperature. Give a number
+(Kelvin) for a uniform wall temperature, or leave it unset for an adiabatic
+wall. For a temperature that varies over the wall, give a dictionary with a
+single <code class="docutils literal notranslate"><span class="pre">field</span></code> key naming a VTP file; the file must carry a point array
+named <code class="docutils literal notranslate"><span class="pre">Temperature</span></code> (Kelvin), and each wall face takes the value at the
+nearest point, or the interpolated value when the file carries cells.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -445,15 +448,34 @@ of <code class="docutils literal notranslate"><span class="pre">temperature</spa
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
 <td><p>No</p></td>
 <td><p>unset (adiabatic)</p></td>
-<td><p>Number (Kelvin) or <code class="docutils literal notranslate"><span class="pre">'adiabatic'</span></code></p></td>
+<td><p>Number (Kelvin), <code class="docutils literal notranslate"><span class="pre">'adiabatic'</span></code>, or <code class="docutils literal notranslate"><span class="pre">{&quot;field&quot;:</span> <span class="pre">&quot;&lt;file&gt;.vtp&quot;}</span></code></p></td>
 <td><p>Wall temperature. If unset, the wall is adiabatic</p></td>
 </tr>
 </tbody>
 </table>
-<p>Example (<cite>testcases/testcases/cavity/buoyancy_cavity_ra1e5_central.py</cite>):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">T_hot</span><span class="p">},</span>   <span class="c1"># T_hot = 310.0</span>
-<span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">T_cold</span><span class="p">},</span>  <span class="c1"># T_cold = 290.0</span>
+<p>Example isothermal walls:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">310.0</span><span class="p">},</span>
+<span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">290.0</span><span class="p">},</span>
+<span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"field"</span><span class="p">:</span> <span class="s2">"hot_patch.vtp"</span><span class="p">}},</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Behaviour change: isothermal wall functions.</strong> Combining a wall
+temperature with <code class="docutils literal notranslate"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;wall</span> <span class="pre">function&quot;</span></code> previously produced a wall
+shear stress scaled by <span class="math notranslate nohighlight">\(\mu(T_w)/\mu(T_1)\)</span>, where <span class="math notranslate nohighlight">\(T_w\)</span> is the
+wall temperature and <span class="math notranslate nohighlight">\(T_1\)</span> the temperature in the near-wall cell. A
+wall function imposes the wall shear indirectly, by rewriting the near-wall
+velocity gradient, and the viscosity dividing that gradient did not match
+the viscosity the viscous flux applied at the wall face. This is now
+corrected, so the realised wall shear stress is the intended
+<span class="math notranslate nohighlight">\(\tau_w\)</span>.</p>
+<p>Isothermal wall-function results therefore move, by the full Sutherland
+ratio: roughly -44% at <span class="math notranslate nohighlight">\(T_w = 150\)</span> K, -28% at 200 K, +35% at 450 K
+and +63% at 600 K, all against <span class="math notranslate nohighlight">\(T_1 = 300\)</span> K. Adiabatic wall
+functions (no <code class="docutils literal notranslate"><span class="pre">temperature</span></code> set) are unaffected - there
+<span class="math notranslate nohighlight">\(T_1\)</span> is the face temperature, so the two viscosities were already
+the same. Resolved (<code class="docutils literal notranslate"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;no</span> <span class="pre">slip&quot;</span></code>) walls were never affected.</p>
 </div>
 </section>
 <section id="fsi">
@@ -463,7 +485,7 @@ wall boundary (any <code class="docutils literal notranslate"><span class="pre">
 solve. The full set of FSI model parameters is documented separately in
 <a class="reference internal" href="fsi.html#fsi"><span class="std std-ref">Fluid-structure interaction</span></a>; this section only shows how it
 attaches to a wall BC.</p>
-<p>Example (<cite>testcases/testcases/shockplatefsi/shockplatefsi.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_FSI"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="n">fsi_zones</span><span class="p">,</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span>
@@ -557,11 +579,11 @@ by referring to a <a class="reference internal" href="reference_conditions.html#
 </tr>
 </tbody>
 </table>
-<p>Example farfield with <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'riemann'</span></code> (<cite>testcases/testcases/naca0012/Naca0012_base.py</cite>):</p>
+<p>Example farfield with <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'riemann'</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span> <span class="s2">"condition"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"riemann"</span><span class="p">},</span>
 </pre></div>
 </div>
-<p>Example farfield with <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'pressure'</span></code> (<cite>testcases/testcases/naca0012/n0012_449_ale_rot.py</cite>):</p>
+<p>Example farfield with <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'pressure'</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
@@ -615,7 +637,7 @@ substituted above.</p>
 </tr>
 </tbody>
 </table>
-<p>Example (<cite>testcases/testcases/traintunnel/traintunnel.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
@@ -721,7 +743,7 @@ runtime controller handles the feedback loop.</p>
 </tr>
 </tbody>
 </table>
-<p>Example (<cite>testcases/testcases/naca0012/n0012_897_cL_target_1_imp.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"naca0012"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"farfield"</span><span class="p">,</span>
@@ -806,7 +828,7 @@ the mesh is in metres. Massflow ratio is nondimensional, where
 </table>
 <p><code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">'default'</span></code> (condition-driven inflow — the incompressible solver’s
 velocity inlet; carries no extra fields beyond the common ones above):</p>
-<p>Example (<cite>testcases/testcases/naca0012/n0012_449_a10p0_incomp.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"inflow"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"default"</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">},</span>
 </pre></div>
 </div>
@@ -855,7 +877,7 @@ pressure ratio and total temperature ratio relative to <code class="docutils lit
 </tr>
 </tbody>
 </table>
-<p>Example (<cite>testcases/testcases/pipe/pipe_total_p_ratio.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"pipe"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_2"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"inflow"</span><span class="p">,</span>
@@ -898,11 +920,11 @@ pressure ratio and total temperature ratio relative to <code class="docutils lit
 </tr>
 </tbody>
 </table>
-<p>Example using a rate (<cite>testcases/testcases/pipe/pipe_massflow.py</cite>):</p>
+<p>Example using a rate:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_rate"</span><span class="p">:</span> <span class="n">massflow</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
 </pre></div>
 </div>
-<p>Example using a ratio (<cite>testcases/testcases/pipe/pipe_massflowratio.py</cite>):</p>
+<p>Example using a ratio:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_ratio"</span><span class="p">:</span> <span class="n">inlet_mass_flow_ratio</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span> <span class="s2">"total_temperature_ratio"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 </pre></div>
 </div>
@@ -1008,7 +1030,7 @@ ratio relative to <code class="docutils literal notranslate"><span class="pre">r
 </tr>
 </tbody>
 </table>
-<p>Example (<cite>testcases/testcases/pipe/pipe_static_p_ratio_outflow.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"outflow"</span><span class="p">,</span>
@@ -1057,11 +1079,11 @@ flow across all zones matches the requested value:</p>
 </tr>
 </tbody>
 </table>
-<p>Example using a rate (<cite>testcases/testcases/pipe/pipe_massflow_outflow.py</cite>):</p>
+<p>Example using a rate:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_rate"</span><span class="p">:</span> <span class="n">massflow</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
 </pre></div>
 </div>
-<p>Example using a ratio (<cite>testcases/testcases/pipe/pipe_massflowratio_outflow.py</cite>):</p>
+<p>Example using a ratio:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"massflow"</span><span class="p">,</span> <span class="s2">"mass_flow_ratio"</span><span class="p">:</span> <span class="n">inlet_mass_flow_ratio</span><span class="p">,</span> <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"IC_1"</span><span class="p">,</span>
 </pre></div>
 </div>
@@ -1199,7 +1221,7 @@ them would require a coordinated schema and C++ change.</p>
 </tr>
 </tbody>
 </table>
-<p>Example (<cite>testcases/testcases/naca0012/Naca0012_base.py</cite>):</p>
+<p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
 </pre></div>
 </div>
@@ -1290,7 +1312,7 @@ compressible solver.</p>
 </tr>
 </tbody>
 </table>
-<p>Example linear periodic boundary condition (<cite>testcases/testcases/cavity/re400_periodic.py</cite>):</p>
+<p>Example linear periodic boundary condition:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"periodic"</span><span class="p">,</span>
@@ -1337,7 +1359,7 @@ compressible solver.</p>
 </tr>
 </tbody>
 </table>
-<p>Example rotated periodic boundary condition (<cite>testcases/testcases/IEA15MW/IEA_15MW_10p59.py</cite>):</p>
+<p>Example rotated periodic boundary condition:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_4"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"periodic"</span><span class="p">,</span>
@@ -1410,11 +1432,11 @@ mesh to be overset on top of a larger background mesh.</p>
 </tr>
 </tbody>
 </table>
-<p>Example without an explicit background (<cite>testcases/testcases/euler_rotating_cylinder/euler_rotating_cylinder.py</cite>):</p>
+<p>Example without an explicit background:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">},</span>
 </pre></div>
 </div>
-<p>Example with an explicit background model (<cite>testcases/testcases/oversetmulticylinder/oversetmulticylinder.py</cite>):</p>
+<p>Example with an explicit background model:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span> <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"background"</span><span class="p">]},</span>
 </pre></div>
 </div>

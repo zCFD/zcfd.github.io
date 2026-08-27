@@ -182,19 +182,19 @@ boundary values.
      - FSI modal model coupling this wall to a structural solve
 
 
-Example no-slip wall (`testcases/testcases/naca0012/Naca0012_base.py`):
+Example no-slip wall:
 
 .. code-block:: python
 
     "BC_2": {"zones": [4], "type": "wall", "kind": "no slip"},
 
-Example immersed wall with a slip condition (`testcases/testcases/euler_rotating_cylinder/cylinderIB.py`):
+Example immersed wall with a slip condition:
 
 .. code-block:: python
 
     "immersed_wall": {"zones": [7], "type": "immersed wall", "kind": "slip"},
 
-Example immersed wall using a wall function (`testcases/testcases/EVE/EVE_steady.py`):
+Example immersed wall using a wall function:
 
 .. code-block:: python
 
@@ -244,7 +244,7 @@ roughness elements on a solid boundary — the scale of irregularities or
 protrusions on the surface that disrupt the smooth flow and create
 additional drag or turbulence.
 
-Example (`testcases/testcases/plate/plate_medium_wf_rough.py`):
+Example:
 
 .. code-block:: python
 
@@ -323,7 +323,7 @@ The options for the **rotating** velocity are:
      - Number
      - Angular velocity of the rotation, in radians per second
 
-Example linear wall velocity (`testcases/testcases/plate/plate_medium_moving_wall.py`):
+Example linear wall velocity:
 
 .. code-block:: python
 
@@ -332,7 +332,7 @@ Example linear wall velocity (`testcases/testcases/plate/plate_medium_moving_wal
         "vector": [34.72, 0.0, 0.0],
     }
 
-Example rotating wall velocity (`testcases/testcases/wheel/wheel_base.py`):
+Example rotating wall velocity:
 
 .. code-block:: python
 
@@ -354,9 +354,12 @@ Example rotating wall velocity (`testcases/testcases/wheel/wheel_base.py`):
 Temperature
 ^^^^^^^^^^^
 
-The ``temperature`` keyword applies a surface temperature. Either a scalar
-value (Kelvin) or the string ``'adiabatic'`` is given directly as the value
-of ``temperature``.
+The ``temperature`` keyword applies a surface temperature. Give a number
+(Kelvin) for a uniform wall temperature, or leave it unset for an adiabatic
+wall. For a temperature that varies over the wall, give a dictionary with a
+single ``field`` key naming a VTP file; the file must carry a point array
+named ``Temperature`` (Kelvin), and each wall face takes the value at the
+nearest point, or the interpolated value when the file carries cells.
 
 .. list-table::
    :widths: 25 10 10 20 30
@@ -370,15 +373,35 @@ of ``temperature``.
    * - ``temperature``
      - No
      - unset (adiabatic)
-     - Number (Kelvin) or ``'adiabatic'``
+     - Number (Kelvin), ``'adiabatic'``, or ``{"field": "<file>.vtp"}``
      - Wall temperature. If unset, the wall is adiabatic
 
-Example (`testcases/testcases/cavity/buoyancy_cavity_ra1e5_central.py`):
+Example isothermal walls:
 
 .. code-block:: python
 
-    "BC_1": {"zones": [1], "type": "wall", "kind": "no slip", "temperature": T_hot},   # T_hot = 310.0
-    "BC_2": {"zones": [2], "type": "wall", "kind": "no slip", "temperature": T_cold},  # T_cold = 290.0
+    "BC_1": {"zones": [1], "type": "wall", "kind": "no slip", "temperature": 310.0},
+    "BC_2": {"zones": [2], "type": "wall", "kind": "wall function", "temperature": 290.0},
+    "BC_3": {"zones": [3], "type": "wall", "kind": "no slip", "temperature": {"field": "hot_patch.vtp"}},
+
+.. note::
+
+    **Behaviour change: isothermal wall functions.** Combining a wall
+    temperature with ``"kind": "wall function"`` previously produced a wall
+    shear stress scaled by :math:`\mu(T_w)/\mu(T_1)`, where :math:`T_w` is the
+    wall temperature and :math:`T_1` the temperature in the near-wall cell. A
+    wall function imposes the wall shear indirectly, by rewriting the near-wall
+    velocity gradient, and the viscosity dividing that gradient did not match
+    the viscosity the viscous flux applied at the wall face. This is now
+    corrected, so the realised wall shear stress is the intended
+    :math:`\tau_w`.
+
+    Isothermal wall-function results therefore move, by the full Sutherland
+    ratio: roughly -44% at :math:`T_w = 150` K, -28% at 200 K, +35% at 450 K
+    and +63% at 600 K, all against :math:`T_1 = 300` K. Adiabatic wall
+    functions (no ``temperature`` set) are unaffected - there
+    :math:`T_1` is the face temperature, so the two viscosities were already
+    the same. Resolved (``"kind": "no slip"``) walls were never affected.
 
 
 .. _bc_wall_fsi:
@@ -392,7 +415,7 @@ solve. The full set of FSI model parameters is documented separately in
 :ref:`Fluid-structure interaction <fsi>`; this section only shows how it
 attaches to a wall BC.
 
-Example (`testcases/testcases/shockplatefsi/shockplatefsi.py`):
+Example:
 
 .. code-block:: python
 
@@ -473,13 +496,13 @@ by referring to a :ref:`reference condition <reference_conditions>` block.
      - See :ref:`Force Driver <bc_force_driver>`
      - Optional automatic driver that adjusts the inflow to target a force coefficient
 
-Example farfield with ``kind: 'riemann'`` (`testcases/testcases/naca0012/Naca0012_base.py`):
+Example farfield with ``kind: 'riemann'``:
 
 .. code-block:: python
 
     "BC_3": {"zones": [1], "type": "farfield", "condition": "IC_1", "kind": "riemann"},
 
-Example farfield with ``kind: 'pressure'`` (`testcases/testcases/naca0012/n0012_449_ale_rot.py`):
+Example farfield with ``kind: 'pressure'``:
 
 .. code-block:: python
 
@@ -526,7 +549,7 @@ Sponge Layer Damping
      - String reference to a reference condition
      - Reference condition the sponge layer damps toward
 
-Example (`testcases/testcases/traintunnel/traintunnel.py`):
+Example:
 
 .. code-block:: python
 
@@ -618,7 +641,7 @@ runtime controller handles the feedback loop.
      - Integer > 0
      - Moving-average window for force smoothing
 
-Example (`testcases/testcases/naca0012/n0012_897_cL_target_1_imp.py`):
+Example:
 
 .. code-block:: python
 
@@ -699,7 +722,7 @@ Common fields:
 ``kind: 'default'`` (condition-driven inflow — the incompressible solver's
 velocity inlet; carries no extra fields beyond the common ones above):
 
-Example (`testcases/testcases/naca0012/n0012_449_a10p0_incomp.py`):
+Example:
 
 .. code-block:: python
 
@@ -738,7 +761,7 @@ pressure ratio and total temperature ratio relative to ``reference``:
      - ``[x, y, z]``: unit vector
      - Overrides the default surface-normal flow direction
 
-Example (`testcases/testcases/pipe/pipe_total_p_ratio.py`):
+Example:
 
 .. code-block:: python
 
@@ -773,13 +796,13 @@ Example (`testcases/testcases/pipe/pipe_total_p_ratio.py`):
      - Number
      - Mass flow ratio relative to ``reference`` (requires ``reference``)
 
-Example using a rate (`testcases/testcases/pipe/pipe_massflow.py`):
+Example using a rate:
 
 .. code-block:: python
 
     "kind": "massflow", "mass_flow_rate": massflow, "reference": "IC_1",
 
-Example using a ratio (`testcases/testcases/pipe/pipe_massflowratio.py`):
+Example using a ratio:
 
 .. code-block:: python
 
@@ -867,7 +890,7 @@ ratio relative to ``reference``, or directly via ``pressure``:
      - Number
      - Total temperature ratio (requires ``reference`` if set)
 
-Example (`testcases/testcases/pipe/pipe_static_p_ratio_outflow.py`):
+Example:
 
 .. code-block:: python
 
@@ -907,13 +930,13 @@ flow across all zones matches the requested value:
      - Number
      - Total temperature ratio (requires ``reference`` if set)
 
-Example using a rate (`testcases/testcases/pipe/pipe_massflow_outflow.py`):
+Example using a rate:
 
 .. code-block:: python
 
     "kind": "massflow", "mass_flow_rate": massflow, "reference": "IC_1",
 
-Example using a ratio (`testcases/testcases/pipe/pipe_massflowratio_outflow.py`):
+Example using a ratio:
 
 .. code-block:: python
 
@@ -1031,7 +1054,7 @@ Symmetry
      - ``'symmetry'``
      - Boundary condition type
 
-Example (`testcases/testcases/naca0012/Naca0012_base.py`):
+Example:
 
 .. code-block:: python
 
@@ -1106,7 +1129,7 @@ The options for the **'linear'** ``transform`` are:
      - ``[x, y, z]``
      - Translation vector mapping this zone onto the matching periodic zone
 
-Example linear periodic boundary condition (`testcases/testcases/cavity/re400_periodic.py`):
+Example linear periodic boundary condition:
 
 .. code-block:: python
 
@@ -1144,7 +1167,7 @@ The options for the **'rotated'** ``transform`` are (compressible solver only �
      - Number
      - Angle of rotation about the axis, in radians
 
-Example rotated periodic boundary condition (`testcases/testcases/IEA15MW/IEA_15MW_10p59.py`):
+Example rotated periodic boundary condition:
 
 .. code-block:: python
 
@@ -1208,13 +1231,13 @@ mesh to be overset on top of a larger background mesh.
      - Integer >= 0
      - Halo fringe layers around the hole when the overset mesh moves (0 = treat every blanked cell as a halo; N > 0 is sufficient when the hole is re-cut every real time step)
 
-Example without an explicit background (`testcases/testcases/euler_rotating_cylinder/euler_rotating_cylinder.py`):
+Example without an explicit background:
 
 .. code-block:: python
 
     "BC_2": {"zones": [7], "type": "overset"},
 
-Example with an explicit background model (`testcases/testcases/oversetmulticylinder/oversetmulticylinder.py`):
+Example with an explicit background model:
 
 .. code-block:: python
 

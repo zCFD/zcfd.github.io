@@ -10,7 +10,7 @@ Setting up an overset case
 ============================
 One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an ``'overset'`` boundary condition whose ``background`` field names the donor model(s) (see below).
 
-Example ``model`` structure, adapted from ``testcases/testcases/oversetmulticylinder/oversetmulticylinder.py`` (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):
+Example ``model`` structure (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):
 
 .. code-block:: python
 
