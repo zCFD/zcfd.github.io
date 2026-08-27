@@ -139,7 +139,7 @@ When ``solver_settings.type`` is ``"incompressible"``, ``linear_solver_options``
         "double_precision": True,
     }
 
-Two further keys are available, but only when the incompressible equations use the SIMPLE coupling scheme (``solver.equations.scheme == "simple"``); they have no effect and are rejected under the coupled scheme:
+Two further keys are available, but only when the incompressible solver uses the SIMPLE coupling scheme (``solver.convergence_control.scheme.name == "simple"``); they have no effect and are rejected under the coupled scheme:
 
 .. list-table::
    :widths: 20 10 25 45

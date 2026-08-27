@@ -195,7 +195,9 @@ The example below uses an implicit pseudo-time scheme so far fewer cycles are ne
 Convergence Control
 ^^^^^^^^^^^^^^^^^^^^
 
-``convergence_control`` paces the inner pseudo-time loop towards convergence: how many cycles to run, which pseudo-time integration scheme to use, and the CFL number driving each step. It is required for steady and dual-time-stepping runs, and must be absent for global time stepping (see the note at the top of this page).
+``convergence_control`` paces the inner pseudo-time loop towards convergence: how many cycles to run, which scheme drives each pseudo-step, and — on the compressible solver — the CFL number sizing it. It is required for steady and dual-time-stepping runs, and must be absent for global time stepping (see the note at the top of this page).
+
+The rest of this section describes the compressible block. ``cycles`` is common to both solvers; the incompressible block replaces ``scheme`` with the pressure-velocity coupling scheme and takes no ``cfl`` — see :ref:`Incompressible convergence control <incomp_convergence_control>`.
 
 .. code-block:: python
 
@@ -529,6 +531,130 @@ Factor applied to the diffusive (viscous) time step when applying the CFL condit
         "cfl": 200,
         "cfl_viscous_factor": 1.0e-6,
         "cfl_ramp": [{"type": "exponential", "factor": 1.05, "initial": 0.1}],
+    },
+
+
+.. _incomp_convergence_control:
+
+Incompressible convergence control
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The incompressible solver marches each pseudo-step with an implicit solve rather than a CFL-limited time step, so its ``convergence_control`` carries ``cycles``, the pressure-velocity coupling ``scheme``, and two startup ramps. There is no ``cfl`` key.
+
+.. code-block:: python
+
+    "convergence control": {
+        "cycles": 5000,
+        "scheme": {"name": "coupled", "implicit relax": 0.9},
+    },
+
+scheme
+======
+
+The coupling scheme decides how velocity and pressure are solved for together. ``scheme.name`` selects it, and the relaxation driving it lives in the same block.
+
+.. list-table::
+   :widths: 25 10 15 25 40
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``name``
+     - No
+     - ``"coupled"``
+     - ``"coupled"`` | ``"simple"``
+     - ``coupled`` solves a single block-4 [u,v,w,p] system per pseudo-time step. ``simple`` uses a segregated SIMPLE momentum predictor followed by a pressure correction.
+   * - ``implicit relax``
+     - No
+     - 0.5
+     - Float, 0.1 to 1.0
+     - Under-relaxation factor (alpha_u) applied to the implicit momentum, pressure and energy updates. Lower is more stable and slower.
+   * - ``turbulence relax``
+     - No
+     - 0.5
+     - Float, > 0.0 to 1.0
+     - Under-relaxation factor on the turbulence transport update. Has no effect without a turbulence model.
+
+The coupling scheme applies to the whole run — it selects the solver itself — so unlike the rest of ``convergence_control`` it cannot be overridden per mesh.
+
+Under ``"simple"`` four further keys configure the pressure-correction solve. They are rejected under ``"coupled"``, which performs no such solve:
+
+.. list-table::
+   :widths: 25 10 15 25 40
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``pressure relax``
+     - No
+     - 0.3
+     - Float, > 0.0 to 1.0
+     - Explicit pressure under-relaxation factor (alpha_p) applied as ``p += alpha_p * p'``.
+   * - ``pressure regularisation``
+     - No
+     - --
+     - Float, >= 0.0
+     - Diagonal regularisation of the pressure-correction Poisson operator, lifting its near-zero constant mode so a solver without null-space projection returns a bounded correction. Vanishes at convergence, so the steady solution is unbiased.
+   * - ``pressure correction limit``
+     - No
+     - --
+     - Float, > 0.0
+     - Limit factor applied to the pressure correction.
+   * - ``pin pressure``
+     - No
+     - ``False``
+     - ``True`` | ``False``
+     - Pin the pressure correction at a reference cell with a large diagonal instead of the default constant-null-space plus mean-removal gauge fix. The pin degrades AMG conditioning, hence the default.
+
+The PETSc options for the SIMPLE momentum and pressure-correction solves are separate — see :ref:`Linear solver <linear_solver>`.
+
+.. code-block:: python
+
+    "convergence control": {
+        "cycles": 5000,
+        "scheme": {
+            "name": "simple",
+            "implicit relax": 0.7,
+            "pressure relax": 0.3,
+        },
+    },
+
+Startup ramps
+=============
+
+Both ramps ease an impulsive start and are active only during the first real-time step. Each takes ``initial`` (the value on the first pseudo cycle) and ``cycles`` (how many pseudo cycles it takes to reach 1).
+
+.. list-table::
+   :widths: 25 10 30 45
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Description
+   * - ``viscosity ramp``
+     - No
+     - ``{"initial": 100.0, "cycles": 300.0}``
+     - Scales the effective viscosity, decaying log-linearly from ``initial`` to 1, so the start is more diffusive (a lower effective Reynolds number). An ``initial`` of 1 or less disables it.
+   * - ``relaxation ramp``
+     - No
+     - ``{"initial": 1.0, "cycles": 300.0}``
+     - Scales the under-relaxation factors above, rising linearly from ``initial`` to 1, so the solver starts more relaxed. An ``initial`` of 1 or more (the default) disables it.
+
+.. code-block:: python
+
+    # Start heavily relaxed and diffusive, easing to the configured values over 500 cycles
+    "convergence control": {
+        "cycles": 5000,
+        "scheme": {"name": "coupled", "implicit relax": 0.9},
+        "viscosity ramp": {"initial": 100.0, "cycles": 500.0},
+        "relaxation ramp": {"initial": 0.2, "cycles": 500.0},
     },
 
 

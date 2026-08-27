@@ -476,11 +476,6 @@ Selecting the incompressible solver (``solver.solver_settings.type ==
      - Default
      - Valid values
      - Description
-   * - ``relax``
-     - No
-     - 0.5
-     - Float, 0.1 to 1.0
-     - Implicit relaxation factor for the flow equations.
    * - ``correction``
      - No
      - ``"over_relaxed"``
@@ -516,31 +511,10 @@ Selecting the incompressible solver (``solver.solver_settings.type ==
      - ``False``
      - ``True`` | ``False``
      - Solve the energy (temperature) transport equation.
-   * - ``scheme``
-     - No
-     - ``"coupled"``
-     - ``"coupled"`` | ``"simple"``
-     - Pressure-velocity coupling scheme. ``coupled`` solves a single block-4 [u,v,w,p] system per pseudo-time step; ``simple`` uses a segregated SIMPLE momentum predictor / pressure correction.
-   * - ``pressure_relax``
-     - No
-     - --
-     - Float, > 0.0 to 1.0
-     - SIMPLE pressure under-relaxation factor. Only used when ``scheme`` is ``"simple"``.
-   * - ``pressure_regularisation``
-     - No
-     - --
-     - Float, >= 0.0
-     - Diagonal regularisation of the SIMPLE pressure-correction Poisson operator (vanishes at convergence). Only used when ``scheme`` is ``"simple"``.
-   * - ``pressure_correction_limit``
-     - No
-     - --
-     - Float, > 0.0
-     - Limit factor applied to the SIMPLE pressure correction. Only used when ``scheme`` is ``"simple"``.
-   * - ``pin_pressure``
-     - No
-     - --
-     - ``True`` | ``False``
-     - Pin the SIMPLE pressure correction at a reference cell instead of the default constant-null-space + mean-removal gauge fix. Only used when ``scheme`` is ``"simple"``.
+
+The pressure-velocity coupling scheme, the relaxation factors that drive it
+and the SIMPLE pressure knobs live in ``convergence_control`` — see
+:ref:`Incompressible convergence control <incomp_convergence_control>`.
 
 Example usage:
 

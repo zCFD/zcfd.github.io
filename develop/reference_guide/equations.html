@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2025.11.13331-267-g31225 documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.11.13331-268-g33414 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=afd12b3a"></script>
+    <script src="../_static/documentation_options.js?v=816a175a"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -572,86 +572,53 @@ and <code class="docutils literal notranslate"><span class="pre">precondition</s
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">relax</span></code></p></td>
-<td><p>No</p></td>
-<td><p>0.5</p></td>
-<td><p>Float, 0.1 to 1.0</p></td>
-<td><p>Implicit relaxation factor for the flow equations.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">correction</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">correction</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;over_relaxed&quot;</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;orthogonal&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;minimum&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;over_relaxed&quot;</span></code></p></td>
 <td><p>Non-orthogonal correction method.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">correction_limiter</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">correction_limiter</span></code></p></td>
 <td><p>No</p></td>
 <td><p>0.5</p></td>
 <td><p>Float, 0.0 to 1.0</p></td>
 <td><p>Limiter for the non-orthogonal correction. 1.0 applies the full correction, 0.0 turns off the correction.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gradient_limiter_type</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gradient_limiter_type</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;cellmd&quot;</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;cellmd&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;cell&quot;</span></code></p></td>
 <td><p>Type of gradient limiter. <code class="docutils literal notranslate"><span class="pre">cellmd</span></code> is more robust on highly non-orthogonal meshes; <code class="docutils literal notranslate"><span class="pre">cell</span></code> is less dissipative.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gradient_limiter</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gradient_limiter</span></code></p></td>
 <td><p>No</p></td>
 <td><p>0.5</p></td>
 <td><p>Float, 0.0 to 1.0</p></td>
 <td><p>Coefficient for the gradient limiter. 1.0 is the most dissipative, 0.0 turns off the limiter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_second_order_non_orthogonal_angle</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_second_order_non_orthogonal_angle</span></code></p></td>
 <td><p>No</p></td>
 <td><p>90.0</p></td>
 <td><p>Float, 0.0 to 90.0</p></td>
 <td><p>Maximum non-orthogonal angle (degrees) at which second order discretisation is used. Above this angle first order discretisation is used.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">central_blend</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">central_blend</span></code></p></td>
 <td><p>No</p></td>
 <td><p>0.8</p></td>
 <td><p>Float</p></td>
 <td><p>Coefficient of blending between first and second order terms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solve_energy</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solve_energy</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
 <td><p>Solve the energy (temperature) transport equation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scheme</span></code></p></td>
-<td><p>No</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&quot;coupled&quot;</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&quot;coupled&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code></p></td>
-<td><p>Pressure-velocity coupling scheme. <code class="docutils literal notranslate"><span class="pre">coupled</span></code> solves a single block-4 [u,v,w,p] system per pseudo-time step; <code class="docutils literal notranslate"><span class="pre">simple</span></code> uses a segregated SIMPLE momentum predictor / pressure correction.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pressure_relax</span></code></p></td>
-<td><p>No</p></td>
-<td><p>–</p></td>
-<td><p>Float, &gt; 0.0 to 1.0</p></td>
-<td><p>SIMPLE pressure under-relaxation factor. Only used when <code class="docutils literal notranslate"><span class="pre">scheme</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pressure_regularisation</span></code></p></td>
-<td><p>No</p></td>
-<td><p>–</p></td>
-<td><p>Float, &gt;= 0.0</p></td>
-<td><p>Diagonal regularisation of the SIMPLE pressure-correction Poisson operator (vanishes at convergence). Only used when <code class="docutils literal notranslate"><span class="pre">scheme</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pressure_correction_limit</span></code></p></td>
-<td><p>No</p></td>
-<td><p>–</p></td>
-<td><p>Float, &gt; 0.0</p></td>
-<td><p>Limit factor applied to the SIMPLE pressure correction. Only used when <code class="docutils literal notranslate"><span class="pre">scheme</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pin_pressure</span></code></p></td>
-<td><p>No</p></td>
-<td><p>–</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p>Pin the SIMPLE pressure correction at a reference cell instead of the default constant-null-space + mean-removal gauge fix. Only used when <code class="docutils literal notranslate"><span class="pre">scheme</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code>.</p></td>
-</tr>
 </tbody>
 </table>
+<p>The pressure-velocity coupling scheme, the relaxation factors that drive it
+and the SIMPLE pressure knobs live in <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code> — see
+<a class="reference internal" href="time.html#incomp-convergence-control"><span class="std std-ref">Incompressible convergence control</span></a>.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"solver_settings"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"incompressible"</span><span class="p">},</span>
