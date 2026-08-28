@@ -511,6 +511,54 @@ Selecting the incompressible solver (``solver.solver_settings.type ==
      - ``False``
      - ``True`` | ``False``
      - Solve the energy (temperature) transport equation.
+   * - ``energy_variable``
+     - No
+     - ``"temperature"``
+     - ``"temperature"`` | ``"potential temperature"``
+     - Variable transported by the energy equation. Potential temperature :math:`\theta = T (p_0/p)^{R/c_p}` is the natural choice for atmospheric cases.
+   * - ``base_state``
+     - No
+     - Not set
+     - Dictionary, see below
+     - Hydrostatic base state of a stratified (anelastic) atmosphere. Setting it turns stratification on: the density becomes the base-state :math:`\bar{\rho}(z)` and buoyancy is :math:`g(\theta-\bar{\theta})/\bar{\theta}`. Requires ``solve_energy: True`` and ``energy_variable: "potential temperature"``.
+
+``base_state`` describes a hydrostatic column in SI units. Height :math:`z` is
+measured along :math:`-\mathbf{g}` from the reference condition's location.
+
+.. list-table::
+   :widths: 20 10 10 20 40
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``kind``
+     - No
+     - ``"constant lapse rate"``
+     - ``"isothermal"`` | ``"constant lapse rate"`` | ``"constant brunt vaisala"``
+     - Temperature profile. ``constant brunt vaisala`` gives uniform stratification :math:`\theta = \theta_0 \exp(N^2 z / g)`.
+   * - ``surface_temperature``
+     - No
+     - 288.15
+     - Float (K)
+     - Temperature at the reference location.
+   * - ``surface_pressure``
+     - No
+     - 101325.0
+     - Float (Pa)
+     - Pressure at the reference location.
+   * - ``lapse_rate``
+     - No
+     - 0.0065
+     - Float (K/m)
+     - :math:`-dT/dz` for ``constant lapse rate``. :math:`g/c_p \approx 0.0098` is the neutral dry adiabat.
+   * - ``brunt_vaisala_frequency``
+     - No
+     - 0.01
+     - Float (1/s)
+     - :math:`N` for ``constant brunt vaisala``.
 
 The pressure-velocity coupling scheme, the relaxation factors that drive it
 and the SIMPLE pressure knobs live in ``convergence_control`` — see
