@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-271-g847ede documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-272-gfdc1e documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=a19d6473"></script>
+    <script src="../_static/documentation_options.js?v=f709efa2"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -199,7 +199,7 @@ some extent with mesh refinement at additional computational cost.</p>
 <td><p>Yes</p></td>
 <td></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'wall'</span></code> or <code class="docutils literal notranslate"><span class="pre">'immersed</span> <span class="pre">wall'</span></code></p></td>
-<td><p>Specifies a solid wall boundary, adiabatic unless a temperature is specified</p></td>
+<td><p>Specifies a solid wall boundary, adiabatic unless a temperature or a heat flux is specified</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
 <td><p>No</p></td>
@@ -231,7 +231,13 @@ some extent with mesh refinement at additional computational cost.</p>
 <td><p>See <a class="reference internal" href="#bc-temperature"><span class="std std-ref">Temperature</span></a></p></td>
 <td><p>Wall temperature. If not specified the wall is treated as adiabatic</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fsi</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code></p></td>
+<td><p>No</p></td>
+<td></td>
+<td><p>See <a class="reference internal" href="#bc-temperature"><span class="std std-ref">Temperature</span></a></p></td>
+<td><p>Prescribed wall heat flux, <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> walls only. Mutually exclusive with <code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fsi</span></code></p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>See <a class="reference internal" href="#bc-wall-fsi"><span class="std std-ref">FSI</span></a></p></td>
@@ -309,6 +315,27 @@ additional drag or turbulence.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="wall-function">
+<span id="bc-wallfunction"></span><h2>Wall Function<a class="headerlink" href="#wall-function" title="Link to this heading">¶</a></h2>
+<p>An adiabatic <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> wall uses an incompressible law of the wall:
+the velocity profile is solved with the density and viscosity of the first
+cell off the wall, and no heat is transferred. Giving the wall a
+<code class="docutils literal notranslate"><span class="pre">temperature</span></code> or a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code> switches that wall to the compressible wall
+function: the Van Driest II / White-Christoph velocity transformation coupled
+to the Crocco-Busemann thermal law of the wall, which evaluates <span class="math notranslate nohighlight">\(y^+\)</span>
+and the wall shear stress with the wall-state density and viscosity and
+produces the wall heat flux.</p>
+<p>With a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code> the wall temperature is recovered; with a <code class="docutils literal notranslate"><span class="pre">temperature</span></code>
+the heat flux is. Both are available as the <code class="docutils literal notranslate"><span class="pre">heatflux</span></code> and <code class="docutils literal notranslate"><span class="pre">twall</span></code> surface
+output variables.</p>
+<p>A constant-heat-flux wall is singular where the boundary layer is thin, for
+example at a plate leading edge: the modelled layer cannot carry an arbitrarily
+large flux there and the wall temperature will rise until it is limited
+internally. Check the <code class="docutils literal notranslate"><span class="pre">twall</span></code> output if a prescribed flux is large.</p>
+<p>The compressible wall function is not supported in combination with
+<a class="reference internal" href="#bc-roughness"><span class="std std-ref">roughness</span></a>, on immersed walls, or in the incompressible
+solver, and these combinations are rejected at input validation.</p>
 </section>
 <section id="velocity">
 <span id="bc-velocity"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading">¶</a></h2>
@@ -422,12 +449,14 @@ velocity or a <strong>rotating</strong> one, selected by its own <code class="do
 </section>
 <section id="temperature">
 <span id="bc-temperature"></span><h2>Temperature<a class="headerlink" href="#temperature" title="Link to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">temperature</span></code> keyword applies a surface temperature. Give a number
-(Kelvin) for a uniform wall temperature, or leave it unset for an adiabatic
-wall. For a temperature that varies over the wall, give a dictionary with a
-single <code class="docutils literal notranslate"><span class="pre">field</span></code> key naming a VTP file; the file must carry a point array
-named <code class="docutils literal notranslate"><span class="pre">Temperature</span></code> (Kelvin), and each wall face takes the value at the
-nearest point, or the interpolated value when the file carries cells.</p>
+<p>A wall is adiabatic unless it is given a <code class="docutils literal notranslate"><span class="pre">temperature</span></code> or, on a
+<code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> wall, a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code>. Both take the same value: a number
+for a uniform wall, or a dictionary with a single <code class="docutils literal notranslate"><span class="pre">field</span></code> key naming a VTP
+file for a value that varies over the wall. The file must carry a point array
+named <code class="docutils literal notranslate"><span class="pre">Temperature</span></code> (Kelvin) or <code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> (W/m<sup>2</sup>), and each wall
+face takes the value at the nearest point, or the interpolated value when the
+file carries cells. Heat flux is <strong>positive into the fluid</strong>, i.e. a heated
+wall; negative values remove energy.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 26.3%" />
@@ -448,34 +477,23 @@ nearest point, or the interpolated value when the file carries cells.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
 <td><p>No</p></td>
 <td><p>unset (adiabatic)</p></td>
-<td><p>Number (Kelvin), <code class="docutils literal notranslate"><span class="pre">'adiabatic'</span></code>, or <code class="docutils literal notranslate"><span class="pre">{&quot;field&quot;:</span> <span class="pre">&quot;&lt;file&gt;.vtp&quot;}</span></code></p></td>
-<td><p>Wall temperature. If unset, the wall is adiabatic</p></td>
+<td><p>Number (Kelvin) or <code class="docutils literal notranslate"><span class="pre">{&quot;field&quot;:</span> <span class="pre">&quot;&lt;file&gt;.vtp&quot;}</span></code></p></td>
+<td><p>Wall temperature</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code></p></td>
+<td><p>No</p></td>
+<td><p>unset (adiabatic)</p></td>
+<td><p>Number (W/m<sup>2</sup>) or <code class="docutils literal notranslate"><span class="pre">{&quot;field&quot;:</span> <span class="pre">&quot;&lt;file&gt;.vtp&quot;}</span></code></p></td>
+<td><p>Prescribed wall heat flux. <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> walls only; mutually exclusive with <code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<p>Example isothermal walls:</p>
+<p>Examples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">310.0</span><span class="p">},</span>
 <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="mf">290.0</span><span class="p">},</span>
-<span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"field"</span><span class="p">:</span> <span class="s2">"hot_patch.vtp"</span><span class="p">}},</span>
+<span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">,</span> <span class="s2">"heat flux"</span><span class="p">:</span> <span class="mf">5.0e3</span><span class="p">},</span>
+<span class="s2">"BC_4"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"field"</span><span class="p">:</span> <span class="s2">"hot_patch.vtp"</span><span class="p">}},</span>
 </pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>Behaviour change: isothermal wall functions.</strong> Combining a wall
-temperature with <code class="docutils literal notranslate"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;wall</span> <span class="pre">function&quot;</span></code> previously produced a wall
-shear stress scaled by <span class="math notranslate nohighlight">\(\mu(T_w)/\mu(T_1)\)</span>, where <span class="math notranslate nohighlight">\(T_w\)</span> is the
-wall temperature and <span class="math notranslate nohighlight">\(T_1\)</span> the temperature in the near-wall cell. A
-wall function imposes the wall shear indirectly, by rewriting the near-wall
-velocity gradient, and the viscosity dividing that gradient did not match
-the viscosity the viscous flux applied at the wall face. This is now
-corrected, so the realised wall shear stress is the intended
-<span class="math notranslate nohighlight">\(\tau_w\)</span>.</p>
-<p>Isothermal wall-function results therefore move, by the full Sutherland
-ratio: roughly -44% at <span class="math notranslate nohighlight">\(T_w = 150\)</span> K, -28% at 200 K, +35% at 450 K
-and +63% at 600 K, all against <span class="math notranslate nohighlight">\(T_1 = 300\)</span> K. Adiabatic wall
-functions (no <code class="docutils literal notranslate"><span class="pre">temperature</span></code> set) are unaffected - there
-<span class="math notranslate nohighlight">\(T_1\)</span> is the face temperature, so the two viscosities were already
-the same. Resolved (<code class="docutils literal notranslate"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;no</span> <span class="pre">slip&quot;</span></code>) walls were never affected.</p>
 </div>
 </section>
 <section id="fsi">

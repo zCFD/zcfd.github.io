@@ -149,7 +149,7 @@ boundary values.
      - Yes
      -
      - ``'wall'`` or ``'immersed wall'``
-     - Specifies a solid wall boundary, adiabatic unless a temperature is specified
+     - Specifies a solid wall boundary, adiabatic unless a temperature or a heat flux is specified
    * - ``kind``
      - No
      - ``'no slip'``
@@ -175,12 +175,16 @@ boundary values.
      -
      - See :ref:`Temperature <bc_temperature>`
      - Wall temperature. If not specified the wall is treated as adiabatic
+   * - ``heat flux``
+     - No
+     -
+     - See :ref:`Temperature <bc_temperature>`
+     - Prescribed wall heat flux, ``'wall function'`` walls only. Mutually exclusive with ``temperature``
    * - ``fsi``
      - No
      -
      - See :ref:`FSI <bc_wall_fsi>`
      - FSI modal model coupling this wall to a structural solve
-
 
 Example no-slip wall:
 
@@ -253,6 +257,33 @@ Example:
         "scalar": 0.001,
     }
 
+
+.. _bc_wallfunction:
+
+Wall Function
+^^^^^^^^^^^^^
+
+An adiabatic ``'wall function'`` wall uses an incompressible law of the wall:
+the velocity profile is solved with the density and viscosity of the first
+cell off the wall, and no heat is transferred. Giving the wall a
+``temperature`` or a ``heat flux`` switches that wall to the compressible wall
+function: the Van Driest II / White-Christoph velocity transformation coupled
+to the Crocco-Busemann thermal law of the wall, which evaluates :math:`y^+`
+and the wall shear stress with the wall-state density and viscosity and
+produces the wall heat flux.
+
+With a ``heat flux`` the wall temperature is recovered; with a ``temperature``
+the heat flux is. Both are available as the ``heatflux`` and ``twall`` surface
+output variables.
+
+A constant-heat-flux wall is singular where the boundary layer is thin, for
+example at a plate leading edge: the modelled layer cannot carry an arbitrarily
+large flux there and the wall temperature will rise until it is limited
+internally. Check the ``twall`` output if a prescribed flux is large.
+
+The compressible wall function is not supported in combination with
+:ref:`roughness <bc_roughness>`, on immersed walls, or in the incompressible
+solver, and these combinations are rejected at input validation.
 
 .. _bc_velocity:
 
@@ -354,12 +385,14 @@ Example rotating wall velocity:
 Temperature
 ^^^^^^^^^^^
 
-The ``temperature`` keyword applies a surface temperature. Give a number
-(Kelvin) for a uniform wall temperature, or leave it unset for an adiabatic
-wall. For a temperature that varies over the wall, give a dictionary with a
-single ``field`` key naming a VTP file; the file must carry a point array
-named ``Temperature`` (Kelvin), and each wall face takes the value at the
-nearest point, or the interpolated value when the file carries cells.
+A wall is adiabatic unless it is given a ``temperature`` or, on a
+``'wall function'`` wall, a ``heat flux``. Both take the same value: a number
+for a uniform wall, or a dictionary with a single ``field`` key naming a VTP
+file for a value that varies over the wall. The file must carry a point array
+named ``Temperature`` (Kelvin) or ``HeatFlux`` (W/m\ :sup:`2`), and each wall
+face takes the value at the nearest point, or the interpolated value when the
+file carries cells. Heat flux is **positive into the fluid**, i.e. a heated
+wall; negative values remove energy.
 
 .. list-table::
    :widths: 25 10 10 20 30
@@ -373,36 +406,22 @@ nearest point, or the interpolated value when the file carries cells.
    * - ``temperature``
      - No
      - unset (adiabatic)
-     - Number (Kelvin), ``'adiabatic'``, or ``{"field": "<file>.vtp"}``
-     - Wall temperature. If unset, the wall is adiabatic
+     - Number (Kelvin) or ``{"field": "<file>.vtp"}``
+     - Wall temperature
+   * - ``heat flux``
+     - No
+     - unset (adiabatic)
+     - Number (W/m\ :sup:`2`) or ``{"field": "<file>.vtp"}``
+     - Prescribed wall heat flux. ``'wall function'`` walls only; mutually exclusive with ``temperature``
 
-Example isothermal walls:
+Examples:
 
 .. code-block:: python
 
     "BC_1": {"zones": [1], "type": "wall", "kind": "no slip", "temperature": 310.0},
     "BC_2": {"zones": [2], "type": "wall", "kind": "wall function", "temperature": 290.0},
-    "BC_3": {"zones": [3], "type": "wall", "kind": "no slip", "temperature": {"field": "hot_patch.vtp"}},
-
-.. note::
-
-    **Behaviour change: isothermal wall functions.** Combining a wall
-    temperature with ``"kind": "wall function"`` previously produced a wall
-    shear stress scaled by :math:`\mu(T_w)/\mu(T_1)`, where :math:`T_w` is the
-    wall temperature and :math:`T_1` the temperature in the near-wall cell. A
-    wall function imposes the wall shear indirectly, by rewriting the near-wall
-    velocity gradient, and the viscosity dividing that gradient did not match
-    the viscosity the viscous flux applied at the wall face. This is now
-    corrected, so the realised wall shear stress is the intended
-    :math:`\tau_w`.
-
-    Isothermal wall-function results therefore move, by the full Sutherland
-    ratio: roughly -44% at :math:`T_w = 150` K, -28% at 200 K, +35% at 450 K
-    and +63% at 600 K, all against :math:`T_1 = 300` K. Adiabatic wall
-    functions (no ``temperature`` set) are unaffected - there
-    :math:`T_1` is the face temperature, so the two viscosities were already
-    the same. Resolved (``"kind": "no slip"``) walls were never affected.
-
+    "BC_3": {"zones": [3], "type": "wall", "kind": "wall function", "heat flux": 5.0e3},
+    "BC_4": {"zones": [4], "type": "wall", "kind": "no slip", "temperature": {"field": "hot_patch.vtp"}},
 
 .. _bc_wall_fsi:
 
