@@ -521,6 +521,16 @@ Selecting the incompressible solver (``solver.solver_settings.type ==
      - Not set
      - Dictionary, see below
      - Hydrostatic base state of a stratified (anelastic) atmosphere. Setting it turns stratification on: the density becomes the base-state :math:`\bar{\rho}(z)` and buoyancy is :math:`g(\theta-\bar{\theta})/\bar{\theta}`. Requires ``solve_energy: True`` and ``energy_variable: "potential temperature"``.
+   * - ``theta_perturbation``
+     - No
+     - Not set
+     - Dictionary, see below
+     - Initial potential-temperature perturbation :math:`\theta'(x, z)` added to the base state. Seeds the initial condition only; the base state itself is unchanged. Requires ``base_state``.
+   * - ``buoyancy_diagnostics``
+     - No
+     - ``False``
+     - ``True`` | ``False``
+     - Log the buoyancy source against the momentum diagonal every cycle. Costs four host syncs per cycle, so for debugging only. Requires ``base_state``.
 
 ``base_state`` describes a hydrostatic column in SI units. Height :math:`z` is
 measured along :math:`-\mathbf{g}` from the reference condition's location.
@@ -559,6 +569,50 @@ measured along :math:`-\mathbf{g}` from the reference condition's location.
      - 0.01
      - Float (1/s)
      - :math:`N` for ``constant brunt vaisala``.
+
+``theta_perturbation`` is the small :math:`\theta'` the gravity-wave and convection
+benchmarks add to the base state. :math:`x` is the mesh x coordinate and :math:`z`
+the height, both measured from the reference condition's location.
+
+.. list-table::
+   :widths: 20 10 10 20 40
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``kind``
+     - Yes
+     - --
+     - ``"inertia gravity wave"`` | ``"bubble"``
+     - ``inertia gravity wave``: :math:`\theta' = A \sin(\pi z/H) / (1 + ((x-x_c)/a)^2)` (Skamarock & Klemp 1994). ``bubble``: :math:`\theta' = A \cos^2(\pi r/2)` inside the ellipse :math:`r = |((x-x_c)/r_x, (z-z_c)/r_z)| \le 1`, zero outside.
+   * - ``amplitude``
+     - Yes
+     - --
+     - Float (K)
+     - :math:`A`. Negative for a cold bubble.
+   * - ``centre``
+     - No
+     - ``[0.0, 0.0]``
+     - ``[x_c, z_c]`` (m)
+     - Perturbation centre. :math:`z_c` is used by ``bubble`` only.
+   * - ``half_width``
+     - No
+     - 5000.0
+     - Float (m)
+     - :math:`a` for ``inertia gravity wave``, or the bubble x radius :math:`r_x`.
+   * - ``half_height``
+     - No
+     - 2000.0
+     - Float (m)
+     - Bubble z radius :math:`r_z`.
+   * - ``depth``
+     - No
+     - 10000.0
+     - Float (m)
+     - :math:`H` in :math:`\sin(\pi z/H)` for ``inertia gravity wave``.
 
 The pressure-velocity coupling scheme, the relaxation factors that drive it
 and the SIMPLE pressure knobs live in ``convergence_control`` — see

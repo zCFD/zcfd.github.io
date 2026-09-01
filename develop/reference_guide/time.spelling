@@ -1,4 +1,4 @@
 source/reference_guide/time.rst:296: (linearised) ["linearized", "linearize"] The default implicit scheme, solving the full linearised system with the 
 source/reference_guide/time.rst:311: (lu) ["loo", "lieu", "Lu", "li", "l", "u", "leu", "lur", "lug", "flu", "lux", "Blu", "ls", "la", "ln"] lu-sgs
 source/reference_guide/time.rst:311: (sgs) ["sgd", "ss", "gs", "sags", "sis", "s gs", "SG"] lu-sgs
-source/reference_guide/time.rst:603: (regularisation) ["regularization", "regulations", "regulation", "singularization", "reregistration"] Diagonal regularisation of the pressure-correction Poisson operator, lifting its near-zero constant mode so a solver without null-space projection returns a bounded correction. Vanishes at convergence, so the steady solution is unbiased.
+source/reference_guide/time.rst:608: (regularisation) ["regularization", "regulations", "regulation", "singularization", "reregistration"] Diagonal regularisation of the pressure-correction Poisson operator, lifting its near-zero constant mode so a solver without null-space projection returns a bounded correction. Vanishes at convergence, so the steady solution is unbiased.

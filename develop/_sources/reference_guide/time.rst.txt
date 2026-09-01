@@ -577,10 +577,15 @@ The coupling scheme decides how velocity and pressure are solved for together. `
      - 0.5
      - Float, > 0.0 to 1.0
      - Under-relaxation factor on the turbulence transport update. Has no effect without a turbulence model.
+   * - ``pin pressure``
+     - No
+     - ``False``
+     - ``True`` | ``False``
+     - Pin the pressure at a reference cell with a large diagonal instead of the default constant-null-space plus mean-removal gauge fix. Needed on a fully closed domain (no fixed-pressure boundary), where the pressure is otherwise determined only up to a constant and the matrix is singular. The pin degrades AMG conditioning, hence the default.
 
 The coupling scheme applies to the whole run — it selects the solver itself — so unlike the rest of ``convergence_control`` it cannot be overridden per mesh.
 
-Under ``"simple"`` four further keys configure the pressure-correction solve. They are rejected under ``"coupled"``, which performs no such solve:
+Under ``"simple"`` three further keys configure the pressure-correction solve. They are rejected under ``"coupled"``, which performs no such solve:
 
 .. list-table::
    :widths: 25 10 15 25 40
@@ -606,11 +611,6 @@ Under ``"simple"`` four further keys configure the pressure-correction solve. Th
      - --
      - Float, > 0.0
      - Limit factor applied to the pressure correction.
-   * - ``pin pressure``
-     - No
-     - ``False``
-     - ``True`` | ``False``
-     - Pin the pressure correction at a reference cell with a large diagonal instead of the default constant-null-space plus mean-removal gauge fix. The pin degrades AMG conditioning, hence the default.
 
 The PETSc options for the SIMPLE momentum and pressure-correction solves are separate — see :ref:`Linear solver <linear_solver>`.
 

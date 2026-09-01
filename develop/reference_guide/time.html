@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-275-g141aa documentation</title>
+    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-276-gc7c3b documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=b566afb4"></script>
+    <script src="../_static/documentation_options.js?v=c9ff2d8f"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -617,10 +617,16 @@
 <td><p>Float, &gt; 0.0 to 1.0</p></td>
 <td><p>Under-relaxation factor on the turbulence transport update. Has no effect without a turbulence model.</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pin</span> <span class="pre">pressure</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p>Pin the pressure at a reference cell with a large diagonal instead of the default constant-null-space plus mean-removal gauge fix. Needed on a fully closed domain (no fixed-pressure boundary), where the pressure is otherwise determined only up to a constant and the matrix is singular. The pin degrades AMG conditioning, hence the default.</p></td>
+</tr>
 </tbody>
 </table>
 <p>The coupling scheme applies to the whole run — it selects the solver itself — so unlike the rest of <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code> it cannot be overridden per mesh.</p>
-<p>Under <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code> four further keys configure the pressure-correction solve. They are rejected under <code class="docutils literal notranslate"><span class="pre">&quot;coupled&quot;</span></code>, which performs no such solve:</p>
+<p>Under <code class="docutils literal notranslate"><span class="pre">&quot;simple&quot;</span></code> three further keys configure the pressure-correction solve. They are rejected under <code class="docutils literal notranslate"><span class="pre">&quot;coupled&quot;</span></code>, which performs no such solve:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21.7%" />
@@ -655,12 +661,6 @@
 <td><p>–</p></td>
 <td><p>Float, &gt; 0.0</p></td>
 <td><p>Limit factor applied to the pressure correction.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pin</span> <span class="pre">pressure</span></code></p></td>
-<td><p>No</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p>Pin the pressure correction at a reference cell with a large diagonal instead of the default constant-null-space plus mean-removal gauge fix. The pin degrades AMG conditioning, hence the default.</p></td>
 </tr>
 </tbody>
 </table>
