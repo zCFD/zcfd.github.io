@@ -534,6 +534,143 @@ Factor applied to the diffusive (viscous) time step when applying the CFL condit
     },
 
 
+.. _inner_convergence:
+
+Inner cycle convergence
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Choosing ``cycles`` for an unsteady simulation means guessing how many pseudo time iterations each real time step needs at the chosen ``cfl``. The ``inner_convergence`` dictionary lets the solver decide instead: each real time step ends once its inner iteration has converged, and ``cycles`` becomes an upper bound rather than a fixed count.
+
+It applies only to :ref:`dual time stepping <running_unsteady>` runs — there is no inner iteration to converge in a steady or globally time-stepped run, and a deck that sets it for one fails validation. Omit the dictionary entirely to run the full ``cycles`` on every real time step. Both solvers honour the same dictionary; what ``target_orders`` is measured on differs between them and is set out under :ref:`Choosing a target <inner_convergence_developing>`.
+
+.. list-table::
+   :widths: 20 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``target_orders``
+     - No
+     - 1.0
+     - Float
+     - Orders of magnitude the judged measure must fall within the current real time step: ``InnerRatio`` for the compressible solver, ``InnerDrop`` for the incompressible solver. Scale free in both, so one value carries between cases. Set to 0 to disable.
+   * - ``target_ratio``
+     - No
+     - unset (off)
+     - Float
+     - Compressible solver only. Absolute floor on ``InnerRatio`` itself, ORed with ``target_orders``. Not portable between cases — measure it from a run first. Unset or 0 disables it; an incompressible deck that sets it fails validation.
+   * - ``min_cycles``
+     - No
+     - 5
+     - Positive integer
+     - Never end a real time step before this many inner cycles.
+   * - ``check_frequency``
+     - No
+     - 5
+     - Positive integer
+     - How often the criterion is tested. A check cycle is also a reporting cycle.
+   * - ``variables``
+     - No
+     - ``"mean flow"``
+     - ``"mean flow"`` | ``"all"`` | list
+     - Which residuals the criterion is judged on; the worst of them governs. ``"mean flow"`` is density, momentum and energy for the compressible solver, momentum and pressure for the incompressible coupled scheme, and momentum alone for SIMPLE. ``"all"`` adds the turbulence transport equations. A list names report columns directly.
+   * - ``stall_window``
+     - No
+     - 10
+     - Non-negative integer
+     - Give up if the reduction improves by less than ``stall_tolerance`` over this many checks. 0 disables stall detection.
+   * - ``stall_tolerance``
+     - No
+     - 0.05
+     - Float
+     - Orders of magnitude that count as progress for stall detection.
+   * - ``start_real_time_step``
+     - No
+     - 0
+     - Non-negative integer
+     - Real time step from which the criterion may end a step early. Before it, ``cycles`` is used unchanged. The diagnostics are reported throughout either way.
+
+Example usage:
+
+.. code-block:: python
+
+    # Let each real time step run until the mean flow residual has dropped two
+    # orders, but never more than 50 inner cycles
+    "time_settings": {
+        "type": "unsteady",
+        "kind": "dual time stepping",
+        "total_time": 1.7,
+        "time_step": 0.002,
+        "order": "second",
+    },
+    "convergence_control": {
+        "cycles": 50,
+        "cfl": 2.0,
+        "inner_convergence": {
+            "target_orders": 2.0,
+            "min_cycles": 5,
+            "check_frequency": 5,
+        },
+    },
+
+.. note::
+    The criterion is not applied to the first real time step. That step runs the ``start`` cycles from a uniform initial field while the CFL number is still ramping, so its residual history is not comparable with the rest of the simulation.
+
+.. note::
+    A real time step that converges early still runs one further inner cycle, on which it writes its report row, checkpoint and visualisation output.
+
+.. _inner_convergence_developing:
+
+Choosing a target
+=================
+
+``target_orders`` is measured on ``InnerRatio``: the largest, across the selected equations, of each residual divided by *its own* physical rate of change. Two properties matter. Dividing each equation by its own rate makes the comparison dimensionless, so taking the largest across equations is meaningful where taking the largest raw residual would not be. And taking the *largest* tracks the equation with the most work still to do.
+
+Contrast ``InnerDrop``, which is the smallest drop across the same equations and is reported as a diagnostic only. Residuals are not comparable between equations, so one can start well below the others simply because that is its scale, having almost nothing left to resolve; the smallest drop then picks exactly that equation and stays near zero however well the rest of the field converges. In a representative IDDES case the momentum equations dropped 2.2 orders while density dropped 0.07 and governed, so a criterion on ``InnerDrop`` could never fire. ``InnerRatio`` on the same case fell a consistent 1.8 orders per real time step.
+
+Because ``target_orders`` is a reduction in a ratio rather than an absolute level, one value carries between cases. To choose it, run once with the criterion off and look at ``InnerRatioDrop`` through a real time step. Most of the reduction happens in the first handful of inner cycles at the chosen ``cfl`` and the curve then has a long flat tail — on that IDDES case 0.7 orders by cycle 5, 1.0 by cycle 10 and 1.8 by cycle 50, so five cycles bought some four fifths of the actual reduction in residual and the remaining forty-five bought the rest. Set ``target_orders`` near the knee with ``min_cycles`` at the knee's cycle number.
+
+Use ``target_ratio`` only when an absolute floor is wanted as well; it is ORed with ``target_orders`` and its value has to be measured per case.
+
+The incompressible measure
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The incompressible solver has no pseudo-time residual to form a ratio from: its report carries the nonlinear residual of the outer iteration, already normalised by the matrix diagonal and by each variable's own range, so it is scale free per equation before anything divides it. ``target_orders`` is therefore judged on ``InnerDrop`` — the orders the worst selected residual has fallen since the first inner cycle of the step — and ``InnerRatio`` and ``InnerRatioDrop`` are reported as zero. ``target_ratio`` has nothing to test and is rejected.
+
+Under the coupled scheme ``"mean flow"`` is momentum and pressure; the pressure row is the continuity constraint and is the equation that most often governs. Under SIMPLE the pressure entry in the report is the residual left by the pressure-correction solve, bounded by the linear solver's tolerance rather than by the flow, so it is not judged and ``"mean flow"`` is momentum alone.
+
+The default of 1.0 was set on the coupled scheme, where a developed cylinder wake ends the median real time step after 10 of 50 inner cycles and the cycles given up are worth about a quarter of an order. SIMPLE converges each step less far — on the same flow its momentum residual falls about 0.8 orders in the first five cycles and then holds — so it needs a lower target, 0.5 in the shipped regression case, and meets it on most steps rather than all. Read ``InnerDrop`` through a few steps with the criterion off before choosing, exactly as for ``InnerRatioDrop`` above.
+
+.. note::
+    The equation governing ``InnerRatio`` can change from one inner cycle to the next, so ``InnerRatioDrop`` compares the worst ratio now against the worst at the first cycle rather than following a single equation. It reads as how far the bottleneck has improved, and flattens when a slower equation takes over — which is the signal, not an artefact.
+
+.. note::
+    A solution restarted from a steady state and left to develop — RANS into DES, or a wake that has yet to break down — looks converged on every real time step for as long as the unsteadiness is still small: the residual starts low, barely moves, and sits far below the physical rate of change. Ending those steps early would cut the inner iteration short exactly while the instability that has to grow is being resolved. Use ``start_real_time_step`` to leave that phase alone and let the criterion take over once the flow is established.
+
+.. _inner_convergence_reading:
+
+Reading the inner convergence
+=============================
+
+Whether or not an automatic criterion is set, a dual time-stepping run reports its inner cycle convergence to the :ref:`report file <reporting>` in the ``InnerCycle``, ``InnerDrop``, ``InnerRatio`` and ``InnerRatioDrop`` columns, joined by ``InnerCells`` on the compressible solver only — see the :ref:`per-column table <inner_convergence_columns>` for which columns carry meaning on each solver. ``InnerDrop`` is the orders of magnitude the worst mean flow residual has dropped since the first inner cycle of the current real time step, which is the quantity to judge ``cycles`` by.
+
+The global residual is a poor guide here for two reasons. It is an absolute value that is never normalised per real time step, so its magnitude says nothing about how far the current inner iteration has come; and it is an RMS over cells, so a handful of cells whose limiter switches between iterations can hold the whole norm up at a noise floor while the bulk of the field is still converging cleanly.
+
+To see the convergence of each real time step separately:
+
+.. code-block:: python
+
+    from zutil.plot import zCFD_Plots
+    plots = zCFD_Plots("cylinder.py")
+    plots.plot_inner_convergence()
+
+This plots ``InnerDrop`` against the inner cycle index, one curve per real time step. Once the startup transient has passed the curves collapse onto each other, and the cycle at which they flatten is where ``cycles`` should be set. At the end of the run the solver also logs the median drop achieved and whether ``cycles`` looks too high or too low.
+
+If the curves flatten well short of the target, see :ref:`troubleshooting <troubleshooting>` — a stall caused by limiter switching is fixed by freezing the limiter, not by adding cycles.
+
 .. _incomp_convergence_control:
 
 Incompressible convergence control

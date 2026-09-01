@@ -1,3 +1,5 @@
+.. _troubleshooting:
+
 Troubleshooting
 ===============
 
@@ -110,6 +112,7 @@ There are several common causes of convergence stall:
 
 #. Multigrid
 #. Flow unsteadiness
+#. Limiter switching (within the inner cycles of an unsteady simulation)
 
 
 Multigrid
@@ -126,4 +129,33 @@ If the unsteadiness is important then the unconverged steady-state flow can be u
 
 On the other hand, if the unsteadiness is not of interest then the accuracy of the solution can be deliberately degraded to provide a more ‘average’ steady-state flow.  This might include using the Rusanov inviscid flux scheme, switching the spatial accuracy to first order and / or using a coarser mesh.  Note that the implicit mode of the solver can also be used to filter the solution in time as larger time-steps can be achieved with a higher CFL number.  The user should note that this approach can cause solver instability and inaccuracy in the final solution, as the ‘averaging’ process is non-physical.  
 
-It may also be the case that the flow residuals are stalled, but the integrated properties of interest (e.g. lift, drag, mass flow) are sufficiently converged as to be useful.  This decision is left to the user.  
+It may also be the case that the flow residuals are stalled, but the integrated properties of interest (e.g. lift, drag, mass flow) are sufficiently converged as to be useful.  This decision is left to the user.
+
+Limiter switching
+-----------------
+
+Within the inner (pseudo-time) cycles of an unsteady dual time-stepping simulation on the
+compressible solver, a common cause of apparent stall is the MUSCL limiter switching state
+from one iteration to the next in a small number of cells. Those cells keep producing a solution change that
+never decays, and because the reported residual is an RMS over all cells, a handful of
+them is enough to hold the whole norm up at a floor. The bulk of the field may be
+converging perfectly well behind it.
+
+The symptom is a residual that drops cleanly for the first several inner cycles and then
+flattens at the same level in every real time step, while the integrated forces continue
+to settle. Judging this from the global residual is unreliable - use the
+:ref:`inner cycle convergence <inner_convergence_reading>` diagnostics instead, which
+measure the drop within each real time step rather than an absolute level.
+
+Adding inner cycles does not help, because the floor is not a convergence rate problem.
+The remedy is to stop the limiter changing: set ``freeze_limiter_cycle`` in the
+``solver.numerical_scheme`` dictionary, which snapshots the limiter and holds it fixed
+thereafter. If the solution genuinely needs the limiter to keep adapting, reduce the physical
+:ref:`time step <unsteady>` instead so that less has to change within each real time step.
+
+The incompressible solver has no slope limiter and ignores ``freeze_limiter_cycle``. An inner
+residual that flattens there is the outer iteration's own floor: under the coupled scheme
+tighten the linear solver or reduce the physical time step; under SIMPLE the floor is set by
+the under-relaxation (``implicit relax`` and ``pressure relax`` in the ``scheme`` block) and
+is reached within a handful of cycles, so a ``target_orders`` above it can never be met - set
+the target from a run with the criterion off rather than adding cycles.

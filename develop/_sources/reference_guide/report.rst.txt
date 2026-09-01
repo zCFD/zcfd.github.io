@@ -38,7 +38,55 @@ The report block lives at ``solver.output_settings.report`` (it can also be over
 
 **'frequency'** sets how frequently a new line is appended to the <casename>_report.csv file. If frequency = x, the solver will output to the <casename>_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (pseudo-time), not outer, cycles.
 
+.. note::
+    When :ref:`'inner_convergence' <inner_convergence>` is set, its **'check_frequency'**
+    cycles are also reporting cycles, so rows may appear more often than **'frequency'**
+    alone would suggest.
+
 **'scale_residuals_by_volume'** scales the reported volume-integrated residuals by cell volume.
+
+.. _inner_convergence_columns:
+
+Inner cycle convergence columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Dual time-stepping simulations report extra columns describing the convergence of the
+inner (pseudo-time) iteration within each real time step. The residual columns themselves
+are absolute and are never normalised per real time step, so they cannot answer "has this
+real time step converged"; these can. The first four are always present; which of them
+carries meaning depends on the solver.
+
+.. list-table::
+   :widths: 18 17 65
+   :header-rows: 1
+
+   * - Column
+     - Solver
+     - Meaning
+   * - 'InnerCycle'
+     - both
+     - The inner cycle index within the current real time step, counting from 1. Use this as the x axis when plotting the convergence of a single real time step.
+   * - 'InnerDrop'
+     - both
+     - Orders of magnitude the worst selected residual has dropped since the first inner cycle of the current real time step. This is what **'target_orders'** tests on the incompressible solver; on the compressible solver it is a diagnostic only - see :ref:`Choosing a target <inner_convergence_developing>` for why.
+   * - 'InnerRatio'
+     - compressible
+     - Largest, across the mean flow equations, of each residual divided by its own physical rate of change. Zero on real time cycle 0, where there is no time history to compare against, and always zero on the incompressible solver, which has no pseudo-time residual.
+   * - 'InnerRatioDrop'
+     - compressible
+     - Orders of magnitude 'InnerRatio' has fallen within the current real time step. This is what **'target_orders'** tests on the compressible solver. Always zero on the incompressible solver.
+   * - 'InnerCells'
+     - compressible
+     - Effective number of cells carrying the residual. A small value means limiter switching in a few cells rather than a stalled field. Not written by the incompressible solver, which has no slope limiter.
+
+See :ref:`Reading the inner convergence <inner_convergence_reading>` for how to plot these
+and how to use them to choose **'cycles'**.
+
+.. note::
+    With :ref:`'inner_convergence' <inner_convergence>` enabled the number of inner cycles
+    varies between real time steps, so the **'Cycle'** column no longer advances by a fixed
+    stride per real time step. Group on **'RealTimeStep'** rather than assuming a stride.
+
 
 **'monitor'**, **'forces'** and **'mass_flow'** are dictionaries keyed by whatever name you choose for each block; the keys are not otherwise validated, but naming them consecutively with a prefix (e.g. ``MR_1``, ``FR_1``, ``MF_1``) keeps a large control file readable:
 
