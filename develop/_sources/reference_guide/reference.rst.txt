@@ -321,6 +321,51 @@ Example usage:
     }
     parameters["solver"]["solver_settings"]["solution_smooth_cycles"] = 0
 
+Restarting on a different number of tasks
+*****************************************
+
+A restart appends to the VTKHDF output it finds rather than replacing it, so
+a restarted case carries on one continuous time series instead of starting a
+second one. That holds only while the partition count does: a VTKHDF series
+stores its sizes as one entry per partition per step, so a run appending at a
+different task count cannot extend the series, and in practice the earlier
+output is lost.
+
+When a restart is about to run on a different number of tasks than the
+solution it is restarting from, the ``.vtkhdf`` files already in the output
+directory are therefore moved into a subdirectory named for the partition
+count that produced them, before the solver opens its output::
+
+    plate_coarse_OUTPUT/background/P2/background.vtkhdf
+    plate_coarse_OUTPUT/background/P2/background_wall.vtkhdf
+
+The new run then starts its own series at the new count, and the old output
+stays where it is and stays readable. The move is reported in the log::
+
+    Restarting from a solution generated on 2 partition(s) with 1 task(s):
+    moved 4 VTKHDF file(s) aside so the existing output is not written over.
+    plate_coarse_OUTPUT/background/P2
+
+Points worth knowing:
+
+* Only the current case's own output directory is swept. With
+  ``'restart_casename'`` pointing at another case, that case's output is
+  left alone — this run does not write into it.
+* Each file is labelled from its own recorded partition count, so output
+  left behind by an earlier run of the same case at a third count is
+  labelled correctly rather than by the restart source's count.
+* A file already written at the new task count is left in place, so a
+  restart on the same number of tasks as before still extends its series as
+  it always has.
+* Passing through the same count twice (2, then 1, then 2, then 1) archives
+  into ``P2`` and then ``P2.1``; an existing archive is never written over.
+* The archive is a subdirectory of the model directory, which
+  post-processing does not look inside — ``zutil`` finds models one level
+  below ``<case>_OUTPUT`` and lists output non-recursively — so an archive
+  is never mistaken for a mesh or picked up as live output.
+* Checkpoint (``_results.h5``), report and ``VISUALISATION`` files are not
+  moved. Only ``.vtkhdf`` output is affected.
+
 Advanced Restart
 ****************
 

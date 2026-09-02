@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Settings &#8212; zCFD User Guide v2025.11.13331-284-gc823b documentation</title>
+    <title>Reference Settings &#8212; zCFD User Guide v2025.11.13331-285-g9f2ea documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=365a0a81"></script>
+    <script src="../_static/documentation_options.js?v=a50c5db3"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="icon" href="../_static/fav.png"/>
@@ -376,6 +376,50 @@ system setting rather than a restart-specific one, and lives separately at
 <span class="n">parameters</span><span class="p">[</span><span class="s2">"solver"</span><span class="p">][</span><span class="s2">"solver_settings"</span><span class="p">][</span><span class="s2">"solution_smooth_cycles"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 </div>
+<section id="restarting-on-a-different-number-of-tasks">
+<h3>Restarting on a different number of tasks<a class="headerlink" href="#restarting-on-a-different-number-of-tasks" title="Link to this heading">¶</a></h3>
+<p>A restart appends to the VTKHDF output it finds rather than replacing it, so
+a restarted case carries on one continuous time series instead of starting a
+second one. That holds only while the partition count does: a VTKHDF series
+stores its sizes as one entry per partition per step, so a run appending at a
+different task count cannot extend the series, and in practice the earlier
+output is lost.</p>
+<p>When a restart is about to run on a different number of tasks than the
+solution it is restarting from, the <code class="docutils literal notranslate"><span class="pre">.vtkhdf</span></code> files already in the output
+directory are therefore moved into a subdirectory named for the partition
+count that produced them, before the solver opens its output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plate_coarse_OUTPUT</span><span class="o">/</span><span class="n">background</span><span class="o">/</span><span class="n">P2</span><span class="o">/</span><span class="n">background</span><span class="o">.</span><span class="n">vtkhdf</span>
+<span class="n">plate_coarse_OUTPUT</span><span class="o">/</span><span class="n">background</span><span class="o">/</span><span class="n">P2</span><span class="o">/</span><span class="n">background_wall</span><span class="o">.</span><span class="n">vtkhdf</span>
+</pre></div>
+</div>
+<p>The new run then starts its own series at the new count, and the old output
+stays where it is and stays readable. The move is reported in the log:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Restarting</span> <span class="kn">from</span><span class="w"> </span><span class="nn">a</span> <span class="n">solution</span> <span class="n">generated</span> <span class="n">on</span> <span class="mi">2</span> <span class="n">partition</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">with</span> <span class="mi">1</span> <span class="n">task</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="n">moved</span> <span class="mi">4</span> <span class="n">VTKHDF</span> <span class="n">file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">aside</span> <span class="n">so</span> <span class="n">the</span> <span class="n">existing</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">written</span> <span class="n">over</span><span class="o">.</span>
+<span class="n">plate_coarse_OUTPUT</span><span class="o">/</span><span class="n">background</span><span class="o">/</span><span class="n">P2</span>
+</pre></div>
+</div>
+<p>Points worth knowing:</p>
+<ul class="simple">
+<li><p>Only the current case’s own output directory is swept. With
+<code class="docutils literal notranslate"><span class="pre">'restart_casename'</span></code> pointing at another case, that case’s output is
+left alone — this run does not write into it.</p></li>
+<li><p>Each file is labelled from its own recorded partition count, so output
+left behind by an earlier run of the same case at a third count is
+labelled correctly rather than by the restart source’s count.</p></li>
+<li><p>A file already written at the new task count is left in place, so a
+restart on the same number of tasks as before still extends its series as
+it always has.</p></li>
+<li><p>Passing through the same count twice (2, then 1, then 2, then 1) archives
+into <code class="docutils literal notranslate"><span class="pre">P2</span></code> and then <code class="docutils literal notranslate"><span class="pre">P2.1</span></code>; an existing archive is never written over.</p></li>
+<li><p>The archive is a subdirectory of the model directory, which
+post-processing does not look inside — <code class="docutils literal notranslate"><span class="pre">zutil</span></code> finds models one level
+below <code class="docutils literal notranslate"><span class="pre">&lt;case&gt;_OUTPUT</span></code> and lists output non-recursively — so an archive
+is never mistaken for a mesh or picked up as live output.</p></li>
+<li><p>Checkpoint (<code class="docutils literal notranslate"><span class="pre">_results.h5</span></code>), report and <code class="docutils literal notranslate"><span class="pre">VISUALISATION</span></code> files are not
+moved. Only <code class="docutils literal notranslate"><span class="pre">.vtkhdf</span></code> output is affected.</p></li>
+</ul>
+</section>
 <section id="advanced-restart">
 <h3>Advanced Restart<a class="headerlink" href="#advanced-restart" title="Link to this heading">¶</a></h3>
 <p>It is possible to restart the SA-neg solver from results generated using the Menter SST solver and vice versa; by default the turbulence field(s) are reset to zero. Generating an approximate initial field for SA-neg from Menter-SST results is not currently possible from a control file.</p>
