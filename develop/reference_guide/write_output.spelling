@@ -1,1 +1,4 @@
 source/reference_guide/write_output.rst:35: (fwensight) ["insight"] ‘none’ | ‘vtk’ | ‘ensight’ | ‘fwensight’ | ‘native’
+source/reference_guide/write_output.rst:198: (checksums) ["checksum", "check sums", "check-sums", "checksum s", "checks"] names, devices, partition count and the mesh MD5 checksums. Written
+source/reference_guide/write_output.rst:202: (mtime) ["mime", "time", "m time"] dataset each, with the full path and mtime as attributes. The set is
+source/reference_guide/write_output.rst:207: (updatable) ["up datable", "up-datable", "adaptable"] it and applies any change the schema marks updatable — so it is re-read on

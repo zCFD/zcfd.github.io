@@ -175,6 +175,54 @@ The interpolated solution on the STL is also output at the same frequency as oth
 
     Two ``'write output'`` keys have no schema equivalent at all and are unaccounted for in ``developer_docs/input-deck.md``: ``'scripts'`` (the list of ParaView Catalyst script filenames for in-situ visualisation) and ``'variable_name_alias'`` (the dict mapping zCFD variable names to alternate output names). The C++ side (``OutputVTK.cxx``) reads both directly from the ``solution`` dict, but ``SolutionModel`` declares neither field, so a control file has no way to set them.
 
+.. _checkpoint_provenance:
+
+What a checkpoint records about the run
+=======================================
+
+A ``<model>_results.h5`` checkpoint carries the run's own configuration
+alongside the flow solution, so the file explains where it came from without
+depending on the run directory still being intact:
+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Location in the file
+     - Contents
+   * - ``version`` (root attribute)
+     - Layout version of the checkpoint, currently ``2``. This is the file
+       layout, not the deck's ``'config version'``.
+   * - ``/provenance/status``
+     - The ``<case>_status.yaml`` file verbatim — zCFD version, date, host
+       names, devices, partition count and the mesh MD5 checksums. Written
+       once, since it cannot change during a run.
+   * - ``/provenance/control/<filename>``
+     - The source of every Python file the control-file read executed, one
+       dataset each, with the full path and mtime as attributes. The set is
+       the whole include chain, not just the file named on the command line,
+       so a deck built from a base plus overrides is recorded in full.
+
+The control deck can be edited while a run is in progress — the solver polls
+it and applies any change the schema marks updatable — so it is re-read on
+each checkpoint and rewritten whenever it has actually changed. Reading it
+back is a plain HDF5 string read:
+
+.. code-block:: python
+
+    import h5py
+
+    with h5py.File("case_OUTPUT/background/background_results.h5") as f:
+        print(f.attrs["version"])
+        print(f["provenance/status"][()].decode())
+        for name in f["provenance/control"]:
+            print("---", f[f"provenance/control/{name}"].attrs["path"])
+            print(f[f"provenance/control/{name}"][()].decode())
+
+Recording these is best effort: a checkpoint that could not be annotated is
+still a valid, restartable checkpoint, and the run reports a warning rather
+than stopping.
+
 .. _output_frequency:
 
 Frequency
