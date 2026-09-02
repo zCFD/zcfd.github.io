@@ -3,4 +3,10 @@ source/reference_guide/equations.rst:523: (anelastic) ["inelastic", "an elastic"
 source/reference_guide/equations.rst:571: (adiabat) ["adiabatic"]  is the neutral dry adiabat.
 source/reference_guide/equations.rst:595: (Skamarock) ["Shamrock"]  (Skamarock & Klemp 1994). 
 source/reference_guide/equations.rst:595: (Klemp) ["Kemp", "Klemperer"]  (Skamarock & Klemp 1994). 
-source/reference_guide/equations.rst:821: (bitwise) ["bit wise", "bit-wise", "leastwise"] The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.
+source/reference_guide/equations.rst:799: (regularised) ["regularized", "regularize", "regulated"] face, and are regularised by a threshold
+source/reference_guide/equations.rst:816: (Albada) ["Albata", "Alba", "Ballad"] . Slightly more compressive than van Albada.
+source/reference_guide/equations.rst:893: (Michalak) ["Michael"] Michalak & Ollivier-Gooch. 
+source/reference_guide/equations.rst:893: (Ollivier) ["Olivier", "Collier", "Oliver"] Michalak & Ollivier-Gooch. 
+source/reference_guide/equations.rst:893: (Gooch) ["Mooch", "Pooch", "Hooch", "Gook"] Michalak & Ollivier-Gooch. 
+source/reference_guide/equations.rst:900: (neighbour) ["neighbor"] individually inside the neighbour bounds. The 
+source/reference_guide/equations.rst:945: (bitwise) ["bit wise", "bit-wise", "leastwise"] The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.

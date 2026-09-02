@@ -322,6 +322,12 @@ Added for ``rans`` and ``les``.
    * - sagradientlimiter
      -
      - Spalart-Allmaras gradient limiter value
+   * - celllimiter
+     -
+     - Cell-based reconstruction limiter value for density (1 = unlimited)
+   * - celllimiterpressure
+     -
+     - Cell-based reconstruction limiter value for pressure (1 = unlimited)
    * - turbulencetimestep
      -
      - Local turbulence timestep
