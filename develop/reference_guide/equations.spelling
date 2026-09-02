@@ -1,6 +1,6 @@
 source/reference_guide/equations.rst:400: (normalises) ["normalizes", "manorialism"] integer values 0-3, which it normalises to the equivalent string. The
 source/reference_guide/equations.rst:523: (anelastic) ["inelastic", "an elastic", "an-elastic", "nonelastic", "anticlastic", "anaplastic", "elastic"] Hydrostatic base state of a stratified (anelastic) atmosphere. Setting it turns stratification on: the density becomes the base-state 
-source/reference_guide/equations.rst:566: (adiabat) ["adiabatic"]  is the neutral dry adiabat.
-source/reference_guide/equations.rst:590: (Skamarock) ["Shamrock"]  (Skamarock & Klemp 1994). 
-source/reference_guide/equations.rst:590: (Klemp) ["Kemp", "Klemperer"]  (Skamarock & Klemp 1994). 
-source/reference_guide/equations.rst:816: (bitwise) ["bit wise", "bit-wise", "leastwise"] The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.
+source/reference_guide/equations.rst:571: (adiabat) ["adiabatic"]  is the neutral dry adiabat.
+source/reference_guide/equations.rst:595: (Skamarock) ["Shamrock"]  (Skamarock & Klemp 1994). 
+source/reference_guide/equations.rst:595: (Klemp) ["Kemp", "Klemperer"]  (Skamarock & Klemp 1994). 
+source/reference_guide/equations.rst:821: (bitwise) ["bit wise", "bit-wise", "leastwise"] The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.

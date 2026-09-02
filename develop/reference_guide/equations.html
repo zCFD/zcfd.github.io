@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2025.11.13331-279-gddd06 documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.11.13331-280-ga883c documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=5ee863c3"></script>
+    <script src="../_static/documentation_options.js?v=401290d0"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -660,31 +660,37 @@ measured along <span class="math notranslate nohighlight">\(-\mathbf{g}\)</span>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
-<td><p>No</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&quot;constant</span> <span class="pre">lapse</span> <span class="pre">rate&quot;</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>—</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;isothermal&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;constant</span> <span class="pre">lapse</span> <span class="pre">rate&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;constant</span> <span class="pre">brunt</span> <span class="pre">vaisala&quot;</span></code></p></td>
-<td><p>Temperature profile. <code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">brunt</span> <span class="pre">vaisala</span></code> gives uniform stratification <span class="math notranslate nohighlight">\(\theta = \theta_0 \exp(N^2 z / g)\)</span>.</p></td>
+<td><p>Temperature profile; selects which profile parameter applies. <code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">brunt</span> <span class="pre">vaisala</span></code> gives uniform stratification <span class="math notranslate nohighlight">\(\theta = \theta_0 \exp(N^2 z / g)\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">surface_temperature</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
 <td><p>No</p></td>
-<td><p>288.15</p></td>
+<td><p>The initialisation reference</p></td>
+<td><p>String</p></td>
+<td><p>Reference condition supplying the surface temperature and pressure (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;IC_1&quot;</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">surface_temperature</span></code></p></td>
+<td><p>No</p></td>
+<td><p>From the reference condition</p></td>
 <td><p>Float (K)</p></td>
-<td><p>Temperature at the reference location.</p></td>
+<td><p>Temperature at the reference location; overrides the reference condition’s value.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">surface_pressure</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">surface_pressure</span></code></p></td>
 <td><p>No</p></td>
-<td><p>101325.0</p></td>
+<td><p>From the reference condition</p></td>
 <td><p>Float (Pa)</p></td>
-<td><p>Pressure at the reference location.</p></td>
+<td><p>Pressure at the reference location; overrides the reference condition’s value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lapse_rate</span></code></p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lapse_rate</span></code></p></td>
+<td><p>No (kind <code class="docutils literal notranslate"><span class="pre">&quot;constant</span> <span class="pre">lapse</span> <span class="pre">rate&quot;</span></code> only)</p></td>
 <td><p>0.0065</p></td>
 <td><p>Float (K/m)</p></td>
 <td><p><span class="math notranslate nohighlight">\(-dT/dz\)</span> for <code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">lapse</span> <span class="pre">rate</span></code>. <span class="math notranslate nohighlight">\(g/c_p \approx 0.0098\)</span> is the neutral dry adiabat.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">brunt_vaisala_frequency</span></code></p></td>
-<td><p>No</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">brunt_vaisala_frequency</span></code></p></td>
+<td><p>No (kind <code class="docutils literal notranslate"><span class="pre">&quot;constant</span> <span class="pre">brunt</span> <span class="pre">vaisala&quot;</span></code> only)</p></td>
 <td><p>0.01</p></td>
 <td><p>Float (1/s)</p></td>
 <td><p><span class="math notranslate nohighlight">\(N\)</span> for <code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">brunt</span> <span class="pre">vaisala</span></code>.</p></td>

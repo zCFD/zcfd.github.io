@@ -545,27 +545,32 @@ measured along :math:`-\mathbf{g}` from the reference condition's location.
      - Valid values
      - Description
    * - ``kind``
-     - No
-     - ``"constant lapse rate"``
+     - Yes
+     - —
      - ``"isothermal"`` | ``"constant lapse rate"`` | ``"constant brunt vaisala"``
-     - Temperature profile. ``constant brunt vaisala`` gives uniform stratification :math:`\theta = \theta_0 \exp(N^2 z / g)`.
+     - Temperature profile; selects which profile parameter applies. ``constant brunt vaisala`` gives uniform stratification :math:`\theta = \theta_0 \exp(N^2 z / g)`.
+   * - ``reference``
+     - No
+     - The initialisation reference
+     - String
+     - Reference condition supplying the surface temperature and pressure (e.g. ``"IC_1"``).
    * - ``surface_temperature``
      - No
-     - 288.15
+     - From the reference condition
      - Float (K)
-     - Temperature at the reference location.
+     - Temperature at the reference location; overrides the reference condition's value.
    * - ``surface_pressure``
      - No
-     - 101325.0
+     - From the reference condition
      - Float (Pa)
-     - Pressure at the reference location.
+     - Pressure at the reference location; overrides the reference condition's value.
    * - ``lapse_rate``
-     - No
+     - No (kind ``"constant lapse rate"`` only)
      - 0.0065
      - Float (K/m)
      - :math:`-dT/dz` for ``constant lapse rate``. :math:`g/c_p \approx 0.0098` is the neutral dry adiabat.
    * - ``brunt_vaisala_frequency``
-     - No
+     - No (kind ``"constant brunt vaisala"`` only)
      - 0.01
      - Float (1/s)
      - :math:`N` for ``constant brunt vaisala``.
