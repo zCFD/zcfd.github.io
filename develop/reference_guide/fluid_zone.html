@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fluid Zones &#8212; zCFD User Guide v2025.11.13331-286-gf58d5 documentation</title>
+    <title>Fluid Zones &#8212; zCFD User Guide v2025.11.13331-287-gf6da7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=6e4f53fd"></script>
+    <script src="../_static/documentation_options.js?v=d7071dd0"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -53,17 +53,46 @@ blocks, keyed the same way as <a class="reference internal" href="boundary.html#
 <p>Each block’s <code class="docutils literal notranslate"><span class="pre">type</span></code> key selects the zone kind and determines which other
 keys are valid and required for that block; an unrecognised key anywhere in
 a fluid zone is rejected at validation time rather than silently ignored.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Incompressible solvers.</strong> All of the source-term zone types below – <code class="docutils literal notranslate"><span class="pre">momentum</span></code>,
+<code class="docutils literal notranslate"><span class="pre">porous</span></code>, <code class="docutils literal notranslate"><span class="pre">canopy</span></code>, <code class="docutils literal notranslate"><span class="pre">disc</span></code> and <code class="docutils literal notranslate"><span class="pre">abl</span></code> – are available to the incompressible
+solver (<code class="docutils literal notranslate"><span class="pre">solver_settings</span></code> <code class="docutils literal notranslate"><span class="pre">type</span></code> <code class="docutils literal notranslate"><span class="pre">'incompressible'</span></code>) as well as the compressible
+one. Points to be aware of:</p>
+<ul class="simple">
+<li><p>The incompressible momentum equation is solved per unit mass (density is divided out),
+so a <code class="docutils literal notranslate"><span class="pre">momentum</span></code> zone’s <code class="docutils literal notranslate"><span class="pre">func</span></code> must return a force <strong>per unit mass</strong> rather than per
+unit volume. The porous, canopy and actuator disc models handle this internally, so
+their input values (<code class="docutils literal notranslate"><span class="pre">alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">C2</span></code>, <code class="docutils literal notranslate"><span class="pre">cd</span></code>, the disc geometry and model dictionaries)
+are identical for both solvers.</p></li>
+<li><p>A <strong>strong</strong> <code class="docutils literal notranslate"><span class="pre">porous</span></code> or <code class="docutils literal notranslate"><span class="pre">canopy</span></code> zone under the segregated SIMPLE scheme
+(<code class="docutils literal notranslate"><span class="pre">scheme</span></code> <code class="docutils literal notranslate"><span class="pre">name</span></code> <code class="docutils literal notranslate"><span class="pre">'simple'</span></code> in <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code>) needs the scheme’s
+<code class="docutils literal notranslate"><span class="pre">pressure_regularisation</span></code> set. Their drag adds to the momentum diagonal, so in a
+heavily blocked cell every pressure-correction face coefficient collapses towards zero
+and that cell’s row of the p’ Laplacian becomes near-empty, which the
+conjugate-gradient solver reports as an indefinite matrix before the run diverges. A
+value around <code class="docutils literal notranslate"><span class="pre">1e-2</span></code> restores stability, though a near-solid block still converges
+more slowly and less far than under the coupled scheme – prefer the <code class="docutils literal notranslate"><span class="pre">'coupled'</span></code>
+scheme for strong drag. Weak drag such as a typical canopy converges under either
+scheme with the default of <code class="docutils literal notranslate"><span class="pre">0</span></code> and the two agree to discretisation level.
+<code class="docutils literal notranslate"><span class="pre">momentum</span></code>, <code class="docutils literal notranslate"><span class="pre">disc</span></code> and <code class="docutils literal notranslate"><span class="pre">abl</span></code> are explicit body forces, never touch the momentum
+diagonal, and are unaffected either way.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">canopy</span></code> turbulence source is only defined for the <code class="docutils literal notranslate"><span class="pre">sst</span></code> model. Under
+Spalart-Allmaras or LES the canopy applies its momentum sink only, and the solver logs
+a warning.</p></li>
+</ul>
+</div>
 <section id="selecting-cells">
 <h2>Selecting cells<a class="headerlink" href="#selecting-cells" title="Link to this heading">¶</a></h2>
 <p>Most zone types select the cells they act on with <code class="docutils literal notranslate"><span class="pre">zones</span></code>: a list of the
 mesh’s numbered cell zones (the same zone-numbering convention used by
-<code class="docutils literal notranslate"><span class="pre">boundary_conditions</span></code>). A smaller set of types — <code class="docutils literal notranslate"><span class="pre">momentum</span></code>, <code class="docutils literal notranslate"><span class="pre">disc</span></code>
-and <code class="docutils literal notranslate"><span class="pre">canopy</span></code> — additionally accept <code class="docutils literal notranslate"><span class="pre">definition</span></code>, the path to a
+<code class="docutils literal notranslate"><span class="pre">boundary_conditions</span></code>). A smaller set of types — <code class="docutils literal notranslate"><span class="pre">momentum</span></code>, <code class="docutils literal notranslate"><span class="pre">porous</span></code>,
+<code class="docutils literal notranslate"><span class="pre">disc</span></code> and <code class="docutils literal notranslate"><span class="pre">canopy</span></code> — additionally accept <code class="docutils literal notranslate"><span class="pre">definition</span></code>, the path to a
 closed-surface VTP file describing the region, as an alternative to
-<code class="docutils literal notranslate"><span class="pre">zones</span></code>. For <code class="docutils literal notranslate"><span class="pre">momentum</span></code> and <code class="docutils literal notranslate"><span class="pre">canopy</span></code> zones, exactly one of the two is
-enforced by validation; for <code class="docutils literal notranslate"><span class="pre">disc</span></code> zones, both are optional at the schema
-level even though the solver needs one of them to select cells in practice.
-Rotating, translating, porous and ABL zones only accept <code class="docutils literal notranslate"><span class="pre">zones</span></code> today —
+<code class="docutils literal notranslate"><span class="pre">zones</span></code>. For <code class="docutils literal notranslate"><span class="pre">momentum</span></code>, <code class="docutils literal notranslate"><span class="pre">porous</span></code> and <code class="docutils literal notranslate"><span class="pre">canopy</span></code> zones, exactly one of
+the two is enforced by validation; for <code class="docutils literal notranslate"><span class="pre">disc</span></code> zones, both are optional at
+the schema level even though the solver needs one of them to select cells in
+practice. Rotating, translating and ABL zones only accept <code class="docutils literal notranslate"><span class="pre">zones</span></code> today —
 they have no VTP-region equivalent.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -305,26 +334,31 @@ boundary condition; setting it without one is rejected at validation time.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">'porous'</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zones</span></code></p></td>
-<td><p>Yes</p></td>
+<td><p>One of <code class="docutils literal notranslate"><span class="pre">zones</span></code>/<code class="docutils literal notranslate"><span class="pre">definition</span></code></p></td>
 <td><p>–</p></td>
 <td><p>List of mesh cell-zone IDs</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">definition</span></code></p></td>
+<td><p>One of <code class="docutils literal notranslate"><span class="pre">zones</span></code>/<code class="docutils literal notranslate"><span class="pre">definition</span></code></p></td>
+<td><p>–</p></td>
+<td><p>Closed-surface VTP file selecting the porous region</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1.0e12</span></code></p></td>
 <td><p>Permeability (Darcy term), <span class="math notranslate nohighlight">\(\ge 0\)</span></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">C2</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">C2</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.0</span></code></p></td>
 <td><p>Inertial resistance factor (Forchheimer term), <span class="math notranslate nohighlight">\(\ge 0\)</span></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">porosity</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">porosity</span></code></p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">\le</span> <span class="pre">porosity</span> <span class="pre">\le</span> <span class="pre">1</span></code> (accepted but not yet read by the solver)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">direction</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">direction</span></code></p></td>
 <td><p>No</p></td>
 <td><p>–</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">y,</span> <span class="pre">z]</span></code> preferred flow direction (accepted but not yet read by the solver)</p></td>

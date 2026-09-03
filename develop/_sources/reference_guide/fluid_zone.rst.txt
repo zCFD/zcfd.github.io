@@ -23,18 +23,46 @@ Each block's ``type`` key selects the zone kind and determines which other
 keys are valid and required for that block; an unrecognised key anywhere in
 a fluid zone is rejected at validation time rather than silently ignored.
 
+.. note::
+
+    **Incompressible solvers.** All of the source-term zone types below -- ``momentum``,
+    ``porous``, ``canopy``, ``disc`` and ``abl`` -- are available to the incompressible
+    solver (``solver_settings`` ``type`` ``'incompressible'``) as well as the compressible
+    one. Points to be aware of:
+
+    * The incompressible momentum equation is solved per unit mass (density is divided out),
+      so a ``momentum`` zone's ``func`` must return a force **per unit mass** rather than per
+      unit volume. The porous, canopy and actuator disc models handle this internally, so
+      their input values (``alpha``, ``C2``, ``cd``, the disc geometry and model dictionaries)
+      are identical for both solvers.
+    * A **strong** ``porous`` or ``canopy`` zone under the segregated SIMPLE scheme
+      (``scheme`` ``name`` ``'simple'`` in ``convergence_control``) needs the scheme's
+      ``pressure_regularisation`` set. Their drag adds to the momentum diagonal, so in a
+      heavily blocked cell every pressure-correction face coefficient collapses towards zero
+      and that cell's row of the p' Laplacian becomes near-empty, which the
+      conjugate-gradient solver reports as an indefinite matrix before the run diverges. A
+      value around ``1e-2`` restores stability, though a near-solid block still converges
+      more slowly and less far than under the coupled scheme -- prefer the ``'coupled'``
+      scheme for strong drag. Weak drag such as a typical canopy converges under either
+      scheme with the default of ``0`` and the two agree to discretisation level.
+      ``momentum``, ``disc`` and ``abl`` are explicit body forces, never touch the momentum
+      diagonal, and are unaffected either way.
+    * The ``canopy`` turbulence source is only defined for the ``sst`` model. Under
+      Spalart-Allmaras or LES the canopy applies its momentum sink only, and the solver logs
+      a warning.
+
 Selecting cells
 ^^^^^^^^^^^^^^^
 
 Most zone types select the cells they act on with ``zones``: a list of the
 mesh's numbered cell zones (the same zone-numbering convention used by
-``boundary_conditions``). A smaller set of types — ``momentum``, ``disc``
-and ``canopy`` — additionally accept ``definition``, the path to a
+``boundary_conditions``). A smaller set of types — ``momentum``, ``porous``,
+``disc`` and ``canopy`` — additionally accept ``definition``, the path to a
 closed-surface VTP file describing the region, as an alternative to
-``zones``. For ``momentum`` and ``canopy`` zones, exactly one of the two is
-enforced by validation; for ``disc`` zones, both are optional at the schema
-level even though the solver needs one of them to select cells in practice.
-Rotating, translating, porous and ABL zones only accept ``zones`` today —
+``zones``. For ``momentum``, ``porous`` and ``canopy`` zones, exactly one of
+the two is enforced by validation; for ``disc`` zones, both are optional at
+the schema level even though the solver needs one of them to select cells in
+practice. Rotating, translating and ABL zones only accept ``zones`` today —
 they have no VTP-region equivalent.
 
 .. note::
@@ -230,9 +258,13 @@ Porous Media
      - --
      - ``'porous'``
    * - ``zones``
-     - Yes
+     - One of ``zones``/``definition``
      - --
      - List of mesh cell-zone IDs
+   * - ``definition``
+     - One of ``zones``/``definition``
+     - --
+     - Closed-surface VTP file selecting the porous region
    * - ``alpha``
      - No
      - ``1.0e12``
