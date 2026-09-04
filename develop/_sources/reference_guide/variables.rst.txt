@@ -375,7 +375,7 @@ Added for ``rans`` and ``les``.
 Per-equation dynamic variables
 ================================
 
-``var_i``, ``resvar_i`` and ``vargrad_i`` (solution value, residual and gradient of solved equation ``i``) are generated for ``i`` from 1 up to the number of solved equations, which depends on the equation type and, for RANS, the turbulence model:
+``var_i``, ``resvar_i``, ``resshare_i`` and ``vargrad_i`` (solution value, residual, share of the total squared residual, and gradient of solved equation ``i``) are generated for ``i`` from 1 up to the number of solved equations, which depends on the equation type and, for RANS, the turbulence model:
 
 .. list-table::
    :widths: 40 30 30
@@ -398,6 +398,15 @@ Per-equation dynamic variables
      - 9
 
 For example, an ``incomp rans`` case using the default (7-equation) turbulence model has ``var_1`` through ``var_7``, ``resvar_1`` through ``resvar_7``, and ``vargrad_1`` through ``vargrad_7`` available (used for the extra turbulence equations, e.g. ``var_6``/``var_7`` for the two SST transport variables in the :ref:`naca0012 <write_output>`-style examples elsewhere in this guide).
+
+``resvar_i`` is divided by the cell volume only when :ref:`'scale_residuals_by_volume' <reporting>`
+is set, so it always matches the reported residual norms.
+
+``resshare_i`` is that cell's share of the total squared residual for equation ``i``, and the
+values sum to one over the mesh. Threshold it at ``1/Neff_<eq>`` - reported when
+:ref:`'residual_statistics' <residual_statistics_columns>` is on - to isolate the cells carrying
+the residual, or sort the cumulative sum to answer "which cells hold the top 90%". It is exactly
+``resvar_i`` squared and normalised, so the two always agree on which cells are the hot ones.
 
 FSI / modal variables
 =======================

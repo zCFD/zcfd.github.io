@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Output variables &#8212; zCFD User Guide v2025.11.13331-295-g8528df documentation</title>
+    <title>Output variables &#8212; zCFD User Guide v2025.11.13331-296-g5e680b documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=211f03c3"></script>
+    <script src="../_static/documentation_options.js?v=6c25928b"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -540,7 +540,7 @@
 </section>
 <section id="per-equation-dynamic-variables">
 <h2>Per-equation dynamic variables<a class="headerlink" href="#per-equation-dynamic-variables" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">var_i</span></code>, <code class="docutils literal notranslate"><span class="pre">resvar_i</span></code> and <code class="docutils literal notranslate"><span class="pre">vargrad_i</span></code> (solution value, residual and gradient of solved equation <code class="docutils literal notranslate"><span class="pre">i</span></code>) are generated for <code class="docutils literal notranslate"><span class="pre">i</span></code> from 1 up to the number of solved equations, which depends on the equation type and, for RANS, the turbulence model:</p>
+<p><code class="docutils literal notranslate"><span class="pre">var_i</span></code>, <code class="docutils literal notranslate"><span class="pre">resvar_i</span></code>, <code class="docutils literal notranslate"><span class="pre">resshare_i</span></code> and <code class="docutils literal notranslate"><span class="pre">vargrad_i</span></code> (solution value, residual, share of the total squared residual, and gradient of solved equation <code class="docutils literal notranslate"><span class="pre">i</span></code>) are generated for <code class="docutils literal notranslate"><span class="pre">i</span></code> from 1 up to the number of solved equations, which depends on the equation type and, for RANS, the turbulence model:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 40.0%" />
@@ -573,6 +573,13 @@
 </tbody>
 </table>
 <p>For example, an <code class="docutils literal notranslate"><span class="pre">incomp</span> <span class="pre">rans</span></code> case using the default (7-equation) turbulence model has <code class="docutils literal notranslate"><span class="pre">var_1</span></code> through <code class="docutils literal notranslate"><span class="pre">var_7</span></code>, <code class="docutils literal notranslate"><span class="pre">resvar_1</span></code> through <code class="docutils literal notranslate"><span class="pre">resvar_7</span></code>, and <code class="docutils literal notranslate"><span class="pre">vargrad_1</span></code> through <code class="docutils literal notranslate"><span class="pre">vargrad_7</span></code> available (used for the extra turbulence equations, e.g. <code class="docutils literal notranslate"><span class="pre">var_6</span></code>/<code class="docutils literal notranslate"><span class="pre">var_7</span></code> for the two SST transport variables in the <a class="reference internal" href="write_output.html#write-output"><span class="std std-ref">naca0012</span></a>-style examples elsewhere in this guide).</p>
+<p><code class="docutils literal notranslate"><span class="pre">resvar_i</span></code> is divided by the cell volume only when <a class="reference internal" href="report.html#reporting"><span class="std std-ref">‘scale_residuals_by_volume’</span></a>
+is set, so it always matches the reported residual norms.</p>
+<p><code class="docutils literal notranslate"><span class="pre">resshare_i</span></code> is that cell’s share of the total squared residual for equation <code class="docutils literal notranslate"><span class="pre">i</span></code>, and the
+values sum to one over the mesh. Threshold it at <code class="docutils literal notranslate"><span class="pre">1/Neff_&lt;eq&gt;</span></code> - reported when
+<a class="reference internal" href="report.html#residual-statistics-columns"><span class="std std-ref">‘residual_statistics’</span></a> is on - to isolate the cells carrying
+the residual, or sort the cumulative sum to answer “which cells hold the top 90%”. It is exactly
+<code class="docutils literal notranslate"><span class="pre">resvar_i</span></code> squared and normalised, so the two always agree on which cells are the hot ones.</p>
 </section>
 <section id="fsi-modal-variables">
 <h2>FSI / modal variables<a class="headerlink" href="#fsi-modal-variables" title="Link to this heading">¶</a></h2>

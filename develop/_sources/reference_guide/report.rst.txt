@@ -35,6 +35,10 @@ The report block lives at ``solver.output_settings.report`` (it can also be over
      - No
      - False
      - Boolean
+   * - :ref:`'residual_statistics' <residual_statistics_columns>`
+     - No
+     - False
+     - Boolean
 
 **'frequency'** sets how frequently a new line is appended to the <casename>_report.csv file. If frequency = x, the solver will output to the <casename>_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (pseudo-time), not outer, cycles.
 
@@ -44,6 +48,51 @@ The report block lives at ``solver.output_settings.report`` (it can also be over
     alone would suggest.
 
 **'scale_residuals_by_volume'** scales the reported volume-integrated residuals by cell volume.
+It applies to the ``resvar_i`` and ``resshare_i`` output variables as well as to the report, so
+the field and the norm of that field always describe the same quantity.
+
+.. _residual_statistics_columns:
+
+Residual statistics columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Setting **'residual_statistics'** adds four columns per equation, describing the *true* residual
+:math:`R(Q)` rather than the solution update. They answer a question the RMS cannot: an RMS says
+"not converged" without saying that the field is converged everywhere except a handful of cells,
+which is the case that takes longest to diagnose.
+
+The columns are named prefix-first (``Rinf_rho``, not ``rho_Rinf``) and are written to
+<casename>_report.csv only - they are deliberately kept off the console residual line, which four
+extra columns per equation would otherwise swamp.
+
+.. list-table::
+   :widths: 18 82
+   :header-rows: 1
+
+   * - Column
+     - Meaning
+   * - 'Rinf_<eq>'
+     - :math:`\lVert R \rVert_\infty`, the largest residual anywhere in the mesh for that equation.
+   * - 'Rrms_<eq>'
+     - RMS of the true residual. Note this is *not* the equation's own residual column, which is the RMS of the solution update :math:`\Delta Q/\Delta\tau`; the two coincide only when the linear solve is exact.
+   * - 'Neff_<eq>'
+     - Participation ratio :math:`(\sum R^2)^2 / \sum R^4`: the number of cells the residual is effectively spread over. Equal to the cell count when every cell contributes equally, and to 1 when a single cell carries everything. A small value against a large mesh means a localised stall, not a stalled field.
+   * - 'Rtop_<eq>'
+     - Fraction of :math:`\sum R^2` held by the single worst cell.
+
+To find *where* those cells are, add the :ref:`resshare_i <output_variables>` volume output
+variables. ``resshare_i`` is each cell's share of the same :math:`\sum R^2`, summing to one over
+the mesh, so thresholding it at ``1/Neff_<eq>`` isolates the cells carrying more than an equal
+share - the cells ``Neff`` is counting.
+
+.. note::
+    This is a different measure from :ref:`'InnerCells' <inner_convergence_columns>`, and neither
+    supersedes the other. ``InnerCells`` is a single scalar over the solution *update*, used to
+    steer dual-time inner cycles. These are per-equation figures over the true residual, for
+    diagnosing where a steady-state stall is sitting.
+
+Off by default: the statistics cost an extra pass over the residual field and two MPI reductions
+per report.
 
 .. _inner_convergence_columns:
 

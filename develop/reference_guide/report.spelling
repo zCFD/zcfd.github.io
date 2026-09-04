@@ -1,11 +1,17 @@
-source/reference_guide/report.rst:55: (normalised) ["normalized", "normalize"] are absolute and are never normalised per real time step, so they cannot answer “has this
-source/reference_guide/report.rst:66: (InnerCycle) ["Inner Cycle", "Inner-cycle", "Exercycle"] ‘InnerCycle’
-source/reference_guide/report.rst:69: (InnerDrop) ["Inner Drop", "Inner-drop", "Dropline"] ‘InnerDrop’
-source/reference_guide/report.rst:72: (InnerRatio) ["Inner Ratio", "Inner-ratio", "Innervation", "Incineration", "Aberration", "Serration"] ‘InnerRatio’
-source/reference_guide/report.rst:75: (InnerRatioDrop) ["Incineration"] ‘InnerRatioDrop’
-source/reference_guide/report.rst:77: (InnerRatio) ["Inner Ratio", "Inner-ratio", "Innervation", "Incineration", "Aberration", "Serration"] Orders of magnitude ‘InnerRatio’ has fallen within the current real time step. This is what 
-source/reference_guide/report.rst:78: (InnerCells) ["Inner Cells", "Inner-cells", "Intercellular"] ‘InnerCells’
-source/reference_guide/report.rst:307: (Ftf) ["Ft", "Ff", "Ftp", "Fth", "Ft f"] _Ftf[x,y,z] and 
-source/reference_guide/report.rst:307: (Mtf) ["Mt", "Mt f", "Mtg", "Mf"] _Mtf[x,y,z]
-source/reference_guide/report.rst:310: (Tq) ["T", "Q", "Te", "Eq", "Sq", "Ti", "Ta", "Tl", "Tc", "Tu", "Tm", "Th", "Tb", "Ty"] _Tq and 
-source/reference_guide/report.rst:310: (Tqp) ["Twp", "Tsp", "Tip", "Tap", "Top", "Typ", "TQM"] _Tqp (thrust, torque and power about the rotation axis) — there is no keyword to configure these; they appear whenever the reported zones belong to a rotating boundary.
+source/reference_guide/report.rst:74: (Rinf) ["Inf", "R inf", "Rind", "Ring", "Riff", "Rink"] ‘Rinf_<eq>’
+source/reference_guide/report.rst:76: (Rrms) ["Rms", "Arms", "R rms", "Rems", "Rims", "Rams", "Rums"] ‘Rrms_<eq>’
+source/reference_guide/report.rst:78: (Neff) ["Eff", "Nerf", "Jeff", "N eff", "Ne ff", "Ne-ff", "Niff", "Naff"] ‘Neff_<eq>’
+source/reference_guide/report.rst:79: (localised) ["localized", "localism"] : the number of cells the residual is effectively spread over. Equal to the cell count when every cell contributes equally, and to 1 when a single cell carries everything. A small value against a large mesh means a localised stall, not a stalled field.
+source/reference_guide/report.rst:80: (Rtop) ["Top", "Stop", "Atop", "R top", "Rt op", "Rt-op", "Oporto"] ‘Rtop_<eq>’
+source/reference_guide/report.rst:84: (thresholding) ["threshold", "shareholding"] the mesh, so thresholding it at 
+source/reference_guide/report.rst:104: (normalised) ["normalized", "normalize"] are absolute and are never normalised per real time step, so they cannot answer “has this
+source/reference_guide/report.rst:115: (InnerCycle) ["Inner Cycle", "Inner-cycle", "Exercycle"] ‘InnerCycle’
+source/reference_guide/report.rst:118: (InnerDrop) ["Inner Drop", "Inner-drop", "Dropline"] ‘InnerDrop’
+source/reference_guide/report.rst:121: (InnerRatio) ["Inner Ratio", "Inner-ratio", "Innervation", "Incineration", "Aberration", "Serration"] ‘InnerRatio’
+source/reference_guide/report.rst:124: (InnerRatioDrop) ["Incineration"] ‘InnerRatioDrop’
+source/reference_guide/report.rst:126: (InnerRatio) ["Inner Ratio", "Inner-ratio", "Innervation", "Incineration", "Aberration", "Serration"] Orders of magnitude ‘InnerRatio’ has fallen within the current real time step. This is what 
+source/reference_guide/report.rst:127: (InnerCells) ["Inner Cells", "Inner-cells", "Intercellular"] ‘InnerCells’
+source/reference_guide/report.rst:356: (Ftf) ["Ft", "Ff", "Ftp", "Fth", "Ft f"] _Ftf[x,y,z] and 
+source/reference_guide/report.rst:356: (Mtf) ["Mt", "Mt f", "Mtg", "Mf"] _Mtf[x,y,z]
+source/reference_guide/report.rst:359: (Tq) ["T", "Q", "Te", "Eq", "Sq", "Ti", "Ta", "Tl", "Tc", "Tu", "Tm", "Th", "Tb", "Ty"] _Tq and 
+source/reference_guide/report.rst:359: (Tqp) ["Twp", "Tsp", "Tip", "Tap", "Top", "Typ", "TQM"] _Tqp (thrust, torque and power about the rotation axis) — there is no keyword to configure these; they appear whenever the reported zones belong to a rotating boundary.

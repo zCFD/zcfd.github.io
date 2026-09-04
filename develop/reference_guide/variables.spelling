@@ -24,11 +24,12 @@ source/reference_guide/variables.rst:387: (incomp) ["income", "in comp", "in-com
 source/reference_guide/variables.rst:390: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
 source/reference_guide/variables.rst:393: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
 source/reference_guide/variables.rst:396: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
-source/reference_guide/variables.rst:413: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
-source/reference_guide/variables.rst:413: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
-source/reference_guide/variables.rst:415: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
-source/reference_guide/variables.rst:415: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
-source/reference_guide/variables.rst:417: (modaldeformation) ["modal deformation", "modal-deformation", "malformation"] modaldeformation
-source/reference_guide/variables.rst:419: (meshvelocity) ["mesh velocity", "mesh-velocity", "velocity"] meshvelocity
-source/reference_guide/variables.rst:434: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"] ) that is never unioned into any equation type’s valid set, so these two names are rejected for every equation type, regardless of turbulence model.
-source/reference_guide/variables.rst:436: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"]  resolve to the same valid-variable set (LES-tier variables are unioned in for both), so the tier split above does not gate anything differently between the two.
+source/reference_guide/variables.rst:405: (normalised) ["normalized", "normalize"]  squared and normalised, so the two always agree on which cells are the hot ones.
+source/reference_guide/variables.rst:422: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
+source/reference_guide/variables.rst:422: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
+source/reference_guide/variables.rst:424: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
+source/reference_guide/variables.rst:424: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
+source/reference_guide/variables.rst:426: (modaldeformation) ["modal deformation", "modal-deformation", "malformation"] modaldeformation
+source/reference_guide/variables.rst:428: (meshvelocity) ["mesh velocity", "mesh-velocity", "velocity"] meshvelocity
+source/reference_guide/variables.rst:443: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"] ) that is never unioned into any equation type’s valid set, so these two names are rejected for every equation type, regardless of turbulence model.
+source/reference_guide/variables.rst:445: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"]  resolve to the same valid-variable set (LES-tier variables are unioned in for both), so the tier split above does not gate anything differently between the two.
