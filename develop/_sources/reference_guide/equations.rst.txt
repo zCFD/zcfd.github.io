@@ -942,13 +942,24 @@ For dual time stepping the limiter is therefore released and re-computed at the 
 
 Global time stepping advances one physical time step per cycle, so there is no pseudo time solve for the freeze to be scoped to and no later opportunity to refresh the snapshot. The setting is ignored and a warning is issued.
 
-The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.
+The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. With a face-based limiter the snapshot is held per face and is not stored in the restart file; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one. A :ref:`cell-based limiter <cell_limiters>` is stored -- see below.
 
 Freezing is deferred while the spatial discretisation is still first order, for example during ``first_order_cycles``, because a first order reconstruction has no limiter values to store.
 
 With one of the :ref:`cell-based limiters <cell_limiters>` the values are held per cell
 rather than per face, but freezing behaves the same way: the per-cell pass simply stops
-running and the stored :math:`\phi` stands. Those values are likewise not written to the
-restart file.
+running and the stored :math:`\phi` stands.
+
+A frozen cell limiter **is** written to the restart file, so a restart resumes holding the
+same :math:`\phi` the run was using rather than recomputing it from the restored solution.
+Only the owned cells of each partition are stored and the halo values are re-derived by a
+halo exchange on read, so the restart is still free to use a different number of
+partitions. The stored values are used only if the restarting control dictionary still
+sets ``freeze_limiter_cycle`` -- the input deck stays the authority on the numerics, so
+removing the setting gives a live limiter back. Under dual time stepping the restored
+snapshot is released at the top of the next real time step like any other, so a restart
+mid-step resumes on the phi that step was using and the following steps recompute it. If
+the restart uses a different turbulence model the components the file does not carry are
+left unlimited.
 
 ``moving_mesh`` is supported: the mesh only moves at the end of a real time step and the limiter is re-computed after the move, so a snapshot is never used at a mesh position it was not taken at. A ``modal_model`` FSI coupling is the exception, because it deforms the mesh from within the pseudo time loop; a warning is issued if both are set.

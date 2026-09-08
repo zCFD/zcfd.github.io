@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Equations &#8212; zCFD User Guide v2025.11.13331-301-g643bb documentation</title>
+    <title>Equations &#8212; zCFD User Guide v2025.11.13331-302-g01a11 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=58edd172"></script>
+    <script src="../_static/documentation_options.js?v=d330cee3"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -1092,12 +1092,22 @@ limiters.</p>
 </table>
 <p>For dual time stepping the limiter is therefore released and re-computed at the start of every real time step, so each step’s snapshot reflects that step’s solution and mesh position. <strong>N must be less than</strong> <code class="docutils literal notranslate"><span class="pre">cycles</span></code> or the snapshot is taken too late to influence that step’s solution; a warning is issued if it is not.</p>
 <p>Global time stepping advances one physical time step per cycle, so there is no pseudo time solve for the freeze to be scoped to and no later opportunity to refresh the snapshot. The setting is ignored and a warning is issued.</p>
-<p>The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. The limiter is held per face and so cannot be stored in the restart file itself, which would prevent restarting on a different number of partitions; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one.</p>
+<p>The cycle count is stored in the restart file, so a steady run restarted at or beyond the given cycle freezes its limiter again on the first cycle of the restarted run. With a face-based limiter the snapshot is held per face and is not stored in the restart file; it is re-computed from the restored solution instead, so a restarted simulation is not bitwise identical to an uninterrupted one. A <a class="reference internal" href="#cell-limiters"><span class="std std-ref">cell-based limiter</span></a> is stored – see below.</p>
 <p>Freezing is deferred while the spatial discretisation is still first order, for example during <code class="docutils literal notranslate"><span class="pre">first_order_cycles</span></code>, because a first order reconstruction has no limiter values to store.</p>
 <p>With one of the <a class="reference internal" href="#cell-limiters"><span class="std std-ref">cell-based limiters</span></a> the values are held per cell
 rather than per face, but freezing behaves the same way: the per-cell pass simply stops
-running and the stored <span class="math notranslate nohighlight">\(\phi\)</span> stands. Those values are likewise not written to the
-restart file.</p>
+running and the stored <span class="math notranslate nohighlight">\(\phi\)</span> stands.</p>
+<p>A frozen cell limiter <strong>is</strong> written to the restart file, so a restart resumes holding the
+same <span class="math notranslate nohighlight">\(\phi\)</span> the run was using rather than recomputing it from the restored solution.
+Only the owned cells of each partition are stored and the halo values are re-derived by a
+halo exchange on read, so the restart is still free to use a different number of
+partitions. The stored values are used only if the restarting control dictionary still
+sets <code class="docutils literal notranslate"><span class="pre">freeze_limiter_cycle</span></code> – the input deck stays the authority on the numerics, so
+removing the setting gives a live limiter back. Under dual time stepping the restored
+snapshot is released at the top of the next real time step like any other, so a restart
+mid-step resumes on the phi that step was using and the following steps recompute it. If
+the restart uses a different turbulence model the components the file does not carry are
+left unlimited.</p>
 <p><code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> is supported: the mesh only moves at the end of a real time step and the limiter is re-computed after the move, so a snapshot is never used at a mesh position it was not taken at. A <code class="docutils literal notranslate"><span class="pre">modal_model</span></code> FSI coupling is the exception, because it deforms the mesh from within the pseudo time loop; a warning is issued if both are set.</p>
 </section>
 </section>
