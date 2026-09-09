@@ -97,6 +97,29 @@ Available to every equation type.
    * - overset
      -
      - Overset blanking/donor status
+   * - timestepratio
+     -
+     - Local time step ratio
+   * - V_avg
+     -
+     - Running average of the velocity vector (:math:`m/s`)
+   * - V_rms
+     -
+     - RMS of the velocity vector (:math:`m/s`)
+   * - p_avg
+     -
+     - Running average of the static pressure (:math:`Pa`)
+   * - p_rms
+     -
+     - RMS of the static pressure (:math:`Pa`)
+   * - T_avg
+     -
+     - Running average of the temperature (:math:`K`)
+   * - T_rms
+     -
+     - RMS of the temperature (:math:`K`)
+
+The ``_avg`` and ``_rms`` fields are written once :ref:`'compute_average_and_rms' <write_output>` is on.
 
 Euler-tier volume variables
 ============================
@@ -161,6 +184,15 @@ Added for ``euler`` and every equation type above it.
    * - badcells
      -
      - Cells tagged as first order when using mesh quality remediation
+   * - artificial_viscosity
+     -
+     - Artificial viscosity applied
+   * - cellorder
+     -
+     - Spatial order used in each cell
+   * - lambdavariable
+     -
+     - Spectral radius of the flux Jacobian
 
 Euler-tier surface variables
 ==============================
@@ -201,6 +233,9 @@ Added for ``euler`` and every equation type above it.
    * - immersed boundary normal
      -
      - Surface normal on an immersed boundary surface
+   * - immersed boundary friction velocity
+     -
+     - Friction velocity on an immersed boundary surface
 
 Viscous-tier volume variables
 ================================
@@ -260,6 +295,12 @@ Added for ``viscous`` and every equation type above it.
    * - eddy
      -
      - Eddy viscosity (:math:`Pa \cdot s`)
+   * - viscosity
+     - mu
+     - Dynamic viscosity (:math:`Pa \cdot s`)
+   * - nu
+     -
+     - Kinematic viscosity (:math:`m^2/s`)
 
 LES-tier volume variables
 ============================
@@ -298,6 +339,12 @@ Added for ``rans`` and ``les``.
    * - lesregion
      -
      - DES/DDES/IDDES region flag
+   * - lescfl
+     -
+     - Convective CFL on the LES length scale, used by the DES CFL shield
+   * - fdshield
+     -
+     - DES/DDES/IDDES shielding function :math:`f_d`: 1 in resolved LES, 0 in the shielded RANS region
    * - ti
      -
      - Turbulence intensity
@@ -356,12 +403,15 @@ Added for ``rans`` and ``les``.
    * - walldist
      -
      - Wall distance (:math:`m`)
-   * - walldistance
-     -
-     - Wall distance (:math:`m`)
-   * - LESRegion
+   * - lesregion
      -
      - DES/DDES/IDDES region flag
+   * - lescfl
+     -
+     - Convective CFL on the LES length scale, used by the DES CFL shield
+   * - fdshield
+     -
+     - DES/DDES/IDDES shielding function :math:`f_d`: 1 in resolved LES, 0 in the shielded RANS region
    * - turbulencekineticenergy
      -
      - `Turbulence kinetic energy <https://en.wikipedia.org/wiki/Turbulence_kinetic_energy>`_ (:math:`J/kg`)
@@ -371,6 +421,25 @@ Added for ``rans`` and ``les``.
    * - nuTilde
      -
      - Spalart-Allmaras working variable
+
+Transition-model variables
+============================
+
+Added for ``rans`` and ``incomp rans`` when the turbulence model is ``sst-transition``, which is the model that solves for them.
+
+.. list-table::
+   :widths: 30 15 55
+   :header-rows: 1
+
+   * - Variable Name
+     - Alias
+     - Definition
+   * - turbulenceintermittency
+     -
+     - Transition model intermittency
+   * - transitionreynoldsnumber
+     -
+     - Transition momentum-thickness Reynolds number
 
 Per-equation dynamic variables
 ================================
@@ -431,15 +500,13 @@ When a fluid zone or boundary condition of type ``fsi`` is present in the config
      - Surface
 
 .. note::
-    A handful of variable names are not present in ``output_variables.py`` under any spelling and are unaccounted for in ``developer_docs/input-deck.md``'s "What's left":
+    Some names read like variables but are not ones the solver knows, so a deck asking for them is rejected:
 
-    - ``lescfl`` and ``fdshield`` (DES/DDES/IDDES CFL and shielding-function outputs) — absent entirely.
-    - ``cellorder`` (volume) and ``facecentre`` (surface) — absent entirely; ``centre`` remains valid in both contexts.
-    - ``velocitygradient`` — only the shorter spelling ``velocitygrad`` is a valid variable name.
+    - ``facecentre`` — ``centre`` is the valid spelling, in both contexts.
+    - ``velocitygradient`` — only the shorter spelling ``velocitygrad`` is valid.
     - ``kinematicviscosity`` — only its alias ``nu`` is valid; the full name is not.
     - ``turbulenceintensity`` — only its alias ``ti`` is valid; the full name is not.
     - ``frictionvelocity`` — only its alias ``ut`` is valid; the full name is not.
-
-    Separately, the schema defines a transition-model tier (``turbulenceintermittency``, ``transitionreynoldsnumber`` in ``output_variables.py``) that is never unioned into any equation type's valid set, so these two names are rejected for every equation type, regardless of turbulence model.
+    - ``walldistance`` — the name the wall distance is *written* under, but ``walldist`` is what a deck asks for.
 
     ``les`` and ``rans`` resolve to the same valid-variable set (LES-tier variables are unioned in for both), so the tier split above does not gate anything differently between the two.

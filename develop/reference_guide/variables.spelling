@@ -4,32 +4,35 @@ source/reference_guide/variables.rst:70: (velocitynearnd) ["rectilinearity"] vel
 source/reference_guide/variables.rst:88: (densitylimiter) ["density limiter", "density-limiter", "densitometer"] densitylimiter
 source/reference_guide/variables.rst:91: (klimiter) ["limiter", "k limiter", "milliliter", "kimberlite", "millimeter"] klimiter
 source/reference_guide/variables.rst:94: (omegalimiter) ["omega limiter", "omega-limiter", "micromillimeter"] omegalimiter
-source/reference_guide/variables.rst:116: (vorticitynd) ["vorticity"] vorticitynd
-source/reference_guide/variables.rst:122: (Qcriterionnd) ["Criterion"] Qcriterionnd
-source/reference_guide/variables.rst:128: (helicitynd) ["telicity"] helicitynd
-source/reference_guide/variables.rst:134: (volupdate) ["vol update", "vol-update", "voluted"] cell_volupdate
-source/reference_guide/variables.rst:140: (cellcolour) ["cellulous"] cellcolour
-source/reference_guide/variables.rst:142: (colouring) ["coloring", "co louring", "co-louring", "couriering", "colorizing", "concurring", "coursing"] Partition/colouring index used by the mesh partitioner
-source/reference_guide/variables.rst:155: (roelowdissipation) ["disproportionation"] roelowdissipation
-source/reference_guide/variables.rst:316: (nuTilde) ["nu Tilde", "nu-tilde", "tilde"] nuTilde
-source/reference_guide/variables.rst:319: (walldistancezone) ["disallowance"] walldistancezone
-source/reference_guide/variables.rst:322: (sagradientlimiter)  sagradientlimiter
-source/reference_guide/variables.rst:325: (celllimiter) ["cell limiter", "cell-limiter", "milliliter", "cellulite", "millimeter", "vermicelli"] celllimiter
-source/reference_guide/variables.rst:328: (celllimiterpressure) ["counterpressure"] celllimiterpressure
-source/reference_guide/variables.rst:331: (turbulencetimestep)  turbulencetimestep
-source/reference_guide/variables.rst:353: (walldistancezone) ["disallowance"] walldistancezone
-source/reference_guide/variables.rst:371: (nuTilde) ["nu Tilde", "nu-tilde", "tilde"] nuTilde
-source/reference_guide/variables.rst:387: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] euler / viscous / les / incomp viscous / incomp les
-source/reference_guide/variables.rst:387: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] euler / viscous / les / incomp viscous / incomp les
-source/reference_guide/variables.rst:390: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
-source/reference_guide/variables.rst:393: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
-source/reference_guide/variables.rst:396: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
-source/reference_guide/variables.rst:405: (normalised) ["normalized", "normalize"]  squared and normalised, so the two always agree on which cells are the hot ones.
-source/reference_guide/variables.rst:422: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
-source/reference_guide/variables.rst:422: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
-source/reference_guide/variables.rst:424: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
-source/reference_guide/variables.rst:424: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
-source/reference_guide/variables.rst:426: (modaldeformation) ["modal deformation", "modal-deformation", "malformation"] modaldeformation
-source/reference_guide/variables.rst:428: (meshvelocity) ["mesh velocity", "mesh-velocity", "velocity"] meshvelocity
-source/reference_guide/variables.rst:443: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"] ) that is never unioned into any equation type’s valid set, so these two names are rejected for every equation type, regardless of turbulence model.
-source/reference_guide/variables.rst:445: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"]  resolve to the same valid-variable set (LES-tier variables are unioned in for both), so the tier split above does not gate anything differently between the two.
+source/reference_guide/variables.rst:100: (timestepratio) ["protestation"] timestepratio
+source/reference_guide/variables.rst:139: (vorticitynd) ["vorticity"] vorticitynd
+source/reference_guide/variables.rst:145: (Qcriterionnd) ["Criterion"] Qcriterionnd
+source/reference_guide/variables.rst:151: (helicitynd) ["telicity"] helicitynd
+source/reference_guide/variables.rst:157: (volupdate) ["vol update", "vol-update", "voluted"] cell_volupdate
+source/reference_guide/variables.rst:163: (cellcolour) ["cellulous"] cellcolour
+source/reference_guide/variables.rst:165: (colouring) ["coloring", "co louring", "co-louring", "couriering", "colorizing", "concurring", "coursing"] Partition/colouring index used by the mesh partitioner
+source/reference_guide/variables.rst:178: (roelowdissipation) ["disproportionation"] roelowdissipation
+source/reference_guide/variables.rst:193: (lambdavariable) ["lambda variable", "lambda-variable", "variableness"] lambdavariable
+source/reference_guide/variables.rst:363: (nuTilde) ["nu Tilde", "nu-tilde", "tilde"] nuTilde
+source/reference_guide/variables.rst:366: (walldistancezone) ["disallowance"] walldistancezone
+source/reference_guide/variables.rst:369: (sagradientlimiter)  sagradientlimiter
+source/reference_guide/variables.rst:372: (celllimiter) ["cell limiter", "cell-limiter", "milliliter", "cellulite", "millimeter", "vermicelli"] celllimiter
+source/reference_guide/variables.rst:375: (celllimiterpressure) ["counterpressure"] celllimiterpressure
+source/reference_guide/variables.rst:378: (turbulencetimestep)  turbulencetimestep
+source/reference_guide/variables.rst:400: (walldistancezone) ["disallowance"] walldistancezone
+source/reference_guide/variables.rst:421: (nuTilde) ["nu Tilde", "nu-tilde", "tilde"] nuTilde
+source/reference_guide/variables.rst:437: (turbulenceintermittency) ["turbulence intermittency", "turbulence-intermittency"] turbulenceintermittency
+source/reference_guide/variables.rst:440: (transitionreynoldsnumber)  transitionreynoldsnumber
+source/reference_guide/variables.rst:456: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] euler / viscous / les / incomp viscous / incomp les
+source/reference_guide/variables.rst:456: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] euler / viscous / les / incomp viscous / incomp les
+source/reference_guide/variables.rst:459: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
+source/reference_guide/variables.rst:462: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
+source/reference_guide/variables.rst:465: (incomp) ["income", "in comp", "in-comp", "nincompoop", "complain"] rans / incomp rans
+source/reference_guide/variables.rst:474: (normalised) ["normalized", "normalize"]  squared and normalised, so the two always agree on which cells are the hot ones.
+source/reference_guide/variables.rst:491: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
+source/reference_guide/variables.rst:491: (modeshapedisplacement)  modeshapedisplacement_1 .. modeshapedisplacement_14
+source/reference_guide/variables.rst:493: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
+source/reference_guide/variables.rst:493: (modeshaperotation) ["modernization"] modeshaperotation_1 .. modeshaperotation_10
+source/reference_guide/variables.rst:495: (modaldeformation) ["modal deformation", "modal-deformation", "malformation"] modaldeformation
+source/reference_guide/variables.rst:497: (meshvelocity) ["mesh velocity", "mesh-velocity", "velocity"] meshvelocity
+source/reference_guide/variables.rst:512: (unioned) ["unironed", "unboned", "union ed", "union-ed", "munitioned", "union"]  resolve to the same valid-variable set (LES-tier variables are unioned in for both), so the tier split above does not gate anything differently between the two.
