@@ -65,6 +65,10 @@ The **output** directory will be created in the working directory from which the
      - No
      - True
      - True | False
+   * - 'output_solver_cycle'
+     - No
+     - False
+     - True | False
    * - 'immersed_boundary_surface'
      - No
      - None
@@ -164,6 +168,10 @@ Floating point precision used for output data: ``'single'`` (default) or ``'doub
 global_node_ids
 ^^^^^^^^^^^^^^^^
 Retains the local-to-global node map so VTKHDF output can stitch partitions back together without a clean-to-grid filter in ParaView. Advanced option; leave at the default (``True``) unless you have a specific reason to disable it.
+
+output_solver_cycle
+^^^^^^^^^^^^^^^^^^^
+Stamps each VTKHDF output step with the solver cycle number instead of the physical time. Every step of a steady run carries the same physical time, so with the default (``False``) the appended steps are indistinguishable in ParaView's time controls; setting this to ``True`` makes them steppable. Has no effect on formats other than VTKHDF.
 
 immersed_boundary_surface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
