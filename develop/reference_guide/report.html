@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reporting &#8212; zCFD User Guide v2025.11.13331-310-ga324d documentation</title>
+    <title>Reporting &#8212; zCFD User Guide v2025.11.13331-311-g39de26 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=be472579"></script>
+    <script src="../_static/documentation_options.js?v=5d7018d3"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -95,8 +95,26 @@ alone would suggest.</p>
 <p><strong>‘scale_residuals_by_volume’</strong> scales the reported volume-integrated residuals by cell volume.
 It applies to the <code class="docutils literal notranslate"><span class="pre">resvar_i</span></code> and <code class="docutils literal notranslate"><span class="pre">resshare_i</span></code> output variables as well as to the report, so
 the field and the norm of that field always describe the same quantity.</p>
+<section id="cycle-time-column">
+<span id="id2"></span><h2>Cycle time column<a class="headerlink" href="#cycle-time-column" title="Link to this heading">¶</a></h2>
+<p>Every row carries an <strong>‘AvgCycleTime’</strong> column: the mean wall-clock time, in seconds, of a
+solver cycle over the cycles since the previous report row. It is the same measurement the
+console report block summarises, recorded per row so the cost of a run can be read from its
+history - which cycles slowed down, and what the solver was doing at the time.</p>
+<p>The interval is the reporting interval, so with <strong>‘frequency’</strong> set to 1 the column is simply
+that cycle’s wall time, and with a larger frequency it is the average over those cycles. The
+cycle timed is the solve - mesh mapping, the solver advance and source term updates - and
+excludes writing the report and the solution files, which happen after the cycle is timed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Wall-clock time is not a like-for-like column between runs: it depends on the machine, the
+partition count and anything else running on the node. It is a within-run diagnostic. In an
+overset case every mesh’s report file carries the same value, because one cycle advances
+all of them.</p>
+</div>
+</section>
 <section id="residual-statistics-columns">
-<span id="id2"></span><h2>Residual statistics columns<a class="headerlink" href="#residual-statistics-columns" title="Link to this heading">¶</a></h2>
+<span id="id3"></span><h2>Residual statistics columns<a class="headerlink" href="#residual-statistics-columns" title="Link to this heading">¶</a></h2>
 <p>Setting <strong>‘residual_statistics’</strong> adds four columns per equation, describing the <em>true</em> residual
 <span class="math notranslate nohighlight">\(R(Q)\)</span> rather than the solution update. They answer a question the RMS cannot: an RMS says
 “not converged” without saying that the field is converged everywhere except a handful of cells,
@@ -250,7 +268,7 @@ stride per real time step. Group on <strong>‘RealTimeStep’</strong> rather t
 </section>
 </section>
 <section id="monitor-points">
-<span id="id3"></span><h2>Monitor Points<a class="headerlink" href="#monitor-points" title="Link to this heading">¶</a></h2>
+<span id="id4"></span><h2>Monitor Points<a class="headerlink" href="#monitor-points" title="Link to this heading">¶</a></h2>
 <p>Monitor points report the specified variable at fixed mesh locations.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -303,7 +321,7 @@ stride per real time step. Group on <strong>‘RealTimeStep’</strong> rather t
 </div>
 </section>
 <section id="forces">
-<span id="id4"></span><h2>Forces<a class="headerlink" href="#forces" title="Link to this heading">¶</a></h2>
+<span id="id5"></span><h2>Forces<a class="headerlink" href="#forces" title="Link to this heading">¶</a></h2>
 <p>Force reporting outputs the x,y,z total forces and moments on a surface or set of surfaces. These are presented as force coefficients (using the non-dimensionalisation convention used for aerofoil lift, drag and moment coefficients), as opposed to dimensional values.
 The force and moment coefficients resulting exclusively from viscous forces and exclusively from pressure forces are also given.</p>
 <table class="docutils align-default">

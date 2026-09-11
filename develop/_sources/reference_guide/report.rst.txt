@@ -51,6 +51,27 @@ The report block lives at ``solver.output_settings.report`` (it can also be over
 It applies to the ``resvar_i`` and ``resshare_i`` output variables as well as to the report, so
 the field and the norm of that field always describe the same quantity.
 
+.. _cycle_time_column:
+
+Cycle time column
+^^^^^^^^^^^^^^^^^
+
+Every row carries an **'AvgCycleTime'** column: the mean wall-clock time, in seconds, of a
+solver cycle over the cycles since the previous report row. It is the same measurement the
+console report block summarises, recorded per row so the cost of a run can be read from its
+history - which cycles slowed down, and what the solver was doing at the time.
+
+The interval is the reporting interval, so with **'frequency'** set to 1 the column is simply
+that cycle's wall time, and with a larger frequency it is the average over those cycles. The
+cycle timed is the solve - mesh mapping, the solver advance and source term updates - and
+excludes writing the report and the solution files, which happen after the cycle is timed.
+
+.. note::
+    Wall-clock time is not a like-for-like column between runs: it depends on the machine, the
+    partition count and anything else running on the node. It is a within-run diagnostic. In an
+    overset case every mesh's report file carries the same value, because one cycle advances
+    all of them.
+
 .. _residual_statistics_columns:
 
 Residual statistics columns
