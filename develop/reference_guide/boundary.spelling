@@ -1,5 +1,5 @@
-source/reference_guide/boundary.rst:536: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] but no current testcase exercises either — both are constructed the same
-source/reference_guide/boundary.rst:631: (AoA) ["AA", "AMA", "ABA", "AAA", "Aa", "Anoa", "Ana", "Ala", "Aga", "Goa", "Moa", "Aha", "Aba", "Boa", "Aka"] Starting value for the control variable (AoA: degrees, velocity: Mach)
-source/reference_guide/boundary.rst:987: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase exercises this kind; the following is a schema-accurate
-source/reference_guide/boundary.rst:1035: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase uses this BC type; the following is a schema-accurate
-source/reference_guide/boundary.rst:1241: (neighbour) ["neighbor"] Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)
+source/reference_guide/boundary.rst:560: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] but no current testcase exercises either — both are constructed the same
+source/reference_guide/boundary.rst:655: (AoA) ["AA", "AMA", "ABA", "AAA", "Aa", "Anoa", "Ana", "Ala", "Aga", "Goa", "Moa", "Aha", "Aba", "Boa", "Aka"] Starting value for the control variable (AoA: degrees, velocity: Mach)
+source/reference_guide/boundary.rst:1011: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase exercises this kind; the following is a schema-accurate
+source/reference_guide/boundary.rst:1059: (testcase) ["test case", "test-case", "esterase", "caseate", "casemate", "cassette"] No current testcase uses this BC type; the following is a schema-accurate
+source/reference_guide/boundary.rst:1265: (neighbour) ["neighbor"] Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)

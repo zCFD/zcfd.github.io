@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-315-g9d5c5 documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-316-ge6498d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=59eeadef"></script>
+    <script src="../_static/documentation_options.js?v=12325906"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -237,7 +237,13 @@ some extent with mesh refinement at additional computational cost.</p>
 <td><p>See <a class="reference internal" href="#bc-temperature"><span class="std std-ref">Temperature</span></a></p></td>
 <td><p>Prescribed wall heat flux, <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> walls only. Mutually exclusive with <code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fsi</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compressible</span> <span class="pre">wall</span> <span class="pre">function</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p>Use the compressible law of the wall on an adiabatic wall, <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> walls only. See <a class="reference internal" href="#bc-wallfunction"><span class="std std-ref">Wall Function</span></a>. A <code class="docutils literal notranslate"><span class="pre">temperature</span></code> or a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code> selects it anyway</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fsi</span></code></p></td>
 <td><p>No</p></td>
 <td></td>
 <td><p>See <a class="reference internal" href="#bc-wall-fsi"><span class="std std-ref">FSI</span></a></p></td>
@@ -318,7 +324,7 @@ additional drag or turbulence.</p>
 </section>
 <section id="wall-function">
 <span id="bc-wallfunction"></span><h2>Wall Function<a class="headerlink" href="#wall-function" title="Link to this heading">¶</a></h2>
-<p>An adiabatic <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> wall uses an incompressible law of the wall:
+<p>By default a <code class="docutils literal notranslate"><span class="pre">'wall</span> <span class="pre">function'</span></code> wall uses an incompressible law of the wall:
 the velocity profile is solved with the density and viscosity of the first
 cell off the wall, and no heat is transferred. Giving the wall a
 <code class="docutils literal notranslate"><span class="pre">temperature</span></code> or a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code> switches that wall to the compressible wall
@@ -329,13 +335,29 @@ produces the wall heat flux.</p>
 <p>With a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code> the wall temperature is recovered; with a <code class="docutils literal notranslate"><span class="pre">temperature</span></code>
 the heat flux is. Both are available as the <code class="docutils literal notranslate"><span class="pre">heatflux</span></code> and <code class="docutils literal notranslate"><span class="pre">twall</span></code> surface
 output variables.</p>
+<p>The velocity transformation is worth having at speed whether or not the wall
+exchanges heat: the boundary layer of an adiabatic wall is still stratified by
+viscous heating. Setting <code class="docutils literal notranslate"><span class="pre">compressible</span> <span class="pre">wall</span> <span class="pre">function</span></code> runs it on an adiabatic
+wall, with the wall state evaluated at the recovery temperature <span class="math notranslate nohighlight">\(T_r\)</span>
+rather than at a specified one, so the wall heat flux is zero by construction:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">,</span>
+    <span class="s2">"compressible wall function"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">twall</span></code> then reports <span class="math notranslate nohighlight">\(T_r\)</span> and <code class="docutils literal notranslate"><span class="pre">heatflux</span></code> reports zero. The key is
+redundant alongside a <code class="docutils literal notranslate"><span class="pre">temperature</span></code> or a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code>, which select the same
+transformation and add the thermal closure to it.</p>
 <p>A constant-heat-flux wall is singular where the boundary layer is thin, for
 example at a plate leading edge: the modelled layer cannot carry an arbitrarily
 large flux there and the wall temperature will rise until it is limited
 internally. Check the <code class="docutils literal notranslate"><span class="pre">twall</span></code> output if a prescribed flux is large.</p>
-<p>The compressible wall function is not supported in combination with
-<a class="reference internal" href="#bc-roughness"><span class="std std-ref">roughness</span></a>, on immersed walls, or in the incompressible
-solver, and these combinations are rejected at input validation.</p>
+<p>The compressible wall function, however it is selected, is not supported in
+combination with <a class="reference internal" href="#bc-roughness"><span class="std std-ref">roughness</span></a>, on immersed walls, or in the
+incompressible solver, and these combinations are rejected at input validation.</p>
 </section>
 <section id="velocity">
 <span id="bc-velocity"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading">¶</a></h2>

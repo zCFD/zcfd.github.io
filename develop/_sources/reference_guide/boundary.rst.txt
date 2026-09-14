@@ -180,6 +180,11 @@ boundary values.
      -
      - See :ref:`Temperature <bc_temperature>`
      - Prescribed wall heat flux, ``'wall function'`` walls only. Mutually exclusive with ``temperature``
+   * - ``compressible wall function``
+     - No
+     - ``False``
+     - ``True`` or ``False``
+     - Use the compressible law of the wall on an adiabatic wall, ``'wall function'`` walls only. See :ref:`Wall Function <bc_wallfunction>`. A ``temperature`` or a ``heat flux`` selects it anyway
    * - ``fsi``
      - No
      -
@@ -263,7 +268,7 @@ Example:
 Wall Function
 ^^^^^^^^^^^^^
 
-An adiabatic ``'wall function'`` wall uses an incompressible law of the wall:
+By default a ``'wall function'`` wall uses an incompressible law of the wall:
 the velocity profile is solved with the density and viscosity of the first
 cell off the wall, and no heat is transferred. Giving the wall a
 ``temperature`` or a ``heat flux`` switches that wall to the compressible wall
@@ -276,14 +281,33 @@ With a ``heat flux`` the wall temperature is recovered; with a ``temperature``
 the heat flux is. Both are available as the ``heatflux`` and ``twall`` surface
 output variables.
 
+The velocity transformation is worth having at speed whether or not the wall
+exchanges heat: the boundary layer of an adiabatic wall is still stratified by
+viscous heating. Setting ``compressible wall function`` runs it on an adiabatic
+wall, with the wall state evaluated at the recovery temperature :math:`T_r`
+rather than at a specified one, so the wall heat flux is zero by construction:
+
+.. code-block:: python
+
+    "BC_2": {
+        "zones": [2],
+        "type": "wall",
+        "kind": "wall function",
+        "compressible wall function": True,
+    },
+
+``twall`` then reports :math:`T_r` and ``heatflux`` reports zero. The key is
+redundant alongside a ``temperature`` or a ``heat flux``, which select the same
+transformation and add the thermal closure to it.
+
 A constant-heat-flux wall is singular where the boundary layer is thin, for
 example at a plate leading edge: the modelled layer cannot carry an arbitrarily
 large flux there and the wall temperature will rise until it is limited
 internally. Check the ``twall`` output if a prescribed flux is large.
 
-The compressible wall function is not supported in combination with
-:ref:`roughness <bc_roughness>`, on immersed walls, or in the incompressible
-solver, and these combinations are rejected at input validation.
+The compressible wall function, however it is selected, is not supported in
+combination with :ref:`roughness <bc_roughness>`, on immersed walls, or in the
+incompressible solver, and these combinations are rejected at input validation.
 
 .. _bc_velocity:
 
