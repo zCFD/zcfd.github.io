@@ -363,8 +363,8 @@ Points worth knowing:
   post-processing does not look inside — ``zutil`` finds models one level
   below ``<case>_OUTPUT`` and lists output non-recursively — so an archive
   is never mistaken for a mesh or picked up as live output.
-* Checkpoint (``_results.h5``), report and ``VISUALISATION`` files are not
-  moved. Only ``.vtkhdf`` output is affected.
+* Checkpoint (``_results.h5``) and report files are not moved. Only
+  ``.vtkhdf`` output is affected.
 
 Advanced Restart
 ****************
