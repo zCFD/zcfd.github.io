@@ -239,6 +239,11 @@ Roughness
      -
      - Valid filename
      - Name of a VTP file containing a node array called ``Roughness``, used to set the value by nearest-point lookup
+   * - ``thermal model``
+     - No
+     - ``'owen thomson'``
+     - ``'owen thomson'`` or ``'reynolds analogy'``
+     - How roughness affects wall heat transfer. Only accepted on a wall-function wall that also has a ``temperature`` or a ``heat flux``
 
 Exactly one of ``scalar`` or ``field`` must be set — neither both nor
 neither is accepted.
@@ -252,6 +257,15 @@ Roughness **height** is the average height or magnitude of surface
 roughness elements on a solid boundary — the scale of irregularities or
 protrusions on the surface that disrupt the smooth flow and create
 additional drag or turbulence.
+
+Internally the models work in equivalent sand-grain **height**, so a
+``length`` is converted on input as ``height = length / 0.03``. The
+``roughness`` surface output variable reports that height, not the value as
+written in the deck.
+
+Roughness is applied by the wall-function wall treatment of both the
+compressible and the incompressible solver, for the Menter SST and SA-neg
+turbulence models.
 
 Example:
 
@@ -305,9 +319,64 @@ example at a plate leading edge: the modelled layer cannot carry an arbitrarily
 large flux there and the wall temperature will rise until it is limited
 internally. Check the ``twall`` output if a prescribed flux is large.
 
-The compressible wall function, however it is selected, is not supported in
-combination with :ref:`roughness <bc_roughness>`, on immersed walls, or in the
-incompressible solver, and these combinations are rejected at input validation.
+The compressible wall function, however it is selected, is not supported on
+immersed walls or in the incompressible solver, and these combinations are
+rejected at input validation.
+
+.. _bc_rough_compressible_wallfunction:
+
+Rough compressible walls
+""""""""""""""""""""""""
+
+:ref:`Roughness <bc_roughness>` may be combined with the compressible wall
+function. This is the combination an icing calculation needs: ice accretion
+roughens the surface, which raises both the skin friction and the convective
+heat transfer that in turn drives the accretion, while an ice protection system
+imposes a wall ``heat flux`` or ``temperature``. Both the roughness and the
+thermal state accept a ``field``, so an ice roughness map and an electrothermal
+pad layout can be prescribed per face from VTP files.
+
+The equivalent sand-grain height is given in **mesh units**, like every other
+length in the input deck — nothing rescales the mesh, so a 0.5 mm ice roughness
+on a metre-scale mesh is ``0.0005``.
+
+On the velocity side the Van Driest transformed velocity obeys the
+incompressible rough-wall law, with the roughness Reynolds number
+:math:`k_s^+` formed from the **wall** density and viscosity rather than those
+of the first cell. That is the same scaling the compressible wall function
+already uses for :math:`y^+` and the wall shear stress; on a heated anti-iced
+wall the two differ substantially.
+
+On the thermal side the Crocco-Busemann closure is an exact Reynolds analogy,
+so on its own it would raise the Stanton number in the same ratio as the skin
+friction. Roughness elements shed momentum by pressure drag but carry heat only
+by conduction, so in reality the heat transfer rises much less. The default
+``thermal model`` of ``'owen thomson'`` therefore adds a thermal sublayer
+resistance
+
+.. math::
+
+    \Delta T^+ = 0.52 \, (k_s^+)^{0.45} \, Pr^{0.8}
+
+between the surface and the roughness crest, blended in over the same
+:math:`k_s^+` range as the velocity intercept so a hydraulically smooth wall is
+unaffected. Setting ``thermal model`` to ``'reynolds analogy'`` removes it.
+
+With a rough wall the ``twall`` output is the temperature of the **surface**,
+not of the roughness crest the law of the wall is closed on; the two differ by
+the drop across that resistance. ``heatflux`` is continuous through it and so
+is unambiguous.
+
+Example — an anti-iced leading edge with a measured ice roughness map:
+
+.. code-block:: python
+
+    parameters["model"]["background"]["boundary_conditions"]["BC_3"] = {
+        "type": "wall",
+        "kind": "wall function",
+        "heat flux": {"field": "ips_pads.vtp"},
+        "roughness": {"type": "height", "field": "ice_roughness.vtp"},
+    }
 
 .. _bc_velocity:
 

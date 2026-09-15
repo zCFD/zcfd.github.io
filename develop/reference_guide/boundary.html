@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-320-g5d029 documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-321-gb65bf documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=3cdda89d"></script>
+    <script src="../_static/documentation_options.js?v=f9b991d5"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -302,6 +302,12 @@ some extent with mesh refinement at additional computational cost.</p>
 <td><p>Valid filename</p></td>
 <td><p>Name of a VTP file containing a node array called <code class="docutils literal notranslate"><span class="pre">Roughness</span></code>, used to set the value by nearest-point lookup</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thermal</span> <span class="pre">model</span></code></p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'owen</span> <span class="pre">thomson'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'owen</span> <span class="pre">thomson'</span></code> or <code class="docutils literal notranslate"><span class="pre">'reynolds</span> <span class="pre">analogy'</span></code></p></td>
+<td><p>How roughness affects wall heat transfer. Only accepted on a wall-function wall that also has a <code class="docutils literal notranslate"><span class="pre">temperature</span></code> or a <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code></p></td>
+</tr>
 </tbody>
 </table>
 <p>Exactly one of <code class="docutils literal notranslate"><span class="pre">scalar</span></code> or <code class="docutils literal notranslate"><span class="pre">field</span></code> must be set — neither both nor
@@ -314,6 +320,13 @@ logarithmic law.</p>
 roughness elements on a solid boundary — the scale of irregularities or
 protrusions on the surface that disrupt the smooth flow and create
 additional drag or turbulence.</p>
+<p>Internally the models work in equivalent sand-grain <strong>height</strong>, so a
+<code class="docutils literal notranslate"><span class="pre">length</span></code> is converted on input as <code class="docutils literal notranslate"><span class="pre">height</span> <span class="pre">=</span> <span class="pre">length</span> <span class="pre">/</span> <span class="pre">0.03</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">roughness</span></code> surface output variable reports that height, not the value as
+written in the deck.</p>
+<p>Roughness is applied by the wall-function wall treatment of both the
+compressible and the incompressible solver, for the Menter SST and SA-neg
+turbulence models.</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">][</span><span class="s2">"roughness"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"height"</span><span class="p">,</span>
@@ -355,9 +368,49 @@ transformation and add the thermal closure to it.</p>
 example at a plate leading edge: the modelled layer cannot carry an arbitrarily
 large flux there and the wall temperature will rise until it is limited
 internally. Check the <code class="docutils literal notranslate"><span class="pre">twall</span></code> output if a prescribed flux is large.</p>
-<p>The compressible wall function, however it is selected, is not supported in
-combination with <a class="reference internal" href="#bc-roughness"><span class="std std-ref">roughness</span></a>, on immersed walls, or in the
-incompressible solver, and these combinations are rejected at input validation.</p>
+<p>The compressible wall function, however it is selected, is not supported on
+immersed walls or in the incompressible solver, and these combinations are
+rejected at input validation.</p>
+<p id="bc-rough-compressible-wallfunction"><a class="reference internal" href="#bc-roughness"><span class="std std-ref">Roughness</span></a> may be combined with the compressible wall
+function. This is the combination an icing calculation needs: ice accretion
+roughens the surface, which raises both the skin friction and the convective
+heat transfer that in turn drives the accretion, while an ice protection system
+imposes a wall <code class="docutils literal notranslate"><span class="pre">heat</span> <span class="pre">flux</span></code> or <code class="docutils literal notranslate"><span class="pre">temperature</span></code>. Both the roughness and the
+thermal state accept a <code class="docutils literal notranslate"><span class="pre">field</span></code>, so an ice roughness map and an electrothermal
+pad layout can be prescribed per face from VTP files.</p>
+<p>The equivalent sand-grain height is given in <strong>mesh units</strong>, like every other
+length in the input deck — nothing rescales the mesh, so a 0.5 mm ice roughness
+on a metre-scale mesh is <code class="docutils literal notranslate"><span class="pre">0.0005</span></code>.</p>
+<p>On the velocity side the Van Driest transformed velocity obeys the
+incompressible rough-wall law, with the roughness Reynolds number
+<span class="math notranslate nohighlight">\(k_s^+\)</span> formed from the <strong>wall</strong> density and viscosity rather than those
+of the first cell. That is the same scaling the compressible wall function
+already uses for <span class="math notranslate nohighlight">\(y^+\)</span> and the wall shear stress; on a heated anti-iced
+wall the two differ substantially.</p>
+<p>On the thermal side the Crocco-Busemann closure is an exact Reynolds analogy,
+so on its own it would raise the Stanton number in the same ratio as the skin
+friction. Roughness elements shed momentum by pressure drag but carry heat only
+by conduction, so in reality the heat transfer rises much less. The default
+<code class="docutils literal notranslate"><span class="pre">thermal</span> <span class="pre">model</span></code> of <code class="docutils literal notranslate"><span class="pre">'owen</span> <span class="pre">thomson'</span></code> therefore adds a thermal sublayer
+resistance</p>
+<div class="math notranslate nohighlight">
+\[\Delta T^+ = 0.52 \, (k_s^+)^{0.45} \, Pr^{0.8}\]</div>
+<p>between the surface and the roughness crest, blended in over the same
+<span class="math notranslate nohighlight">\(k_s^+\)</span> range as the velocity intercept so a hydraulically smooth wall is
+unaffected. Setting <code class="docutils literal notranslate"><span class="pre">thermal</span> <span class="pre">model</span></code> to <code class="docutils literal notranslate"><span class="pre">'reynolds</span> <span class="pre">analogy'</span></code> removes it.</p>
+<p>With a rough wall the <code class="docutils literal notranslate"><span class="pre">twall</span></code> output is the temperature of the <strong>surface</strong>,
+not of the roughness crest the law of the wall is closed on; the two differ by
+the drop across that resistance. <code class="docutils literal notranslate"><span class="pre">heatflux</span></code> is continuous through it and so
+is unambiguous.</p>
+<p>Example — an anti-iced leading edge with a measured ice roughness map:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">][</span><span class="s2">"boundary_conditions"</span><span class="p">][</span><span class="s2">"BC_3"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"wall function"</span><span class="p">,</span>
+    <span class="s2">"heat flux"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"field"</span><span class="p">:</span> <span class="s2">"ips_pads.vtp"</span><span class="p">},</span>
+    <span class="s2">"roughness"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"height"</span><span class="p">,</span> <span class="s2">"field"</span><span class="p">:</span> <span class="s2">"ice_roughness.vtp"</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <section id="velocity">
 <span id="bc-velocity"></span><h2>Velocity<a class="headerlink" href="#velocity" title="Link to this heading">¶</a></h2>
