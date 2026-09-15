@@ -385,13 +385,13 @@ Additional information
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Total force
-"""""""""""
+===========
 Total force, :math:`\mathbf{F}`, is simply , :math:`\mathbf{F}_p +  \mathbf{F}_v`, and likewise for moments.
 
 .. _report_nondimensionalisation:
 
 Non-dimensionalisation
-"""""""""""""""""""""""
+======================
 Forces are non-dimensionalised into force coefficients as :math:`C_{x} = \frac{ \mathbf{F}_x  }{ q_{\inf} S }`
 Where :math:`q_{\inf}` = reference dynamic pressure and :math:`S` = reference area
 
@@ -400,23 +400,23 @@ Where :math:`c` = reference length
 
 
 Dimensional pressure force
-""""""""""""""""""""""""""
+==========================
 :math:`\mathbf{F_p} = \oint - (p-p_{ref}) \ \hat{\mathbf{n}} \ \textrm d A`
 
 Where :math:`p` is surface pressure and  :math:`\hat{\mathbf{n}}` is the surface normal (pointing towards the wetted area).
 
 Dimensional viscous force
-"""""""""""""""""""""""""
+=========================
 :math:`\mathbf{F}_v = \oint \mu \nabla . V \  \textrm d A`
 
 Where :math:`\mu` is dynamic viscosity and :math:`V` is the velocity vector at the wall.
 
 Dimensional pressure moment
-"""""""""""""""""""""""""""
+===========================
 :math:`\mathbf{M}_p = \oint -(p-p_{ref}) \hat{\textbf{n}} \ (x - x_{ref}) \ \mathrm d A`
 
 Dimensional viscous moment
-"""""""""""""""""""""""""""
+==========================
 :math:`\mathbf{M}_v = \oint  \mu \nabla V \ (x - x_{ref}) \ \mathrm d A`
 
 

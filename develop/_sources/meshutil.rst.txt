@@ -102,3 +102,271 @@ UGRID is a NASA format for meshes. You must follow the naming convention for UGR
     (zCFD): convert_mesh <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5 <filename>.mapbc
 
 This produces the zCFD HDF5 file.
+
+CBA Mesh Converter
+~~~~~~~~~~~~~~~~~~~
+
+The converter supports structured multiblock meshes in the University of Bristol UOBSMB / *flowcode* CBA format (*.blk*). A CBA file is plain text: a header line giving the block count, a symmetry flag and a format version, then each block in turn — a dimension line (*ni nj nk*), the block's grid points (with *i* varying fastest, then *j*, then *k*), and six footer lines, one per face, always in the order *imin, imax, jmin, jmax, kmin, kmax*. Each footer line is ``type neighbour_block orientation``: for an inter-block face (type ``2``) the other two numbers give the 1-based partner block and the 1-based partner face (``1`` = ``imin`` ... ``6`` = ``kmax``); for any other type they are ignored. A 2D block (*nk* = 1) is extruded by one cell along *y*, by the ``--span`` distance.
+
+Every boundary face carries a type code. Without a zone file, each type maps to a default zone:
+
+.. list-table::
+   :widths: 12 20 15 12 30
+   :header-rows: 1
+
+   * - Type
+     - Default zone name
+     - ``bc``
+     - Zone tag
+     - Meaning
+   * - ``-2``
+     - ``symmetry``
+     - ``symmetry``
+     - ``7``
+     - symmetry plane
+   * - ``-1``
+     - ``aero_wall``
+     - ``wall``
+     - ``4``
+     - aerodynamic (solid) wall
+   * - ``0``
+     - ``wall``
+     - ``wall``
+     - ``3``
+     - wall
+   * - ``1``
+     - ``farfield``
+     - ``farfield``
+     - ``2``
+     - farfield
+   * - ``2``
+     - n/a
+     - n/a
+     - n/a
+     - inter-block interface, not a boundary
+   * - ``3``
+     - ``periodic_downstream``
+     - ``periodic``
+     - ``5``
+     - periodic (downstream side)
+   * - ``4``
+     - ``periodic_upstream``
+     - ``periodic``
+     - ``6``
+     - periodic (upstream side)
+
+To convert, run through *convert_mesh* using the ``.blk`` extension, or explicitly with ``-f cba``:
+
+.. code-block:: bash
+
+    (zCFD): convert_mesh <filename>.blk <new_filename>.h5
+
+or run the converter directly:
+
+.. code-block:: bash
+
+    (zCFD): cba_convert <filename>.blk <new_filename>.h5 [options]
+
+Any options given after the two filenames on a *convert_mesh* command line are passed straight through to *cba_convert*. Its options are:
+
+.. list-table::
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Option
+     - Meaning
+   * - ``input``
+     - the CBA (*.blk*) mesh to read
+   * - ``output``
+     - the zCFD *.h5* mesh to write
+   * - ``--zones FILE``
+     - a zone definition YAML file, overriding the default zone assignment above
+   * - ``--write-zones FILE``
+     - also write the resolved zone assignment to FILE as YAML, and continue converting
+   * - ``--no-weld``
+     - keep each block's nodes separate instead of welding coincident nodes at block boundaries
+   * - ``--span VALUE``
+     - extrusion distance for a 2D mesh (default ``1.0``)
+   * - ``--quiet``
+     - suppress the summary report
+
+This produces the zCFD HDF5 file. A zone file is optional for CBA meshes: see `Structured Mesh Zone Files`_.
+
+Plot3D Mesh Converter
+~~~~~~~~~~~~~~~~~~~~~~
+
+The converter also reads ASCII (formatted), whole-format Plot3D structured multiblock grids (*.p3d*, *.fmt*). The file is a plain sequence of numbers: an optional block-count line, then one dimension line per block (*ni nj nk*, or *ni nj* for a 2D block), then for each block in turn all of its *x* coordinates, then all of its *y* coordinates, then (for a 3D block) all of its *z* coordinates — again with *i* varying fastest, then *j*, then *k*. A single block with no leading count line is also accepted. An extra *IBLANK* integer following each point's coordinates is tolerated and ignored, and FORTRAN-style repeat counts (for example ``12*0.0`` for twelve repetitions of ``0.0``) are expanded. A 2D grid (no *k* dimension) is extruded by one cell along *z*, by the ``--span`` distance.
+
+Binary (unformatted) Plot3D files, and the plane-by-plane streamed layout some codes write instead of the whole-block layout, are not supported; both are rejected rather than silently misread.
+
+Unlike a CBA file, a Plot3D grid carries no connectivity or boundary information: block-to-block interfaces are discovered from coincident nodes after welding, and every boundary face must be assigned to a zone by hand — see `Structured Mesh Zone Files`_. A zone file is therefore mandatory.
+
+To convert, run through *convert_mesh* using the ``.p3d`` or ``.fmt`` extension, or explicitly with ``-f plot3d``:
+
+.. code-block:: bash
+
+    (zCFD): convert_mesh <filename>.p3d <new_filename>.h5 --zones <zonefile>.yml
+
+or run the converter directly:
+
+.. code-block:: bash
+
+    (zCFD): plot3d_convert <filename>.p3d <new_filename>.h5 --zones <zonefile>.yml [options]
+
+Any options given after the two filenames on a *convert_mesh* command line are passed straight through to *plot3d_convert*. Its options are:
+
+.. list-table::
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Option
+     - Meaning
+   * - ``input``
+     - the Plot3D (*.p3d*/*.fmt*) grid to read
+   * - ``output``
+     - the zCFD *.h5* mesh to write
+   * - ``--zones FILE``
+     - the zone definition YAML file (required, unless only ``--write-zones`` is given)
+   * - ``--write-zones FILE``
+     - write a zone template covering every discovered boundary face to FILE
+   * - ``--no-weld``
+     - keep each block's nodes separate instead of welding coincident nodes at block boundaries
+   * - ``--span VALUE``
+     - extrusion distance for a 2D grid (default ``1.0``)
+   * - ``--quiet``
+     - suppress the summary report
+
+This produces the zCFD HDF5 file.
+
+Structured Mesh Zone Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A zone file is optional for a CBA mesh — omit ``--zones`` and the default mapping in `CBA Mesh Converter`_ is used — and mandatory for a Plot3D grid, which carries no boundary information of its own.
+
+A zone file is YAML, with a single top-level ``zones`` map keyed by an integer zone tag; each tag must be unique. Here is a complete zone file for a 4-block ONERA M6 wing grid (block 1 is upstream of the wing, blocks 2 and 3 run along the wing, block 4 is downstream past the tip):
+
+.. code-block:: yaml
+
+    zones:
+      3:
+        name: wing
+        bc: wall
+        patches:
+          - {block: 2, face: jmin}
+          - {block: 3, face: jmin}
+      7:
+        name: symmetry
+        bc: symmetry
+        patches:
+          - {block: 1, face: kmin}
+          - {block: 2, face: kmin}
+          - {block: 3, face: kmin}
+          - {block: 4, face: kmin}
+      9:
+        name: farfield
+        bc: farfield
+        patches:
+          - {block: 1, face: imin}
+          - {block: 1, face: jmax}
+          - {block: 2, face: jmax}
+          - {block: 3, face: jmax}
+          - {block: 4, face: imax}
+          - {block: 4, face: jmax}
+
+Each zone takes:
+
+- ``name`` — a free-text label, used only in the summary report (defaults to ``zone_<tag>`` if omitted).
+- ``bc`` — required; one of ``wall``, ``inflow``, ``outflow``, ``symmetry``, ``farfield``, ``periodic``. This is what the solver acts on; the zone tag itself is just an identifier for grouping and reporting.
+- ``patches`` — an optional list of explicit block faces belonging to this zone. ``block`` is the 1-based block number; ``face`` is one of ``imin``, ``imax``, ``jmin``, ``jmax``, ``kmin``, ``kmax``.
+- ``cba_type`` — CBA only, optional; a raw CBA footer type code (see `CBA Mesh Converter`_). Every boundary patch still carrying that type code, and not already claimed by an explicit patch in this or any other zone, is added to this zone.
+
+A patch normally covers the whole block face. To assign only part of a face, add a 1-based, inclusive node-index range on one or both of the face's two in-plane axes:
+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Face
+     - In-plane axes
+   * - ``imin``, ``imax``
+     - ``j``, ``k``
+   * - ``jmin``, ``jmax``
+     - ``i``, ``k``
+   * - ``kmin``, ``kmax``
+     - ``i``, ``j``
+
+.. code-block:: yaml
+
+    zones:
+      3:
+        name: inlet_strip
+        bc: inflow
+        patches:
+          - {block: 1, face: imax, j: [1, 5], k: [1, 3]}
+
+If a patch is listed explicitly, it always takes that zone, even where a ``cba_type`` catch-all on another zone would otherwise have matched it: explicit patches take precedence over ``cba_type`` membership.
+
+To find the boundary faces available on a mesh without working them out by hand, write a template and edit it:
+
+.. code-block:: bash
+
+    (zCFD): cba_convert mesh.blk mesh.h5 --write-zones zones.yml
+    (zCFD): plot3d_convert grid.p3d grid.h5 --write-zones zones.yml
+
+For a CBA mesh this writes the *currently resolved* zone assignment (the defaults above, or whatever ``--zones`` produced if it was also given) and still converts the mesh. For a Plot3D grid, if ``--zones`` is not also given, it instead writes a single template zone (tag ``3``, ``bc: wall``) covering every discovered boundary face — split into as many patches as the discovered block structure needs — and stops without writing an *.h5* file. Either way, edit the ``name``, ``bc`` and grouping of the written zones as needed, then rerun with ``--zones zones.yml``.
+
+Structured Mesh Conversion Checks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The converter runs the same checks on every structured mesh, regardless of source format:
+
+- **Node welding.** Coincident nodes at block boundaries are merged into a single global node, within a tolerance derived from the mesh itself (the smaller of one billionth of the mesh's bounding-box diagonal, and a thousandth of the shortest genuine edge in the mesh). ``--no-weld`` keeps every block's nodes separate; interfaces are still paired even when nodes are not welded.
+- **Interface pairing.** For a CBA mesh, every inter-block face declared in the file's footers is checked: the partner face must exist, must point back to the same face (reciprocity), and its nodes must actually coincide with the partner's. For a Plot3D grid, which declares no connectivity, interfaces are discovered instead, purely from which welded nodes turn out to be shared between two blocks.
+- **Handedness.** Every block's node ordering is classified as right- or left-handed from its signed volume, and face winding is adjusted per block so that outward normals and cell volumes come out correctly either way. Mixed handedness across blocks in the same mesh is not an error.
+- **Six faces per cell, one or two cells per face.** Every cell ends up bounded by exactly six faces, and every face by exactly one cell (a boundary face) or two (an interior or interface face) — never zero, and never more than two.
+- **Positive volumes.** Every cell's volume, computed from its bounding faces, must be strictly positive.
+- **Periodic pairing.** Boundary faces with ``bc: periodic`` are grouped by zone tag and checked pairwise: each periodic zone must map onto exactly one other periodic zone under a pure rotation about the *x*, *y* or *z* axis, and that mapping must be reciprocal. The axis and angle found for each pair are reported.
+
+If any of these fail, conversion stops before a mesh is written, with a message naming the blocks and faces involved:
+
+.. list-table::
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Failure
+     - What it means
+   * - unreciprocated interface
+     - CBA only. One face's footer names another face as its interface partner, but that face's own footer either is not an interface or names a different partner. Fix the footer on the side that is wrong.
+   * - non-coincident interface
+     - A declared CBA interface's nodes do not coincide with its partner's at all — the two blocks are offset from one another where they are meant to meet. Check the grid geometry at that face.
+   * - partial-face abutment
+     - The same check as above, but only part of a declared CBA interface abuts its partner — a step or a sliver mismatch rather than a full offset. The faces reported are the ones left unpaired.
+   * - undeclared coincidence
+     - Two block faces (CBA) are geometrically coincident, but neither declares the other as its interface partner. Either move the blocks apart, or add the missing interface footer.
+   * - degenerate block face
+     - A block face has folded onto itself: the block is collapsed at that face, or wrapped with too few cells to keep the face distinct from itself, so some of its quads coincide with each other.
+   * - uncovered boundary quads
+     - Some boundary quads were never placed in a zone. The message gives the 1-based node-index range on the face's two in-plane axes — paste it directly into a ``patches`` entry in the zone file to cover the gap. The same check, reported as quads assigned to *more than one* zone, catches overlapping patches.
+   * - duplicate zone tag
+     - Two zones in the zone file use the same tag. Tags must be unique; give one of them a different tag.
+
+Node welding that merges genuinely distinct nodes, rather than the two sides of a declared self-interface, is also rejected — the message names the block and the two node indices involved.
+
+Structured Mesh Conversion Report
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unless ``--quiet`` is given, both converters print a summary once conversion succeeds:
+
+- the block count, and the CBA symmetry flag (always ``0`` for a Plot3D grid)
+- the cell count
+- the node count, raw and welded, and how many nodes were merged
+- the face count, split into interior, interface and boundary faces
+- every interface pair, with its face-quad count and whether it was found transposed and/or axis-reversed relative to its partner
+- the resolved zones — tag, ``name``, ``bc`` and the number of boundary faces each ended up with
+- how many blocks came out right-handed versus left-handed
+- the periodic pairs found (axis and angle in degrees), or ``none``
+- the minimum cell volume
+- the weld tolerance used, and the shortest genuine edge it was derived from
+- the time taken in each phase of the conversion (welding, face-building, zone resolution, assembly, checks)
+
+This is the quickest way to confirm a mesh converted the way you expect — in particular, that the interface and zone face counts match what you know about the mesh, and that the minimum cell volume is sensible.
