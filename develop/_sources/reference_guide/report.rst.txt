@@ -37,7 +37,7 @@ The report block lives at ``solver.output_settings.report`` (it can also be over
      - Boolean
    * - :ref:`'residual_statistics' <residual_statistics_columns>`
      - No
-     - False
+     - True
      - Boolean
 
 **'frequency'** sets how frequently a new line is appended to the <casename>_report.csv file. If frequency = x, the solver will output to the <casename>_report.csv every x solver cycles. For a dual time-stepping simulation, this is the inner (pseudo-time), not outer, cycles.
@@ -112,8 +112,8 @@ share - the cells ``Neff`` is counting.
     steer dual-time inner cycles. These are per-equation figures over the true residual, for
     diagnosing where a steady-state stall is sitting.
 
-Off by default: the statistics cost an extra pass over the residual field and two MPI reductions
-per report.
+On by default. Set **'residual_statistics'** to ``False`` to save the extra pass over the residual
+field and the two MPI reductions per report.
 
 .. _inner_convergence_columns:
 

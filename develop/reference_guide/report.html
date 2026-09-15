@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reporting &#8212; zCFD User Guide v2025.11.13331-319-gb2255 documentation</title>
+    <title>Reporting &#8212; zCFD User Guide v2025.11.13331-320-g5d029 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=1c5200e7"></script>
+    <script src="../_static/documentation_options.js?v=3cdda89d"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -80,7 +80,7 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#residual-statistics-columns"><span class="std std-ref">‘residual_statistics’</span></a></p></td>
 <td><p>No</p></td>
-<td><p>False</p></td>
+<td><p>True</p></td>
 <td><p>Boolean</p></td>
 </tr>
 </tbody>
@@ -158,8 +158,8 @@ supersedes the other. <code class="docutils literal notranslate"><span class="pr
 steer dual-time inner cycles. These are per-equation figures over the true residual, for
 diagnosing where a steady-state stall is sitting.</p>
 </div>
-<p>Off by default: the statistics cost an extra pass over the residual field and two MPI reductions
-per report.</p>
+<p>On by default. Set <strong>‘residual_statistics’</strong> to <code class="docutils literal notranslate"><span class="pre">False</span></code> to save the extra pass over the residual
+field and the two MPI reductions per report.</p>
 </section>
 <section id="inner-cycle-convergence-columns">
 <span id="inner-convergence-columns"></span><h2>Inner cycle convergence columns<a class="headerlink" href="#inner-cycle-convergence-columns" title="Link to this heading">¶</a></h2>
