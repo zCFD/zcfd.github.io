@@ -92,13 +92,13 @@ extra columns per equation would otherwise swamp.
 
    * - Column
      - Meaning
-   * - 'Rinf_<eq>'
+   * - ``Rinf_<eq>``
      - :math:`\lVert R \rVert_\infty`, the largest residual anywhere in the mesh for that equation.
-   * - 'Rrms_<eq>'
+   * - ``Rrms_<eq>``
      - RMS of the true residual. Note this is *not* the equation's own residual column, which is the RMS of the solution update :math:`\Delta Q/\Delta\tau`; the two coincide only when the linear solve is exact.
-   * - 'Neff_<eq>'
+   * - ``Neff_<eq>``
      - Participation ratio :math:`(\sum R^2)^2 / \sum R^4`: the number of cells the residual is effectively spread over. Equal to the cell count when every cell contributes equally, and to 1 when a single cell carries everything. A small value against a large mesh means a localised stall, not a stalled field.
-   * - 'Rtop_<eq>'
+   * - ``Rtop_<eq>``
      - Fraction of :math:`\sum R^2` held by the single worst cell.
 
 To find *where* those cells are, add the :ref:`resshare_i <output_variables>` volume output
@@ -133,19 +133,19 @@ carries meaning depends on the solver.
    * - Column
      - Solver
      - Meaning
-   * - 'InnerCycle'
+   * - ``InnerCycle``
      - both
      - The inner cycle index within the current real time step, counting from 1. Use this as the x axis when plotting the convergence of a single real time step.
-   * - 'InnerDrop'
+   * - ``InnerDrop``
      - both
      - Orders of magnitude the worst selected residual has dropped since the first inner cycle of the current real time step. This is what **'target_orders'** tests on the incompressible solver; on the compressible solver it is a diagnostic only - see :ref:`Choosing a target <inner_convergence_developing>` for why.
-   * - 'InnerRatio'
+   * - ``InnerRatio``
      - compressible
      - Largest, across the mean flow equations, of each residual divided by its own physical rate of change. Zero on real time cycle 0, where there is no time history to compare against, and always zero on the incompressible solver, which has no pseudo-time residual.
-   * - 'InnerRatioDrop'
+   * - ``InnerRatioDrop``
      - compressible
-     - Orders of magnitude 'InnerRatio' has fallen within the current real time step. This is what **'target_orders'** tests on the compressible solver. Always zero on the incompressible solver.
-   * - 'InnerCells'
+     - Orders of magnitude ``InnerRatio`` has fallen within the current real time step. This is what **'target_orders'** tests on the compressible solver. Always zero on the incompressible solver.
+   * - ``InnerCells``
      - compressible
      - Effective number of cells carrying the residual. A small value means limiter switching in a few cells rather than a stalled field. Not written by the incompressible solver, which has no slope limiter.
 

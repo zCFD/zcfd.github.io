@@ -169,7 +169,7 @@ For example to set a velocity of 50 mesh units/sec in the X direction:
     ..
 
 
-Or to set a velocity of mach 0.2 in the X direction:
+Or to set a velocity of Mach 0.2 in the X direction:
 
 .. code-block:: python
 

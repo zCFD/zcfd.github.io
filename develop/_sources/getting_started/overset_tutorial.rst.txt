@@ -15,7 +15,7 @@ There are various situations in CFD modelling when it is useful to be able to pl
 
 * There may already be a high quality mesh for an aircraft or a cityscape, and we want to include a new component or a new building without regenerating the entire mesh. It may be simpler to include any changes into a new mesh of a small region, and apply it like a patch as an overset mesh.      
 
-This is called an overset mesh technique, and is supported by zCFD.  In all cases, the flow solutions are calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy.  zCFD will support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large numbers of overset meshes in each simulation.  Each overset boundary condition can name the mesh(es) it takes donor data from, and the solver uses this to work out which mesh is active in each part of the flow domain.  zCFD automatically manages the data exchange between all meshes, including parallel partitions.
+This is called an overset mesh technique, and is supported by zCFD.  In all cases, the flow solutions are calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy.  zCFD will support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large numbers of overset meshes in each simulation.  Each overset boundary condition can name the meshes it takes donor data from, and the solver uses this to work out which mesh is active in each part of the flow domain.  zCFD automatically manages the data exchange between all meshes, including parallel partitions.
 
 .. _example1MultipleOversetCylinderTestCase:
 

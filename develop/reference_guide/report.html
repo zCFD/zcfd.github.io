@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reporting &#8212; zCFD User Guide v2025.11.13331-321-gb65bf documentation</title>
+    <title>Reporting &#8212; zCFD User Guide v2025.11.13331-322-g2e9d9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=f9b991d5"></script>
+    <script src="../_static/documentation_options.js?v=2587ffd1"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -133,16 +133,16 @@ extra columns per equation would otherwise swamp.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘Rinf_&lt;eq&gt;’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Rinf_&lt;eq&gt;</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\lVert R \rVert_\infty\)</span>, the largest residual anywhere in the mesh for that equation.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘Rrms_&lt;eq&gt;’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Rrms_&lt;eq&gt;</span></code></p></td>
 <td><p>RMS of the true residual. Note this is <em>not</em> the equation’s own residual column, which is the RMS of the solution update <span class="math notranslate nohighlight">\(\Delta Q/\Delta\tau\)</span>; the two coincide only when the linear solve is exact.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘Neff_&lt;eq&gt;’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Neff_&lt;eq&gt;</span></code></p></td>
 <td><p>Participation ratio <span class="math notranslate nohighlight">\((\sum R^2)^2 / \sum R^4\)</span>: the number of cells the residual is effectively spread over. Equal to the cell count when every cell contributes equally, and to 1 when a single cell carries everything. A small value against a large mesh means a localised stall, not a stalled field.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘Rtop_&lt;eq&gt;’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Rtop_&lt;eq&gt;</span></code></p></td>
 <td><p>Fraction of <span class="math notranslate nohighlight">\(\sum R^2\)</span> held by the single worst cell.</p></td>
 </tr>
 </tbody>
@@ -181,23 +181,23 @@ carries meaning depends on the solver.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>‘InnerCycle’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InnerCycle</span></code></p></td>
 <td><p>both</p></td>
 <td><p>The inner cycle index within the current real time step, counting from 1. Use this as the x axis when plotting the convergence of a single real time step.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘InnerDrop’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InnerDrop</span></code></p></td>
 <td><p>both</p></td>
 <td><p>Orders of magnitude the worst selected residual has dropped since the first inner cycle of the current real time step. This is what <strong>‘target_orders’</strong> tests on the incompressible solver; on the compressible solver it is a diagnostic only - see <a class="reference internal" href="time.html#inner-convergence-developing"><span class="std std-ref">Choosing a target</span></a> for why.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘InnerRatio’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InnerRatio</span></code></p></td>
 <td><p>compressible</p></td>
 <td><p>Largest, across the mean flow equations, of each residual divided by its own physical rate of change. Zero on real time cycle 0, where there is no time history to compare against, and always zero on the incompressible solver, which has no pseudo-time residual.</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘InnerRatioDrop’</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InnerRatioDrop</span></code></p></td>
 <td><p>compressible</p></td>
-<td><p>Orders of magnitude ‘InnerRatio’ has fallen within the current real time step. This is what <strong>‘target_orders’</strong> tests on the compressible solver. Always zero on the incompressible solver.</p></td>
+<td><p>Orders of magnitude <code class="docutils literal notranslate"><span class="pre">InnerRatio</span></code> has fallen within the current real time step. This is what <strong>‘target_orders’</strong> tests on the compressible solver. Always zero on the incompressible solver.</p></td>
 </tr>
-<tr class="row-even"><td><p>‘InnerCells’</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InnerCells</span></code></p></td>
 <td><p>compressible</p></td>
 <td><p>Effective number of cells carrying the residual. A small value means limiter switching in a few cells rather than a stalled field. Not written by the incompressible solver, which has no slope limiter.</p></td>
 </tr>
