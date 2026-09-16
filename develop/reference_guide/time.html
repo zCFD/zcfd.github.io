@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-325-gd53b4 documentation</title>
+    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-326-g2dfb4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=68c3bd12"></script>
+    <script src="../_static/documentation_options.js?v=3af9c2df"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -108,13 +108,13 @@
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;second&quot;</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;first&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;second&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
-<td><p>Order of physical time integration.</p></td>
+<td><p>Order of the Backward Difference Formula used for the physical time derivative. Only present under dual time stepping: global time stepping assembles no such term, so setting <code class="docutils literal notranslate"><span class="pre">order</span></code> there is rejected — see <a class="reference internal" href="#running-gts"><span class="std std-ref">Global time stepping</span></a>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">start</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
 <td><p>Non-negative integer</p></td>
-<td><p>How many steady-state pseudo-time cycles to run to initialise the solution before physical time-stepping begins.</p></td>
+<td><p>How many steady-state pseudo-time cycles to run to initialise the solution before physical time-stepping begins. Only present under dual time stepping: global time stepping has no pseudo-time loop to run them in, so setting <code class="docutils literal notranslate"><span class="pre">start</span></code> there is rejected — see <a class="reference internal" href="#running-gts"><span class="std std-ref">Global time stepping</span></a>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scheme</span></code></p></td>
 <td><p>Yes, if <code class="docutils literal notranslate"><span class="pre">kind</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;global</span> <span class="pre">timestepping&quot;</span></code></p></td>
@@ -146,7 +146,21 @@
 <section id="global-time-stepping">
 <span id="running-gts"></span><h3>Global time stepping<a class="headerlink" href="#global-time-stepping" title="Link to this heading">¶</a></h3>
 <p>Global time stepping (GTS) advances the solution in physical time only, using the same physical time step in every cell — there is no pseudo-time convergence loop, so <code class="docutils literal notranslate"><span class="pre">convergence_control</span></code> must not be set for a GTS run. In cases where there are very small cells it would be impractical to use global time stepping, as every cell would have to march at the pace of the smallest.</p>
-<p>Because GTS drives physical time directly, only the explicit pseudo-time schemes apply: <code class="docutils literal notranslate"><span class="pre">scheme.name</span></code> may be <code class="docutils literal notranslate"><span class="pre">&quot;euler&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;runge</span> <span class="pre">kutta&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">&quot;implicit</span> <span class="pre">euler&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;lu-sgs&quot;</span></code> are pseudo-time-only machinery and cannot drive a physical explicit march — setting either under a GTS <code class="docutils literal notranslate"><span class="pre">scheme</span></code> is rejected.</p>
+<section id="order-of-accuracy">
+<h4>Order of accuracy<a class="headerlink" href="#order-of-accuracy" title="Link to this heading">¶</a></h4>
+<p>Because GTS drives physical time directly, the <code class="docutils literal notranslate"><span class="pre">scheme</span></code> <em>is</em> the physical time integration and carries the whole order of accuracy of the run. There is no Backward Difference Formula: the physical time derivative that dual time stepping adds to the residual is not assembled at all under GTS, so <code class="docutils literal notranslate"><span class="pre">order</span></code> does not apply and setting it is rejected. <code class="docutils literal notranslate"><span class="pre">start</span></code> is rejected for the same reason — its steady start-up cycles need a pseudo-time loop to run in, and a GTS run has none; start from a converged field by restarting the GTS run from a steady run’s results instead.</p>
+<p>For that reason <code class="docutils literal notranslate"><span class="pre">scheme</span></code> is restricted to the one time-accurate explicit scheme zCFD carries, the three-stage TVD Runge-Kutta (SSP-RK3), which is <strong>third order in physical time</strong>. It is spelled either way below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"scheme"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"runge kutta"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+<span class="s2">"scheme"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"runge kutta"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">:</span> <span class="s2">"rk third order tvd"</span><span class="p">},</span>
+</pre></div>
+</div>
+<p>Every other scheme is rejected — each is either first order in physical time, or not an explicit physical march at all:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;euler&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;runge</span> <span class="pre">kutta&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">stage:</span> <span class="pre">1</span></code>, are forward Euler — first order in time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;runge</span> <span class="pre">kutta&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">stage:</span> <span class="pre">4</span></code> or <code class="docutils literal notranslate"><span class="pre">5</span></code> are Jameson-style low-storage schemes: every stage is evaluated from the solution at time level <em>n</em>, and their trailing coefficients (0.55 and 0.506) miss the 1/2 a second-order scheme requires. They are formally first order, and exist to damp the error modes of a steady-state solve rather than to integrate physical time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;implicit</span> <span class="pre">euler&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;lu-sgs&quot;</span></code> are pseudo-time-only machinery and cannot drive a physical explicit march at all.</p></li>
+</ul>
+<p>Use <code class="docutils literal notranslate"><span class="pre">kind:</span> <span class="pre">&quot;dual</span> <span class="pre">time</span> <span class="pre">stepping&quot;</span></code> to run any of those; there they drive an inner pseudo-time loop, and the physical time accuracy comes from <code class="docutils literal notranslate"><span class="pre">order</span></code> instead.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run a globally time-stepped unsteady simulation</span>
 <span class="s2">"time_settings"</span><span class="p">:</span> <span class="p">{</span>
@@ -165,6 +179,7 @@
 <p class="admonition-title">Note</p>
 <p>Global time stepping restricts all cells to the smallest time step and should only be used for unsteady simulations.</p>
 </div>
+</section>
 </section>
 <section id="dual-time-stepping">
 <span id="running-unsteady"></span><h3>Dual time stepping<a class="headerlink" href="#dual-time-stepping" title="Link to this heading">¶</a></h3>

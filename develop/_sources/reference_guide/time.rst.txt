@@ -71,12 +71,12 @@ Time Settings
      - No
      - ``"second"``
      - ``"first"`` | ``"second"`` | ``1`` | ``2``
-     - Order of physical time integration.
+     - Order of the Backward Difference Formula used for the physical time derivative. Only present under dual time stepping: global time stepping assembles no such term, so setting ``order`` there is rejected — see :ref:`Global time stepping <running_gts>`.
    * - ``start``
      - No
      - ``0``
      - Non-negative integer
-     - How many steady-state pseudo-time cycles to run to initialise the solution before physical time-stepping begins.
+     - How many steady-state pseudo-time cycles to run to initialise the solution before physical time-stepping begins. Only present under dual time stepping: global time stepping has no pseudo-time loop to run them in, so setting ``start`` there is rejected — see :ref:`Global time stepping <running_gts>`.
    * - ``scheme``
      - Yes, if ``kind`` is ``"global timestepping"``
      - --
@@ -112,7 +112,24 @@ Global time stepping
 =====================
 Global time stepping (GTS) advances the solution in physical time only, using the same physical time step in every cell — there is no pseudo-time convergence loop, so ``convergence_control`` must not be set for a GTS run. In cases where there are very small cells it would be impractical to use global time stepping, as every cell would have to march at the pace of the smallest.
 
-Because GTS drives physical time directly, only the explicit pseudo-time schemes apply: ``scheme.name`` may be ``"euler"`` or ``"runge kutta"``. ``"implicit euler"`` and ``"lu-sgs"`` are pseudo-time-only machinery and cannot drive a physical explicit march — setting either under a GTS ``scheme`` is rejected.
+Order of accuracy
+~~~~~~~~~~~~~~~~~
+Because GTS drives physical time directly, the ``scheme`` *is* the physical time integration and carries the whole order of accuracy of the run. There is no Backward Difference Formula: the physical time derivative that dual time stepping adds to the residual is not assembled at all under GTS, so ``order`` does not apply and setting it is rejected. ``start`` is rejected for the same reason — its steady start-up cycles need a pseudo-time loop to run in, and a GTS run has none; start from a converged field by restarting the GTS run from a steady run's results instead.
+
+For that reason ``scheme`` is restricted to the one time-accurate explicit scheme zCFD carries, the three-stage TVD Runge-Kutta (SSP-RK3), which is **third order in physical time**. It is spelled either way below:
+
+.. code-block:: python
+
+    "scheme": {"name": "runge kutta", "stage": 3},
+    "scheme": {"name": "runge kutta", "stage": "rk third order tvd"},
+
+Every other scheme is rejected — each is either first order in physical time, or not an explicit physical march at all:
+
+* ``"euler"``, and ``"runge kutta"`` with ``stage: 1``, are forward Euler — first order in time.
+* ``"runge kutta"`` with ``stage: 4`` or ``5`` are Jameson-style low-storage schemes: every stage is evaluated from the solution at time level *n*, and their trailing coefficients (0.55 and 0.506) miss the 1/2 a second-order scheme requires. They are formally first order, and exist to damp the error modes of a steady-state solve rather than to integrate physical time.
+* ``"implicit euler"`` and ``"lu-sgs"`` are pseudo-time-only machinery and cannot drive a physical explicit march at all.
+
+Use ``kind: "dual time stepping"`` to run any of those; there they drive an inner pseudo-time loop, and the physical time accuracy comes from ``order`` instead.
 
 Example usage:
 
