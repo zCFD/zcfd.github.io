@@ -341,7 +341,10 @@ Added for ``rans`` and ``les``.
      - DES/DDES/IDDES region flag
    * - ``lescfl``
      -
-     - Convective CFL on the LES length scale, used by the DES CFL shield
+     - CFL on the LES length scale used by the DES CFL shield: the larger of the grid relative transport CFL and the eddy turnover CFL
+   * - ``lesturnover``
+     -
+     - Eddy turnover contribution to lescfl on its own, so the binding mechanism is visible
    * - ``fdshield``
      -
      - DES/DDES/IDDES shielding function :math:`f_d`: 1 in resolved LES, 0 in the shielded RANS region
@@ -408,7 +411,10 @@ Added for ``rans`` and ``les``.
      - DES/DDES/IDDES region flag
    * - ``lescfl``
      -
-     - Convective CFL on the LES length scale, used by the DES CFL shield
+     - CFL on the LES length scale used by the DES CFL shield: the larger of the grid relative transport CFL and the eddy turnover CFL
+   * - ``lesturnover``
+     -
+     - Eddy turnover contribution to lescfl on its own, so the binding mechanism is visible
    * - ``fdshield``
      -
      - DES/DDES/IDDES shielding function :math:`f_d`: 1 in resolved LES, 0 in the shielded RANS region

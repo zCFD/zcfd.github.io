@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Output variables &#8212; zCFD User Guide v2025.11.13331-326-g2dfb4 documentation</title>
+    <title>Output variables &#8212; zCFD User Guide v2025.11.13331-327-g7b94c documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=3af9c2df"></script>
+    <script src="../_static/documentation_options.js?v=265f3d71"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -491,57 +491,61 @@
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lescfl</span></code></p></td>
 <td></td>
-<td><p>Convective CFL on the LES length scale, used by the DES CFL shield</p></td>
+<td><p>CFL on the LES length scale used by the DES CFL shield: the larger of the grid relative transport CFL and the eddy turnover CFL</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fdshield</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lesturnover</span></code></p></td>
+<td></td>
+<td><p>Eddy turnover contribution to lescfl on its own, so the binding mechanism is visible</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fdshield</span></code></p></td>
 <td></td>
 <td><p>DES/DDES/IDDES shielding function <span class="math notranslate nohighlight">\(f_d\)</span>: 1 in resolved LES, 0 in the shielded RANS region</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ti</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ti</span></code></p></td>
 <td></td>
 <td><p>Turbulence intensity</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencekineticenergy</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencekineticenergy</span></code></p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Turbulence_kinetic_energy" target="_blank">Turbulence kinetic energy</a> (<span class="math notranslate nohighlight">\(J/kg\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencekineticenergygrad</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencekineticenergygrad</span></code></p></td>
 <td></td>
 <td><p>Turbulence kinetic energy gradient</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulenceeddyfrequency</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulenceeddyfrequency</span></code></p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure" target="_blank">Turbulence eddy frequency</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulenceeddyfrequencygrad</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulenceeddyfrequencygrad</span></code></p></td>
 <td></td>
 <td><p>Turbulence eddy frequency gradient</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nuTilde</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nuTilde</span></code></p></td>
 <td></td>
 <td><p>Spalart-Allmaras working variable</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">walldistancezone</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">walldistancezone</span></code></p></td>
 <td></td>
 <td><p>Wall-distance zone id</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sagradientlimiter</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sagradientlimiter</span></code></p></td>
 <td></td>
 <td><p>Spalart-Allmaras gradient limiter value</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">celllimiter</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">celllimiter</span></code></p></td>
 <td></td>
 <td><p>Cell-based reconstruction limiter value for density (1 = unlimited)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">celllimiterpressure</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">celllimiterpressure</span></code></p></td>
 <td></td>
 <td><p>Cell-based reconstruction limiter value for pressure (1 = unlimited)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencetimestep</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencetimestep</span></code></p></td>
 <td></td>
 <td><p>Local turbulence timestep</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">menterf1</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">menterf1</span></code></p></td>
 <td></td>
 <td><p>Menter SST blending function</p></td>
 </tr>
@@ -582,21 +586,25 @@
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lescfl</span></code></p></td>
 <td></td>
-<td><p>Convective CFL on the LES length scale, used by the DES CFL shield</p></td>
+<td><p>CFL on the LES length scale used by the DES CFL shield: the larger of the grid relative transport CFL and the eddy turnover CFL</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fdshield</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lesturnover</span></code></p></td>
+<td></td>
+<td><p>Eddy turnover contribution to lescfl on its own, so the binding mechanism is visible</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fdshield</span></code></p></td>
 <td></td>
 <td><p>DES/DDES/IDDES shielding function <span class="math notranslate nohighlight">\(f_d\)</span>: 1 in resolved LES, 0 in the shielded RANS region</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencekineticenergy</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulencekineticenergy</span></code></p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Turbulence_kinetic_energy" target="_blank">Turbulence kinetic energy</a> (<span class="math notranslate nohighlight">\(J/kg\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turbulenceeddyfrequency</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turbulenceeddyfrequency</span></code></p></td>
 <td></td>
 <td><p><a class="reference external" href="https://en.wikipedia.org/wiki/SST_(Menter%E2%80%99s_Shear_Stress_Transport)#K-W_Closure" target="_blank">Turbulence eddy frequency</a> (<span class="math notranslate nohighlight">\(1/s\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nuTilde</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nuTilde</span></code></p></td>
 <td></td>
 <td><p>Spalart-Allmaras working variable</p></td>
 </tr>

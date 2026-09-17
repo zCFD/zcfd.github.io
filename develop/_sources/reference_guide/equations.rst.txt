@@ -164,6 +164,11 @@ documented under :ref:`"les" <equation_les>`.
      - --
      - Float, > 0.0
      - Width of the blend above ``les_cfl_limit``. See below.
+   * - ``les_turnover_coefficient``
+     - No
+     - 1.0
+     - Float, >= 0.0
+     - Weight on the eddy turnover term in the shielded CFL. See below.
 
 model
 =====
@@ -209,30 +214,43 @@ blending.
 
 les_cfl_limit
 =============
-Convective CFL number at or below which the LES branch of a DES/DDES/IDDES
-model is left untouched. Omitted (the default), the CFL shield is disabled
-entirely.
+CFL number at or below which the LES branch of a DES/DDES/IDDES model is left
+untouched. Omitted (the default), the CFL shield is disabled entirely.
 
 The LES branch replaces the modelled RANS stress with resolved eddies of the
 size of the local filter width :math:`\Delta`, but those eddies are only
-genuinely resolved if the time step can carry them, that is if the convective
-CFL number is of order one. Where the CFL is larger the model still drops the
+genuinely resolved if the time step can follow them, that is if the cell CFL
+number is of order one. Where the CFL is larger the model still drops the
 RANS stress, while the temporal discretisation cannot supply the resolved
 stress that should replace it. The eddy viscosity shielding function
 :math:`f_d` does not protect against this because it is built from
 :math:`r_d`, a purely spatial ratio.
 
-Setting a limit adds a second shield built from the cell CFL number,
+Setting a limit adds a second shield built from the cell CFL number. The time
+step has to resolve two distinct things — the transport of an eddy of size
+:math:`\Delta` across the cell, and that eddy's own turnover — so the shield
+takes whichever of the two is binding,
 
 .. math::
 
-   \mathrm{CFL} = \frac{\left| \mathbf{u} - \mathbf{u}_{grid} \right| \Delta t}{\Delta},
+   \mathrm{CFL} = \max\left(
+   \frac{\left| \mathbf{u} - \mathbf{u}_{grid} \right| \Delta t}{\Delta},
+   \; C_{turn} \left| S \right| \Delta t \right),
    \qquad
    f_{CFL} = \mathrm{smoothstep}\left(
    \mathrm{clamp}\left( \frac{\mathrm{CFL} - \mathrm{limit}}{\mathrm{width}}, 0, 1 \right) \right)
 
 which is combined with :math:`f_d` so that the more protective of the two
-wins. At :math:`f_{CFL} = 1` the hybrid length scale is exactly the RANS
+wins.
+
+The transport term uses the velocity relative to the mesh, so it is
+indifferent to the frame: a mesh and fluid in rigid body motion together
+contribute nothing to it. On a rotating mesh, however, the solid body term
+:math:`\mathbf{\Omega} \times \mathbf{r}` is a genuine relative speed and
+can dominate, so a fine rotating overset mesh is often shielded almost
+everywhere. That is the criterion reporting a real limitation of the mesh and
+time step rather than an artefact — see ``les_turnover_coefficient`` for the
+term that covers the opposite case. At :math:`f_{CFL} = 1` the hybrid length scale is exactly the RANS
 length scale, so the LES branch is fully suppressed. Because :math:`f_{CFL}`
 is exactly zero at or below the limit, a simulation whose CFL number is
 everywhere within the limit is unaffected.
@@ -250,6 +268,36 @@ Width of the blend above ``les_cfl_limit``. RANS is fully enforced at a CFL
 number of ``limit + width``. A wider blend gives a more gradual return to
 RANS, which is usually preferable since the shielded cells also revert to
 full upwind dissipation.
+
+les_turnover_coefficient
+========================
+Weight :math:`C_{turn}` on the eddy turnover term of the shielded CFL. Has no
+effect unless ``les_cfl_limit`` is set. Setting it to ``0.0`` recovers the
+transport only criterion.
+
+Transport alone is a one sided test. Where the flow is slow relative to the
+mesh it reports a CFL near zero and permits the LES branch however large the
+time step is, even though an energetic eddy in that cell may turn over many
+times per step. Stagnation regions, recirculation cores and the neighbourhood
+of a rotation axis, where :math:`\Omega r \rightarrow 0`, are all in that
+blind spot.
+
+The turnover term closes it. The velocity of an eddy at the filter width is
+:math:`u'(\Delta) \sim \left| S \right| \Delta`, so :math:`\Delta` cancels
+and the measure is simply the shear timescale Courant number
+:math:`\left| S \right| \Delta t`, with :math:`\left| S \right| =
+\sqrt{2 S_{ij} S_{ij}}` the resolved strain rate magnitude.
+
+Strain rather than vorticity is deliberate. Solid body rotation carries
+:math:`\left| \omega \right| = 2\Omega` with no turnover at all, so a
+vorticity based measure would shield every vortex core — exactly the content a
+DES run exists to resolve. The resolved strain is also used in preference to
+the modelled :math:`\sqrt{k}`, which in a shielded cell is the full RANS
+turbulence kinetic energy rather than the subgrid part, and would lock a cell
+into RANS once it got there.
+
+Use the **lesturnover** output variable alongside **lescfl** to see which of
+the two mechanisms is binding in a given cell.
 
 qcr
 ===
