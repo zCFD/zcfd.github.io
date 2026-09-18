@@ -5,13 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Overset &#8212; zCFD User Guide v2025.11.13331-331-g8a1c1 documentation</title>
+    <title>Overset &#8212; zCFD User Guide v2025.11.13331-332-g0d079 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=cfa06312"></script>
+    <script src="../_static/documentation_options.js?v=2aecf651"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <link rel="icon" href="../_static/fav.png"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Write Output" href="write_output.html" />
@@ -164,6 +165,68 @@
 <p class="admonition-title">Note</p>
 <p>There is no control-file option for detailed per-mesh-pair mapper diagnostics. The underlying C++ verbose-mapping flag exists, but nothing in the current control-file schema or launcher wires a value to it, so it cannot be enabled from a control deck.</p>
 </div>
+</section>
+</section>
+<section id="how-overset-works-in-the-solver">
+<span id="overset-implementation"></span><h2>How overset works in the solver<a class="headerlink" href="#how-overset-works-in-the-solver" title="Link to this heading">¶</a></h2>
+<p>Each mesh in an overset case keeps its own solver, its own partitioning and its own boundary conditions. Nothing is merged into a single mesh. The coupling is a set of directed mesh pairs, and everything below happens per pair.</p>
+<section id="mesh-ordering">
+<h3>Mesh ordering<a class="headerlink" href="#mesh-ordering" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">background</span></code> field on each overset boundary condition defines a directed graph over the models, which is required to be acyclic. The models are topologically sorted so that a model always appears after the model or models it names as its background, with root meshes (those with no overset boundary condition) first. That order is used for hole cutting, for the data exchange and for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.</p>
+<p>Each edge of the graph becomes a mapping pair holding two mappers: a <em>forward</em> mapper carrying data from the overset mesh into the background mesh, and a <em>reverse</em> mapper carrying data from the background mesh into the overset mesh.</p>
+</section>
+<section id="hole-cutting">
+<h3>Hole cutting<a class="headerlink" href="#hole-cutting" title="Link to this heading">¶</a></h3>
+<p>For each pair, every node of the background mesh is tested against the cells of the overset mesh. A background cell is blanked when <strong>all</strong> of its nodes are found inside the overset mesh; a cell with even one uncovered node stays active. Blanked cells take no part in the solution.</p>
+<p>This minimal blanking is recorded before anything else modifies it, and is what the <a class="reference internal" href="variables.html#output-variables"><span class="std std-ref">overset output variable</span></a> reports. <code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code> then runs N sweeps over the interior faces, and on each sweep any blanked cell sharing a face with an active cell is promoted back to active. The hole therefore shrinks by N cell layers, which is how an overlap band — a region where both meshes hold a valid solution — is created.</p>
+<p>When one mesh is the background of several overset meshes, all of its active flags are reset once, then every pair’s hole is cut, and only then is any mapping computed. Cutting and mapping pair by pair would let a later pair’s reset erase an earlier pair’s hole.</p>
+</section>
+<section id="fringe-cells">
+<h3>Fringe cells<a class="headerlink" href="#fringe-cells" title="Link to this heading">¶</a></h3>
+<p>The cells that receive interpolated data are drawn from the blanked set. By default the fringe is the two layers of blanked cells adjacent to the remaining active region.</p>
+<p>When the overset mesh moves, a cell blanked now may be uncovered by the next hole cut, so every blanked cell is treated as a fringe cell. That is safe but means interpolating the whole hole volume. Setting <code class="docutils literal notranslate"><span class="pre">moving_mesh_halo_layers</span></code> to N replaces this with an N-layer fringe, which is sufficient when the hole is re-cut every real time step.</p>
+</section>
+<section id="donor-search">
+<h3>Donor search<a class="headerlink" href="#donor-search" title="Link to this heading">¶</a></h3>
+<p>Donors are found with a bounding volume hierarchy built over the donor mesh — on the GPU when a device is present, on the host otherwise. The tree is built once per mesh and reused until the meshes move.</p>
+<p>For a moving mesh the mesh coordinates and the tree are <strong>not</strong> moved. The rigid body motion is carried as a transform and applied to the <em>query points</em> instead, mapping them into the donor mesh’s own frame before the search. This is why a rotating overset case costs little more per remap than a static one.</p>
+<p>A donor only counts if it is itself active. A fringe point that lands in a blanked region of the donor mesh finds nothing, and that face falls back to the unmapped face treatment rather than to interpolated data. This is the usual reason to increase <code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code>.</p>
+</section>
+<section id="interpolation">
+<h3>Interpolation<a class="headerlink" href="#interpolation" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">idw_from_cells_order</span></code> selects the interpolant once the donor cell is known:</p>
+<ul class="simple">
+<li><p><strong>0</strong> — the value of the containing cell is taken directly, with unit weight. This is a piecewise-constant transfer, first-order accurate.</p></li>
+<li><p><strong>1</strong> — the containing cell and its neighbours are combined with weights <span class="math notranslate nohighlight">\((R - d)/(R + 4d)\)</span>, where <span class="math notranslate nohighlight">\(d\)</span> is the distance from the query point to each donor cell centre and <span class="math notranslate nohighlight">\(R\)</span> is 1.2 times the largest of those distances.</p></li>
+</ul>
+</section>
+<section id="what-is-exchanged-and-when">
+<h3>What is exchanged, and when<a class="headerlink" href="#what-is-exchanged-and-when" title="Link to this heading">¶</a></h3>
+<p>The exchange runs <strong>once per pseudo-time cycle</strong>, before any solver advances, and moves both the conserved cell data and the cell gradients. Walking the models in topological order, each model first sends the data it owns as a donor, then receives the data it needs as a dependent, and is then synchronised to the device and has its parallel halos updated before the next model is handled.</p>
+<p>The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that reason an overset case requires one of the implicit pseudo-time schemes, <code class="docutils literal notranslate"><span class="pre">implicit</span> <span class="pre">euler</span></code> or <code class="docutils literal notranslate"><span class="pre">lu-sgs</span></code> (see <a class="reference internal" href="time.html#time"><span class="std std-ref">Convergence control</span></a>). A control file that asks for an explicit scheme alongside an overset boundary condition is rejected at validation.</p>
+</section>
+<section id="moving-meshes">
+<h3>Moving meshes<a class="headerlink" href="#moving-meshes" title="Link to this heading">¶</a></h3>
+<p>An overset mesh attached to a rotating fluid zone with <code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code> (see <a class="reference internal" href="transforms.html#mesh-transform"><span class="std std-ref">Mesh Transformation</span></a>) is solved in its own mesh-attached frame; only the mapped data crosses between frames. At the end of each real time step the accumulated rotation angle is advanced and the momentum components of the current solution and of both stored time levels are counter-rotated, so that the time history the dual-time scheme differences is expressed consistently in the current frame.</p>
+<p>At the end of a real time step, if either mesh of a pair reports that it has moved, the per-mesh record of which faces are mapped is cleared and <strong>all</strong> pairs are re-cut and re-mapped — not only the stale ones, because cutting one donor’s holes begins with a full reset of its active flags. Clearing the record matters on a moving mesh: a face mapped at a previous position but now outside donor coverage would otherwise stay marked as found and its fringe cell would be left unfilled.</p>
+</section>
+<section id="blanked-cells-in-the-rest-of-the-solver">
+<h3>Blanked cells in the rest of the solver<a class="headerlink" href="#blanked-cells-in-the-rest-of-the-solver" title="Link to this heading">¶</a></h3>
+<p>Blanking is not confined to the mapper:</p>
+<ul class="simple">
+<li><p>the residual is zeroed in blanked cells, so they cannot drive the solution or contribute to the reported residual norms;</p></li>
+<li><p>the implicit update is masked by the same flag, so a blanked row is left untouched;</p></li>
+<li><p>multigrid agglomeration propagates the flag to the coarse levels, and a coarse cell is marked blanked if <strong>any</strong> of its children is blanked. A coarse cell with a mixture of active and blanked children logs <code class="docutils literal notranslate"><span class="pre">Parents</span> <span class="pre">are</span> <span class="pre">mixed</span> <span class="pre">active</span> <span class="pre">and</span> <span class="pre">inactive</span></code>. A large count means the coarsening and the hole boundary are poorly aligned.</p></li>
+</ul>
+</section>
+<section id="practical-consequences">
+<h3>Practical consequences<a class="headerlink" href="#practical-consequences" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Meshes must genuinely overlap. A hole cut exactly to the overset mesh’s own footprint leaves no band in which both meshes hold an independently computed solution, and the fringe then draws its donors from cells that are themselves interpolated. Use <code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code> to open a real overlap band.</p></li>
+<li><p>Keep cell sizes similar across the interface. The transfer is at best a distance-weighted average of donor cell values, so a coarse donor cannot represent a gradient the fine receiver resolves.</p></li>
+<li><p>Use an implicit pseudo-time scheme. Note that multigrid is not available with the implicit schemes, so an overset case runs without it.</p></li>
+<li><p>A body inside a hole is not seen by the mesh whose cells are blanked, so a wall must always live in the mesh that resolves it.</p></li>
+</ul>
 </section>
 </section>
 </section>
