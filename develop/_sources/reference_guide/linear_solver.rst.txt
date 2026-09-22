@@ -9,7 +9,7 @@ There are several situations where the options selected in zCFD require the solu
 * When RBFs are used for mesh motion.
 * When the incompressible solver is selected.
 
-When running on CPUs zCFD uses the `Petsc <https://petsc.org>`_ linear solver library and when running on NVidia GPUs zCFD uses the `AMGX <https://developer.nvidia.com/amgx>`_ linear solver library. Both libraries offer a wide array of solver and preconditioner choices and altering the settings can have a significant impact on the performance and convergence of the solver. Options can be passed to Petsc via the control dictionary and AMGX options are set using a json file which is read at runtime.
+When running on CPUs zCFD uses the `Petsc <https://petsc.org>`_ linear solver library and when running on NVidia GPUs zCFD uses the `AMGX <https://developer.nvidia.com/amgx>`_ linear solver library. Both libraries offer a wide array of solver and preconditioner choices and altering the settings can have a significant impact on the performance and convergence of the solver. Options can be passed to Petsc via the control dictionary and AMGX options are set using a json file which is read at runtime. For the settings each backend uses, equation by equation, see :ref:`linear_solver_side_by_side`.
 
 These settings live under ``solver.solver_settings.linear_solver_options``:
 
@@ -72,23 +72,78 @@ Each of ``flow``, ``turbulence`` and ``rbf`` is a plain dictionary of PETSc comm
             "-ksp_min_it": "2",
             "-ksp_type": "fgmres",
             "-ksp_rtol": "1.0e-3",
-            "-ksp_monitor": "",
             "-ksp_converged_reason": "",
         },
         "turbulence": {
             "-ksp_min_it": "2",
             "-ksp_type": "fgmres",
             "-ksp_rtol": "1.0e-5",
-            "-ksp_monitor": "",
             "-ksp_converged_reason": "",
         },
         "rbf": {
             "-ksp_type": "fgmres",
             "-ksp_rtol": "1.0e-5",
-            "-ksp_monitor": "",
         },
         "double_precision": False,
     }
+
+.. warning::
+
+   **``-ksp_rtol`` is relative to the initial guess, not to the right-hand side.** zCFD
+   solves every system with ``KSPSetInitialGuessNonzero``, keeping the previous outer
+   iteration's solution, so only the very first solve of a run starts from zero with
+   ``||r0|| == ||b||``. Afterwards ``||r0||`` is typically a hundredth of ``||b||`` or
+   less, and a given ``-ksp_rtol`` is correspondingly tighter in absolute terms than it
+   looks. This is why two ``-ksp_rtol`` values cannot be compared across equations whose
+   initial guesses are of different quality, and why a value that looks generous can
+   still exhaust ``-ksp_max_it``. ``-ksp_monitor_true_residual`` prints
+   ``||r(i)||/||b||`` alongside the residual and is the way to see what a solve is
+   really achieving.
+
+``-ksp_converged_reason`` prints one line per linear solve, giving the number of
+iterations it took and whether it converged. A solve that reports ``DIVERGED_ITS`` ran
+out of iterations rather than diverging; it still returns its best answer, but the
+tolerance asked for was not met, and a run where that happens on most cycles is doing
+work that the outer iteration cannot use. ``-ksp_monitor`` prints a line per
+Krylov *iteration*; it is useful when investigating a solve but is not a default,
+because on a long run it dominates the log. Add it to any of these dictionaries
+when you need it.
+
+.. _linear_solver_prefixes:
+
+One options namespace per solver
+""""""""""""""""""""""""""""""""
+
+PETSc has a single, process-wide options database. zCFD builds a separate solver
+for each system it has to solve, and each one is given its own PETSc options
+prefix, taken from the name of the dictionary it comes from:
+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Dictionary
+     - Prefix
+   * - ``flow``
+     - ``-flow_``
+   * - ``turbulence``
+     - ``-turb_`` (and ``-energy_`` for the incompressible energy equation)
+   * - ``momentum``
+     - ``-momentum_``
+   * - ``pressure_correction``
+     - ``-pcorr_``
+   * - ``rbf``
+     - ``-rbf_``
+
+So ``"-ksp_type": "bcgs"`` in the ``momentum`` dictionary reaches PETSc as
+``-momentum_ksp_type bcgs`` and applies to that solver alone. **Nothing needs to
+change in a control file** — the keys are written exactly as before and zCFD adds
+the prefix. The prefix matters only if you inject options from outside the control
+file, through the ``PETSC_OPTIONS`` environment variable for instance, where you
+must now spell the prefix yourself to target one solver.
+
+Previously every solver read the same unprefixed keys, which meant an option set
+for one equation and left unset by the next silently carried over into it.
 
 The `Hypre <https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods>`_ library of algebraic multigrid methods is available via `Petsc PCHYPRE <https://petsc.org/release/manualpages/PC/PCHYPRE/#pchypre>`_ and the associated settings can be supplied via the same dictionaries. Using Hypre's boomeramg package as a preconditioner has shown good performance with the incompressible solver:
 
@@ -112,34 +167,127 @@ Further Hypre options are detailed in the `Petsc PCHYPRE <https://petsc.org/rele
 Incompressible solver
 ^^^^^^^^^^^^^^^^^^^^^^
 
-When ``solver_settings.type`` is ``"incompressible"``, ``linear_solver_options`` defaults to tighter tolerances and double precision, since the pressure-Poisson system is more sensitive to linear-solver accuracy:
+When ``solver_settings.type`` is ``"incompressible"``, ``linear_solver_options`` gains two
+further keys and uses its own defaults, modelled on OpenFOAM's ``simpleFoam``.
+
+Why they look the way they do
+"""""""""""""""""""""""""""""
+
+Under the SIMPLE scheme every equation is solved inside an outer iteration, so its
+linear solve does not need to be accurate — it needs to be cheap, because the outer
+loop will revisit it a few thousand times. That is what ``simpleFoam`` encodes: across
+the OpenFOAM tutorials every equation is solved to ``relTol 0.1``, one order of
+magnitude, and only the *kind* of solver changes with the equation. (The motorBike
+tutorial is the exception, tightening ``p`` to ``0.01``; the zCFD pressure-correction
+default follows that tighter figure and everything else the 0.1.) zCFD follows the
+same mapping:
+
+.. list-table::
+   :widths: 22 39 39
+   :header-rows: 1
+
+   * - ``fvSolution``
+     - OpenFOAM setting
+     - zCFD equivalent
+   * - ``p``
+     - GAMG + GaussSeidel, ``relTol 0.1``
+     - ``pressure_correction``: CG + Hypre BoomerAMG
+   * - ``U``
+     - PBiCGStab + DILU, ``relTol 0.1``
+     - ``momentum``: BiCGStab + block-Jacobi/ILU
+   * - ``k``, ``omega``, ``epsilon``
+     - smoothSolver, ``relTol 0.1``
+     - ``turbulence``: BiCGStab + block-Jacobi/ILU
+
+The pressure correction is the one equation that needs a coarse grid. It is elliptic,
+and a purely local preconditioner such as ILU cannot move information across the mesh
+however strong it is made, so it will grind through its iteration limit without
+converging. Algebraic multigrid is the fix, and it is what OpenFOAM uses for ``p``.
+
+The coupled (non-SIMPLE) scheme is the exception: there the block-4
+velocity-pressure solve *is* the step rather than an inner iteration, so ``flow``
+keeps a tight tolerance. ``simpleFoam`` has no counterpart to it.
+
+The defaults:
 
 .. code-block:: python
 
     "linear_solver_options": {
+        # Coupled scheme only: this solve is the step, so it is solved tightly.
         "flow": {
             "-ksp_min_it": "2",
             "-ksp_type": "fgmres",
             "-ksp_rtol": "1.0e-7",
             "-ksp_atol": "1.0e-16",
-            "-ksp_max_it": "20",
+            "-ksp_max_it": "50",
+            "-pc_type": "bjacobi",
+            "-sub_pc_type": "ilu",
             "-ksp_converged_reason": "",
-            "-ksp_monitor": "",
         },
+        # simpleFoam's k/omega/epsilon/nuTilda entry. Also used for the energy equation.
         "turbulence": {
-            "-ksp_min_it": "2",
-            "-ksp_type": "fgmres",
-            "-ksp_rtol": "1.0e-12",
+            "-ksp_min_it": "1",
+            "-ksp_type": "bcgs",
+            "-ksp_rtol": "0.1",
             "-ksp_atol": "1.0e-16",
+            "-ksp_max_it": "50",
+            "-pc_type": "bjacobi",
+            "-sub_pc_type": "ilu",
             "-ksp_converged_reason": "",
-            "-ksp_monitor": "",
-            "-ksp_max_it": "20",
         },
-        "rbf": {},
+        # SIMPLE only: simpleFoam's U entry.
+        "momentum": {
+            "-ksp_min_it": "1",
+            "-ksp_type": "bcgs",
+            "-ksp_rtol": "0.1",
+            "-ksp_atol": "1.0e-12",
+            "-ksp_max_it": "50",
+            "-pc_type": "bjacobi",
+            "-sub_pc_type": "ilu",
+            "-ksp_converged_reason": "",
+        },
+        # SIMPLE only: simpleFoam's p entry.
+        "pressure_correction": {
+            "-ksp_min_it": "1",
+            "-ksp_type": "cg",
+            "-ksp_rtol": "0.01",
+            "-ksp_atol": "1.0e-12",
+            "-ksp_max_it": "100",
+            "-pc_type": "hypre",
+            "-pc_hypre_type": "boomeramg",
+            "-zcfd_constant_nullspace": "1",
+            "-zcfd_pc_reuse_cycles": "20",
+            "-ksp_converged_reason": "",
+        },
+        "rbf": {
+            "-ksp_type": "fgmres",
+            "-ksp_rtol": "1.0e-5",
+        },
         "double_precision": True,
     }
 
-Two further keys are available, but only when the incompressible solver uses the SIMPLE coupling scheme (``solver.convergence_control.scheme.name == "simple"``); they have no effect and are rejected under the coupled scheme:
+``-zcfd_pc_reuse_cycles`` is not a PETSc option either — zCFD consumes it — and says how often
+to rebuild the preconditioner. The matrix is reassembled every outer iteration, so by default
+PETSc rebuilds the multigrid hierarchy before every solve, and that is the dominant cost:
+profiled with ``-log_view`` on a 52k-cell plate SIMPLE case, ``PCSetUp`` was 5.01 s of the
+8.50 s spent in ``KSPSolve``, 59% of all linear-solver time, for a matrix whose sparsity never
+changes. Building it once and freezing it is not the answer either: on the plate case that
+takes the pressure solve from 1.26 iterations per cycle over the first fifty cycles to 8.3 over
+the last fifty, as the startup transient moves the operator out from under it. Rebuilding every
+N solves cuts the setup cost by N while keeping the preconditioner at most N cycles stale — the
+same trade OpenFOAM's GAMG makes with ``cacheAgglomeration``. Set it to ``1`` to rebuild every
+solve. Whatever the value, it cannot change the answer: the Krylov solver applies the true
+operator, so a stale preconditioner costs iterations and nothing else.
+
+``-zcfd_constant_nullspace`` is not a PETSc option: zCFD consumes it and never passes
+it on. It asks for a constant null space to be attached to the pressure-correction
+operator, which is what keeps the solve well posed when the domain is enclosed and the
+pressure has no datum. zCFD detaches it again by itself if the boundary conditions turn
+out to include a fixed-pressure outlet, since that outlet then sets the datum.
+
+``pressure_correction`` and ``momentum`` apply only when the incompressible solver uses
+the SIMPLE coupling scheme (``solver.convergence_control.scheme.name == "simple"``).
+The coupled scheme builds neither solver, and setting either key under it is rejected.
 
 .. list-table::
    :widths: 20 10 25 45
@@ -151,11 +299,11 @@ Two further keys are available, but only when the incompressible solver uses the
      - Valid values
    * - ``pressure_correction``
      - No
-     - Falls back to ``turbulence``
+     - See above
      - Dictionary of PETSc options for the SIMPLE pressure-correction (block-1 Poisson) solver.
    * - ``momentum``
      - No
-     - Falls back to ``flow``
+     - See above
      - Dictionary of PETSc options for the SIMPLE momentum predictor (block-3) solver.
 
 
@@ -207,6 +355,57 @@ In general these settings provide good performance for most cases. If issues are
 
 There are too many AMGX options to detail here but example configurations for different solvers are given `here <https://github.com/NVIDIA/AMGX/tree/main/src/configs>`__.
 
+Incompressible AMGX configurations
+""""""""""""""""""""""""""""""""""
+
+The incompressible solver reads its own set of files, one per equation, so that each
+system gets a configuration suited to it. Each file is looked for in the working
+directory first and in ``ZCFD_HOME`` otherwise, so dropping a copy next to the control
+file overrides it for that case.
+
+.. list-table::
+   :widths: 34 66
+   :header-rows: 1
+
+   * - File
+     - System
+   * - ``incomp_amgx.json``
+     - Coupled scheme: the block-4 velocity-pressure system.
+   * - ``incomp_simple_mom_amgx.json``
+     - SIMPLE: the block-3 momentum predictor. FGMRES + block-Jacobi, ``alt_rel_tolerance`` 0.1.
+   * - ``incomp_pcorr_amgx.json``
+     - SIMPLE: the block-1 pressure-correction Poisson. Aggregation AMG — ``simpleFoam``'s ``p``.
+   * - ``incomp_turb_amgx.json``
+     - Turbulence and energy transport.
+
+``"structure_reuse_levels": -1`` on ``incomp_amgx.json`` and ``incomp_pcorr_amgx.json``
+keeps the multigrid hierarchy across cycles: the matrix coefficients change every outer
+iteration but the sparsity pattern never does, so re-aggregating each cycle is wasted
+work. ``"coarse_solver": "NOSOLVER"`` in ``incomp_pcorr_amgx.json`` is deliberate and
+should be left alone — with no fixed-pressure outlet the pressure-correction operator is
+singular and a direct coarse solve hits a zero pivot on it, which is also why OpenFOAM
+leaves ``directSolveCoarsest`` off.
+
+.. note::
+
+   **The PETSc settings above do not transfer wholesale to AMGX, and were measured
+   separately.** Two changes that are clearly right on the PETSc side turned out to be
+   wrong here, on a GPU A/B of the lid-driven cavity and the plate RANS case:
+
+   * Moving the momentum predictor from FGMRES to BiCGStab — ``simpleFoam``'s
+     ``PBiCGStab`` — cost 68% more iterations (6564 to 10995) and was no better with
+     ``MULTICOLOR_DILU`` in place of block-Jacobi. OpenFOAM pairs ``PBiCGStab`` with
+     ``DILU``, a much stronger preconditioner than anything cheap available here, and
+     without it BiCGStab has nothing to lean on. FGMRES is kept.
+   * Loosening the turbulence ``alt_rel_tolerance`` from ``1.0e-6`` to the ``relTol 0.1``
+     OpenFOAM uses moved ``wall_Fx`` on the plate case by 53%. The equivalent change is
+     safe on PETSc only because the turbulence solve there already terminated on
+     ``-ksp_atol``, so the relative tolerance was never what bounded it; ``alt_rel_tolerance``
+     has no such floor and the loosening is real. It is kept at ``1.0e-6``.
+
+   So the AMGX files deliberately diverge from the PETSc options: the mapping in the
+   previous section describes the PETSc path.
+
 When running on NVidia GPUs and using AMGX, the only linear-solver-related option that still comes from the zCFD control dictionary is ``double_precision``, on ``linear_solver_options``:
 
 .. code-block:: python
@@ -214,3 +413,349 @@ When running on NVidia GPUs and using AMGX, the only linear-solver-related optio
     "linear_solver_options": {"double_precision": False}
 
 The ``double_precision`` option controls whether the mean flow linear system is solved in single or double precision. Solving in single precision brings a reduction in memory use and a speed up to the solver. However, double precision may be required for more challenging cases.
+
+.. _linear_solver_side_by_side:
+
+Side by side: Petsc and AMGX
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The same equation is solved by a different library on CPU and on GPU, and the two are
+configured in different places — Petsc through the control dictionary, AMGX through its
+json files. This section puts them next to each other, equation by equation, so that the
+settings a case is actually running can be read off in one place.
+
+The two backends are tuned independently and are **not** expected to match. Where they
+differ, the difference is usually deliberate and measured; the note at the end of the
+AMGX section above gives the two cases where a Petsc setting was tried on AMGX and
+rejected.
+
+How the settings correspond
+"""""""""""""""""""""""""""
+
+.. list-table::
+   :widths: 26 30 44
+   :header-rows: 1
+
+   * - Concept
+     - Petsc
+     - AMGX
+   * - Krylov method
+     - ``-ksp_type``
+     - ``solver``
+   * - Preconditioner
+     - ``-pc_type``, ``-sub_pc_type``
+     - ``preconditioner``, and its ``smoother`` when that is AMG
+   * - Relative tolerance
+     - ``-ksp_rtol``
+     - ``alt_rel_tolerance``, or ``tolerance`` under ``RELATIVE_INI_CORE``
+   * - Absolute tolerance
+     - ``-ksp_atol``
+     - ``tolerance``, under ``COMBINED_REL_INI_ABS`` only
+   * - Iteration limit
+     - ``-ksp_max_it``
+     - ``max_iters``
+   * - Minimum iterations
+     - ``-ksp_min_it``
+     - no equivalent
+   * - GMRES restart
+     - ``-ksp_gmres_restart`` (unset, so 30)
+     - ``gmres_n_restart``
+   * - Setup amortisation
+     - ``-zcfd_pc_reuse_cycles``
+     - ``structure_reuse_levels`` (see below)
+
+The tolerance rows depend on the ``convergence`` mode, which is why the same
+``tolerance`` key means different things in different files:
+
+* ``COMBINED_REL_INI_ABS``, used by the incompressible files, stops when
+  ``|r| < tolerance`` **or** ``|r|/|r0| <= alt_rel_tolerance``. So ``tolerance`` is an
+  absolute floor and ``alt_rel_tolerance`` is the relative one — the two Petsc
+  tolerances, in the opposite order to what the names suggest.
+* ``RELATIVE_INI_CORE``, used by the compressible files, stops when
+  ``|r|/|r0| <= tolerance``. Here ``tolerance`` is the *relative* tolerance and there is
+  no absolute floor at all.
+
+.. warning::
+
+   ``structure_reuse_levels`` and ``-zcfd_pc_reuse_cycles`` are not equivalent, despite
+   doing a similar job. ``structure_reuse_levels`` keeps the multigrid *structure* — the
+   aggregation and colouring — and still rebuilds the coarse operators at every setup.
+   ``-zcfd_pc_reuse_cycles`` skips the preconditioner setup outright for all but every
+   Nth solve. AMGX has no equivalent of the second, and Petsc has no equivalent of the
+   first.
+
+Incompressible, SIMPLE scheme
+"""""""""""""""""""""""""""""
+
+Momentum predictor — ``momentum`` / prefix ``momentum_`` / ``incomp_simple_mom_amgx.json``:
+
+.. list-table::
+   :widths: 26 37 37
+   :header-rows: 1
+
+   * - Setting
+     - Petsc
+     - AMGX
+   * - Solver
+     - ``bcgs``
+     - ``FGMRES``, restart 30
+   * - Preconditioner
+     - ``bjacobi`` + ``ilu``
+     - ``BLOCK_JACOBI``
+   * - Relative tolerance
+     - ``0.1``
+     - ``0.1``
+   * - Absolute tolerance
+     - ``1.0e-12``
+     - ``1e-10``
+   * - Iteration limit
+     - ``50``
+     - ``50``
+
+Pressure correction — ``pressure_correction`` / prefix ``pcorr_`` / ``incomp_pcorr_amgx.json``:
+
+.. list-table::
+   :widths: 26 37 37
+   :header-rows: 1
+
+   * - Setting
+     - Petsc
+     - AMGX
+   * - Solver
+     - ``cg``
+     - ``FGMRES``, restart 32
+   * - Preconditioner
+     - ``hypre`` / BoomerAMG
+     - aggregation AMG, ``SIZE_8``, V-cycle, ``BLOCK_JACOBI`` smoother
+   * - Sweeps
+     - BoomerAMG defaults
+     - 0 pre, 2 post, ``coarse_solver`` ``NOSOLVER``
+   * - Relative tolerance
+     - ``0.01``
+     - ``0.01``
+   * - Absolute tolerance
+     - ``1.0e-12``
+     - ``1e-10``
+   * - Iteration limit
+     - ``100``
+     - ``50``
+   * - Setup amortisation
+     - rebuild every 20 solves
+     - ``structure_reuse_levels`` ``-1``
+
+This is the closest-matched pair: multigrid at ``relTol 0.01`` on both sides.
+
+Turbulence and energy — ``turbulence`` / prefixes ``turb_`` and ``energy_`` /
+``incomp_turb_amgx.json``:
+
+.. list-table::
+   :widths: 26 37 37
+   :header-rows: 1
+
+   * - Setting
+     - Petsc
+     - AMGX
+   * - Solver
+     - ``bcgs``
+     - ``FGMRES``, restart 32
+   * - Preconditioner
+     - ``bjacobi`` + ``ilu``
+     - aggregation AMG, ``BLOCK_JACOBI`` smoother, 0 pre / 3 post
+   * - Relative tolerance
+     - ``0.1``
+     - ``1.0e-6``
+   * - Absolute tolerance
+     - ``1.0e-16``
+     - ``1e-10``
+   * - Iteration limit
+     - ``50``
+     - ``100``
+
+The relative tolerances differ by five orders of magnitude, and that is intentional —
+see the note in the previous section. The energy equation shares the ``turbulence``
+dictionary and the same json file on both backends; only its Petsc options prefix is
+its own.
+
+Incompressible, coupled scheme
+""""""""""""""""""""""""""""""
+
+Block-4 velocity-pressure — ``flow`` / prefix ``flow_`` / ``incomp_amgx.json``. Turbulence
+and energy are as above; ``momentum`` and ``pressure_correction`` are not built at all
+under this scheme.
+
+.. list-table::
+   :widths: 26 37 37
+   :header-rows: 1
+
+   * - Setting
+     - Petsc
+     - AMGX
+   * - Solver
+     - ``fgmres``
+     - ``FGMRES``, restart 100
+   * - Preconditioner
+     - ``bjacobi`` + ``ilu``
+     - aggregation AMG, ``MULTICOLOR_GS``, 1 pre / 3 post
+   * - Relative tolerance
+     - ``1.0e-7``
+     - ``1e-4``
+   * - Absolute tolerance
+     - ``1.0e-16``
+     - ``1e-10``
+   * - Iteration limit
+     - ``50``
+     - ``30``
+   * - Setup amortisation
+     - rebuild every 20 solves
+     - ``structure_reuse_levels`` ``-1``
+
+.. warning::
+
+   **On a large parallel case the coupled flow solve does not reach**
+   ``-ksp_rtol`` **at any iteration limit, and** ``-ksp_max_it`` **is what ends
+   it.** The 7.46M-cell Windsor body on 16 ranks reports ``DIVERGED_ITS`` on
+   every cycle at a cap of 20, 50 and 400 alike: block-Jacobi/ILU stalls on a
+   block-4 saddle-point system of that size, its per-iteration convergence
+   factor decaying from 0.82 over the first twenty iterations to 0.91 averaged
+   over fifty.
+
+   This is not a reason to lower the cap. The outer iteration does not need a
+   converged linear solve, only a better one, and the deeper solve pays for
+   itself: at 500 cycles it takes ``rhoV[0]`` from ``3.78e-06`` to ``1.11e-06``
+   for 1.73x the cost per cycle, so at equal wall time it is still about twice
+   as converged. Treat ``DIVERGED_ITS`` on this solver as a statement about the
+   preconditioner's reach, not as a failure to act on. A stronger
+   preconditioner for the coupled system, rather than a larger cap, is what
+   would actually remove it.
+
+.. note::
+
+   **The two relative tolerances in this table are not comparable, and the Petsc one is
+   not the tighter of the pair despite the smaller number.** Petsc applies ``-ksp_rtol``
+   to the residual of the *initial guess*, and this solver keeps the previous outer
+   iteration's solution as that guess, so from the second solve onwards ``||r0||`` is a
+   hundredth of ``||b||`` or less and ``1.0e-7`` relative to it is nearer ``1.0e-9``
+   relative to ``||b||``. AMGX's ``alt_rel_tolerance`` is a reduction from its own
+   starting residual in the same way, but its aggregation multigrid gets there in about
+   eight iterations where block-Jacobi/ILU stalls on this saddle-point system.
+
+   Measured on the lid-driven cavity at 300 cycles, comparing the outer residual each
+   setting actually delivers rather than the number in the file: AMGX at
+   ``alt_rel_tolerance`` ``1e-4`` reaches ``rhoV[0]`` ``1.9e-09``, where Petsc at
+   ``-ksp_rtol`` ``1.0e-7`` reaches ``3.4e-08``. Matching the *numbers* would make
+   things worse, not better — Petsc at ``1.0e-4`` stalls the outer iteration at
+   ``1.2e-05`` and never reaches ``1e-06`` at all. Both backends agree in the limit:
+   solved near-exactly (``-ksp_rtol`` ``1.0e-12``, 200 iterations) Petsc reaches
+   ``3.2e-13``.
+
+Compressible
+""""""""""""
+
+Mean flow — ``flow`` / prefix ``flow_`` / ``amgx.json``; turbulence — ``turbulence`` /
+prefix ``turb_`` / ``turbamgx.json``, or ``turbamgx_sa.json`` when the turbulence model
+is ``sa-neg``.
+
+.. list-table::
+   :widths: 26 37 37
+   :header-rows: 1
+
+   * - Setting
+     - Petsc
+     - AMGX
+   * - Solver (both systems)
+     - ``fgmres``
+     - ``FGMRES``, restart 5
+   * - Preconditioner
+     - not set, so Petsc's own default
+     - aggregation AMG, ``MULTICOLOR_GS`` (``BLOCK_JACOBI`` for ``sa-neg``)
+   * - Relative tolerance, mean flow
+     - ``1.0e-3``
+     - ``1e-3``
+   * - Relative tolerance, turbulence
+     - ``1.0e-5``
+     - ``1e-5``
+   * - Absolute tolerance
+     - not set, so ``1e-50``
+     - none, under ``RELATIVE_INI_CORE``
+   * - Iteration limit
+     - not set, so ``10000``
+     - ``10``
+
+The tolerances line up exactly here. The iteration limits do not: a compressible Petsc
+solve is bounded only by its tolerance, where the AMGX one stops after ten iterations
+whether it has converged or not.
+
+RBF mesh motion
+"""""""""""""""
+
+``rbf`` / prefix ``rbf_`` / ``RBF_amgx.json``. This is the least-aligned pair in zCFD:
+the two backends use a different Krylov method, a different cycle, and different *kinds*
+of tolerance.
+
+.. list-table::
+   :widths: 26 37 37
+   :header-rows: 1
+
+   * - Setting
+     - Petsc
+     - AMGX
+   * - Solver
+     - ``fgmres``
+     - ``PCG``
+   * - Preconditioner
+     - not set
+     - AMG, ``D2`` interpolation, W-cycle, ``BLOCK_JACOBI`` smoother
+   * - Tolerance
+     - ``1.0e-5`` relative
+     - ``1e-12`` absolute
+   * - Iteration limit
+     - not set, so ``10000``
+     - ``100``
+
+Summary
+"""""""
+
+.. list-table::
+   :widths: 34 22 22 22
+   :header-rows: 1
+
+   * - Equation
+     - Relative tolerance
+     - Krylov method
+     - Preconditioner class
+   * - Incompressible pressure correction
+     - same, ``0.01``
+     - differs
+     - same, multigrid
+   * - Incompressible momentum
+     - same, ``0.1``
+     - differs
+     - same, block-Jacobi
+   * - Incompressible turbulence, energy
+     - differs
+     - differs
+     - differs
+   * - Incompressible coupled flow
+     - differs (not comparable — see above)
+     - same
+     - differs
+   * - Compressible mean flow
+     - same, ``1.0e-3``
+     - same
+     - differs
+   * - Compressible turbulence
+     - same, ``1.0e-5``
+     - same
+     - differs
+   * - RBF
+     - differs
+     - differs
+     - differs
+
+Reading the settings a case actually used
+"""""""""""""""""""""""""""""""""""""""""
+
+On the Petsc path the solver logs every option it sets, under the prefix it sets it
+under, so the log is the authoritative record of what a run used — including anything
+overridden from the control dictionary. On the AMGX path, set ``"print_solve_stats": 1``
+in the relevant json file to have each solve report its iteration count and residuals.
