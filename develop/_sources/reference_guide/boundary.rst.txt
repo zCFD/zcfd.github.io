@@ -1327,11 +1327,11 @@ mesh to be overset on top of a larger background mesh.
      - unset (falls back to all-pairs connectivity)
      - Model name, list of model names, or unset
      - Model(s) whose mesh provides donor data at this boundary. Used to derive the blanking priority order — models are topologically sorted so a model always appears after the model(s) it names as background. When unset, the solver falls back to all-pairs connectivity against every preceding model in the topological order; explicit specification is preferred, as it avoids unnecessary mapper creation for non-overlapping mesh pairs
-   * - ``idw_from_cells_order``
+   * - ``interpolation_method``
      - No
-     - 0
-     - Integer >= 0
-     - Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)
+     - ``nearest cell``
+     - ``nearest cell``, ``inverse distance``, ``green-gauss`` or ``least-squares``
+     - Donor interpolation method: ``nearest cell`` the containing cell's value, ``inverse distance`` a distance-weighted average, ``green-gauss`` a Green-Gauss reconstruction, ``least-squares`` a least-squares reconstruction
    * - ``additional_active_layers``
      - No
      - 0

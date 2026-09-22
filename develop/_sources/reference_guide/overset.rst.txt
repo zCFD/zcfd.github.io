@@ -55,11 +55,11 @@ Overset mapping options are set directly on the boundary condition that marks a 
      - ``None``
      - Model name (string) or list of model names
      - The model(s) whose mesh provides donor data at this boundary. When omitted, the solver falls back to legacy all-pairs connectivity (mapping against every preceding model).
-   * - ``idw_from_cells_order``
+   * - ``interpolation_method``
      - No
-     - 0
-     - 0 or 1
-     - Sets the order of accuracy for IDW mapping.
+     - ``nearest cell``
+     - ``nearest cell``, ``inverse distance``, ``green-gauss`` or ``least-squares``
+     - Selects how the donor value is interpolated (see below).
    * - ``additional_active_layers``
      - No
      - 0
@@ -113,9 +113,9 @@ Example usage, adapted from a real multi-mesh overset testcase (one background m
   }
 
 
-idw_from_cells_order
+interpolation_method
 ^^^^^^^^^^^^^^^^^^^^^
-If **idw_from_cells_order** is set to 0, this provides a 0th order interpolation where we only utilise data from the cell a mapped point is located within. If set to 1, a first order interpolation is achieved using an IDW interpolation, using the cell a point is found in, and its neighbours.
+Selects how the donor value is built once the containing cell is known: ``nearest cell`` takes that cell's value directly, ``inverse distance`` is a distance-weighted average over the cell and its neighbours, ``green-gauss`` is a Green-Gauss linear reconstruction about the donor cell centre, and ``least-squares`` is a least-squares linear reconstruction about the same point. Each method is described under :ref:`How overset works in the solver <overset_implementation>`.
 
 additional_active_layers
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -170,10 +170,14 @@ A donor only counts if it is itself active. A fringe point that lands in a blank
 
 Interpolation
 ^^^^^^^^^^^^^
-``idw_from_cells_order`` selects the interpolant once the donor cell is known:
+``interpolation_method`` selects the interpolant once the donor cell is known:
 
-* **0** — the value of the containing cell is taken directly, with unit weight. This is a piecewise-constant transfer, first-order accurate.
-* **1** — the containing cell and its neighbours are combined with weights :math:`(R - d)/(R + 4d)`, where :math:`d` is the distance from the query point to each donor cell centre and :math:`R` is 1.2 times the largest of those distances.
+* **nearest cell** — the value of the containing cell is taken directly, with unit weight. This is a piecewise-constant transfer, first-order accurate.
+* **inverse distance** — the containing cell and its neighbours are combined with weights :math:`(R - d)/(R + 4d)`, where :math:`d` is the distance from the query point to each donor cell centre and :math:`R` is 1.2 times the largest of those distances.
+* **green-gauss** — a Green-Gauss linear reconstruction about the donor cell centre, evaluated at the query point.
+* **least-squares** — a least-squares linear reconstruction about the donor cell centre, evaluated at the query point.
+
+``nearest cell`` and ``inverse distance`` combine cell values, so they return the donor field at a point offset from the query point; ``green-gauss`` and ``least-squares`` reconstruct a gradient and evaluate it at the query point itself.
 
 What is exchanged, and when
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

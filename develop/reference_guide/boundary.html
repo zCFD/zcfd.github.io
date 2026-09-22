@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-339-g17ad5 documentation</title>
+    <title>Boundary Conditions &#8212; zCFD User Guide v2025.11.13331-341-g6d40d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=67f1de9e"></script>
+    <script src="../_static/documentation_options.js?v=667575b9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -1505,11 +1505,11 @@ mesh to be overset on top of a larger background mesh.</p>
 <td><p>Model name, list of model names, or unset</p></td>
 <td><p>Model(s) whose mesh provides donor data at this boundary. Used to derive the blanking priority order — models are topologically sorted so a model always appears after the model(s) it names as background. When unset, the solver falls back to all-pairs connectivity against every preceding model in the topological order; explicit specification is preferred, as it avoids unnecessary mapper creation for non-overlapping mesh pairs</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">idw_from_cells_order</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">interpolation_method</span></code></p></td>
 <td><p>No</p></td>
-<td><p>0</p></td>
-<td><p>Integer &gt;= 0</p></td>
-<td><p>Interpolation order for IDW mapping (0 = standard, 1 = use neighbour info)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nearest</span> <span class="pre">cell</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nearest</span> <span class="pre">cell</span></code>, <code class="docutils literal notranslate"><span class="pre">inverse</span> <span class="pre">distance</span></code>, <code class="docutils literal notranslate"><span class="pre">green-gauss</span></code> or <code class="docutils literal notranslate"><span class="pre">least-squares</span></code></p></td>
+<td><p>Donor interpolation method: <code class="docutils literal notranslate"><span class="pre">nearest</span> <span class="pre">cell</span></code> the containing cell’s value, <code class="docutils literal notranslate"><span class="pre">inverse</span> <span class="pre">distance</span></code> a distance-weighted average, <code class="docutils literal notranslate"><span class="pre">green-gauss</span></code> a Green-Gauss reconstruction, <code class="docutils literal notranslate"><span class="pre">least-squares</span></code> a least-squares reconstruction</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code></p></td>
 <td><p>No</p></td>
