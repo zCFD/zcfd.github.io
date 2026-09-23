@@ -70,6 +70,11 @@ Overset mapping options are set directly on the boundary condition that marks a 
      - 0
      - Non-negative integer
      - Halo fringe layers around the hole when the overset mesh moves (0 treats every blanked cell as a halo; a value > 0 is sufficient when the hole is re-cut every real time step).
+   * - ``blank_enclosed_cells``
+     - No
+     - ``True``
+     - Boolean
+     - Also blanks the background cells that the hole encloses but no overset cell covers: the ones inside this mesh's own solid bodies.
 
 Example usage, adapted from a real multi-mesh overset testcase (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):
 
@@ -124,6 +129,12 @@ Adds additional active cells which may have been made inactive by an overlapping
 moving_mesh_halo_layers
 ^^^^^^^^^^^^^^^^^^^^^^^
 Relevant only when the overset mesh is itself moving (see the rotating/translating fluid zone motion types with ``moving_mesh: True`` in :ref:`Mesh Transformation <mesh_transform>`). Controls how many halo fringe layers are kept around the re-cut hole each time the mesh moves; a value of 0 treats every blanked cell as a halo, which is safe but conservative, while N > 0 is sufficient when the hole is re-cut every real time step and avoids remapping cells that don't need it.
+
+blank_enclosed_cells
+^^^^^^^^^^^^^^^^^^^^
+Coverage blanks a background cell by testing whether each of its nodes lies inside an overset cell, which cannot see the cells inside the overset mesh's own solid bodies -- a blade, a hub, a fuselage -- since the overset mesh has no cells inside its walls. Left active, those cells solve as fluid inside a solid with no donor to correct them, and appear as islands in the middle of the hole in the ``overset`` output variable.
+
+With this option on (the default), a flood fill from the active cells outside the overset mesh's bounding box identifies what the hole walls in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh with no wall encloses nothing, and one carrying an inward-facing overset boundary has deliberately left its interior to the background. The count blanked is logged at each hole cut.
 
 background
 ^^^^^^^^^^
