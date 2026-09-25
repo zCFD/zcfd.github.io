@@ -153,7 +153,7 @@ Rotating
    * - ``moving_mesh``
      - No
      - ``False``
-     - ``True`` \| ``False`` — only settable if this mesh has an ``overset`` boundary
+     - ``True`` \| ``False`` — only settable in an unsteady run on a mesh with an overset or sliding interface
    * - ``ramp``
      - No
      - --
@@ -162,8 +162,9 @@ Rotating
 By default (``moving_mesh: False``) a rotating zone applies a rotating
 reference-frame momentum source without actually moving the mesh — the
 classic MRF treatment. Setting ``moving_mesh: True`` instead moves the zone's
-cells for real, which requires the same mesh to also declare an ``overset``
-boundary condition; setting it without one is rejected at validation time.
+cells for real, which requires an unsteady run and the same mesh to also
+declare an overset or sliding :ref:`interface <bc_interface>`; setting it
+otherwise is rejected at validation time.
 
 .. code-block:: python
 
@@ -192,7 +193,7 @@ For a genuinely moving (overset) rotating zone:
         }
     },
     'boundary_conditions': {
-        'overset_boundaries': {'zones': [13], 'type': 'overset'},
+        'overset_boundaries': {'zones': [13], 'type': 'interface', 'kind': 'overset'},
         ...
     },
 
@@ -226,7 +227,7 @@ Translating
    * - ``moving_mesh``
      - No
      - ``False``
-     - ``True`` \| ``False`` — only settable if this mesh has an ``overset`` boundary
+     - ``True`` \| ``False`` — only settable in an unsteady run on a mesh with an overset or sliding interface
    * - ``ramp``
      - No
      - --
@@ -985,7 +986,7 @@ Affine transform (``'affine transform'``)
    * - ``moving_mesh``
      - No
      - ``False``
-     - ``True`` \| ``False`` — only settable if this mesh has an ``overset`` boundary
+     - ``True`` \| ``False`` — only settable in an unsteady run on a mesh with an overset or sliding interface
 
 .. code-block:: python
 

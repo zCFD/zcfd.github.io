@@ -40,7 +40,7 @@ There are 4 meshes involved in this case. A single control dictionary called "ov
         "cylinder_1": {"mesh": "back3.h5", ...},
     }
 
-Note that in this case, the "back3.h5" mesh defining a cylinder has been used twice, once for "cylinder_1" and once for "cylinder_2". This is OK, because the "cylinder_1" and "cylinder_2" model entries each apply a different transformation (down and up along the y-axis respectively). The solver knows that the meshes are used for different solutions, in different parts of the flow domain. Also note that the translated mesh for "cylinder_1" overlaps the translated mesh for "cylinder_2" (the mesh between the two cylinders). This is also OK because each model entry's overset boundary condition explicitly names its own background mesh - the solver builds "cylinder_1" and "cylinder_2" oversetting "refinement_region", which oversets "background". In each case, the active solution is the one on the top-level oversetting mesh.
+Note that in this case, the "back3.h5" mesh defining a cylinder has been used twice, once for "cylinder_1" and once for "cylinder_2". This is OK, because the "cylinder_1" and "cylinder_2" model entries each apply a different transformation (down and up along the y-axis respectively). The solver knows that the meshes are used for different solutions, in different parts of the flow domain. Also note that the translated mesh for "cylinder_1" overlaps the translated mesh for "cylinder_2" (the mesh between the two cylinders). This is also OK because each model entry's overset interface explicitly names its own donor mesh in its connection - the solver builds "cylinder_1" and "cylinder_2" oversetting "refinement_region", which oversets "background". In each case, the active solution is the one on the top-level oversetting mesh.
 
 The files for running the case are available for download `here <https://zcfd.zenotech.com/tutorials/5/oversetmulticylinder.zip>`__.
 
@@ -58,9 +58,14 @@ This tells the solver to use the inbuilt transformation function in zutil to tra
 
 .. code-block:: python
 
-    "BC_2": {"zones": [13], "type": "overset", "background": ["refinement_region"]},
+    "BC_2": {
+        "zones": [13],
+        "type": "interface",
+        "kind": "overset",
+        "connection": {"model": ["refinement_region"]},
+    },
 
-For the "cylinder_2" model (the "back3.h5" mesh, translated down in y), zone 13 (comprising boundary faces excluding symmetry planes and the cylinder surface) is designated as an overset boundary, and its ``background`` field names "refinement_region" as the donor mesh it exchanges data with. Naming the background mesh explicitly like this is the preferred form: it tells the solver exactly which mesh pairs need a mapper built, rather than falling back to checking every preceding mesh in the model dictionary for overlap. The software automatically calculates the necessary mapping and interpolation coefficients to preserve the spatial accuracy of the overset solution.
+For the "cylinder_2" model (the "back3.h5" mesh, translated down in y), zone 13 (comprising boundary faces excluding symmetry planes and the cylinder surface) is designated as an overset interface, and its connection names "refinement_region" as the donor mesh it exchanges data with. Naming the donor mesh explicitly like this is the preferred form: it tells the solver exactly which mesh pairs need a mapper built, rather than checking every preceding mesh in the model dictionary for overlap. The software automatically calculates the necessary mapping and interpolation coefficients to preserve the spatial accuracy of the overset solution.
 
 The "Multiple Overset Cylinder" test case runs in a few minutes on a GPU, with the simple command:
 
@@ -161,7 +166,7 @@ This function returns the velocity to be applied to a fluid zone, which is then 
       "moving mesh": True,
   },
 
-The fluid zone's ``velocity`` is a single vector in m/s - there is no separate ``vector``/``mach`` split for a translating zone. The ``moving_mesh`` field is set directly on the fluid zone; setting it is only permitted when the same mesh also declares an overset boundary condition (as the "train" mesh does, for the zone where it exchanges data with the tunnel background mesh), since a moving mesh with nowhere to overset is meaningless. Setting ``moving_mesh`` to ``True`` forces a recalculation of the physical location of the mesh, including the recalculation of any overset mappings, every real time step.
+The fluid zone's ``velocity`` is a single vector in m/s - there is no separate ``vector``/``mach`` split for a translating zone. The ``moving_mesh`` field is set directly on the fluid zone; setting it is only permitted in an unsteady run, on a mesh that also declares an overset or sliding interface (as the "train" mesh does, for the zone where it exchanges data with the tunnel background mesh), since a moving mesh with nothing to exchange data with is meaningless. Setting ``moving_mesh`` to ``True`` forces a recalculation of the physical location of the mesh, including the recalculation of any overset mappings, every real time step.
 
 The unsteady time-marching settings that apply to the whole case live under the control dictionary's top-level ``solver`` key, split between ``time_settings`` (what is being marched) and ``convergence_control`` (how each step converges):
 

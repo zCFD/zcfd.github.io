@@ -57,10 +57,8 @@ zCFD supports the following boundary condition types:
      - Standalone mass-flow boundary condition
    * - :ref:`Symmetry <bc_symmetry>`
      - Mirror boundary condition
-   * - :ref:`Overset <bc_overset>`
-     - The boundary of a mesh to be overset on a background mesh
-   * - :ref:`Periodic <bc_periodic>`
-     - Repeating boundary condition, with flow from one periodic boundary mapped to the other.
+   * - :ref:`Interface <bc_interface>`
+     - A boundary joined to another part of the domain: an overset mesh boundary, a sliding interface between two meshes, or one side of a periodic pair
 
 
 Zones
@@ -1173,25 +1171,330 @@ Example:
     "BC_1": {"zones": [2, 3], "type": "symmetry"},
 
 
+.. _bc_interface:
+
+Interface
+=========
+
+An interface boundary condition (``type: 'interface'``) joins a boundary to
+another part of the domain rather than closing it off: the solution on one
+side is supplied by the other. The ``kind`` selects how the two sides are
+joined:
+
+* ``'overset'`` — this mesh overlaps another, and takes the values in its
+  fringe from the mesh beneath it.
+* ``'sliding'`` — two meshes meet on a shared surface of revolution with
+  non-matching faces, and exchange a conservative flux across it.
+* ``'periodic'`` — two boundaries of the same mesh are treated as one
+  surface, related by a rotation or a translation.
+
+Every interface names what it connects to in its ``connection`` block. What
+the connection holds depends on the ``kind``, and is described in each
+subsection below.
+
+.. _bc_overset:
+
+Overset
+^^^^^^^
+
+The overset interface is applied to the outer boundaries of a mesh that is
+overset on top of one or more other meshes. See :ref:`Overset <overset>` for
+how an overset case is set up and solved.
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'interface'``
+     - Boundary condition type
+   * - ``kind``
+     - Yes
+     -
+     - ``'overset'``
+     - Interface kind
+   * - ``connection``
+     - No
+     - unset (maps against every preceding model)
+     - See below
+     - The model(s) whose mesh provides donor data at this interface
+   * - ``interpolation_method``
+     - No
+     - ``nearest cell``
+     - ``nearest cell``, ``inverse distance``, ``green-gauss`` or ``least-squares``
+     - Donor interpolation method: ``nearest cell`` the containing cell's value, ``inverse distance`` a distance-weighted average, ``green-gauss`` a Green-Gauss reconstruction, ``least-squares`` a least-squares reconstruction
+   * - ``additional_active_layers``
+     - No
+     - 0
+     - Integer >= 0
+     - Number of additional active cell layers near the blanking boundary
+   * - ``moving_mesh_halo_layers``
+     - No
+     - 0
+     - Integer >= 0
+     - Halo fringe layers around the hole when the overset mesh moves (0 = treat every blanked cell as a halo; N > 0 is sufficient when the hole is re-cut every real time step)
+
+The options for the overset ``connection`` are:
+
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``model``
+     - Yes
+     -
+     - Model name or list of model names
+     - Model(s) whose mesh provides donor data at this interface. Each must be another model in the case
+
+The connections define the blanking priority order: models are
+topologically sorted so that a model always appears after the model(s) it
+connects to. Without a connection, the solver maps against every preceding
+model in that order. Naming the connection explicitly is preferred, as it
+avoids building mappers for mesh pairs that do not overlap.
+
+Example without a connection:
+
+.. code-block:: python
+
+    "BC_2": {"zones": [7], "type": "interface", "kind": "overset"},
+
+Example connected to a model named ``background``:
+
+.. code-block:: python
+
+    "BC_2": {
+        "zones": [10],
+        "type": "interface",
+        "kind": "overset",
+        "connection": {"model": ["background"]},
+    },
+
+.. _bc_sliding:
+
+Sliding
+^^^^^^^
+
+A sliding interface joins two models whose meshes abut, without
+overlapping, on a shared cylindrical, conical or annular surface — typically
+a rotating region and the stationary region around it. The faces on the two
+sides need not match. The two face sets are clipped against each other into
+a common set of intersection polygons, one numerical flux is computed per
+polygon, and that flux is applied to the cell on each side, so the interface
+is conservative rather than interpolated.
+
+A sliding interface is declared on both models, and each names the other.
+The connection gives the model and the boundary on the other side; that
+boundary must itself be a sliding interface whose connection names this one
+back.
+
+The interface must be a surface of revolution about the axis of the rotating
+fluid zone on either side. When neither side rotates, the two meshes are
+simply joined, and the axis is found from the shape of the interface itself.
+
+The interface may be a cylinder, a cone, a flat annulus, a spherical band, a
+disc or spherical cap that reaches the axis, or a whole sphere centred on the
+axis. It must cover the full circle about the axis; a periodic sector is not
+supported. The summary printed at the start of the run names the shape the
+solver found, which is a quick check that the right zones were listed.
+
+A closed or compound surface, such as a drum's two faces and its side, can be
+declared either way:
+
+* as one sliding interface on each side that lists every zone. The solver
+  groups the zones into single surfaces, a cylinder meshed as two zones
+  counting as one, and pairs each surface with the matching one on the other
+  side;
+* as one sliding interface per surface, each naming its partner, when the
+  pairing should be stated explicitly.
+
+A zone that matches no surface on the other side stops the run at setup, with
+the zone, the model and the shape it was found to have.
+
+.. code-block:: python
+
+    "outer": {"boundary conditions": {
+        "BC_2": {"zones": [10, 63, 62], "type": "interface", "kind": "sliding",
+                 "connection": {"model": "disc", "boundary": "BC_1"}}}},
+    "disc": {"boundary conditions": {
+        "BC_1": {"zones": [21, 22, 23], "type": "interface", "kind": "sliding",
+                 "connection": {"model": "outer", "boundary": "BC_2"}}}},
+
+.. list-table::
+   :widths: 20 10 10 20 35
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``zones``
+     - Yes
+     -
+     - List of integers
+     - Mesh zone IDs this boundary condition applies to
+   * - ``type``
+     - Yes
+     -
+     - ``'interface'``
+     - Boundary condition type
+   * - ``kind``
+     - Yes
+     -
+     - ``'sliding'``
+     - Interface kind
+   * - ``connection``
+     - Yes
+     -
+     - See below
+     - The model and boundary on the other side of this interface
+   * - ``area``
+     - No
+     - ``conservative``
+     - ``conservative`` or ``free stream``
+     - Which area vector each side's segments use (see below)
+   * - ``flux``
+     - No
+     - ``segment``
+     - ``segment`` or ``parent``
+     - Where the interface's numerical flux is evaluated (see below)
+
+The options for the sliding ``connection`` are:
+
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``model``
+     - Yes
+     -
+     - Model name
+     - The model on the other side of this interface. It must be another model in the case
+   * - ``boundary``
+     - Yes
+     -
+     - Boundary condition name
+     - The boundary condition on that model that forms the other side of this interface
+
+``area``
+    ``conservative`` gives both sides the mean of the two parent area maps,
+    so the interface conserves to round-off and the per-face closure error
+    is first order in cell width. ``free stream`` gives each side its own
+    parent map, so closure, and with it free-stream preservation, is exact
+    and the conservation deficit is second order. The two are identical on
+    a planar interface and for matching meshes.
+
+``flux``
+    ``segment`` computes one flux per intersection polygon, applied with a
+    shared area vector to the cell on each side, so the two sides cancel
+    exactly and the interface conserves. ``parent`` computes one flux per
+    parent face instead, against the area-weighted average of that face's
+    donors and with the parent face's own area vector. The flux then does not
+    change when the intersection pattern changes, so the noise a rotating
+    interface makes as cells pass one another is lower, but each side fluxes
+    its own faces and nothing cancels: the interface is not conservative.
+    ``segment`` is the default for that reason.
+
+The following advanced options are rarely needed:
+
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``segment_capacity_factor``
+     - No
+     - 8
+     - Integer >= 1
+     - Segment storage reserved per interface face. The intersection is rebuilt every real time step and its segment count varies with the rotation angle, so storage is reserved once at this multiple of the local interface face count. Setup sweeps a full revolution and stops with the factor actually needed if this is too small
+   * - ``sliver_tolerance``
+     - No
+     - 1.0e-10
+     - Number >= 0
+     - Overlaps smaller than this fraction of the smaller parent face are discarded. Slivers carry no useful flux but each costs a segment slot
+   * - ``closure_tolerance``
+     - No
+     - 1.0e-2
+     - Number >= 0
+     - Largest fraction of a face's area that may be left uncovered by its segments before setup stops. A real gap between the two sides (mismatched radii, a partial annulus, a wrong axis) shows up here rather than as a silent leak
+
+Example of a rotor and the stator around it, each connected to the other:
+
+.. code-block:: python
+
+    "model": {
+        "rotor": {
+            "mesh": "rotor.h5",
+            "boundary_conditions": {
+                "BC_3": {
+                    "zones": [21],
+                    "type": "interface",
+                    "kind": "sliding",
+                    "connection": {"model": "stator", "boundary": "BC_2"},
+                },
+            },
+        },
+        "stator": {
+            "mesh": "stator.h5",
+            "boundary_conditions": {
+                "BC_2": {
+                    "zones": [20],
+                    "type": "interface",
+                    "kind": "sliding",
+                    "connection": {"model": "rotor", "boundary": "BC_3"},
+                },
+            },
+        },
+    },
+
 .. _bc_periodic:
 
 Periodic
-========
+^^^^^^^^
 
-This boundary condition needs to be specified in pairs with opposing
-transformations. The transforms specified should map each zone onto the
-matching zone.
+A periodic interface treats two boundaries of the same mesh as one surface,
+with the flow leaving one boundary entering the other. It is specified in
+pairs: each boundary's connection names the other boundary of the pair, and
+that boundary must name this one back.
 
-.. note::
-
-    Each periodic boundary needs to provide the correct transform to the
-    opposite matching boundary.
+Each side carries the ``transform`` that maps it onto the other side, so the
+two transforms must be inverses of each other. A rotation of theta about an
+axis pairs with a rotation of -theta about the same axis line (equivalently,
+theta about the reversed axis); a translation by a vector pairs with the
+translation by its negative. Both sides of a pair use the same transform
+``type``.
 
 .. note::
 
     The incompressible solver (``solver_settings.type: 'incompressible'``)
-    only supports the **'linear'** (translational) periodic kind.
-    **'rotated'** periodic boundaries are only supported by the
+    only supports the **'linear'** (translational) periodic transform.
+    **'rotated'** periodic interfaces are only supported by the
     compressible solver.
 
 .. list-table::
@@ -1211,20 +1514,25 @@ matching zone.
    * - ``type``
      - Yes
      -
-     - ``'periodic'``
+     - ``'interface'``
      - Boundary condition type
    * - ``kind``
      - Yes
      -
-     - ``'rotated'`` or ``'linear'``
-     - Selects the periodic transformation type (see note above on incompressible-solver support)
+     - ``'periodic'``
+     - Interface kind
+   * - ``connection``
+     - Yes
+     -
+     - See below
+     - The other boundary of the periodic pair
    * - ``transform``
      - Yes
      -
      - See below
-     - The periodic transformation, shape depends on ``kind``
+     - The transformation that maps this boundary onto the one it connects to
 
-The options for the **'linear'** ``transform`` are:
+The options for the periodic ``connection`` are:
 
 .. list-table::
    :widths: 25 10 10 20 30
@@ -1235,21 +1543,52 @@ The options for the **'linear'** ``transform`` are:
      - Default
      - Valid values
      - Description
+   * - ``boundary``
+     - Yes
+     -
+     - Boundary condition name
+     - The boundary condition on this model that forms the other side of the periodic pair
+
+The ``transform`` takes a ``type`` of ``'linear'`` or ``'rotated'``. The
+options for the **'linear'** ``transform`` are:
+
+.. list-table::
+   :widths: 25 10 10 20 30
+   :header-rows: 1
+
+   * - Keyword
+     - Required
+     - Default
+     - Valid values
+     - Description
+   * - ``type``
+     - Yes
+     -
+     - ``'linear'``
+     - Transform type
    * - ``vector``
      - Yes
      -
      - ``[x, y, z]``
-     - Translation vector mapping this zone onto the matching periodic zone
+     - Translation vector mapping this boundary onto the other side of the pair
 
-Example linear periodic boundary condition:
+Example linear periodic pair:
 
 .. code-block:: python
 
     "BC_3": {
         "zones": [11],
-        "type": "periodic",
-        "kind": "linear",
-        "transform": {"vector": [0.0, 0.0, 1.0]},
+        "type": "interface",
+        "kind": "periodic",
+        "connection": {"boundary": "BC_4"},
+        "transform": {"type": "linear", "vector": [0.0, 0.0, 1.0]},
+    },
+    "BC_4": {
+        "zones": [12],
+        "type": "interface",
+        "kind": "periodic",
+        "connection": {"boundary": "BC_3"},
+        "transform": {"type": "linear", "vector": [0.0, 0.0, -1.0]},
     },
 
 The options for the **'rotated'** ``transform`` are (compressible solver only — see note above):
@@ -1263,94 +1602,52 @@ The options for the **'rotated'** ``transform`` are (compressible solver only �
      - Default
      - Valid values
      - Description
+   * - ``type``
+     - Yes
+     -
+     - ``'rotated'``
+     - Transform type
    * - ``axis``
      - Yes
      -
      - ``[x, y, z]``: unit vector
-     - Axis of rotation mapping this boundary onto the matching periodic zone
+     - Axis of rotation mapping this boundary onto the other side of the pair
    * - ``origin``
      - Yes
      -
      - ``[x, y, z]``
-     - Origin of the axis of rotation
+     - A point on the axis of rotation
    * - ``theta``
      - Yes
      -
      - Number
      - Angle of rotation about the axis, in radians
 
-Example rotated periodic boundary condition:
+Example rotated periodic pair for a 120° sector:
 
 .. code-block:: python
 
-    "BC_4": {
+    "BC_5": {
         "zones": [5],
-        "type": "periodic",
-        "kind": "rotated",
+        "type": "interface",
+        "kind": "periodic",
+        "connection": {"boundary": "BC_6"},
         "transform": {
+            "type": "rotated",
             "theta": math.radians(120.0),
             "axis": [1.0, 0.0, 0.0],
             "origin": [0.0, 0.0, 0.0],
         },
     },
-
-
-.. _bc_overset:
-
-Overset
-=======
-
-The overset boundary condition should be applied to the boundaries of a
-mesh to be overset on top of a larger background mesh.
-
-.. list-table::
-   :widths: 20 10 10 20 35
-   :header-rows: 1
-
-   * - Keyword
-     - Required
-     - Default
-     - Valid values
-     - Description
-   * - ``zones``
-     - Yes
-     -
-     - List of integers
-     - Mesh zone IDs this boundary condition applies to
-   * - ``type``
-     - Yes
-     -
-     - ``'overset'``
-     - Boundary condition type
-   * - ``background``
-     - No
-     - unset (falls back to all-pairs connectivity)
-     - Model name, list of model names, or unset
-     - Model(s) whose mesh provides donor data at this boundary. Used to derive the blanking priority order — models are topologically sorted so a model always appears after the model(s) it names as background. When unset, the solver falls back to all-pairs connectivity against every preceding model in the topological order; explicit specification is preferred, as it avoids unnecessary mapper creation for non-overlapping mesh pairs
-   * - ``interpolation_method``
-     - No
-     - ``nearest cell``
-     - ``nearest cell``, ``inverse distance``, ``green-gauss`` or ``least-squares``
-     - Donor interpolation method: ``nearest cell`` the containing cell's value, ``inverse distance`` a distance-weighted average, ``green-gauss`` a Green-Gauss reconstruction, ``least-squares`` a least-squares reconstruction
-   * - ``additional_active_layers``
-     - No
-     - 0
-     - Integer >= 0
-     - Number of additional active cell layers near the blanking boundary
-   * - ``moving_mesh_halo_layers``
-     - No
-     - 0
-     - Integer >= 0
-     - Halo fringe layers around the hole when the overset mesh moves (0 = treat every blanked cell as a halo; N > 0 is sufficient when the hole is re-cut every real time step)
-
-Example without an explicit background:
-
-.. code-block:: python
-
-    "BC_2": {"zones": [7], "type": "overset"},
-
-Example with an explicit background model:
-
-.. code-block:: python
-
-    "BC_2": {"zones": [10], "type": "overset", "background": ["background"]},
+    "BC_6": {
+        "zones": [6],
+        "type": "interface",
+        "kind": "periodic",
+        "connection": {"boundary": "BC_5"},
+        "transform": {
+            "type": "rotated",
+            "theta": math.radians(-120.0),
+            "axis": [1.0, 0.0, 0.0],
+            "origin": [0.0, 0.0, 0.0],
+        },
+    },

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fluid Zones &#8212; zCFD User Guide v2025.11.13331-352-g041bc06 documentation</title>
+    <title>Fluid Zones &#8212; zCFD User Guide v2025.11.13331-353-g3e5bb documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=042c013d"></script>
+    <script src="../_static/documentation_options.js?v=3c3205ec"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -209,7 +209,7 @@ pair.</p></li>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code> — only settable if this mesh has an <code class="docutils literal notranslate"><span class="pre">overset</span></code> boundary</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code> — only settable in an unsteady run on a mesh with an overset or sliding interface</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ramp</span></code></p></td>
 <td><p>No</p></td>
@@ -221,8 +221,9 @@ pair.</p></li>
 <p>By default (<code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">False</span></code>) a rotating zone applies a rotating
 reference-frame momentum source without actually moving the mesh — the
 classic MRF treatment. Setting <code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code> instead moves the zone’s
-cells for real, which requires the same mesh to also declare an <code class="docutils literal notranslate"><span class="pre">overset</span></code>
-boundary condition; setting it without one is rejected at validation time.</p>
+cells for real, which requires an unsteady run and the same mesh to also
+declare an overset or sliding <a class="reference internal" href="boundary.html#bc-interface"><span class="std std-ref">interface</span></a>; setting it
+otherwise is rejected at validation time.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">'fluid_zones'</span><span class="p">:</span> <span class="p">{</span>
     <span class="s1">'FZ_1'</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">'zones'</span><span class="p">:</span> <span class="p">[</span><span class="mi">17</span><span class="p">],</span>
@@ -246,7 +247,7 @@ boundary condition; setting it without one is rejected at validation time.</p>
     <span class="p">}</span>
 <span class="p">},</span>
 <span class="s1">'boundary_conditions'</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s1">'overset_boundaries'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'zones'</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'overset'</span><span class="p">},</span>
+    <span class="s1">'overset_boundaries'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'zones'</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'interface'</span><span class="p">,</span> <span class="s1">'kind'</span><span class="p">:</span> <span class="s1">'overset'</span><span class="p">},</span>
     <span class="o">...</span>
 <span class="p">},</span>
 </pre></div>
@@ -292,7 +293,7 @@ boundary condition; setting it without one is rejected at validation time.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code> — only settable if this mesh has an <code class="docutils literal notranslate"><span class="pre">overset</span></code> boundary</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code> — only settable in an unsteady run on a mesh with an overset or sliding interface</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ramp</span></code></p></td>
 <td><p>No</p></td>
@@ -1199,7 +1200,7 @@ RBF when it is below <code class="docutils literal notranslate"><span class="pre
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code> — only settable if this mesh has an <code class="docutils literal notranslate"><span class="pre">overset</span></code> boundary</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code> — only settable in an unsteady run on a mesh with an overset or sliding interface</p></td>
 </tr>
 </tbody>
 </table>

@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-352-g041bc06 documentation</title>
+    <title>Time Marching &#8212; zCFD User Guide v2025.11.13331-353-g3e5bb documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=042c013d"></script>
+    <script src="../_static/documentation_options.js?v=3c3205ec"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -940,7 +940,7 @@
 </section>
 <section id="moving-mesh">
 <span id="id10"></span><h2>Moving Mesh<a class="headerlink" href="#moving-mesh" title="Link to this heading">¶</a></h2>
-<p>Mesh motion is controlled by a per-fluid-zone <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> flag on a rotating or translating fluid zone, and requires an overset boundary condition to be present on the same mesh (mesh motion needs an overset assembly to move within; a rotating or translating zone in a non-overset case uses an ALE reference frame instead, so <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> has no effect there and is rejected).</p>
+<p>Mesh motion is controlled by a per-fluid-zone <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> flag on a rotating or translating fluid zone, and requires an unsteady run with an overset or sliding <a class="reference internal" href="boundary.html#bc-interface"><span class="std std-ref">interface</span></a> on the same mesh (mesh motion needs another mesh to move relative to; a rotating or translating zone without one uses an ALE reference frame instead, so <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> has no effect there and is rejected).</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 25.0%" />
@@ -959,7 +959,7 @@
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code>. Only settable on a rotating or translating fluid zone whose mesh has an overset boundary condition.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code>. Only settable in an unsteady run, on a rotating or translating fluid zone whose mesh has an overset or sliding interface.</p></td>
 </tr>
 </tbody>
 </table>
@@ -975,7 +975,7 @@
 <span class="p">},</span>
 </pre></div>
 </div>
-<p>For simulations where there is no relative movement of interest, <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> should be left at its default of <code class="docutils literal notranslate"><span class="pre">False</span></code> and the zone runs in its own (rotating or translating) reference frame. Setting <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> forces a recalculation of the physical location of the mesh every step, including the recalculation of the overset mapping.</p>
+<p>For simulations where there is no relative movement of interest, <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> should be left at its default of <code class="docutils literal notranslate"><span class="pre">False</span></code> and the zone runs in its own (rotating or translating) reference frame. Setting <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> forces a recalculation of the physical location of the mesh every step, including the recalculation of the overset mapping or the sliding interface intersection.</p>
 </section>
 </section>
 

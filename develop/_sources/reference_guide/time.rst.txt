@@ -883,7 +883,7 @@ Example usage:
 Moving Mesh
 ^^^^^^^^^^^
 
-Mesh motion is controlled by a per-fluid-zone ``moving_mesh`` flag on a rotating or translating fluid zone, and requires an overset boundary condition to be present on the same mesh (mesh motion needs an overset assembly to move within; a rotating or translating zone in a non-overset case uses an ALE reference frame instead, so ``moving_mesh`` has no effect there and is rejected).
+Mesh motion is controlled by a per-fluid-zone ``moving_mesh`` flag on a rotating or translating fluid zone, and requires an unsteady run with an overset or sliding :ref:`interface <bc_interface>` on the same mesh (mesh motion needs another mesh to move relative to; a rotating or translating zone without one uses an ALE reference frame instead, so ``moving_mesh`` has no effect there and is rejected).
 
 .. list-table::
    :widths: 25 10 25 40
@@ -896,7 +896,7 @@ Mesh motion is controlled by a per-fluid-zone ``moving_mesh`` flag on a rotating
    * - ``moving_mesh``
      - No
      - ``False``
-     - ``True`` | ``False``. Only settable on a rotating or translating fluid zone whose mesh has an overset boundary condition.
+     - ``True`` | ``False``. Only settable in an unsteady run, on a rotating or translating fluid zone whose mesh has an overset or sliding interface.
 
 Example usage:
 
@@ -912,4 +912,4 @@ Example usage:
         },
     },
 
-For simulations where there is no relative movement of interest, ``moving_mesh`` should be left at its default of ``False`` and the zone runs in its own (rotating or translating) reference frame. Setting ``moving_mesh`` to ``True`` forces a recalculation of the physical location of the mesh every step, including the recalculation of the overset mapping.
+For simulations where there is no relative movement of interest, ``moving_mesh`` should be left at its default of ``False`` and the zone runs in its own (rotating or translating) reference frame. Setting ``moving_mesh`` to ``True`` forces a recalculation of the physical location of the mesh every step, including the recalculation of the overset mapping or the sliding interface intersection.

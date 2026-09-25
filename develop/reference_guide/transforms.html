@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Mesh Transformation &#8212; zCFD User Guide v2025.11.13331-352-g041bc06 documentation</title>
+    <title>Mesh Transformation &#8212; zCFD User Guide v2025.11.13331-353-g3e5bb documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=042c013d"></script>
+    <script src="../_static/documentation_options.js?v=3c3205ec"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -171,7 +171,7 @@
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> | <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p>Physically moves the mesh (requires this model to also declare an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition — see <a class="reference internal" href="overset.html#overset"><span class="std std-ref">overset</span></a>). Without an overset boundary, the zone still rotates/translates as a reference frame, but <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> has no additional effect.</p></td>
+<td><p>Physically moves the mesh (requires an unsteady run, and this model to also declare an overset or sliding interface — see <a class="reference internal" href="boundary.html#bc-interface"><span class="std std-ref">Interface</span></a>). Without one, the zone still rotates/translates as a reference frame and <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> is rejected at validation.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ramp</span></code></p></td>
 <td><p>No</p></td>
@@ -181,7 +181,7 @@
 </tr>
 </tbody>
 </table>
-<p>A rotating reference frame, with the mesh itself placed by an initial rotation (no overset boundary, so <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> is left at its default):</p>
+<p>A rotating reference frame, with the mesh itself placed by an initial rotation (no overset interface, so <code class="docutils literal notranslate"><span class="pre">moving_mesh</span></code> is left at its default):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zutil.transform</span>
 
 <span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"background"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -200,7 +200,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>An overset mesh that is actually rotated in place each time step (<code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code>, paired with an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition on the same model):</p>
+<p>An overset mesh that is actually rotated in place each time step (<code class="docutils literal notranslate"><span class="pre">moving_mesh:</span> <span class="pre">True</span></code>, paired with an overset interface on the same model):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span><span class="p">[</span><span class="s2">"model"</span><span class="p">][</span><span class="s2">"cylinder_1"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"cylinder_origin.h5"</span><span class="p">,</span>
     <span class="s2">"transforms"</span><span class="p">:</span> <span class="p">{</span>
@@ -221,7 +221,9 @@
             <span class="s2">"moving_mesh"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">}},</span>
+    <span class="s2">"boundary_conditions"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"interface"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">}</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>

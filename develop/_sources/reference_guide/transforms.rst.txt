@@ -120,14 +120,14 @@ A zone of cells can be rotated or translated relative to the rest of the mesh by
      - No
      - ``False``
      - ``True`` | ``False``
-     - Physically moves the mesh (requires this model to also declare an ``'overset'`` boundary condition — see :ref:`overset <overset>`). Without an overset boundary, the zone still rotates/translates as a reference frame, but ``moving_mesh`` has no additional effect.
+     - Physically moves the mesh (requires an unsteady run, and this model to also declare an overset or sliding interface — see :ref:`Interface <bc_interface>`). Without one, the zone still rotates/translates as a reference frame and ``moving_mesh`` is rejected at validation.
    * - ``ramp``
      - No
      - ``None``
      - Dict
      - Optional ramping of the motion at start-up. Not a validated sub-schema — no control deck in this repository sets it; check the C++ read site before relying on a specific shape.
 
-A rotating reference frame, with the mesh itself placed by an initial rotation (no overset boundary, so ``moving_mesh`` is left at its default):
+A rotating reference frame, with the mesh itself placed by an initial rotation (no overset interface, so ``moving_mesh`` is left at its default):
 
 .. code-block:: python
 
@@ -148,7 +148,7 @@ A rotating reference frame, with the mesh itself placed by an initial rotation (
         "boundary_conditions": {...},
     }
 
-An overset mesh that is actually rotated in place each time step (``moving_mesh: True``, paired with an ``'overset'`` boundary condition on the same model):
+An overset mesh that is actually rotated in place each time step (``moving_mesh: True``, paired with an overset interface on the same model):
 
 .. code-block:: python
 
@@ -172,7 +172,9 @@ An overset mesh that is actually rotated in place each time step (``moving_mesh:
                 "moving_mesh": True,
             }
         },
-        "boundary_conditions": {"BC_1": {"zones": [7], "type": "overset"}},
+        "boundary_conditions": {
+            "BC_1": {"zones": [7], "type": "interface", "kind": "overset"}
+        },
     }
 
 Mesh morphing

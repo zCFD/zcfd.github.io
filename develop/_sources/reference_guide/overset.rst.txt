@@ -2,13 +2,13 @@
 
 Overset
 -------
-zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the control file's top-level ``model`` key, each carrying its own ``mesh`` path, and each mesh that receives donor data from another mesh must declare an ``'overset'`` boundary condition on its hole-cutting surface (see :ref:`Overset boundary condition <overset_bc>` below).
+zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the control file's top-level ``model`` key, each carrying its own ``mesh`` path, and each mesh that receives donor data from another mesh must declare an overset interface on its hole-cutting surface (see :ref:`Overset interface <overset_bc>` below).
 
 .. _overset_setup:
 
 Setting up an overset case
 ============================
-One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an ``'overset'`` boundary condition whose ``background`` field names the donor model(s) (see below).
+One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an overset interface whose ``connection`` names the donor model(s) (see below).
 
 Example ``model`` structure (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):
 
@@ -31,10 +31,10 @@ All meshes are read from the ``mesh`` key of each entry under ``model``; no sepa
 
 .. _overset_bc:
 
-Overset boundary condition
-===========================
+Overset interface
+=================
 
-Overset mapping options are set directly on the boundary condition that marks a mesh's overset (hole-cutting) surface, using ``'type': 'overset'`` inside that model's ``boundary_conditions`` block:
+Overset mapping options are set directly on the boundary condition that marks a mesh's overset (hole-cutting) surface, using ``'type': 'interface'`` with ``'kind': 'overset'`` inside that model's ``boundary_conditions`` block (see also :ref:`Interface <bc_interface>`):
 
 .. list-table::
    :widths: 25 10 20 20 30
@@ -48,13 +48,18 @@ Overset mapping options are set directly on the boundary condition that marks a 
    * - ``type``
      - Yes
      - --
+     - ``'interface'``
+     - Boundary condition type.
+   * - ``kind``
+     - Yes
+     - --
      - ``'overset'``
      - Marks this boundary as an overset (hole-cutting) surface.
-   * - ``background``
+   * - ``connection``
      - No
      - ``None``
-     - Model name (string) or list of model names
-     - The model(s) whose mesh provides donor data at this boundary. When omitted, the solver falls back to legacy all-pairs connectivity (mapping against every preceding model).
+     - ``{"model": ...}`` with a model name (string) or list of model names
+     - The model(s) whose mesh provides donor data at this boundary. When omitted, the solver maps against every preceding model.
    * - ``interpolation_method``
      - No
      - ``nearest cell``
@@ -96,8 +101,9 @@ Example usage, adapted from a real multi-mesh overset testcase (one background m
                   "BC_1": {"zones": [9, 11], "type": "symmetry"},
                   "BC_2": {
                       "zones": [10],
-                      "type": "overset",
-                      "background": ["background"],
+                      "type": "interface",
+                      "kind": "overset",
+                      "connection": {"model": ["background"]},
                   },
               },
           },
@@ -107,8 +113,9 @@ Example usage, adapted from a real multi-mesh overset testcase (one background m
                   "BC_1": {"zones": [11, 12], "type": "symmetry"},
                   "BC_2": {
                       "zones": [13],
-                      "type": "overset",
-                      "background": ["refinement_region"],
+                      "type": "interface",
+                      "kind": "overset",
+                      "connection": {"model": ["refinement_region"]},
                   },
                   "BC_3": {"zones": [10], "type": "wall", "kind": "no slip"},
               },
@@ -134,11 +141,11 @@ blank_enclosed_cells
 ^^^^^^^^^^^^^^^^^^^^
 Coverage blanks a background cell by testing whether each of its nodes lies inside an overset cell, which cannot see the cells inside the overset mesh's own solid bodies -- a blade, a hub, a fuselage -- since the overset mesh has no cells inside its walls. Left active, those cells solve as fluid inside a solid with no donor to correct them, and appear as islands in the middle of the hole in the ``overset`` output variable.
 
-With this option on (the default), a flood fill from the active cells outside the overset mesh's bounding box identifies what the hole walls in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh with no wall encloses nothing, and one carrying an inward-facing overset boundary has deliberately left its interior to the background. The count blanked is logged at each hole cut.
+With this option on (the default), a flood fill from the active cells outside the overset mesh's bounding box identifies what the hole walls in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh with no wall encloses nothing, and one carrying an inward-facing overset interface has deliberately left its interior to the background. The count blanked is logged at each hole cut.
 
-background
+connection
 ^^^^^^^^^^
-Names the model(s) whose mesh supplies donor data at this overset boundary, and is used to derive the blanking priority order: models are topologically sorted so that a model always appears after the model(s) it declares as its background, with root meshes (no overset boundary conditions) placed first. Explicit specification is preferred over the ``None`` default — it avoids unnecessary mapper creation for non-overlapping mesh pairs. Accepts either a single model name or a list, as shown in the example above.
+The connection's ``model`` names the model(s) whose mesh supplies donor data at this overset interface, and is used to derive the blanking priority order: models are topologically sorted so that a model always appears after the model(s) it connects to, with root meshes (no overset interfaces) placed first. Naming the connection explicitly is preferred to omitting it, as it avoids building mappers for mesh pairs that do not overlap. The ``model`` accepts either a single model name or a list, as shown in the example above.
 
 .. note::
 
@@ -153,7 +160,7 @@ Each mesh in an overset case keeps its own solver, its own partitioning and its 
 
 Mesh ordering
 ^^^^^^^^^^^^^
-The ``background`` field on each overset boundary condition defines a directed graph over the models, which is required to be acyclic. The models are topologically sorted so that a model always appears after the model or models it names as its background, with root meshes (those with no overset boundary condition) first. That order is used for hole cutting, for the data exchange and for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.
+The connection on each overset interface defines a directed graph over the models, which is required to be acyclic. The models are topologically sorted so that a model always appears after the model or models it connects to, with root meshes (those with no overset interface) first. That order is used for hole cutting, for the data exchange and for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.
 
 Each edge of the graph becomes a mapping pair holding two mappers: a *forward* mapper carrying data from the overset mesh into the background mesh, and a *reverse* mapper carrying data from the background mesh into the overset mesh.
 
@@ -194,7 +201,7 @@ What is exchanged, and when
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The exchange runs **once per pseudo-time cycle**, before any solver advances, and moves both the conserved cell data and the cell gradients. Walking the models in topological order, each model first sends the data it owns as a donor, then receives the data it needs as a dependent, and is then synchronised to the device and has its parallel halos updated before the next model is handled.
 
-The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that reason an overset case requires one of the implicit pseudo-time schemes, ``implicit euler`` or ``lu-sgs`` (see :ref:`Convergence control <time>`). A control file that asks for an explicit scheme alongside an overset boundary condition is rejected at validation.
+The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that reason an overset case requires one of the implicit pseudo-time schemes, ``implicit euler`` or ``lu-sgs`` (see :ref:`Convergence control <time>`). A control file that asks for an explicit scheme alongside an overset interface is rejected at validation.
 
 Moving meshes
 ^^^^^^^^^^^^^

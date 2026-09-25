@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Overset &#8212; zCFD User Guide v2025.11.13331-352-g041bc06 documentation</title>
+    <title>Overset &#8212; zCFD User Guide v2025.11.13331-353-g3e5bb documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d9aafeaa" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=f70a89e2" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=659bf730" />
-    <script src="../_static/documentation_options.js?v=042c013d"></script>
+    <script src="../_static/documentation_options.js?v=3c3205ec"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -36,10 +36,10 @@
             
   <section id="overset">
 <span id="id1"></span><h1>Overset<a class="headerlink" href="#overset" title="Link to this heading">¶</a></h1>
-<p>zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the control file’s top-level <code class="docutils literal notranslate"><span class="pre">model</span></code> key, each carrying its own <code class="docutils literal notranslate"><span class="pre">mesh</span></code> path, and each mesh that receives donor data from another mesh must declare an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition on its hole-cutting surface (see <a class="reference internal" href="#overset-bc"><span class="std std-ref">Overset boundary condition</span></a> below).</p>
+<p>zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the control file’s top-level <code class="docutils literal notranslate"><span class="pre">model</span></code> key, each carrying its own <code class="docutils literal notranslate"><span class="pre">mesh</span></code> path, and each mesh that receives donor data from another mesh must declare an overset interface on its hole-cutting surface (see <a class="reference internal" href="#overset-bc"><span class="std std-ref">Overset interface</span></a> below).</p>
 <section id="setting-up-an-overset-case">
 <span id="overset-setup"></span><h2>Setting up an overset case<a class="headerlink" href="#setting-up-an-overset-case" title="Link to this heading">¶</a></h2>
-<p>One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an <code class="docutils literal notranslate"><span class="pre">'overset'</span></code> boundary condition whose <code class="docutils literal notranslate"><span class="pre">background</span></code> field names the donor model(s) (see below).</p>
+<p>One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared through an overset interface whose <code class="docutils literal notranslate"><span class="pre">connection</span></code> names the donor model(s) (see below).</p>
 <p>Example <code class="docutils literal notranslate"><span class="pre">model</span></code> structure (one background mesh, a refinement region overset onto it, and two further meshes overset onto the refinement region):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"background"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"back1.h5"</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
@@ -55,9 +55,9 @@
 </div>
 <p>All meshes are read from the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> key of each entry under <code class="docutils literal notranslate"><span class="pre">model</span></code>; no separate mesh/case file pairing and no command-line mesh argument is needed.</p>
 </section>
-<section id="overset-boundary-condition">
-<span id="overset-bc"></span><h2>Overset boundary condition<a class="headerlink" href="#overset-boundary-condition" title="Link to this heading">¶</a></h2>
-<p>Overset mapping options are set directly on the boundary condition that marks a mesh’s overset (hole-cutting) surface, using <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'overset'</span></code> inside that model’s <code class="docutils literal notranslate"><span class="pre">boundary_conditions</span></code> block:</p>
+<section id="overset-interface">
+<span id="overset-bc"></span><h2>Overset interface<a class="headerlink" href="#overset-interface" title="Link to this heading">¶</a></h2>
+<p>Overset mapping options are set directly on the boundary condition that marks a mesh’s overset (hole-cutting) surface, using <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'interface'</span></code> with <code class="docutils literal notranslate"><span class="pre">'kind':</span> <span class="pre">'overset'</span></code> inside that model’s <code class="docutils literal notranslate"><span class="pre">boundary_conditions</span></code> block (see also <a class="reference internal" href="boundary.html#bc-interface"><span class="std std-ref">Interface</span></a>):</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 23.8%" />
@@ -78,34 +78,40 @@
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></td>
 <td><p>Yes</p></td>
 <td><p>–</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'interface'</span></code></p></td>
+<td><p>Boundary condition type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>–</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'overset'</span></code></p></td>
 <td><p>Marks this boundary as an overset (hole-cutting) surface.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">background</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">connection</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Model name (string) or list of model names</p></td>
-<td><p>The model(s) whose mesh provides donor data at this boundary. When omitted, the solver falls back to legacy all-pairs connectivity (mapping against every preceding model).</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{&quot;model&quot;:</span> <span class="pre">...}</span></code> with a model name (string) or list of model names</p></td>
+<td><p>The model(s) whose mesh provides donor data at this boundary. When omitted, the solver maps against every preceding model.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">interpolation_method</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">interpolation_method</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">nearest</span> <span class="pre">cell</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">nearest</span> <span class="pre">cell</span></code>, <code class="docutils literal notranslate"><span class="pre">inverse</span> <span class="pre">distance</span></code>, <code class="docutils literal notranslate"><span class="pre">green-gauss</span></code> or <code class="docutils literal notranslate"><span class="pre">least-squares</span></code></p></td>
 <td><p>Selects how the donor value is interpolated (see below).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">additional_active_layers</span></code></p></td>
 <td><p>No</p></td>
 <td><p>0</p></td>
 <td><p>Non-negative integer</p></td>
 <td><p>Adds additional active cells to the overlapped mesh near the blanking boundary.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh_halo_layers</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moving_mesh_halo_layers</span></code></p></td>
 <td><p>No</p></td>
 <td><p>0</p></td>
 <td><p>Non-negative integer</p></td>
 <td><p>Halo fringe layers around the hole when the overset mesh moves (0 treats every blanked cell as a halo; a value &gt; 0 is sufficient when the hole is re-cut every real time step).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">blank_enclosed_cells</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blank_enclosed_cells</span></code></p></td>
 <td><p>No</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -130,8 +136,9 @@
                 <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
                 <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span>
-                    <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"background"</span><span class="p">],</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"interface"</span><span class="p">,</span>
+                    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span>
+                    <span class="s2">"connection"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"background"</span><span class="p">]},</span>
                 <span class="p">},</span>
             <span class="p">},</span>
         <span class="p">},</span>
@@ -141,8 +148,9 @@
                 <span class="s2">"BC_1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"symmetry"</span><span class="p">},</span>
                 <span class="s2">"BC_2"</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span>
-                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span>
-                    <span class="s2">"background"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"refinement_region"</span><span class="p">],</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"interface"</span><span class="p">,</span>
+                    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"overset"</span><span class="p">,</span>
+                    <span class="s2">"connection"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"refinement_region"</span><span class="p">]},</span>
                 <span class="p">},</span>
                 <span class="s2">"BC_3"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"zones"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"wall"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"no slip"</span><span class="p">},</span>
             <span class="p">},</span>
@@ -167,11 +175,11 @@
 <section id="blank-enclosed-cells">
 <h3>blank_enclosed_cells<a class="headerlink" href="#blank-enclosed-cells" title="Link to this heading">¶</a></h3>
 <p>Coverage blanks a background cell by testing whether each of its nodes lies inside an overset cell, which cannot see the cells inside the overset mesh’s own solid bodies – a blade, a hub, a fuselage – since the overset mesh has no cells inside its walls. Left active, those cells solve as fluid inside a solid with no donor to correct them, and appear as islands in the middle of the hole in the <code class="docutils literal notranslate"><span class="pre">overset</span></code> output variable.</p>
-<p>With this option on (the default), a flood fill from the active cells outside the overset mesh’s bounding box identifies what the hole walls in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh with no wall encloses nothing, and one carrying an inward-facing overset boundary has deliberately left its interior to the background. The count blanked is logged at each hole cut.</p>
+<p>With this option on (the default), a flood fill from the active cells outside the overset mesh’s bounding box identifies what the hole walls in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh with no wall encloses nothing, and one carrying an inward-facing overset interface has deliberately left its interior to the background. The count blanked is logged at each hole cut.</p>
 </section>
-<section id="background">
-<h3>background<a class="headerlink" href="#background" title="Link to this heading">¶</a></h3>
-<p>Names the model(s) whose mesh supplies donor data at this overset boundary, and is used to derive the blanking priority order: models are topologically sorted so that a model always appears after the model(s) it declares as its background, with root meshes (no overset boundary conditions) placed first. Explicit specification is preferred over the <code class="docutils literal notranslate"><span class="pre">None</span></code> default — it avoids unnecessary mapper creation for non-overlapping mesh pairs. Accepts either a single model name or a list, as shown in the example above.</p>
+<section id="connection">
+<h3>connection<a class="headerlink" href="#connection" title="Link to this heading">¶</a></h3>
+<p>The connection’s <code class="docutils literal notranslate"><span class="pre">model</span></code> names the model(s) whose mesh supplies donor data at this overset interface, and is used to derive the blanking priority order: models are topologically sorted so that a model always appears after the model(s) it connects to, with root meshes (no overset interfaces) placed first. Naming the connection explicitly is preferred to omitting it, as it avoids building mappers for mesh pairs that do not overlap. The <code class="docutils literal notranslate"><span class="pre">model</span></code> accepts either a single model name or a list, as shown in the example above.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>There is no control-file option for detailed per-mesh-pair mapper diagnostics. The underlying C++ verbose-mapping flag exists, but nothing in the current control-file schema or launcher wires a value to it, so it cannot be enabled from a control deck.</p>
@@ -183,7 +191,7 @@
 <p>Each mesh in an overset case keeps its own solver, its own partitioning and its own boundary conditions. Nothing is merged into a single mesh. The coupling is a set of directed mesh pairs, and everything below happens per pair.</p>
 <section id="mesh-ordering">
 <h3>Mesh ordering<a class="headerlink" href="#mesh-ordering" title="Link to this heading">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">background</span></code> field on each overset boundary condition defines a directed graph over the models, which is required to be acyclic. The models are topologically sorted so that a model always appears after the model or models it names as its background, with root meshes (those with no overset boundary condition) first. That order is used for hole cutting, for the data exchange and for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.</p>
+<p>The connection on each overset interface defines a directed graph over the models, which is required to be acyclic. The models are topologically sorted so that a model always appears after the model or models it connects to, with root meshes (those with no overset interface) first. That order is used for hole cutting, for the data exchange and for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.</p>
 <p>Each edge of the graph becomes a mapping pair holding two mappers: a <em>forward</em> mapper carrying data from the overset mesh into the background mesh, and a <em>reverse</em> mapper carrying data from the background mesh into the overset mesh.</p>
 </section>
 <section id="hole-cutting">
@@ -217,7 +225,7 @@
 <section id="what-is-exchanged-and-when">
 <h3>What is exchanged, and when<a class="headerlink" href="#what-is-exchanged-and-when" title="Link to this heading">¶</a></h3>
 <p>The exchange runs <strong>once per pseudo-time cycle</strong>, before any solver advances, and moves both the conserved cell data and the cell gradients. Walking the models in topological order, each model first sends the data it owns as a donor, then receives the data it needs as a dependent, and is then synchronised to the device and has its parallel halos updated before the next model is handled.</p>
-<p>The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that reason an overset case requires one of the implicit pseudo-time schemes, <code class="docutils literal notranslate"><span class="pre">implicit</span> <span class="pre">euler</span></code> or <code class="docutils literal notranslate"><span class="pre">lu-sgs</span></code> (see <a class="reference internal" href="time.html#time"><span class="std std-ref">Convergence control</span></a>). A control file that asks for an explicit scheme alongside an overset boundary condition is rejected at validation.</p>
+<p>The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that reason an overset case requires one of the implicit pseudo-time schemes, <code class="docutils literal notranslate"><span class="pre">implicit</span> <span class="pre">euler</span></code> or <code class="docutils literal notranslate"><span class="pre">lu-sgs</span></code> (see <a class="reference internal" href="time.html#time"><span class="std std-ref">Convergence control</span></a>). A control file that asks for an explicit scheme alongside an overset interface is rejected at validation.</p>
 </section>
 <section id="moving-meshes">
 <h3>Moving meshes<a class="headerlink" href="#moving-meshes" title="Link to this heading">¶</a></h3>
