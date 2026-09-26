@@ -1232,7 +1232,7 @@ how an overset case is set up and solved.
      - The model(s) whose mesh provides donor data at this interface
    * - ``interpolation_method``
      - No
-     - ``nearest cell``
+     - ``least-squares``
      - ``nearest cell``, ``inverse distance``, ``green-gauss`` or ``least-squares``
      - Donor interpolation method: ``nearest cell`` the containing cell's value, ``inverse distance`` a distance-weighted average, ``green-gauss`` a Green-Gauss reconstruction, ``least-squares`` a least-squares reconstruction
    * - ``additional_active_layers``

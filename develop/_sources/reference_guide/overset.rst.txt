@@ -62,7 +62,7 @@ Overset mapping options are set directly on the boundary condition that marks a 
      - The model(s) whose mesh provides donor data at this boundary. When omitted, the solver maps against every preceding model.
    * - ``interpolation_method``
      - No
-     - ``nearest cell``
+     - ``least-squares``
      - ``nearest cell``, ``inverse distance``, ``green-gauss`` or ``least-squares``
      - Selects how the donor value is interpolated (see below).
    * - ``additional_active_layers``
