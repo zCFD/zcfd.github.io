@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Overset meshes · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/working-with/overset-meshes.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/overset-meshes-DpiwxD0D.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Working with</span><span> / <b>Overset meshes</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="overset-meshes">Overset meshes</h1>
+<p>zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined
+entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the
+control file&#x27;s top-level <code>model</code> key, each carrying its own <code>mesh</code> path, and each mesh that receives donor data from
+another mesh must declare an overset interface on its hole-cutting surface (see
+<a href="guide/working-with/overset-meshes/index.html#overset-interface">Overset interface</a> below).</p>
+<h2 id="setting-up-an-overset-case">Setting up an overset case</h2>
+<p>One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each
+further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared
+through an overset interface whose <code>connection</code> names the donor model(s) (see below).</p>
+<p>Example <code>model</code> structure (one background mesh, a refinement region overset onto it, and two further meshes overset
+onto the refinement region):</p>
+<pre><code class="language-python">&quot;model&quot;: {
+    &quot;background&quot;: {&quot;mesh&quot;: &quot;back1.h5&quot;, ...},
+    &quot;refinement_region&quot;: {&quot;mesh&quot;: &quot;back2.h5&quot;, ...},
+    &quot;cylinder_1&quot;: {&quot;mesh&quot;: &quot;back3.h5&quot;, ...},
+    &quot;cylinder_2&quot;: {&quot;mesh&quot;: &quot;back3.h5&quot;, ...},
+}
+</code></pre>
+<p>Run the case with a plain:</p>
+<pre><code class="language-bash">(zCFD)&gt; run_zcfd -c oversetmulticylinder.py
+</code></pre>
+<p>All meshes are read from the <code>mesh</code> key of each entry under <code>model</code>; no separate mesh/case file pairing and no
+command-line mesh argument is needed.</p>
+<h2 id="overset-interface">Overset interface</h2>
+<p>Overset mapping options are set directly on the boundary condition that marks a mesh&#x27;s overset (hole-cutting)
+surface, using <code>&#x27;type&#x27;: &#x27;interface&#x27;</code> with <code>&#x27;kind&#x27;: &#x27;overset&#x27;</code> inside that model&#x27;s <code>boundary_conditions</code> block — see
+the <a href="reference/model/boundary-conditions/interface/index.html"><code>interface</code></a> boundary condition reference and
+<a href="guide/choosing/choosing-boundary-conditions/index.html#interface">Interface</a>.</p>
+<p>Example usage, adapted from a real multi-mesh overset testcase (one background mesh, a refinement region overset onto
+it, and two further meshes overset onto the refinement region):</p>
+<pre><code class="language-python">parameters = {
+    ...
+    &quot;model&quot;: {
+        &quot;background&quot;: {
+            &quot;mesh&quot;: &quot;back1.h5&quot;,
+            &quot;boundary_conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [9, 11], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {&quot;zones&quot;: [10], &quot;type&quot;: &quot;farfield&quot;, &quot;condition&quot;: &quot;IC_1&quot;, &quot;kind&quot;: &quot;riemann&quot;},
+            },
+        },
+        &quot;refinement_region&quot;: {
+            &quot;mesh&quot;: &quot;back2.h5&quot;,
+            &quot;boundary_conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [9, 11], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [10],
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;overset&quot;,
+                    &quot;connection&quot;: {&quot;model&quot;: [&quot;background&quot;]},
+                },
+            },
+        },
+        &quot;cylinder_1&quot;: {
+            &quot;mesh&quot;: &quot;back3.h5&quot;,
+            &quot;boundary_conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [11, 12], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [13],
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;overset&quot;,
+                    &quot;connection&quot;: {&quot;model&quot;: [&quot;refinement_region&quot;]},
+                },
+                &quot;BC_3&quot;: {&quot;zones&quot;: [10], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+            },
+        },
+    },
+    ...
+}
+</code></pre>
+<h3 id="interpolation_method">interpolation_method</h3>
+<p><a href="reference/model/boundary-conditions/interface/index.html#interpolation-method"><strong>interpolation_method</strong></a> selects how the donor
+value is built once the containing cell is known: <code>nearest cell</code> takes that cell&#x27;s value directly, <code>inverse distance</code>
+is a distance-weighted average over the cell and its neighbours, <code>green-gauss</code> is a Green-Gauss linear reconstruction
+about the donor cell centre, and <code>least-squares</code> (the default) is a least-squares linear reconstruction about the same
+point. Each method is described under <a href="guide/working-with/overset-meshes/index.html#interpolation">Interpolation</a> below.</p>
+<h3 id="additional_active_layers">additional_active_layers</h3>
+<p>Adds additional active cells which may have been made inactive by an overlapping mesh. For example, where a rotating domain is used, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering
+cells made inactive. This will result in no mapping between background and overset meshes at these points. To resolve
+this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and
+background meshes. Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.</p>
+<h3 id="moving_mesh_halo_layers">moving_mesh_halo_layers</h3>
+<p>Relevant only when the overset mesh is itself moving (see the rotating/translating fluid zone motion types with
+<code>moving_mesh: True</code> in the <a href="reference/model/fluid-zones/rotating/index.html#moving-mesh">fluid zones</a> reference). Controls how
+many halo fringe layers are kept around the re-cut hole each time the mesh moves; a value of 0 treats every blanked
+cell as a halo, which is safe but conservative, while N &gt; 0 is sufficient when the hole is re-cut every real time step
+and avoids remapping cells that don&#x27;t need it.</p>
+<h3 id="blank_enclosed_cells">blank_enclosed_cells</h3>
+<p>Coverage blanks a background cell by testing whether each of its nodes lies inside an overset cell, which cannot see
+the cells inside the overset mesh&#x27;s own solid bodies — a blade, a hub, a fuselage — since the overset mesh has no
+cells inside its walls. Left active, those cells solve as fluid inside a solid with no donor to correct them, and
+appear as islands in the middle of the hole in the <code>overset</code> output variable.</p>
+<p>With <a href="reference/model/boundary-conditions/interface/index.html#blank-enclosed-cells"><strong>blank_enclosed_cells</strong></a> on (the
+default), a flood fill from the active cells outside the overset mesh&#x27;s bounding box identifies what the hole walls
+in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh
+with no wall encloses nothing, and one carrying an inward-facing overset interface has deliberately left its interior
+to the background. The count blanked is logged at each hole cut.</p>
+<h3 id="connection">connection</h3>
+<p>The <a href="reference/model/boundary-conditions/interface/index.html#connection"><strong>connection</strong></a>&#x27;s <code>model</code> names the model(s) whose
+mesh supplies donor data at this overset interface, and is used to derive the blanking priority order: models are
+topologically sorted so that a model always appears after the model(s) it connects to, with root meshes (no overset
+interfaces) placed first. Naming the connection explicitly is preferred to omitting it, as it avoids building mappers
+for mesh pairs that do not overlap. The <code>model</code> accepts either a single model name or a list, as shown in the example
+above.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>There is no control-file option for detailed per-mesh-pair mapper diagnostics. The underlying C++ verbose-mapping flag
+exists, but nothing in the current control-file schema or launcher wires a value to it, so it cannot be enabled from a
+control deck.</p></div></aside>
+<h2 id="how-overset-works-in-the-solver">How overset works in the solver</h2>
+<p>Each mesh in an overset case keeps its own solver, its own partitioning and its own boundary conditions. Nothing is
+merged into a single mesh. The coupling is a set of directed mesh pairs, and everything below happens per pair.</p>
+<h3 id="mesh-ordering">Mesh ordering</h3>
+<p>The connection on each overset interface defines a directed graph over the models, which is required to be acyclic.
+The models are topologically sorted so that a model always appears after the model or models it connects to, with
+root meshes (those with no overset interface) first. That order is used for hole cutting, for the data exchange and
+for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.</p>
+<p>Each edge of the graph becomes a mapping pair holding two mappers: a <em>forward</em> mapper carrying data from the overset
+mesh into the background mesh, and a <em>reverse</em> mapper carrying data from the background mesh into the overset mesh.</p>
+<h3 id="hole-cutting">Hole cutting</h3>
+<p>For each pair, every node of the background mesh is tested against the cells of the overset mesh. A background cell
+is blanked when <strong>all</strong> of its nodes are found inside the overset mesh; a cell with even one uncovered node stays
+active. Blanked cells take no part in the solution.</p>
+<p>This minimal blanking is recorded before anything else modifies it, and is what the <code>overset</code> output variable
+reports. <code>additional_active_layers</code> then runs N sweeps over the interior faces, and on each sweep any blanked cell
+sharing a face with an active cell is promoted back to active. The hole therefore shrinks by N cell layers, which is
+how an overlap band — a region where both meshes hold a valid solution — is created.</p>
+<p>When one mesh is the background of several overset meshes, all of its active flags are reset once, then every pair&#x27;s
+hole is cut, and only then is any mapping computed. Cutting and mapping pair by pair would let a later pair&#x27;s reset
+erase an earlier pair&#x27;s hole.</p>
+<h3 id="fringe-cells">Fringe cells</h3>
+<p>The cells that receive interpolated data are drawn from the blanked set. By default the fringe is the two layers of
+blanked cells adjacent to the remaining active region.</p>
+<p>When the overset mesh moves, a cell blanked now may be uncovered by the next hole cut, so every blanked cell is
+treated as a fringe cell. That is safe but means interpolating the whole hole volume. Setting
+<code>moving_mesh_halo_layers</code> to N replaces this with an N-layer fringe, which is sufficient when the hole is re-cut every
+real time step.</p>
+<h3 id="donor-search">Donor search</h3>
+<p>Donors are found with a bounding volume hierarchy built over the donor mesh — on the GPU when a device is present, on
+the host otherwise. The tree is built once per mesh and reused until the meshes move.</p>
+<p>For a moving mesh the mesh coordinates and the tree are <strong>not</strong> moved. The rigid body motion is carried as a
+transform and applied to the <em>query points</em> instead, mapping them into the donor mesh&#x27;s own frame before the search.
+This is why a rotating overset case costs little more per remap than a static one.</p>
+<p>A donor only counts if it is itself active. A fringe point that lands in a blanked region of the donor mesh finds
+nothing, and that face falls back to the unmapped face treatment rather than to interpolated data. This is the usual
+reason to increase <code>additional_active_layers</code>.</p>
+<h3 id="interpolation">Interpolation</h3>
+<p><code>interpolation_method</code> selects the interpolant once the donor cell is known:</p>
+<ul>
+<li><strong>nearest cell</strong> — the value of the containing cell is taken directly, with unit weight. This is a
+piecewise-constant transfer, first-order accurate.</li>
+<li><strong>inverse distance</strong> — the containing cell and its neighbours are combined with weights <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>R</mi><mo>−</mo><mi>d</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>R</mi><mo>+</mo><mn>4</mn><mi>d</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(R - d)/(R + 4d)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0077em">R</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0077em">R</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord">4</span><span class="mord mathnormal">d</span><span class="mclose">)</span></span></span></span>, where
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord mathnormal">d</span></span></span></span> is the distance from the query point to each donor cell centre and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord mathnormal" style="margin-right:0.0077em">R</span></span></span></span> is 1.2 times the largest of those
+distances.</li>
+<li><strong>green-gauss</strong> — a Green-Gauss linear reconstruction about the donor cell centre, evaluated at the query point.</li>
+<li><strong>least-squares</strong> — a least-squares linear reconstruction about the donor cell centre, evaluated at the query
+point.</li>
+</ul>
+<p><code>nearest cell</code> and <code>inverse distance</code> combine cell values, so they return the donor field at a point offset from the
+query point; <code>green-gauss</code> and <code>least-squares</code> reconstruct a gradient and evaluate it at the query point itself.</p>
+<h3 id="what-is-exchanged-and-when">What is exchanged, and when</h3>
+<p>The exchange runs <strong>once per pseudo-time cycle</strong>, before any solver advances, and moves both the conserved cell data
+and the cell gradients. Walking the models in topological order, each model first sends the data it owns as a donor,
+then receives the data it needs as a dependent, and is then synchronised to the device and has its parallel halos
+updated before the next model is handled.</p>
+<p>The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would
+therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that
+reason an overset case requires one of the implicit pseudo-time schemes, <code>implicit euler</code>, <code>lu-sgs</code> or <code>mf-gmres</code>
+(see <a href="guide/choosing/choosing-a-time-marching-scheme/index.html#scheme">Choosing a time-marching scheme</a>). A control file that
+asks for an explicit scheme alongside an overset interface is rejected at validation.</p>
+<h3 id="moving-meshes">Moving meshes</h3>
+<p>An overset mesh attached to a rotating fluid zone with <code>moving_mesh: True</code> (see
+<a href="guide/choosing/choosing-a-fluid-zone-model/index.html#rotating-and-translating-zones">Rotating and translating zones</a>) is solved
+in its own mesh-attached frame; only the mapped data crosses between frames. At the end of each real time step the
+accumulated rotation angle is advanced and the momentum components of the current solution and of both stored time
+levels are counter-rotated, so that the time history the dual-time scheme differences is expressed consistently in
+the current frame.</p>
+<p>At the end of a real time step, if either mesh of a pair reports that it has moved, the per-mesh record of which
+faces are mapped is cleared and <strong>all</strong> pairs are re-cut and re-mapped — not only the stale ones, because cutting one
+donor&#x27;s holes begins with a full reset of its active flags. Clearing the record matters on a moving mesh: a face
+mapped at a previous position but now outside donor coverage would otherwise stay marked as found and its fringe cell
+would be left unfilled.</p>
+<h3 id="blanked-cells-in-the-rest-of-the-solver">Blanked cells in the rest of the solver</h3>
+<p>Blanking is not confined to the mapper:</p>
+<ul>
+<li>the residual is zeroed in blanked cells, so they cannot drive the solution or contribute to the reported residual
+norms;</li>
+<li>the implicit update is masked by the same flag, so a blanked row is left untouched;</li>
+<li>multigrid agglomeration propagates the flag to the coarse levels, and a coarse cell is marked blanked if <strong>any</strong> of
+its children is blanked. A coarse cell with a mixture of active and blanked children logs
+<code>Parents are mixed active and inactive</code>. A large count means the coarsening and the hole boundary are poorly
+aligned.</li>
+</ul>
+<h3 id="practical-consequences">Practical consequences</h3>
+<ul>
+<li>Meshes must genuinely overlap. A hole cut exactly to the overset mesh&#x27;s own footprint leaves no band in which both
+meshes hold an independently computed solution, and the fringe then draws its donors from cells that are
+themselves interpolated. Use <code>additional_active_layers</code> to open a real overlap band.</li>
+<li>Keep cell sizes similar across the interface. The transfer is at best a distance-weighted average of donor cell
+values, so a coarse donor cannot represent a gradient the fine receiver resolves.</li>
+<li>Use an implicit pseudo-time scheme. Multigrid is not available with the implicit schemes, so an overset case runs
+without it.</li>
+<li>A body inside a hole is not seen by the mesh whose cells are blanked, so a wall must always live in the mesh that
+resolves it.</li>
+</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/working-with/overset-meshes/index.html#setting-up-an-overset-case">Setting up an overset case</a><a href="guide/working-with/overset-meshes/index.html#overset-interface">Overset interface</a><a href="guide/working-with/overset-meshes/index.html#how-overset-works-in-the-solver">How overset works in the solver</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

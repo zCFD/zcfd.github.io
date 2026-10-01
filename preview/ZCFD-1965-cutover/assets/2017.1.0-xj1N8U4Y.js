@@ -1,0 +1,73 @@
+var e=`
+# 2017.1.0
+
+- run_zcfd script now passes through the tasks per node parameter to the \`smartlaunch\` script which is needed when not running through a scheduler
+- Made Intel MPI aware of the filesystem it is running on to improve performance on parallel file systems and address issues seen running on GPFS
+- Fixed bug with periodic boundary condition
+- Removed some code duplication in the python layer
+- Fixed bug in \`create_trbx_zcfd_input\` that caused turbine regions not to be rotated.
+- Bug fix to physical nodal locations in high order code
+- Added curvature approximation for high order
+- Added porous media support
+- Fixed bug detecting actuator disc reference cell when running in parallel
+- Ensure the generated turbine region contains the reference point
+- Added thrust and tip speed interpolation functions
+- Added screen output for actuator disc initialisation
+- Performance improvements of file reading during restart
+- Added eddy output for boundary faces for high order
+- Bug fix to quad nodal location ordering
+- Fixed bug in high order filtering
+- Added MUSCL reconstruction option for P0
+- Changed binding behaviour to bind to sockets if oversubscribing the number of processes on a node
+- Added checks for existence of the Unix tool \`numactl\`
+- Added checks for the presence of the mesh and control files
+- Bug fix to viscous force calculation for high order
+- Stability improvements to polynomial multigrid
+- Upgraded to Python 2.7.13
+- Removed requirement for a C++11 compiler for the foamtozCFD converter
+- Added missing face area scaling for viscous friction calculation
+- Only convect at lower polynomial orders for PMG
+- Include pressure and friction forces in reports for High Order
+- Fixes to support multiple moving reference frames
+- Allow selection of Rusanov scheme for high order
+- Added support for multiple cell zones in a single fluid zone entry
+- Added translating mesh option
+- Fix to ALE HLLC fluxes
+- Added moment reporting
+- Updated reporting notebook with plotting functionality
+- Enable time history vtk output for global timestepping
+- Various fixes to global timestepping scheme
+- Added vorticity vector output for HO
+- Fix support for mixed element CGNS files
+- Fix dimensional Q criterion output
+- Added helicity output for HO
+- Added ability to choose between finite difference and analytic Jacobian for LU-SGS FV
+- Ensure reported residual is factored by CFL
+- Fixes to FV LU-SGS residual reporting
+- Added option to use Rusanov scheme for FV LU-SGS Jacobian
+- Added pressure limiter to implicit time marching
+- Added generic finite difference boundary Jacobian calculator
+- Added analytic Jacobians for Wall, Wall Function, Farfield, Inflow, Outflow, Canopy and Symmetry boundary conditions
+- Added ability to freeze viscous fluxes for FV LU-SGS sweeps
+- Added support to restart from LnOmega turbulence model
+- Bug fixes to preconditioning
+- Added support for P4 Hexes for HO
+- Added scaling of turbulent CFL for FV LU-SGS
+- Added shock sensor for HO
+- Enabled FV LU-SGS with multigrid
+- Added output of artificial viscosity for HO
+- Added logic to supply a start and end real time cycle for outputting solution in vtk format
+- Add momentum source Jacobians for FV LU-SGS
+- Added capability to identify cells at a plane in actuator disc region
+- Added actuator disc plane average reference velocity calculation
+- Use diffusive flux on the boundary faces rather than applying penalty parameter
+- Only rename the hdf5 file on the master process
+- Added new functions for conserved gradient calculation
+- Fix for implicit solver with farfield subzones
+- Added in prolongation relaxation factor for PMG
+- Allow user to scale artificial viscosity
+- Changed behaviour or restart reporting. Will create a backup of the restarted report file and start a new report file with all of the variable being reported at the top
+- Put all *vtu and *vtp in a VISUALISATION sub-directory to help tidy up our file output. \\*.pvd files remain where they are and point to the files in VISUALISATION
+- Put log files in a LOGGING sub-directory
+- Added OpenSSL libraries to release distribution
+`;export{e as default};

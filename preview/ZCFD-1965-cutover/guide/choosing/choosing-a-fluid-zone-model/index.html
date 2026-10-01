@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Choosing a fluid-zone model · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/choosing/choosing-a-fluid-zone-model.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/choosing-a-fluid-zone-model-B8vpIuis.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Choosing…</span><span> / <b>Choosing a fluid-zone model</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="choosing-a-fluid-zone-model">Choosing a fluid-zone model</h1>
+<p>Which fluid zone represents the device, obstruction or motion in the flow?</p>
+<p>Choose the zone type by what the flow must feel. A rotor, propeller or turbine whose blades the mesh does not resolve
+is an actuator disc. A distributed resistance, such as a radiator, a fence or a packed bed, is a porous zone, and a
+tree canopy over terrain is a canopy zone. Any other body force is a momentum source, written as a Python function. A
+zone of cells that rotates or translates is a rotating or translating zone, run either as a reference frame or as a
+mesh that moves.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th><code>type</code></th><th>Represents</th><th>Selects its cells by</th></tr></thead><tbody><tr><td><a href="reference/model/fluid-zones/disc/index.html"><code>disc</code></a></td><td>an actuator disc: a rotor, propeller or turbine</td><td><code>zones</code> or <code>definition</code></td></tr><tr><td><a href="reference/model/fluid-zones/porous/index.html"><code>porous</code></a></td><td>a porous medium, as viscous and inertial resistance</td><td><code>zones</code> or <code>definition</code></td></tr><tr><td><a href="reference/model/fluid-zones/canopy/index.html"><code>canopy</code></a></td><td>a tree canopy in a terrain wind model</td><td><code>zones</code> or <code>definition</code></td></tr><tr><td><a href="reference/model/fluid-zones/momentum/index.html"><code>momentum</code></a></td><td>an arbitrary body force, from a Python function</td><td><code>zones</code> or <code>definition</code></td></tr><tr><td><a href="reference/model/fluid-zones/rotating/index.html"><code>rotating</code></a></td><td>a rotating reference frame, or a mesh that rotates</td><td><code>zones</code></td></tr><tr><td><a href="reference/model/fluid-zones/translating/index.html"><code>translating</code></a></td><td>a zone of cells translating relative to the rest of the mesh</td><td><code>zones</code></td></tr><tr><td><a href="reference/model/fluid-zones/rbf-transform/index.html"><code>rbf transform</code></a>, <a href="reference/model/fluid-zones/idw-transform/index.html"><code>idw transform</code></a></td><td>a surface deformation carried into the volume mesh</td><td><code>zones</code></td></tr><tr><td><a href="reference/model/fluid-zones/abl/index.html"><code>abl</code></a></td><td>validated, but has no effect on the solution</td><td><code>zones</code></td></tr></tbody></table></div>
+<p>Fluid zones are a dictionary of named blocks, keyed in the same way as
+<a href="guide/choosing/choosing-boundary-conditions/index.html">boundary conditions</a>:</p>
+<pre><code class="language-python">{
+    &#x27;model&#x27;: {
+        &#x27;&lt;mesh_name&gt;&#x27;: {
+            &#x27;mesh&#x27;: &#x27;&lt;mesh_name&gt;.h5&#x27;,
+            &#x27;fluid_zones&#x27;: {
+                &#x27;FZ_1&#x27;: {&#x27;type&#x27;: &#x27;...&#x27;, ...},
+                &#x27;FZ_2&#x27;: {&#x27;type&#x27;: &#x27;...&#x27;, ...},
+            },
+            &#x27;boundary_conditions&#x27;: {...},
+        }
+    }
+}
+</code></pre>
+<p>Each block&#x27;s <a href="reference/model/fluid-zones/index.html"><code>type</code></a> selects the kind of zone, and determines which other keys are
+valid and required in that block. An unrecognised key anywhere in a fluid zone is rejected at validation, not
+silently ignored.</p>
+<h2 id="selecting-cells">Selecting cells</h2>
+<p>Most zone types select the cells they act on with <code>zones</code>, a list of the mesh&#x27;s numbered cell zones, numbered in the
+same way as for <a href="guide/choosing/choosing-boundary-conditions/index.html#zones">boundary conditions</a>. The <code>momentum</code>, <code>porous</code>, <code>disc</code> and
+<code>canopy</code> types also accept <code>definition</code> as an alternative: the path to a closed-surface VTP file describing the
+region. For <code>momentum</code>, <code>porous</code> and <code>canopy</code> zones, validation requires exactly one of the two. For <code>disc</code> zones both
+are optional in the schema, although the solver needs one of them to select any cells. Rotating, translating and ABL
+zones accept only <code>zones</code>; they have no VTP-region equivalent.</p>
+<h2 id="fluid-zones-in-the-incompressible-solver">Fluid zones in the incompressible solver</h2>
+<p>All the source-term zone types, <code>momentum</code>, <code>porous</code>, <code>canopy</code>, <code>disc</code> and <code>abl</code>, are available to the incompressible
+solver, <code>{&quot;solver_settings&quot;: {&quot;type&quot;: &quot;incompressible&quot;}}</code>, as well as to the compressible one. Three points differ.</p>
+<p>The incompressible momentum equation is solved per unit mass, with the density divided out, so a <code>momentum</code> zone&#x27;s
+<code>func</code> must return a force per unit mass rather than per unit volume. The porous, canopy and actuator disc models
+handle this internally, so their inputs (<code>alpha</code>, <code>C2</code>, <code>cd</code>, and the disc&#x27;s geometry and model dictionaries) are the
+same for both solvers.</p>
+<p>A strong <code>porous</code> or <code>canopy</code> zone under the segregated SIMPLE scheme,
+<code>{&quot;convergence_control&quot;: {&quot;scheme&quot;: {&quot;name&quot;: &quot;simple&quot;}}}</code>, needs the scheme&#x27;s <code>pressure_regularisation</code> set. Their
+drag adds to the momentum diagonal, so in a heavily blocked cell every pressure-correction face coefficient collapses
+towards zero, and that cell&#x27;s row of the p′ Laplacian becomes nearly empty. The conjugate-gradient solver then reports
+an indefinite matrix, and the run diverges. A value around <code>1e-2</code> restores stability, though a near-solid block still
+converges more slowly and less far than under the coupled scheme; for strong drag, prefer the <code>&#x27;coupled&#x27;</code> scheme.
+Weak drag, such as a typical canopy, converges under either scheme with the default of <code>0</code>, and the two agree to
+discretisation level. <code>momentum</code>, <code>disc</code> and <code>abl</code> zones are explicit body forces that never touch the momentum
+diagonal, and are unaffected either way.</p>
+<p>The <code>canopy</code> turbulence source is defined only for the <code>sst</code> model. Under any other turbulence model the canopy applies
+its momentum sink alone, and the solver logs a warning.</p>
+<h2 id="actuator-discs">Actuator discs</h2>
+<p>A wind turbine or a propeller affects the flow, but it is often impractical to resolve the flow down to the scale of
+its blades. An actuator disc represents the device instead, as a set of source terms superimposed on the flow.</p>
+<p>Turbines and propellers behave almost identically in the actuator disc model; the differences lie only in the
+coordinate systems and sign conventions usually used to define them. In zCFD an actuator disc is a
+<a href="reference/model/fluid-zones/disc/index.html">fluid zone</a> of type <code>&#x27;disc&#x27;</code>.</p>
+<p>The <a href="reference/model/fluid-zones/disc/index.html#model-type"><code>type</code></a> key of the disc&#x27;s <code>model</code> block selects a <code>&#x27;simple&#x27;</code> disc,
+with fixed or curve-driven thrust and power coefficients, or a <code>&#x27;bet&#x27;</code> disc, based on blade-element theory.</p>
+<p>The <a href="reference/model/fluid-zones/disc/index.html#geometry-normal"><code>normal</code></a> sets the direction of the disc&#x27;s force. In zCFD the
+normal points in the direction of the force on the fluid: for a propeller it points with the flow, and for a turbine
+it points towards the incoming flow.</p>
+<p>A disc zone is built from four dictionaries and a few keys of its own:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Key</th><th>Holds</th></tr></thead><tbody><tr><td><a href="reference/model/fluid-zones/disc/index.html#controller"><code>controller</code></a></td><td>how the disc&#x27;s forces are controlled: <code>fixed</code>, with <code>omega</code> and <code>pitch</code>, or <code>tsr curve</code>, with a tip speed ratio curve</td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#geometry"><code>geometry</code></a></td><td><code>centre</code>, <code>normal</code>, <code>up</code>, <code>inner radius</code> and <code>outer radius</code></td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#discretisation"><code>discretisation</code></a></td><td>the representation of the disc, such as <code>{&quot;type&quot;: &quot;disc&quot;, &quot;number of elements&quot;: 48}</code></td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#model"><code>model</code></a></td><td>the force model: <code>simple</code>, averaged over the whole disc, or <code>bet</code>, by blade elements</td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#name"><code>name</code></a></td><td>the name of the disc</td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#definition"><code>definition</code></a></td><td>a VTP file selecting the disc&#x27;s cells, as an alternative to <code>zones</code></td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#reference-plane"><code>reference_plane</code></a> and <a href="reference/model/fluid-zones/disc/index.html#reference-point"><code>reference_point</code></a></td><td>for a <code>simple</code> model, where the reference velocity is taken: on a reference plane when <code>reference_plane</code> is true, otherwise at <code>reference_point</code>, or from the solver&#x27;s reference condition if neither is set</td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#update-frequency"><code>update_frequency</code></a></td><td>how often, in cycles, the disc&#x27;s source is re-sampled</td></tr><tr><td><a href="reference/model/fluid-zones/disc/index.html#rotation-direction"><code>rotation_direction</code></a></td><td>the direction of rotation, such as <code>clockwise</code></td></tr></tbody></table></div>
+<p>A simple propeller with a fixed controller:</p>
+<pre><code class="language-json">{
+  &quot;fluid_zones&quot;: {
+    &quot;FZ_1&quot;: {
+      &quot;type&quot;: &quot;disc&quot;,
+      &quot;name&quot;: &quot;R01&quot;,
+      &quot;definition&quot;: &quot;propellor_vtp/R01.vtp&quot;,
+      &quot;reference plane&quot;: true,
+      &quot;update frequency&quot;: 10,
+      &quot;rotation direction&quot;: &quot;clockwise&quot;,
+      &quot;controller&quot;: { &quot;type&quot;: &quot;fixed&quot;, &quot;omega&quot;: 314.16, &quot;pitch&quot;: 0.0 },
+      &quot;geometry&quot;: {
+        &quot;centre&quot;: [0.0, 0.0, 0.0],
+        &quot;normal&quot;: [0.0, 0.0, -1.0],
+        &quot;up&quot;: [1.0, 0.0, 0.0],
+        &quot;inner radius&quot;: 0.039,
+        &quot;outer radius&quot;: 0.175
+      },
+      &quot;discretisation&quot;: { &quot;type&quot;: &quot;disc&quot;, &quot;number of elements&quot;: 24 },
+      &quot;model&quot;: {
+        &quot;type&quot;: &quot;simple&quot;,
+        &quot;kind&quot;: &quot;propellor&quot;,
+        &quot;power model&quot;: &quot;fixed&quot;,
+        &quot;thrust coefficient&quot;: 0.06,
+        &quot;power coefficient&quot;: 0.048
+      }
+    }
+  }
+}
+</code></pre>
+<p>A <code>bet</code> model in place of the simple one describes the blades: their number, chord and twist along the radius, as
+fractions of it, and the lift and drag of each aerofoil against angle of attack:</p>
+<pre><code class="language-json">{
+  &quot;model&quot;: {
+    &quot;type&quot;: &quot;bet&quot;,
+    &quot;kind&quot;: &quot;propellor&quot;,
+    &quot;number of blades&quot;: 2,
+    &quot;number of sections&quot;: 24,
+    &quot;blade chord&quot;: [
+      [0.2, 0.03],
+      [1.0, 0.015]
+    ],
+    &quot;blade twist&quot;: [
+      [0.2, 40.0],
+      [1.0, 12.0]
+    ],
+    &quot;aerofoil positions&quot;: [
+      [0.0, &quot;naca4412&quot;],
+      [1.0, &quot;naca4412&quot;]
+    ],
+    &quot;aerofoils&quot;: {
+      &quot;naca4412&quot;: {
+        &quot;cl&quot;: [
+          [-10.0, -0.6],
+          [0.0, 0.4],
+          [10.0, 1.4]
+        ],
+        &quot;cd&quot;: [
+          [-10.0, 0.02],
+          [0.0, 0.01],
+          [10.0, 0.02]
+        ]
+      }
+    },
+    &quot;tip loss correction&quot;: &quot;rstar&quot;,
+    &quot;tip loss correction radius&quot;: 0.8
+  }
+}
+</code></pre>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>Keys may be written with spaces, <code>&#x27;inner radius&#x27;</code> and <code>&#x27;tip speed ratio&#x27;</code>, or with underscores, <code>inner_radius</code> and
+<code>tip_speed_ratio</code>. Both forms are normalised to the same field before validation.</p></div></aside>
+<h2 id="rotating-and-translating-zones">Rotating and translating zones</h2>
+<p>A zone of cells is rotated or translated relative to the rest of the mesh by a
+<a href="reference/model/fluid-zones/rotating/index.html"><code>&#x27;rotating&#x27;</code></a> or <a href="reference/model/fluid-zones/translating/index.html"><code>&#x27;translating&#x27;</code></a>
+entry in the model&#x27;s <code>fluid_zones</code>. The same entry serves two purposes. On its own it is a rotating reference frame,
+for a spinning cylinder or a rotor in its own non-overset mesh, for example. Combined with an overset or sliding
+<a href="reference/model/boundary-conditions/interface/index.html">interface</a> and <code>moving_mesh: True</code>, it is a mesh that moves every
+time step and is coupled afresh to the mesh on the other side of the interface.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Setting</th><th>The zone is</th><th>Requires</th></tr></thead><tbody><tr><td><code>moving_mesh: False</code> (the default)</td><td>a rotating reference frame, with Coriolis and centrifugal momentum sources</td><td>nothing further</td></tr><tr><td><a href="reference/model/fluid-zones/rotating/index.html#moving-mesh"><code>moving_mesh</code></a><code>: True</code></td><td>rotated by an angle that the overset mapper and the sliding intersection apply</td><td>an unsteady run, and an overset or sliding interface on the same mesh</td></tr><tr><td><a href="reference/model/fluid-zones/rotating/index.html#move-mesh"><code>move_mesh</code></a><code>: True</code> as well</td><td>a mesh physically rotated every time step, solved in the inertial frame</td><td><code>moving_mesh: True</code></td></tr></tbody></table></div>
+<p>By default a rotating zone applies the momentum source of a rotating reference frame without moving the mesh: the
+classic MRF treatment.</p>
+<p><a href="reference/model/fluid-zones/rotating/index.html#moving-mesh"><code>moving_mesh</code></a><code>: True</code> moves the zone physically instead. It
+requires an unsteady run, and an overset or sliding interface declared on the same mesh; setting it in any other case
+is rejected at validation. The physical location of the zone is then recalculated every step, together with the
+overset mapping or the sliding-interface intersection. The mesh coordinates themselves stay where they are: the
+rotation is carried as an angle, which the overset mapper and the sliding intersection apply to what they transfer.</p>
+<p><a href="reference/model/fluid-zones/rotating/index.html#move-mesh"><code>move_mesh</code></a><code>: True</code> as well rotates the mesh physically every
+time step and solves the zone in the inertial frame, so that the interface reads the mesh&#x27;s true position rather than
+reconstructing it. Both treatments are exact for the interior, since a pure rotation changes no volume and no area.
+<code>move_mesh</code> requires <code>moving_mesh</code>. Without it the zone is a rotating reference frame carrying Coriolis and
+centrifugal sources, and the rotation would be applied twice, so that combination is rejected.</p>
+<p>A rotating reference frame, with the mesh placed by an initial rotation; there is no overset interface, so
+<code>moving_mesh</code> keeps its default:</p>
+<pre><code class="language-python">import zutil.transform
+
+{
+    &quot;model&quot;: {
+        &quot;background&quot;: {
+            &quot;mesh&quot;: &quot;cylinder.h5&quot;,
+            &quot;transforms&quot;: {&quot;transform_matrix&quot;: zutil.transform.rotate([0, 1, 0], -90.0)},
+            &quot;fluid_zones&quot;: {
+                &quot;rotating_zone&quot;: {
+                    &quot;type&quot;: &quot;rotating&quot;,
+                    &quot;zones&quot;: [3],
+                    &quot;axis&quot;: [0, 0, 1],
+                    &quot;origin&quot;: [0, 0, 0],
+                    &quot;omega&quot;: 17.453292519943297,
+                }
+            },
+            &quot;boundary_conditions&quot;: {...},
+        }
+    }
+}
+</code></pre>
+<p>An overset mesh rotated in place every time step, with <code>moving_mesh: True</code> and an overset interface on the same
+model:</p>
+<pre><code class="language-python">{
+    &quot;model&quot;: {
+        &quot;cylinder_1&quot;: {
+            &quot;mesh&quot;: &quot;cylinder_origin.h5&quot;,
+            &quot;transforms&quot;: {
+                &quot;transform_matrix&quot;: [
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, 1.2],
+                    [0.0, 0.0, 1.0, 1.2],
+                    [0.0, 0.0, 0.0, 1.0],
+                ]
+            },
+            &quot;fluid_zones&quot;: {
+                &quot;FZ_1&quot;: {
+                    &quot;type&quot;: &quot;rotating&quot;,
+                    &quot;zones&quot;: [0],
+                    &quot;axis&quot;: [1.0, 0.0, -0.0],
+                    &quot;origin&quot;: [0.0, 1.2, 1.2],
+                    &quot;omega&quot;: 104.71975511965978,
+                    &quot;moving_mesh&quot;: True,
+                }
+            },
+            &quot;boundary_conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [7], &quot;type&quot;: &quot;interface&quot;, &quot;kind&quot;: &quot;overset&quot;}
+            },
+        }
+    }
+}
+</code></pre>
+<h2 id="porous-media">Porous Media</h2>
+<p>A porous zone adds the momentum source</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>S</mi><mi>i</mi></msub><mo>=</mo><mo>−</mo><mrow><mo fence="true">(</mo><mfrac><mi>μ</mi><mi>α</mi></mfrac><msub><mi>V</mi><mi>i</mi></msub><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>ρ</mi><msub><mi>C</mi><mn>2</mn></msub><mi mathvariant="normal">∣</mi><mi>V</mi><mi mathvariant="normal">∣</mi><msub><mi>V</mi><mi>i</mi></msub><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_i = -\left( \frac{\mu}{\alpha} V_i + \frac{1}{2} \rho C_2 |V| V_i \right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em"></span><span class="minner"><span class="mopen delimcenter" style="top:0em"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em"><span style="top:-2.314em"><span class="pstrut" style="height:3em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span><span style="top:-3.23em"><span class="pstrut" style="height:3em"></span><span class="frac-line" style="border-bottom-width:0.04em"></span></span><span style="top:-3.677em"><span class="pstrut" style="height:3em"></span><span class="mord"><span class="mord mathnormal">μ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em"><span style="top:-2.314em"><span class="pstrut" style="height:3em"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em"><span class="pstrut" style="height:3em"></span><span class="frac-line" style="border-bottom-width:0.04em"></span></span><span style="top:-3.677em"><span class="pstrut" style="height:3em"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal">ρ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.2222em">V</span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em"><span class="delimsizing size3">)</span></span></span></span></span></span></span>
+<p>where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">S_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> is the source term in the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em"></span><span class="mord mathnormal">i</span></span></span></span>-th direction, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em"></span><span class="mord mathnormal">μ</span></span></span></span> the dynamic viscosity, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> the permeability,
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi></mrow><annotation encoding="application/x-tex">\rho</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em"></span><span class="mord mathnormal">ρ</span></span></span></span> the fluid density, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">C_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> the inertial resistance factor and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">V_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> the velocity component. The first term is
+Darcy&#x27;s law; in laminar flow it gives the pressure drop</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>P</mi><mo>=</mo><mfrac><mi>μ</mi><mi>α</mi></mfrac><mi>V</mi></mrow><annotation encoding="application/x-tex">\Delta P = \frac{\mu}{\alpha} V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.1389em">P</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1.7936em;vertical-align:-0.686em"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em"><span style="top:-2.314em"><span class="pstrut" style="height:3em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span><span style="top:-3.23em"><span class="pstrut" style="height:3em"></span><span class="frac-line" style="border-bottom-width:0.04em"></span></span><span style="top:-3.677em"><span class="pstrut" style="height:3em"></span><span class="mord"><span class="mord mathnormal">μ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal" style="margin-right:0.2222em">V</span></span></span></span></span>
+<p>where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">\Delta P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.1389em">P</span></span></span></span> is the pressure drop, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em"></span><span class="mord mathnormal">μ</span></span></span></span> the dynamic viscosity, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> the permeability and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord mathnormal" style="margin-right:0.2222em">V</span></span></span></span> the velocity.</p>
+<p><a href="reference/model/fluid-zones/porous/index.html#alpha"><code>alpha</code></a> defaults to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>12</mn></msup></mrow><annotation encoding="application/x-tex">10^{12}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span></span></span></span></span></span></span></span>, which is effectively no resistance, so a
+porous zone does nothing until <code>alpha</code> is lowered or <a href="reference/model/fluid-zones/porous/index.html#c2"><code>C2</code></a> is raised.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The model constants are given in mesh units: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> is an area and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">C_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> an inverse length. The values below assume
+a mesh in metres, with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> in m² and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">C_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> in 1/m.</p></div></aside>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Material</th><th>Permeability <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> (m²)</th></tr></thead><tbody><tr><td>Fence</td><td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>7</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1 \times 10^{-7}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.8141em"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">7</span></span></span></span></span></span></span></span></span></span></span></span></td></tr><tr><td>Car radiator</td><td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>9</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1 \times 10^{-9}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.8141em"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span></span></td></tr><tr><td>Sand</td><td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>11</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1 \times 10^{-11}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.8141em"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">11</span></span></span></span></span></span></span></span></span></span></span></span></td></tr></tbody></table></div>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Material</th><th>Inertial resistance factor <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">C_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> (1/m)</th></tr></thead><tbody><tr><td>Open cell foam</td><td>1000</td></tr><tr><td>Gravel</td><td>500</td></tr><tr><td>Sand</td><td>100</td></tr><tr><td>Fine mesh</td><td>10000</td></tr></tbody></table></div>
+<h2 id="momentum-source">Momentum Source</h2>
+<p>A <a href="reference/model/fluid-zones/momentum/index.html">momentum source</a> applies an arbitrary body force, supplied as a Python
+function of the cell centres.</p>
+<p><code>func</code> is sampled once, when the zone is set up, and is not re-evaluated during the solve; an actuator disc, by
+contrast, re-samples its source at every <code>update_frequency</code>. <code>kind</code> and <code>frequency</code> are accepted by the schema but have
+no effect on a <code>momentum</code> zone.</p>
+<pre><code class="language-python">def momentum_drive(cell_centre_list):
+    &quot;&quot;&quot;Return a constant +z body force (fx, fy, fz) per cell.&quot;&quot;&quot;
+    return [(0.0, 0.0, body_force) for _ in cell_centre_list]
+
+{
+    &#x27;fluid_zones&#x27;: {
+        &#x27;FZ_1&#x27;: {
+            &#x27;type&#x27;: &#x27;momentum&#x27;,
+            &#x27;definition&#x27;: &#x27;pipe_periodic_region.vtp&#x27;,
+            &#x27;func&#x27;: momentum_drive,
+        }
+    }
+}
+</code></pre>
+<h2 id="canopy">Canopy</h2>
+<p>A canopy zone represents a tree canopy in a terrain wind model.</p>
+<p><a href="reference/model/fluid-zones/canopy/index.html#cd"><code>cd</code></a>, <a href="reference/model/fluid-zones/canopy/index.html#beta-p"><code>beta_p</code></a>,
+<a href="reference/model/fluid-zones/canopy/index.html#beta-d"><code>beta_d</code></a>, <a href="reference/model/fluid-zones/canopy/index.html#ceps-4"><code>Ceps_4</code></a> and
+<a href="reference/model/fluid-zones/canopy/index.html#ceps-5"><code>Ceps_5</code></a> are defined in the literature, for example Desmond (2014).</p>
+<pre><code class="language-python">def lad_function(cell_centre_list):
+    lai = 5.0  # for example following Da Costa 2007
+    h_can = 20.0
+    lad_list = []
+    for cell in cell_centre_list:
+        wall_distance = cell[3]
+        lad = (np.interp(wall_distance, a_z[0] * h_can, a_z[1]) * lai / h_can,)
+        lad_list.append(lad)
+    return lad_list
+
+{
+    &#x27;fluid_zones&#x27;: {
+        &#x27;canopy_zone&#x27;: {
+            &#x27;type&#x27;: &#x27;canopy&#x27;,
+            &#x27;definition&#x27;: &#x27;canopy_dacosta.vtp&#x27;,
+            &#x27;function&#x27;: lad_function,
+            &#x27;cd&#x27;: 0.25,
+            &#x27;beta_p&#x27;: 0.17,
+            &#x27;beta_d&#x27;: 3.37,
+            &#x27;Ceps_4&#x27;: 0.9,
+            &#x27;Ceps_5&#x27;: 0.9,
+        },
+    }
+}
+</code></pre>
+<p>The leaf area density varies with height:</p>
+<pre><code class="language-python">a_z = (
+    np.asarray([0.0, 0.43, 0.1, 0.45, 0.2, 0.56, 0.3, 0.74, 0.4, 1.10,
+                0.5, 1.35, 0.6, 1.48, 0.7, 1.47, 0.8, 1.35, 0.9, 1.01,
+                1.0, 0.00]).reshape(11, 2).T
+)
+</code></pre>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>When <a href="reference/model/fluid-zones/canopy/index.html#field"><code>field</code></a> is used instead of <code>definition</code>, the height of the canopy at
+each cell is found from the point of the supplied VTK file nearest the cell centre, and read from a node-based scalar
+array named <code>&#x27;Height&#x27;</code>.</p></div></aside>
+<h2 id="atmospheric-boundary-layer-abl">Atmospheric Boundary Layer (ABL)</h2>
+<aside class="admon admon-warning"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17h.01"></path></svg>Warning</div><div class="admon-b"><p>An <a href="reference/model/fluid-zones/abl/index.html">ABL zone</a> has no physical effect on the solution. Its fields are validated but
+not read by the solver: the zone reduces to a bare momentum-source kernel over the selected cells, with no source
+derived from <code>roughness_length</code>, <code>friction_velocity</code>, <code>reference_height</code> or <code>wind_direction</code>. An atmospheric boundary
+layer profile is set on a reference condition instead; see
+<a href="guide/choosing/choosing-initialisation-and-reference-state/index.html#abl">ABL</a>.</p></div></aside>
+<h2 id="moving-or-deforming-a-mesh">Moving or deforming a mesh</h2>
+<p>zCFD has three distinct mechanisms for moving or deforming a mesh, each configured independently and per model, that
+is per mesh:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Mechanism</th><th>What it does</th><th>Where it is set</th></tr></thead><tbody><tr><td>Initial placement</td><td>a single static rotation, translation or scaling of the whole mesh, applied once when it loads</td><td>the model&#x27;s <a href="reference/model/transforms/index.html"><code>transforms</code></a></td></tr><tr><td>Dynamic rigid-body motion</td><td>a zone of cells rotating or translating relative to the rest of the mesh, such as a rotor or a moving overset component</td><td>a <code>&#x27;rotating&#x27;</code> or <code>&#x27;translating&#x27;</code> entry in <a href="reference/model/fluid-zones/index.html"><code>fluid_zones</code></a>; see <a href="guide/choosing/choosing-a-fluid-zone-model/index.html#rotating-and-translating-zones">Rotating and translating zones</a></td></tr><tr><td>Mesh morphing</td><td>a known deformation of a surface, such as a wing or blade deflecting under load, carried into the volume mesh by RBF or IDW interpolation</td><td>an <code>&#x27;rbf transform&#x27;</code> or <code>&#x27;idw transform&#x27;</code> entry in <a href="reference/model/fluid-zones/index.html"><code>fluid_zones</code></a>; see <a href="guide/working-with/fluid-structure-interaction/index.html#mesh-deformation">Fluid–structure interaction</a></td></tr></tbody></table></div>
+<h2 id="reference-entries">Reference entries</h2>
+<ul>
+<li><a href="reference/model/fluid-zones/index.html">Fluid zones</a>, with each zone type</li>
+<li><a href="reference/model/fluid-zones/disc/index.html"><code>disc</code></a>, <a href="reference/model/fluid-zones/porous/index.html"><code>porous</code></a>,
+<a href="reference/model/fluid-zones/canopy/index.html"><code>canopy</code></a>, <a href="reference/model/fluid-zones/momentum/index.html"><code>momentum</code></a></li>
+<li><a href="reference/model/fluid-zones/rotating/index.html"><code>rotating</code></a> and <a href="reference/model/fluid-zones/translating/index.html"><code>translating</code></a></li>
+<li><a href="reference/model/transforms/index.html"><code>transforms</code></a></li>
+</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#selecting-cells">Selecting cells</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#fluid-zones-in-the-incompressible-solver">Fluid zones in the incompressible solver</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#actuator-discs">Actuator discs</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#rotating-and-translating-zones">Rotating and translating zones</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#porous-media">Porous Media</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#momentum-source">Momentum Source</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#canopy">Canopy</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#atmospheric-boundary-layer-abl">Atmospheric Boundary Layer (ABL)</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#moving-or-deforming-a-mesh">Moving or deforming a mesh</a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html#reference-entries">Reference entries</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

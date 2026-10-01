@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>1 · Simple aerofoil · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/1-simple-aerofoil.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/1-simple-aerofoil-DstWphFE.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><a href="tutorials/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Tutorials</span></a><a href="tutorials/1-simple-aerofoil/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">1 · Simple aerofoil</span></a><a href="tutorials/2-steady-state-rans/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">2 · Steady-state RANS</span></a><a href="tutorials/3-time-accurate-solution/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">3 · Time-accurate solution</span></a><a href="tutorials/4-aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a><a href="tutorials/5-overset-meshes/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">5 · Overset meshes</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>1 · Simple aerofoil</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="simple-aerofoil">Simple aerofoil</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>The NACA0012 is a symmetrical aerofoil which is commonly used for code validation. In this configuration it is a
+quick and simple simulation to run. By downloading the tutorial bundle and following the instructions below, you
+should learn to run, post-process and visualise a simple zCFD simulation. This is a small simulation which most
+users should be able to run on a laptop in ~5 minutes.</p>
+<h2 id="what-you-need">What you need?</h2>
+<p>To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for
+this tutorial). For instructions on installing zCFD please see <a href="guide/setting-up/installation-and-licensing/index.html">installation and licensing</a>.</p>
+<p>The tutorial assumes that you are running all commands using a bash shell on Linux.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial zip file can be downloaded <a href="https://zcfd.zenotech.com/tutorials/1/naca0012.zip">here</a>. The zip file
+contains a mesh file (<em>naca0012.h5</em>) and a zCFD control file (<em>naca0012.py</em>).</p><p>This tutorial will assume you unzip the file in a directory called &quot;zcfd_tutorial_1&quot; in your users home directory.</p><pre><code class="language-bash">cd ~
+mkdir zcfd_tutorial_1
+wget https://zcfd.zenotech.com/tutorials/1/naca0012.zip
+unzip naca0012.zip
+</code></pre><h2 id="step-2-review-control-file">Step 2. Review Control file</h2><p><em>naca0012.py</em> is the zCFD control file. When zCFD runs, it reads the control file and uses the Python
+dictionary <code>parameters</code> to set the solver settings. Control files declare <code>&quot;config_version&quot;: 2</code>, and nest their
+settings under a top-level <code>solver</code> key (numerics, physics and output settings shared by the whole simulation) and
+a <code>model</code> key (one entry per mesh, holding that mesh&#x27;s boundary conditions). A brief overview of the parameters
+dictionary for the simulation is given below; for a more detailed description of the control file structure, see
+<a href="guide/concepts/how-the-deck-works/index.html">how the deck works</a>.</p><pre><code class="language-python">parameters = {
+    &quot;config_version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;rans&quot;,
+            &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+        },
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;euler_second&quot;,
+            &quot;inviscid flux scheme&quot;: &quot;roe&quot;,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 300,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [1.0, 0.0, 0.0], &quot;mach&quot;: 0.15},
+                &quot;viscosity&quot;: 1.02145e-05,
+                &quot;turbulence intensity&quot;: 5.2e-2,
+                &quot;eddy viscosity ratio&quot;: 1.0,
+            },
+        },
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: False},
+        &quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;},
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 50,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.1, &quot;initial&quot;: 1.0}],
+            },
+            &quot;cycles&quot;: 1500,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 10,
+                &quot;forces&quot;: {
+                    &quot;FR_1&quot;: {&quot;name&quot;: &quot;wall&quot;, &quot;zones&quot;: [4]},
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;surface variables&quot;: [&quot;V&quot;,&quot;p&quot;,&quot;mach&quot;,&quot;cp&quot;,&quot;cf&quot;,&quot;pressureforce&quot;,&quot;frictionforce&quot;],
+                &quot;volume variables&quot;:  [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;mach&quot;, &quot;cp&quot;, &quot;eddy&quot;],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;naca0012&quot;: {
+            &quot;mesh&quot;: &quot;naca0012.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {
+                    &quot;zones&quot;: [1],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [4],
+                    &quot;type&quot;: &quot;wall&quot;,
+                    &quot;kind&quot;: &quot;no slip&quot;,
+                },
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: [2, 3],
+                    &quot;type&quot;: &quot;symmetry&quot;,
+                },
+            },
+        },
+    },
+}
+</code></pre><h3 id="time-marching">Time marching</h3><p>The physical time layout and the pacing of the iterative solve are described by two sibling keys under <code>solver</code>:
+<code>time_settings</code>, which describes the physical time layout (steady or unsteady), and <code>convergence_control</code>, which
+paces the iterative solve. Keeping them separate means each one only has to say one thing: <code>time_settings</code> says
+<em>what kind of run this is</em>, and <code>convergence_control</code> says <em>how quickly to march towards convergence</em>.</p><p><code>&quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;}</code> declares a steady simulation outright, as an explicit, first-class
+declaration. Steady simulations assume that the simulated flow does not vary with time. Most real flows
+are not truly &#x27;steady&#x27;, but steady simulations tend to be much easier and cheaper to run than unsteady
+simulations. For an attached, streamlined flow like this one using a steady simulation is reasonable when
+time-resolved data is not required.</p><p>CFD simulations work by iteration: the solver starts with a very rough estimate of the flow <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x, 0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span>, then during the
+first &#x27;iteration cycle&#x27; the solver uses <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x, 0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span> to create a better approximation of the flow, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>. This is
+repeated many times, using <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> to calculate <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span> to calculate <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">3</span><span class="mclose">)</span></span></span></span> and so on, until
+the estimate of the flow is good enough.</p><p>The flow will generally change very quickly in the first few iterations, and then converge asymptotically on the
+&#x27;right&#x27; answer. The <a href="reference/solver/convergence-control/index.html#cycles">cycles</a> parameter, part of
+<code>convergence_control</code>, states how many iterations should be used in the simulation - the higher it is the more
+accurate the solution is likely to be, but given the convergence is asymptotic setting it too high will lead to
+lots of computational effort being used for very little change in the solution towards the end.</p><p>The <a href="reference/solver/convergence-control/index.html#scheme">scheme</a> defines the numerical scheme used by the solver to get
+from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,n+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>. The <code>implicit euler</code> scheme is a sensible choice to use for this type of simulation.</p><p>The <a href="reference/solver/convergence-control/index.html#cfl">CFL</a> essentially sets how much the flow is allowed to change
+between <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x,n+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> approximations of the flow field - if it is set too high the simulation will not
+converge, and if it is set too low the simulation will take many cycles reach the appropriate flow. <code>cfl ramp</code> is
+a list of ramps, run in order; the single one here grows the CFL each cycle, from <code>initial</code> by a factor of
+<code>factor</code>, so early cycles - where the flow field is a poor approximation of the true solution - take a cautiously
+small step, while later cycles converge faster.</p><h3 id="equations">Equations</h3><p>The <a href="reference/solver/equations/index.html">equations</a> block sets the type of flow being simulated. There are a number
+of different options, depending on the assumptions made about the flow. <code>rans</code> is used to simulate a
+compressible flow, including the effects of turbulence on the mean flow by use of a turbulence
+equation. The <code>turbulence</code> sub-dictionary sets the turbulence model used.</p><p>How the flow is spatially discretised - its <code>order</code> of accuracy and its inviscid flux scheme - is a separate
+concern from <em>what</em> is being solved, so those settings live in their own <code>numerical_scheme</code> block, alongside
+<code>equations</code>.</p><h3 id="ic_1">IC_1</h3><p>Now that the numerical settings have been defined, the flow needs to have boundary conditions. Boundary
+conditions define what happens at exterior faces of the mesh. In this case, there are three boundary conditions.</p><p>The first boundary condition is that of the freestream air, which is at a temperature of 300 K, a
+pressure of 101325 Pa and flows parallel to the mesh&#x27;s x axis at a Mach number of 0.15. The <code>IC_1</code> entry in
+<code>reference_conditions</code> defines a flow at these conditions.</p><p>Because the RANS equations include the effect of viscosity, the viscosity at the <code>IC_1</code>
+flow condition must also be defined (in this case, it is set to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.02145</mn><mo lspace="0em" rspace="0em">×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup><mtext> </mtext><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">g</mi><mtext> </mtext><msup><mi mathvariant="normal">m</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext> </mtext><msup><mi mathvariant="normal">s</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">1.02145 {\times}10^{-5}\ \mathrm{kg\  m^{-1}\ s^{-1}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em"></span><span class="mord">1.02145</span><span class="mord"><span class="mord">×</span></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">5</span></span></span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord"><span class="mord mathrm" style="margin-right:0.0139em">kg</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathrm mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathrm mtight">1</span></span></span></span></span></span></span></span></span></span></span></span></span> at 300 K).
+This corresponds to a chord based Reynolds number of 6 million. Because the RANS equations include turbulence
+modelling, the <code>turbulence_intensity</code> and <code>eddy_viscosity_ratio</code> are also set. These are used as boundary
+conditions for the SST turbulence model equations. The values given are sensible values for flows without
+significant freestream turbulence.</p><p><code>IC_1</code> also doubles as the initial guess for the flow field: <code>&quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;}</code>
+tells the solver that at 0 cycles the entirety of the flow should be initialised to the <code>IC_1</code> conditions. Stating
+this explicitly starts to matter once more than one reference condition is in play (see
+<a href="tutorials/2-steady-state-rans/index.html">Steady-state RANS</a>).</p><h3 id="bc_1">BC_1</h3><p>The <code>BC_1</code> entry assigns the <code>IC_1</code> flow condition to all mesh faces contained in the mesh zone <code>1</code> (note the
+plural <code>zones</code> key - a boundary condition can span more than one mesh zone). Mesh zones are defined during the
+meshing process, and in this case mesh zone <code>1</code> contains all the mesh faces which are on the farfield exterior
+surface of the mesh. The <code>farfield</code> type means that flow can pass freely through the specified mesh faces, and the
+<code>riemann</code> kind means that flow can pass both in and out of the mesh via the specified mesh faces.</p><h3 id="bc_2">BC_2</h3><p>The <code>BC_2</code> entry assigns a no-slip wall boundary condition to all mesh faces contained in the mesh zone <code>4</code>. Mesh
+zone <code>4</code>, in this case, contains all faces on the aerofoil surface. Note the <code>kind</code> is written <code>&quot;no slip&quot;</code>, with a
+space.</p><h3 id="bc_3">BC_3</h3><p>The <code>BC_3</code> entry assigns a symmetry boundary condition to all mesh faces contained in mesh zones <code>2</code> and <code>3</code>,
+which are the +ve z and -ve z faces of the mesh. This boundary condition type is used here to
+simulate an aerofoil of effectively infinite span, but with a low mesh resolution in the z axis to reduce
+simulation cost.</p><h3 id="report">Report</h3><p>The <code>report</code> sub-dictionary, nested under <code>output_settings</code>, defines which flow statistics zCFD should output to
+the user during the simulation, and how often. The &#x27;frequency&#x27; key here defines that zCFD should report flow
+statistics to the user every 10 iteration cycles during the simulation. Exactly which flow statistics are
+outputted can be changed by the user, but the defaults are enough to monitor the
+convergence of the solution. The &#x27;forces&#x27; sub-dictionary monitors the forces on specific mesh zones:
+here, the forces on mesh zone 4, which is the aerofoil surface.
+Some of the flow statistics (e.g. force on the aerofoil wall) are non-dimensionalised (see
+<a href="reference/solver/output-settings/index.html#report">here</a>) against the reference condition named in <code>initialisation</code>&#x27;s
+<code>reference</code> key. That key defaults to whichever condition <code>initial_conditions</code> names when it is left unset, which
+here is <code>IC_1</code>, the freestream state - so there is nothing extra to write here.</p><h3 id="write-output">Write Output</h3><p>The final part of <code>output_settings</code>, the <code>solution</code> sub-dictionary, defines which variables should be outputted
+into VTK HDF format (.vtkhdf) for visualisation by the user at the end of the simulation.</p><h2 id="step-3-running-zcfd">Step 3. Running zCFD</h2><p>To run zCFD you first need to source the &quot;activate&quot; script and then use the &quot;run_zcfd&quot; path.</p><ol>
+<li>Activating your environment:</li>
+</ol><pre><code class="language-bash">source ./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><ol start="2">
+<li>Run zCFD validate input to check the control dictionary for errors:</li>
+</ol><pre><code class="language-bash">cd ~/zcfd_tutorial_1/
+validate_input naca0012.py -m naca0012.h5
+</code></pre><ol start="3">
+<li>Run zCFD in the case directory:</li>
+</ol><pre><code class="language-bash">run_zcfd -m naca0012.h5 -c naca0012.py
+</code></pre><p>zCFD will attempt to detect the number of CPU cores and any GPUs present and make use of them. If you want to
+manually configure this see <a href="reference/command-line/invocation-and-flags/index.html">invocation and flags</a>.</p><p>As the solver is running it will output information about the current CFL, Multigrid level, timing, reporting
+information and file I/O. The output from zCFD will be written to the screen and also to a log file
+&quot;naca0012.log&quot;.</p><p>To watch the residuals and the wall forces converge while the solver runs, open the control file in zMon, as
+described in <a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a>.</p><figure class="figure"><img src="images/tutorial-1-zcfd-output.png" alt="zCFD Output" loading="lazy"/><figcaption>zCFD Output</figcaption></figure><p>zCFD will run for the 1500 <code>cycles</code> specified in the control dictionary, if you want to stop the solver early then
+you can either press CTRL+C to kill the process or update the <code>cycles</code> keyword to be a value smaller than the
+current cycle number, zCFD will detect this change and stop the solver.</p><p>The solver should take a few minutes to complete on a modern GPU, and a bit longer on a CPU.</p><h2 id="step-4-review-the-output">Step 4. Review the output</h2><p>A successful zCFD run creates the following files and directories. They are named after the control file,
+<code>naca0012.py</code>, and each model&#x27;s output is named after its key under <code>model</code>, which in this deck is also
+<code>naca0012</code>.</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td>naca0012.log</td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>naca0012_status.yaml</code></td><td>A YAML file recording how the run was started: the zCFD version, the date, the control file, the mesh and its checksum, and the nodes and devices used.</td></tr><tr><td>naca0012_report.ipynb</td><td>An auto-generated Jupyter notebook that plots the report file against cycle number.</td></tr><tr><td>naca0012_OUTPUT/naca0012/naca0012_report.csv</td><td>A .csv format table which shows the variation of flow statistics with cycle number.</td></tr><tr><td>naca0012_OUTPUT/naca0012/naca0012_results.h5</td><td>The checkpoint: the flow solution in zCFD format, used to restart the run.</td></tr><tr><td>naca0012_OUTPUT/naca0012/naca0012.vtkhdf</td><td>A VTK HDF file containing the volume data from the simulation, for visualisation.</td></tr><tr><td>naca0012_OUTPUT/naca0012/naca0012_wall.vtkhdf etc</td><td>One VTK HDF file for each boundary condition type, containing the surface data for that boundary condition.</td></tr><tr><td>naca0012_OUTPUT/LOGGING/</td><td>A separate log for each MPI rank, used for debugging.</td></tr></tbody></table></div><p>The status file is described in <a href="guide/setting-up/running-zcfd/index.html#the-status-file">The status file</a>.</p><h2 id="step-5-checking-convergence">Step 5. Checking convergence</h2><p>Open the run in zMon to see its residuals and forces, while it runs or after it has finished:</p><pre><code class="language-bash">. ./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+cd ~/zcfd_tutorial_1/
+zmon naca0012.py
+</code></pre><p>A browser opens on the zMon dashboard; <a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a> describes each
+panel.</p><p>A short Python script makes the same plots and can post-process a case automatically, for example at the end of a
+batch job. Save this as <code>naca0012_post.py</code> beside the control file:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+
+from zutil.fileutils import get_zcfd_result
+
+result = get_zcfd_result(&quot;naca0012.py&quot;)
+report = result.report.data
+prefix = result.force_prefix()
+
+fig, ax = plt.subplots()
+for variable in [&quot;rho&quot;, &quot;rhoV[0]&quot;, &quot;rhoV[1]&quot;, &quot;rhoV[2]&quot;, &quot;rhoE&quot;, &quot;rhok&quot;, &quot;rhoOmega&quot;]:
+    ax.semilogy(report[&quot;Cycle&quot;], report[variable], label=variable)
+ax.set_xlabel(&quot;Cycle&quot;)
+ax.legend()
+fig.savefig(&quot;naca0012_residuals.png&quot;, dpi=200)
+
+fig, ax = plt.subplots()
+ax.plot(report[&quot;Cycle&quot;], report[f&quot;{prefix}_Fx&quot;], label=&quot;x force&quot;)
+ax.plot(report[&quot;Cycle&quot;], report[f&quot;{prefix}_Fz&quot;], label=&quot;z force&quot;)
+ax.set_xlabel(&quot;Cycle&quot;)
+ax.legend()
+fig.savefig(&quot;naca0012_forces.png&quot;, dpi=200)
+</code></pre><p>and run it in the activated environment:</p><pre><code class="language-bash">python naca0012_post.py
+</code></pre><p><a href="guide/working-with/post-processing-and-visualisation/index.html#batch-post-processing-with-python-scripts">Batch post-processing with Python scripts</a>
+lists what <code>get_zcfd_result</code> provides.</p><h3 id="residuals">Residuals</h3><p>The residual variables essentially measure how close to a stable solution of the chosen flow equations (e.g. the
+RANS equations) the simulation is. There is a residual for each flow variable, and the lower the residual, the
+more converged the flow solution is.</p><figure class="figure"><img src="images/tutorial-1-plot-1.png" alt="zCFD Output" loading="lazy"/><figcaption>zCFD Output</figcaption></figure><p>As would be expected (note the logarithmic y axis), the residuals drop very quickly in the first couple of
+hundred iterations as the flow quickly develops from the initial condition (which in this case, is the freestream
+condition everywhere). After that, the flow residuals (<code>rho</code>, <code>rhoV[0]</code>, <code>rhoV[1]</code>, <code>rhoV[2]</code> and <code>rhoE</code>)
+residuals continue to drop, while the turbulence residuals (<code>rhok</code> and <code>rhoOmega</code>) drop initially before
+flatlining / increasing.</p><p>This behaviour is common - the turbulence equations can take a while to react to changes in the flow field, and
+the initial guess for the turbulence equations is often poorer than the initial conditions for the flow field. A
+combination of the fact that the flow residuals have dropped several orders of magnitude over the simulation
+history and the fact that the residuals are in effect flat from 20,000 cycles onwards show
+that the simulation is sufficiently converged.</p><h3 id="forces">Forces</h3><p>In the forces panel, show the x and z forces. Given this is a symmetrical aerofoil run at 0 angle of attack, the x
+force corresponds to drag and the z force corresponds to lift. The lift should be zero and the drag positive.</p><figure class="figure"><img src="images/tutorial-1-plot-2.png" alt="zCFD Output" loading="lazy"/><figcaption>zCFD Output</figcaption></figure><p>The force plots tell a similar story to the residuals - there are initially large oscillations as the flow
+settles down, before the force traces essentially flatline from 1200 cycles onwards.</p><h3 id="plotting-performance">Plotting performance</h3><pre><code class="language-python">r.plot_performance()
+</code></pre><p>Finally, the <code>plot_performance()</code> method plots the time used per cycle. The last cycle is
+particularly long because it is the only cycle where the flow solution is written to a file. If an implicit
+solver is used, <code>plot_performance()</code> will also attempt to plot the memory usage per cycle.</p><h2 id="step-6-looking-at-results-with-paraview">Step 6. Looking at results with ParaView</h2><p>ParaView is a general purpose visualisation tool that is the recommended way of post processing zCFD results.
+Please see <a href="https://www.paraview.org">ParaView.org</a> for download and installation instructions.</p><aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The .vtkhdf output format requires <a href="https://www.paraview.org/download/">ParaView 6.1.1</a> or later.</p></div></aside></div>
+<h3 id="loading-your-data">Loading your data</h3>
+<p>As mentioned above a &quot;naca0012_OUTPUT/naca0012&quot; folder has been generated, and contains a &quot;.vtkhdf&quot; file
+(naca0012.vtkhdf). This is a single VTK HDF file containing all of the volume output data, making it easy to load
+into ParaView.</p>
+<p>After opening ParaView, click the &quot;Open&quot; icon shown below or go into File&gt;Open or press Ctrl+O. Locate
+the directory in which you have stored your data and open naca0012.vtkhdf.</p>
+<figure class="figure"><img src="images/tutorial-1-figure-1.png" alt="File open menu in ParaView" loading="lazy"/><figcaption>File open menu in ParaView</figcaption></figure>
+<p>Once the file is correctly loaded in ParaView, the &quot;Pipeline Browser&quot; on the left of your screen should look like
+this:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-2.png" alt="ParaView Pipeline" loading="lazy"/><figcaption>ParaView Pipeline</figcaption></figure>
+<p>Now you need to click &quot;Apply&quot;, which will lead to the following layout:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-3.png" alt="ParaView after loading pvd file" loading="lazy"/><figcaption>ParaView after loading pvd file</figcaption></figure>
+<p>You may need to use the &#x27;set view direction to +ve y&#x27; button:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-17.png" alt="Set view direction to +ve y" loading="lazy"/><figcaption>Set view direction to +ve y</figcaption></figure>
+<h3 id="visualising-variables">Visualising Variables</h3>
+<p>By default, ParaView shows the &quot;cellvolume&quot; variable. This shows that the mesh is refined near the centre of the mesh, where the airfoil is. This is common practice, as capturing the flow around a body is more
+demanding than doing so in the free-stream. Naturally, having a very fine mesh over the entire fluid domain would make the problem computationally expensive.</p>
+<p>Other variables can be selected and shown using the following scrolling menu:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-4.png" alt="Variables drop down" loading="lazy"/><figcaption>Variables drop down</figcaption></figure>
+<p>Let&#x27;s observe the pressure coefficient around the airfoil. To do so, use the scrolling menu and select the &quot;cp&quot;
+variable.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The pressure coefficient is given by the following formula
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>p</mi></msub><mo>=</mo><mfrac><mrow><mi>p</mi><mo>−</mo><msub><mi>p</mi><mi mathvariant="normal">∞</mi></msub></mrow><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>ρ</mi><mi mathvariant="normal">∞</mi></msub><msubsup><mi>V</mi><mi mathvariant="normal">∞</mi><mn>2</mn></msubsup></mrow></mfrac></mrow><annotation encoding="application/x-tex">C_p = \frac{p-p_{\infty }}{\frac{1}{2}\rho _{\infty }V_{\infty }^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1.4963em;vertical-align:-0.6418em"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8544em"><span style="top:-2.599em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em"><span style="top:-2.656em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.2255em"><span class="pstrut" style="height:3em"></span><span class="frac-line mtight" style="border-bottom-width:0.049em"></span></span><span style="top:-3.384em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span><span class="mord mtight"><span class="mord mathnormal mtight">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em"><span></span></span></span></span></span></span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.2222em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7463em"><span style="top:-2.214em;margin-left:-0.2222em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span><span style="top:-2.786em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286em"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em"><span class="pstrut" style="height:3em"></span><span class="frac-line" style="border-bottom-width:0.04em"></span></span><span style="top:-3.4461em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6418em"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p></div></aside>
+<p>This gives the following (you will need to zoom in substantially to the centre of the mesh before you can clearly
+see the airfoil):</p>
+<figure class="figure"><img src="images/tutorial-1-figure-5.png" alt="Pressure around airfoil" loading="lazy"/><figcaption>Pressure around airfoil</figcaption></figure>
+<p>You can change the colormap used by ParaView by clicking on the &quot;Edit Color Map&quot; icon:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-6a.png" alt="Edit Color Map" loading="lazy"/><figcaption>Edit Color Map</figcaption></figure>
+<p>and then the &quot;Choose Preset&quot; icon:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-6.png" alt="Colour map icon" loading="lazy"/><figcaption>Colour map icon</figcaption></figure>
+<p>Here are the same results shown using different colormaps:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-7.png" alt="Jet" loading="lazy"/><figcaption>Jet</figcaption></figure>
+<figure class="figure"><img src="images/tutorial-1-figure-8.png" alt="Cool to warm (extended)" loading="lazy"/><figcaption>Cool to warm (extended)</figcaption></figure>
+<p>These steps give a qualitative view of the solution. More advanced
+analysis is also feasible. A common result in aerodynamics, especially around an airfoil, is the plot of the
+pressure coefficient along the chord.</p>
+<h3 id="pressure-coefficient-plot">Pressure Coefficient Plot</h3>
+<p>Open the &quot;naca0012_wall.vtkhdf&quot; file. Naturally, the resulting image looks different from the previous as this
+only contains the zones where a &quot;wall&quot; boundary condition has been defined, which in this case happens to be
+the airfoil itself.</p>
+<figure class="figure"><img src="images/tutorial-1-figure-9.png" alt="Wall.vtkhdf" loading="lazy"/><figcaption>Wall.vtkhdf</figcaption></figure>
+<p>It is usually of interest to have a plot showing the pressure coefficient on the upper and the lower surface,
+therefore it is necessary to extract the data separately for each face of the airfoil. The upper and lower
+surfaces of the airfoil then need to be separated.</p>
+<p>To this end, the &quot;Clip&quot; filter has to be used. To use it, right-click on the &quot;naca0012_wall.vtkhdf&quot; object in the
+Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the &quot;Clip&quot; filter are displayed on
+the left. Firstly, untick the &quot;Invert&quot; option and then you should set them to the following combination:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-10.png" alt="Clip parameters" loading="lazy"/><figcaption>Clip parameters</figcaption></figure>
+<p>By default, this will &quot;remove&quot; the lower surface of the airfoil, leaving the following shape:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-11.png" alt="Airfoil upper surface" loading="lazy"/><figcaption>Airfoil upper surface</figcaption></figure>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>To remove the upper surface instead, tick the &quot;Invert&quot; option in the &quot;Clip&quot; filter&#x27;s properties.</p></div></aside>
+<p>Next, take a &quot;Slice&quot; of the remaining surface. To do so, follow the same procedure as for the &quot;Clip&quot;
+filter but select the &quot;Slice&quot; filter instead. When prompted, set the properties of the filter to be as follows:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-12.png" alt="Slice parameters" loading="lazy"/><figcaption>Slice parameters</figcaption></figure>
+<p>You should end up with this:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-13.png" alt="Upper airfoil slice" loading="lazy"/><figcaption>Upper airfoil slice</figcaption></figure>
+<p>Then the data should be converted from &quot;cell data&quot; to &quot;point data&quot;. This is done by using the
+&quot;CellDatatoPointData&quot; filter. Access by right-clicking on the &quot;Slice&quot; object selecting &quot;Add filters&quot;.</p>
+<p>Once this is done, a plot can be produced in ParaView using the &quot;PlotOnSortedLines&quot; filter. Right-click on the
+&quot;CellDatatoPointData1&quot; object created previously and add the &quot;PlotOnSortedLines&quot; filter. A plot should appear on
+the right. You can select the variables to plot in the &quot;Properties -&gt; Series Parameters&quot; window, as well as
+changing the settings of the axis.
+Select the &quot;cp&quot; variable in &quot;Series Parameters&#x27;, and use &#x27;Points_X&#x27; as the &#x27;X Array Name&#x27;. Untick &#x27;Show Legend&#x27;,
+set &#x27;Left Axis Title&#x27; to &#x27;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">C_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span></span></span></span>&#x27; and set the &#x27;Bottom Axis Title&#x27; to &#x27;x&#x27;. You can also use the &quot;Left Axis Use
+Custom Range&quot; option to change the y-axis range:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-14.png" alt="Left axis parameters" loading="lazy"/><figcaption>Left axis parameters</figcaption></figure>
+<p>Setting the maximum as a negative number inverts the y-axis and the negative numbers will be
+shown &quot;at the top&quot;.</p>
+<figure class="figure"><img src="images/tutorial-1-figure-15.png" alt="Cp vs Chord" loading="lazy"/><figcaption>Cp vs Chord</figcaption></figure>
+<p>The data can be exported as a .csv file, which can then be manipulated in Python, Excel, MATLAB or any other
+software. To do so, go to File -&gt; Save data -&gt; <em>select a folder and give a name to the file</em>. The following
+window should appear:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-16.png" alt="CSV Writer tool" loading="lazy"/><figcaption>CSV Writer tool</figcaption></figure>
+<p>By default, ParaView writes all the variables into the .csv file. However, if only a few of them are of interest,
+you can use the &quot;Choose Arrays To Write&quot; option.</p>
+<p>Now, this procedure can be repeated for the lower surface of the airfoil. A pressure coefficient plot can then be
+made for validation purposes.</p>
+<p>:::</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/1-simple-aerofoil/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/1-simple-aerofoil/index.html#what-you-need">What you need?</a><a href="tutorials/1-simple-aerofoil/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/1-simple-aerofoil/index.html#step-2-review-control-file">Step 2. Review Control file</a><a href="tutorials/1-simple-aerofoil/index.html#step-3-running-zcfd">Step 3. Running zCFD</a><a href="tutorials/1-simple-aerofoil/index.html#step-4-review-the-output">Step 4. Review the output</a><a href="tutorials/1-simple-aerofoil/index.html#step-5-checking-convergence">Step 5. Checking convergence</a><a href="tutorials/1-simple-aerofoil/index.html#step-6-looking-at-results-with-paraview">Step 6. Looking at results with ParaView</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

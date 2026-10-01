@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Troubleshooting · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/troubleshooting/troubleshooting.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/troubleshooting-BPvM-R_a.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow sel" aria-current="page"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <b>Troubleshooting</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="troubleshooting">Troubleshooting</h1>
+<p>zCFD validates every deck before the solver starts, so a key that is misspelt, out of range or inconsistent with its
+neighbours is reported before the first cycle. Most of the symptoms below are ones validation cannot catch. Find the
+symptom in the table, confirm it with the check its section gives, then work through the causes in the order listed.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Symptom</th><th>What the run shows</th><th>Section</th></tr></thead><tbody><tr><td>Residuals rise until the run stops</td><td>One or more residual columns of the report file grow from cycle to cycle</td><td><a href="guide/troubleshooting/troubleshooting/index.html#diverging-residuals">Diverging residuals</a></td></tr><tr><td>The run stops on a non-finite value</td><td><code>Non-finite values (NaN or inf) detected in report...</code></td><td><a href="guide/troubleshooting/troubleshooting/index.html#nan-or-inf-in-the-report">NaN or <code>inf</code> in the report</a></td></tr><tr><td>A compressible run fails and the cells that cause it are unknown</td><td><code>Crash Cell Location:</code> lines in the log, with safe mode on</td><td><a href="guide/troubleshooting/troubleshooting/index.html#locating-the-failing-cells">Locating the failing cells</a></td></tr><tr><td>Residuals fall, then plateau</td><td>A residual history that flattens well short of the target</td><td><a href="guide/troubleshooting/troubleshooting/index.html#convergence-stall">Convergence stall</a></td></tr><tr><td>The inner-cycle residual flattens at the same level in every real time step</td><td>A floor in each real time step, while the integrated forces continue to settle</td><td><a href="guide/troubleshooting/troubleshooting/index.html#limiter-switching">Limiter switching</a></td></tr><tr><td>Divergence persists at a low CFL number and first order, or a stall is local</td><td>A residual carried by a handful of cells</td><td><a href="guide/troubleshooting/troubleshooting/index.html#poor-mesh-quality">Poor mesh quality</a></td></tr><tr><td>The solver stops on a licence message, at start-up or during the run</td><td><code>License initialisation error</code>, <code>License checkout error</code> or <code>License heart beat failed</code></td><td><a href="guide/troubleshooting/troubleshooting/index.html#licence-and-launch-failures">Licence and launch failures</a></td></tr><tr><td>Validation rejects an output variable</td><td><code>Output variable error: Variables [...] are not valid for equation type ...</code></td><td><a href="guide/troubleshooting/troubleshooting/index.html#output-variable-rejected">Output variable rejected</a></td></tr></tbody></table></div>
+<h2 id="diverging-residuals">Diverging residuals</h2>
+<p>The residuals in the <code>&lt;casename&gt;_report.csv</code> file should fall gradually as the solver converges, per real time step
+if the flow is unsteady. A run is diverging when one or more of them turns and rises instead. The divergence may
+follow a period of otherwise stable convergence, because a particular pattern in the flow can appear during the
+solution and destabilise the scheme. A diverging run that is left to continue ends on a
+<a href="guide/troubleshooting/troubleshooting/index.html#nan-or-inf-in-the-report">non-finite value</a>.</p>
+<figure class="figure"><img src="images/diverge.png" alt="The typical form of a divergent set of residuals. Rather than decreasing, the values all start increasing significantly from cycle 45 onwards. In this case the NACA0012 case was deliberately set with an unstable explicit CFL number of 6.0." title="Diverging residuals" loading="lazy"/><figcaption>The typical form of a divergent set of residuals. Rather than decreasing, the values all start increasing significantly from cycle 45 onwards. In this case the NACA0012 case was deliberately set with an unstable explicit CFL number of 6.0.</figcaption></figure>
+<p><strong>Confirm it.</strong> Plot the residual columns of the report file against the cycle, or watch them in
+<a href="guide/working-with/monitoring-a-run/index.html">zMon</a>. For an <a href="reference/solver/convergence-control/index.html#scheme-name">implicit</a> run
+using the AMGX library, the log also reports each solve of the implicit linear system: the number of iterations and
+the residual after each one. Typically 4 to 5 iterations are enough to achieve the desired reduction in residual,
+which is 3 to 4 orders of magnitude. If the number of iterations climbs above 6, the linear system may be poorly
+conditioned as a result of numerical instability in the solution.</p>
+<pre><code>Cycle 5003 (real time cycle: 0 time: 0)
+CFL 20.0 (20.0) - MG 20.0 (coarse mesh: 0)
+        iter      Mem Usage (GB)       residual           rate
+        --------------------------------------------------------------
+            Ini             36.9899   3.037596e-06
+            0             36.9899   4.565379e-07         0.1503
+            1             36.9899   1.138337e-07         0.2493
+            2             36.9899   3.056741e-08         0.2685
+            3             36.9899   1.061114e-08         0.3471
+            4             36.9899   3.308933e-09         0.3118
+            5             36.9899   1.293730e-09         0.3910
+        --------------------------------------------------------------
+        Total Iterations: 6
+        Avg Convergence Rate: 	0.2743
+        Final Residual: 		1.293730e-09
+        Total Reduction in Residual:	4.259057e-04
+        Maximum Memory Usage:	36.990 GB
+        --------------------------------------------------------------
+Total Time: 0.869665
+    setup: 0.109454 s
+    solve: 0.760211 s
+    solve(per iteration): 0.126702 s
+        iter      Mem Usage (GB)       residual           rate
+        --------------------------------------------------------------
+            Ini             36.9899   1.713350e-04
+            0             36.9899   1.060694e-07	0.0006
+            1             36.9899   1.898567e-10	0.0018
+        --------------------------------------------------------------
+        Total Iterations: 2
+        Avg Convergence Rate:	0.0011
+        Final Residual:		1.898567e-10
+        Total Reduction in Residual:	1.108102e-06
+        Maximum Memory Usage:	36.990 GB
+        --------------------------------------------------------------
+</code></pre>
+<p><em>Example output from the AMGX implicit linear solver. In this case the turbulence equations are solved after the primary flow variables. The primary flow variables are solved in 5 cycles of the AMGX solver, achieving an order of magnitude 3 reduction in the residuals.</em></p>
+<p>Work through the causes in this order. If the run still diverges once the first three have been tried, the cause is
+most likely the boundary conditions, preconditioning or the mesh quality.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Cause</th><th>Setting</th><th>First change</th></tr></thead><tbody><tr><td>CFL number above the stability limit of the mesh</td><td><a href="reference/solver/convergence-control/index.html#cfl"><code>cfl</code></a></td><td>Below 1.0, say 0.5, for an explicit run; 5.0 or less for an implicit run</td></tr><tr><td>Second-order spatial accuracy</td><td><a href="reference/solver/numerical-scheme/index.html#order"><code>order</code></a></td><td><code>first</code></td></tr><tr><td>A less dissipative inviscid flux scheme</td><td><a href="reference/solver/numerical-scheme/index.html#inviscid-flux-scheme"><code>inviscid_flux_scheme</code></a></td><td><code>rusanov</code></td></tr><tr><td>Wall function iterations that do not converge</td><td>wall <a href="reference/model/boundary-conditions/wall/index.html#kind"><code>kind</code></a></td><td><code>slip</code> or <code>no slip</code></td></tr><tr><td>An inconsistent set of boundary conditions</td><td><a href="reference/model/boundary-conditions/index.html"><code>boundary_conditions</code></a></td><td>Simplify them, as described below</td></tr><tr><td>Preconditioning unsuited to the mesh</td><td><a href="reference/solver/equations/index.html#precondition"><code>precondition</code></a></td><td><code>False</code></td></tr><tr><td>Poor quality cells</td><td><a href="guide/troubleshooting/troubleshooting/index.html#poor-mesh-quality">Poor mesh quality</a></td><td>Confirm it, then remediate or improve the mesh</td></tr></tbody></table></div>
+<h3 id="numerical-instability">Numerical instability</h3>
+<p>The solver advances the flow solution towards convergence at the required level of spatial and temporal accuracy,
+subject to a user-defined limit called the <a href="reference/solver/convergence-control/index.html#cfl">CFL</a> (Courant–Friedrichs–Lewy)
+number. The CFL number limits the update to the solution in each cycle to maintain the stability of the underlying
+numerical scheme.</p>
+<p>There are formal criteria for the CFL number of a given scheme, but these typically apply only to idealised meshes:
+orthogonal or structured, with a very gradual variation in the volume ratio from cell to cell. For a complex mesh, or
+where cell quality is poor even in only a few cells, the limit for stability may be significantly lower. In explicit
+mode the theoretical CFL limit is approximately 1.0 for most schemes, though in many cases a higher value of 1.5 to
+2.0 will work. In implicit mode the theoretical CFL limit is 1000 or more, and values between 10 and 100 are common.</p>
+<p>Reducing the spatial <a href="reference/solver/numerical-scheme/index.html#order"><code>order</code></a> to <code>first</code> and the
+<a href="reference/solver/numerical-scheme/index.html#inviscid-flux-scheme"><code>inviscid_flux_scheme</code></a> to <code>rusanov</code> gives the most stable,
+though least accurate, discretisation.</p>
+<h3 id="wall-functions">Wall functions</h3>
+<p>zCFD scales a turbulent wall function on a solid boundary automatically. An internal iterative solution of a set of
+equations matches the flow speed and the wall shear stress in the cell adjacent to the wall to the ideal profile of a
+turbulent boundary layer. The number of internal iterations should be low, fewer than 20, if the solution is
+physically valid. zCFD reports the time per cycle in the <code>AvgCycleTime</code> column of the report file, and a value that
+starts climbing may indicate that the wall function iterations are not converging. To test whether the wall functions
+are the cause, change the wall <a href="reference/model/boundary-conditions/wall/index.html#kind"><code>kind</code></a> from <code>wall function</code> to
+<code>slip</code> or <code>no slip</code>, whichever is the closer approximation to the desired behaviour.</p>
+<h3 id="inconsistent-boundary-conditions">Inconsistent boundary conditions</h3>
+<p>zCFD checks that each boundary condition in <a href="reference/model/boundary-conditions/index.html"><code>boundary_conditions</code></a> is
+correctly specified, but it cannot determine whether a combination of boundary conditions is correct. A closed
+fluid domain with every boundary a solid wall except for a single mass flow condition, for example, will appear to
+converge at first, until the pressure rises or falls to non-physical levels. The effects of mismatched boundary conditions can
+also be more subtle, especially where inflow and outflow conditions over-specify or under-specify the solution.</p>
+<p>To diagnose inconsistent boundary conditions, simplify them: replace wall functions with slip walls, and inflow and
+outflow conditions with <a href="reference/model/boundary-conditions/farfield/index.html#kind">farfield</a> conditions of kind <code>riemann</code>.
+It can also help to repeat the simulation and stop the solver shortly before the crash, to inspect the solution for
+unexpected features. The temperature field often points to the areas of the flow that are causing problems,
+particularly where poor quality cells are present.</p>
+<h3 id="preconditioning">Preconditioning</h3>
+<p>The timestep of zCFD in explicit mode is limited by a local numerical wave speed in the solver scheme. In regions of
+low-speed flow, such as near stagnation points, this may be overly conservative. Preconditioning modifies the scheme to
+increase the local timestep, subject to a local stability condition. The stability limits of the preconditioned
+scheme may be inappropriate for a given mesh, however, and the flow field then diverges. To test this, set
+<a href="reference/solver/equations/index.html#precondition"><code>precondition</code></a> in <code>equations</code> to <code>False</code>.</p>
+<h3 id="parallel-log-files">Parallel log files</h3>
+<p>For a parallel run, the main log file may not contain all of the information about a crash that the solution on one
+partition has caused. The log file for each partition is stored in the <code>&lt;case&gt;_OUTPUT/LOGGING</code> directory as
+<code>&lt;case&gt;.&lt;rank&gt;.log</code>.</p>
+<h2 id="nan-or-inf-in-the-report">NaN or <code>inf</code> in the report</h2>
+<p>The run stops with this message:</p>
+<pre><code class="language-text">Non-finite values (NaN or inf) detected in report...
+</code></pre>
+<p><strong>Confirm it.</strong> The row holding the non-finite value is written to <code>&lt;casename&gt;_report.csv</code> before the run stops, so
+the last row of the file shows which column failed, and the rows above it show how the run arrived there. For a
+parallel run, read the <a href="guide/troubleshooting/troubleshooting/index.html#parallel-log-files">log file of each partition</a> as well as the main log.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>What the rows before it show</th><th>Cause and remedy</th></tr></thead><tbody><tr><td>Residuals that rose over the preceding rows</td><td>A divergence: see <a href="guide/troubleshooting/troubleshooting/index.html#diverging-residuals">Diverging residuals</a></td></tr><tr><td>A residual carried by a handful of cells, or divergence at a low CFL number</td><td>See <a href="guide/troubleshooting/troubleshooting/index.html#poor-mesh-quality">Poor mesh quality</a></td></tr></tbody></table></div>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>A column that reads <code>NaN</code> in every row written after a restart, while the run continues, is not a failure. The
+restart was seeded from a run with a different turbulence model, and the column belongs to that model&#x27;s closure,
+which this run does not solve.</p></div></aside>
+<h3 id="locating-the-failing-cells">Locating the failing cells</h3>
+<p>Safe mode reports where a compressible run fails. Setting <a href="reference/solver/solver-settings/index.html#safe"><code>safe</code></a> to <code>True</code>
+checks every cell after each explicit update on the fine mesh. A cell with a NaN value, or with a non-positive density,
+energy or pressure, stops the run. The log shows <code>ExplicitSolver::march - Solver update failed</code>, then one
+<code>Crash Cell Location:</code> line per failed cell, giving the coordinates of its centre. The run stops without writing
+further output. The check synchronises every stage of the update, so use it to diagnose a failing case and leave it
+off in production. Implicit updates, coarse multigrid levels and the incompressible solver are not checked.</p>
+<h2 id="convergence-stall">Convergence stall</h2>
+<p>More common than divergence is convergence stall, in which the reported residuals fall at first and then plateau.</p>
+<figure class="figure"><img src="images/stall.png" alt="The convergence of the steady-state explicit solver has achieved an average residual reduction of 5 orders of magnitude and then stalled. The noise in the solution from 40k cycles onwards suggests that either the flow is not fundamentally steady-state or that multigrid is adding an error to the solution. The user must determine whether the level of convergence is sufficient for their purposes and if not whether to run an unsteady simulation or degrade the spatial accuracy." title="Stalling residuals" loading="lazy"/><figcaption>The convergence of the steady-state explicit solver has achieved an average residual reduction of 5 orders of magnitude and then stalled. The noise in the solution from 40k cycles onwards suggests that either the flow is not fundamentally steady-state or that multigrid is adding an error to the solution. The user must determine whether the level of convergence is sufficient for their purposes and if not whether to run an unsteady simulation or degrade the spatial accuracy.</figcaption></figure>
+<p><strong>Confirm it.</strong> The residual history in the report file flattens and stays level. The
+<a href="guide/working-with/post-processing-and-visualisation/index.html#residual-statistics-columns">residual statistics columns</a> show
+whether the stall belongs to the whole field or to a handful of cells: a small <code>Neff</code> against a large mesh means a
+localised stall, which is a <a href="guide/troubleshooting/troubleshooting/index.html#poor-mesh-quality">mesh quality</a> question. The flow residuals may be stalled while the
+integrated properties of interest, such as lift, drag or mass flow, are converged well enough to be useful. That
+judgement rests with the engineer.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Cause</th><th>Setting</th><th>First change</th></tr></thead><tbody><tr><td>An error introduced by multigrid</td><td><code>cycles</code> in <a href="reference/solver/numerical-scheme/index.html#multigrid-cycles"><code>multigrid</code></a></td><td>Turn multigrid off after a set number of cycles</td></tr><tr><td>Physical unsteadiness in a steady-state simulation</td><td><a href="reference/solver/time-settings/index.html#type"><code>type</code></a> in <code>time_settings</code></td><td>Run unsteady from the stalled solution, or degrade the accuracy</td></tr><tr><td>A physical time step too large for dual time stepping</td><td><a href="reference/solver/time-settings/index.html#time-step"><code>time_step</code></a></td><td>Reduce it</td></tr><tr><td>The limiter switching within the inner cycles</td><td><a href="guide/troubleshooting/troubleshooting/index.html#limiter-switching">Limiter switching</a></td><td>Freeze the limiter</td></tr></tbody></table></div>
+<h3 id="multigrid">Multigrid</h3>
+<p>For explicit simulations, <a href="reference/solver/numerical-scheme/index.html#multigrid">multigrid</a> accelerates convergence by using
+a set of coarse meshes to propagate the longer-wavelength components of the solution through the domain faster than
+the CFL condition would allow on the finest mesh. In theory, and on idealised meshes, multigrid does not change the
+steady-state solution that is reached, or the pseudo-steady-state solution of an unsteady flow. On real meshes around
+complex geometry, however, multigrid introduces an error, and this can limit convergence. Setting
+<a href="reference/solver/numerical-scheme/index.html#multigrid-cycles"><code>cycles</code></a> in the <code>multigrid</code> block turns multigrid off after
+that number of cycles, which removes the error.</p>
+<h3 id="flow-unsteadiness">Flow unsteadiness</h3>
+<p>A very common cause of convergence stall, particularly in steady-state simulations, is physical unsteadiness in the
+underlying flow. The solver is then attempting to find a steady-state solution to an unsteady problem, and the
+solution keeps changing from cycle to cycle. There are two approaches, depending on the flow features of interest.</p>
+<p>If the unsteadiness matters, use the unconverged steady-state flow as the starting point for an unsteady simulation.
+If the stall is within the pseudo-steady cycles of an unsteady dual time-stepping solution, the physical
+<a href="reference/solver/time-settings/index.html#time-step"><code>time_step</code></a> may be too large, and should be reduced.</p>
+<p>If the unsteadiness is not of interest, the accuracy of the solution can be deliberately degraded to give a more
+&#x27;average&#x27; steady-state flow. This might mean the <code>rusanov</code> inviscid flux scheme, first-order spatial accuracy, a
+coarser mesh, or a combination of these. The implicit mode of the solver can also filter the solution in time, since a
+higher CFL number allows larger time steps. This approach can cause solver instability and inaccuracy in the final
+solution, because the &#x27;averaging&#x27; process is non-physical.</p>
+<h2 id="limiter-switching">Limiter switching</h2>
+<p>Within the inner, pseudo-time cycles of an unsteady dual time-stepping simulation on the compressible solver, a
+common cause of apparent stall is the MUSCL limiter switching state from one iteration to the next in a small number
+of cells. Those cells keep producing a solution change that never decays. The reported residual is an RMS over all
+cells, so a handful of them is enough to hold the whole norm up at a floor, while the bulk of the field may be
+converging perfectly well behind it.</p>
+<p><strong>Confirm it.</strong> The residual drops cleanly for the first several inner cycles and then flattens at the same level in
+every real time step, while the integrated forces continue to settle. Judging this from the global residual is
+unreliable. Use the
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#inner-cycle-convergence-columns">inner cycle convergence columns</a>
+instead, which measure the drop within each real time step rather than an absolute level.</p>
+<p>Adding inner cycles does not help, because the floor is not a problem of convergence rate.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Cause</th><th>Setting</th><th>First change</th></tr></thead><tbody><tr><td>The limiter changing state in a few cells</td><td><a href="reference/solver/numerical-scheme/index.html#freeze-limiter-cycle"><code>freeze_limiter_cycle</code></a> in <code>numerical_scheme</code></td><td>Set it, to snapshot the limiter and hold it fixed thereafter</td></tr><tr><td>A solution that genuinely needs the limiter to keep adapting</td><td><a href="reference/solver/time-settings/index.html#time-step"><code>time_step</code></a></td><td>Reduce it, so less has to change in each real time step</td></tr><tr><td>The outer-iteration floor of the incompressible coupled scheme</td><td><a href="guide/choosing/choosing-a-linear-solver/index.html">linear solver</a>, <a href="reference/solver/time-settings/index.html#time-step"><code>time_step</code></a></td><td>Tighten the linear solver, or reduce the time step</td></tr><tr><td>The under-relaxation floor of the incompressible SIMPLE scheme</td><td><a href="reference/solver/convergence-control/index.html#inner-convergence-target-orders"><code>target_orders</code></a></td><td>Set the target from a run with the criterion off</td></tr></tbody></table></div>
+<p>The incompressible solver has no slope limiter and ignores <code>freeze_limiter_cycle</code>. An inner residual that flattens
+there is the outer iteration&#x27;s own floor. Under the coupled scheme, tighten the linear solver or reduce the physical
+time step. Under SIMPLE, the floor is set by the under-relaxation,
+<a href="reference/solver/convergence-control/index.html#scheme-implicit-relax"><code>implicit_relax</code></a> and
+<a href="reference/solver/convergence-control/index.html#scheme-pressure-relax"><code>pressure_relax</code></a> in the <code>scheme</code> block, and it is
+reached within a handful of cycles. A <code>target_orders</code> above that floor can never be met, so set the target from a run
+with the criterion off rather than adding cycles.</p>
+<h2 id="licence-and-launch-failures">Licence and launch failures</h2>
+<p>The solver stops at start-up with <code>License initialisation error</code> or <code>License checkout error</code>. A run that has already
+started may instead log <code>Connection to license server failed retrying</code>, and later stop with <code>License heart beat failed</code>.</p>
+<p><strong>Confirm it.</strong> The lines printed before the stop name the failure. A failed start-up prints
+<code>Error initializing license system</code> or <code>Error initializing license heart beat</code>, followed by the licensing system&#x27;s own
+description of the error. A failed checkout prints <code>Error checking out license</code> with the RLM status value, then the
+product, version and count requested, and the same description. Look the status value up in the
+<a href="guide/setting-up/installation-and-licensing/index.html#licence-error-codes">licence error codes</a>.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Cause</th><th>Where to look</th></tr></thead><tbody><tr><td>No licence file in any of the locations searched</td><td><a href="guide/setting-up/installation-and-licensing/index.html#licence">Licence</a>: <code>zcfd.lic</code> beside the input files, the <code>lic</code> directory of the installation, or <code>RLM_LICENSE</code></td></tr><tr><td>A licence that has expired, or has not yet started</td><td>Status value -3 or -37</td></tr><tr><td>More licences requested than are free</td><td>Status value -8 or -22: reduce the number of ranks, or stop other running processes</td></tr><tr><td>No connection to the licence server</td><td>Status value -17, -103 to -107 or -111 to -113: check the server, the firewall and <code>RLM_LICENSE</code></td></tr><tr><td>A connection lost during the run</td><td>Status value -21, or the heartbeat messages: see below</td></tr></tbody></table></div>
+<p>Once a run has started, a lost connection to the licence server does not stop it at once. The solver logs the retry
+warning and continues for up to 10 minutes. If the connection is not restored within that time, the run stops with
+<code>License heart beat failed</code>.</p>
+<h2 id="output-variable-rejected">Output variable rejected</h2>
+<p>Validation rejects the deck with a message of this form:</p>
+<pre><code class="language-text">Output variable error: Variables [&#x27;kinematicviscosity&#x27;] are not valid for equation type &#x27;viscous&#x27; in volume context. Valid variables include: [...]...
+</code></pre>
+<p><strong>Confirm it.</strong> The message names the rejected variables, the equation type and whether the list is the surface or
+the volume one. Where a close spelling is valid, it adds <code>Did you mean</code>. The list it closes with shows only the first
+few valid names, so look the name up on the <a href="reference/output-variables/index.html">output variables</a> page instead. Which names
+are valid, and why, is set out under
+<a href="guide/working-with/post-processing-and-visualisation/index.html#output-variables">Output variables</a>.</p>
+<p>Several names are rejected because the name an engineer reads in an output file, or would naturally write, is not the
+one a deck asks for:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Rejected name</th><th>Request instead</th><th>Why</th></tr></thead><tbody><tr><td><code>kinematicviscosity</code></td><td><a href="reference/output-variables/index.html#nu"><code>nu</code></a></td><td><code>nu</code> is written to the output file as <code>kinematicviscosity</code></td></tr><tr><td><code>turbulenceintensity</code></td><td><a href="reference/output-variables/index.html#ti"><code>ti</code></a></td><td><code>ti</code> is written as <code>turbulenceintensity</code></td></tr><tr><td><code>walldistance</code></td><td><a href="reference/output-variables/index.html#walldist"><code>walldist</code></a></td><td><code>walldist</code> is written as <code>walldistance</code></td></tr><tr><td><code>velocitygradient</code></td><td><a href="reference/output-variables/index.html#velocitygrad"><code>velocitygrad</code></a></td><td>Only the shorter spelling is valid</td></tr><tr><td><code>facecentre</code></td><td><a href="reference/output-variables/index.html#centre"><code>centre</code></a></td><td><code>centre</code> is the valid spelling in both contexts</td></tr><tr><td><code>frictionvelocity</code></td><td><a href="reference/output-variables/index.html#ut"><code>ut</code></a></td><td>Only the short name is valid</td></tr></tbody></table></div>
+<p>A valid name can also be rejected because the case does not offer it:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Cause</th><th>Setting</th></tr></thead><tbody><tr><td>The name belongs to a higher tier than the equation type solved</td><td><a href="reference/solver/equations/index.html#type"><code>type</code></a> in <code>equations</code></td></tr><tr><td>A transition variable without the transition model</td><td><a href="reference/solver/equations/index.html#turbulence-model"><code>model</code></a> in <code>turbulence</code>, set to <code>sst-transition</code></td></tr><tr><td>A modal variable without FSI</td><td><a href="reference/model/boundary-conditions/wall/index.html#fsi"><code>fsi</code></a> on a wall boundary condition</td></tr><tr><td>A surface-only name in the volume list, or the reverse</td><td><a href="reference/solver/output-settings/index.html#solution-surface-variables"><code>surface_variables</code></a>, <a href="reference/solver/output-settings/index.html#solution-volume-variables"><code>volume_variables</code></a></td></tr><tr><td>A <code>var_i</code>, <code>resvar_i</code>, <code>resshare_i</code> or <code>vargrad_i</code> index above the number of equations solved</td><td><a href="reference/solver/equations/index.html#type"><code>type</code></a> and the turbulence model</td></tr></tbody></table></div>
+<p>A running average or RMS variable, such as <code>p_avg</code> or <code>V_rms</code>, passes validation whether or not averaging is on. If
+<a href="reference/solver/output-settings/index.html#compute-average-and-rms"><code>compute_average_and_rms</code></a> is not set, the solver raises
+this error when it first writes the variable:</p>
+<pre><code class="language-text">Averaged output variable requested but averaging storage is unallocated - set output_settings.compute_average_and_rms
+</code></pre>
+<h2 id="poor-mesh-quality">Poor mesh quality</h2>
+<p>A run that still diverges once the CFL number, the spatial order and the inviscid flux scheme have been reduced, or a
+stall carried by a handful of cells, points to poor quality cells. The formal CFL criteria apply only to idealised
+meshes, and a few poor cells are enough to lower the limit for stability of the whole run.</p>
+<p><strong>Confirm it.</strong> A small <code>Neff</code> in the
+<a href="guide/working-with/post-processing-and-visualisation/index.html#residual-statistics-columns">residual statistics columns</a>,
+against a large mesh, means that the residual is carried by a few cells. Add the
+<a href="reference/output-variables/index.html#resshare-n"><code>resshare_i</code></a> volume output variables and threshold them at <code>1/Neff</code> to find
+those cells. The temperature field often points to the same areas.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Cause</th><th>Setting</th><th>First change</th></tr></thead><tbody><tr><td>Poor cells lowering the limit for stability</td><td><a href="reference/solver/convergence-control/index.html#cfl"><code>cfl</code></a></td><td>Reduce it</td></tr><tr><td>Poor cells that cannot be removed from the mesh</td><td><a href="guide/troubleshooting/troubleshooting/index.html#mesh-quality-remediation">Mesh quality remediation</a></td><td>Set a threshold angle</td></tr><tr><td>A mesh that can be improved</td><td><a href="guide/setting-up/preparing-a-mesh/index.html">Preparing a mesh</a></td><td>Improve the mesh, so the whole domain stays second order</td></tr></tbody></table></div>
+<h2 id="mesh-quality-remediation">Mesh quality remediation</h2>
+<pre><code class="language-json">{
+  &quot;solver_settings&quot;: {
+    &quot;type&quot;: &quot;compressible&quot;,
+    &quot;mesh_quality_remediation_angle_threshold&quot;: 75
+  }
+}
+</code></pre>
+<p>A strongly non-orthogonal face can stop a second-order compressible solve from converging. The non-orthogonality of a
+face is the angle between the line joining the two cell centres on either side of it and the face normal. It is 0
+degrees on an ideal mesh and grows as the cells skew.</p>
+<p>Setting <code>mesh_quality_remediation_angle_threshold</code> computes the convective flux at first order on every interior face
+whose non-orthogonality exceeds the threshold, in degrees. Every other face keeps the order the numerical scheme sets.
+The key is unset by default, and no face is changed. When convergence problems are traced to mesh quality, 75 degrees
+is a reasonable first threshold. The first-order faces add numerical dissipation where they sit, so an improved mesh
+remains preferable to a remediated one for a final solution.</p>
+<p>The setting applies to the compressible solver only. An incompressible deck that sets it fails validation.</p>
+<p>At start-up the log reports the spread of face angles across the mesh and the number of faces changed:</p>
+<pre><code class="language-text">[wing] mesh quality remediation: interior faces whose non-orthogonality exceeds 75 degrees use a first-order convective flux
+ Mesh quality remediation: face non-orthogonality histogram
+ Angle (deg) |  0 -&gt; 20 | 20 -&gt; 40 | 40 -&gt; 60 | 60 -&gt; 80 | 80 -&gt;100 | 100-&gt;120 | 120-&gt;140 | 140-&gt;160 | 160-&gt;180 |
+ Num faces   |    812345|     40211|      2310|       188|         4|         0|         0|         0|         0|
+ Mesh quality remediation: face non-orthogonality ranges from 0 to 81.6 degrees
+ Mesh quality remediation: 57 interior faces exceed the 75 degree threshold and use a first-order convective flux
+</code></pre>
+<p>Add <code>badcells</code> to <code>volume_variables</code> in the solution output to see where those faces lie. Each cell next to a
+first-order face holds the largest non-orthogonality among its first-order faces; every other cell holds 0.</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/troubleshooting/troubleshooting/index.html#diverging-residuals">Diverging residuals</a><a href="guide/troubleshooting/troubleshooting/index.html#nan-or-inf-in-the-report">NaN or inf in the report</a><a href="guide/troubleshooting/troubleshooting/index.html#convergence-stall">Convergence stall</a><a href="guide/troubleshooting/troubleshooting/index.html#limiter-switching">Limiter switching</a><a href="guide/troubleshooting/troubleshooting/index.html#licence-and-launch-failures">Licence and launch failures</a><a href="guide/troubleshooting/troubleshooting/index.html#output-variable-rejected">Output variable rejected</a><a href="guide/troubleshooting/troubleshooting/index.html#poor-mesh-quality">Poor mesh quality</a><a href="guide/troubleshooting/troubleshooting/index.html#mesh-quality-remediation">Mesh quality remediation</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

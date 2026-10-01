@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Python functions in the deck · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/setting-up/python-functions-in-the-deck.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/python-functions-in-the-deck-2mTJCECc.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow sel" aria-current="page"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Setting up</span><span> / <b>Python functions in the deck</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="python-functions-in-the-deck">Python functions in the deck</h1>
+<p>Several parameters in the zCFD control dictionary will accept functions as arguments. These functions are then evaluated by the solver when required. This allows you to customise and tune the solver as it runs.</p>
+<h2 id="ramp-cfl-function">Ramp CFL Function</h2>
+<p>The named shapes in <a href="reference/solver/convergence-control/index.html#cfl-cfl-ramp">cfl_ramp</a> cover most cases. Where the CFL needs to respond to something they cannot express, <code>cfl_ramp</code> accepts a Python callable instead of the list.</p>
+<p>The function is called once per pseudo-time cycle as <code>f(cycle, current_cfl)</code>, and returns the CFL for that cycle. The result is clamped to the <code>cfl</code> target.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><strong>Description</strong></td><td>Provide a dynamic CFL number</td></tr><tr><td><strong>Valid for parameter</strong></td><td><a href="reference/solver/convergence-control/index.html#cfl-cfl-ramp">cfl_ramp</a></td></tr><tr><td><strong>Parameters</strong></td><td>solve_cycle, current_cfl</td></tr><tr><td><strong>Returns</strong></td><td>float, or a dictionary of <code>cfl</code> / <code>cfl_turbulence</code> / <code>cfl_coarse</code></td></tr></tbody></table></div>
+<p>Example:</p>
+<pre><code class="language-python"># Hold a low CFL until the shock has settled, then step up
+def my_cfl_ramp(solve_cycle, current_cfl):
+    if solve_cycle &lt; 500:
+        return min(1.0 * 1.005 ** (solve_cycle - 1), 10.0)
+    elif solve_cycle &lt; 1000:
+        return 15.0
+    return 30.0
+</code></pre>
+<pre><code class="language-python">parameters = {
+ ...
+ &quot;solver&quot;: {
+   ...
+   &quot;convergence control&quot;: {
+     &quot;cfl&quot;: {&quot;cfl&quot;: 30.0, &quot;cfl ramp&quot;: my_cfl_ramp},
+     ...
+     }
+   ...
+   }
+ ...
+}
+</code></pre>
+<p>Returning a dictionary drives the turbulence and coarse-level CFL targets alongside the mean-flow one. Any key left out keeps the value from the control dictionary:</p>
+<pre><code class="language-python">def my_cfl_ramp(solve_cycle, current_cfl):
+    cfl = min(1.0 * 1.005 ** (solve_cycle - 1), 30.0)
+    return {&quot;cfl&quot;: cfl, &quot;cfl_turbulence&quot;: 0.5 * cfl}
+</code></pre>
+<h2 id="transform-function">Transform Function</h2>
+<p>A transformation function my be supplied to the force report block to transform the force into a different coordinate system. This is particularly useful for reporting lift and drag, which are often rotated from the solver coordinate system.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><strong>Description</strong></td><td>Transform a supplied point - rotate, scale or translate.</td></tr><tr><td><strong>Valid for parameter</strong></td><td><a href="reference/solver/output-settings/index.html#report-forces">Forces transform</a></td></tr><tr><td><strong>Parameters</strong></td><td>(x, y, z): floats</td></tr><tr><td><strong>Returns</strong></td><td>(x, y, z): floats</td></tr></tbody></table></div>
+<p>Example:</p>
+<pre><code class="language-python">#zutil is a Zenotech python library providing various utilities, available within a zCFD installation
+import zutil
+
+# Angle of attack
+alpha = 10.0
+# Transform into wind axis
+def my_transform(x,y,z):
+    v = [x,y,z]
+    v =  zutil.rotate_vector(v,alpha,0.0)
+    return  {v[0], v[1], v[2]}
+</code></pre>
+<h2 id="initialisation-function">Initialisation Function</h2>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><strong>Description</strong></td><td>Provide the initial flow field variables on a cell-by-cell basis</td></tr><tr><td><strong>Valid for parameter</strong></td><td><a href="reference/solver/initialisation/index.html#initial-conditions">initial_conditions</a></td></tr><tr><td><strong>Parameters</strong></td><td>kwargs dictionary containing &quot;pressure&quot;, &quot;temperature&quot;, &quot;velocity&quot;, &quot;wall_distance&quot;, &quot;location&quot;</td></tr><tr><td><strong>Returns</strong></td><td>dictionary containing one or more of &quot;pressure&quot;, &quot;temperature&quot; or &quot;velocity&quot;</td></tr></tbody></table></div>
+<pre><code class="language-python">def my_initialisation(**kwargs):
+  # Dimensional primitive variables
+  pressure = kwargs[&#x27;pressure&#x27;]
+  temperature = kwargs[&#x27;temperature&#x27;]
+  velocity = kwargs[&#x27;velocity&#x27;]
+  wall_distance = kwargs[&#x27;wall_distance&#x27;]
+  # Cell centre localtion [X, Y, Z]
+  location = kwargs[&#x27;location&#x27;]
+
+  if location[0] &gt; 10.0:
+    velocity[0] *= 2.0
+
+  # Return a dictionary with user defined quantity.
+  return { &#x27;velocity&#x27; : velocity }
+</code></pre>
+<p>A function as the initial condition needs a <a href="reference/solver/initialisation/index.html#reference"><code>reference</code></a> condition beside it:</p>
+<pre><code class="language-python">{&quot;initialisation&quot;: {&quot;reference&quot;: &quot;IC_1&quot;, &quot;initial_conditions&quot;: my_initialisation}}
+</code></pre>
+<h2 id="driven-initial-condition">Driven initial condition</h2>
+<p>A &#x27;driving function&#x27; provides another way of prescribing a farfield initial condition, which on evaluation returns an initial condition dictionary.</p>
+<p>The driving function is re-evaluated at zCFD&#x27;s reporting frequency, meaning that the condition (e.g. inlet velocity) can be programmed to change as the simulation progresses.</p>
+<p>At startup, the function is only provided with the key word arguments RealTimeStep=0, Cycle=0. However, the driving function is subsequently provided with key word arguments containing all the data in the &#x27;_report.csv&#x27; file, evaluated at the previous timestep. For any driven initial condition, every value in the initial condition dictionary is also appended to the _report.csv file.</p>
+<p>This means that the initial condition can be programmed to respond to the flow. An example is shown below, where the driven IC will continually adjust inlet angle of attack until a specified lift coefficient is achieved.</p>
+<p>If the driven initial condition has been programmed to respond to changes in the flow, it is important to ensure that the flow has had enough time to propagate from the farfield through to the region of interest and settle before readjusting the driven initial condition. For simulations where the farfield is distant from the geometry, local and implicit time-stepping will likely give the fastest propagation of adjusted farfield conditions through the domain.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>Driven initial conditions <strong>cannot</strong> be used as reference conditions, to initialise the flow (e.g &#x27;IC_1&#x27;) or within a restarted simulation.</p></div></aside>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><strong>Description</strong></td><td>Provides a farfield initial condition that can respond to changes in the flow.</td></tr><tr><td><strong>Valid for parameter</strong></td><td><a href="reference/solver/initialisation/index.html">initial condition</a></td></tr><tr><td><strong>Parameters</strong></td><td>kwargs dictionary containing &quot;RealTimeStep&quot;, &quot;Cycle&quot; and all reporting variables</td></tr><tr><td><strong>Returns</strong></td><td>dictionary containing valid keys for an <a href="reference/solver/initialisation/index.html">initial condition</a></td></tr></tbody></table></div>
+<pre><code class="language-python">def example_ic_func(**kwargs):
+  &quot;&quot;&quot;
+  Example driver function to target a lift coefficient by varying
+  angle of attack
+  &quot;&quot;&quot;
+  alpha_init = 0 # Initial angle of attack
+  lift_target= 0.5 # Targeted lift coefficient
+  update_period = 1000 # How often alpha should be updated
+  flow_settling_period = 1500
+
+  assumed_d_cL_d_alpha = 0.1 # Used to estimate alpha which would give required lift
+  relaxation_factor = 1.15 # &lt;1: under-relaxation, &gt;1: over-relaxation
+
+
+  if &#x27;lift_target_alpha&#x27; in kwargs.keys(): # If timestep &gt; 1
+      alpha_current = kwargs[&#x27;lift_target_alpha&#x27;]
+      F_xyz = [kwargs[&#x27;wall_Fx&#x27;], kwargs[&#x27;wall_Fy&#x27;], kwargs[&#x27;wall_Fz&#x27;]]
+      F_LDS = zutil.rotate_vector(F_xyz, alpha_current, 0.0)
+      lift_current = F_LDS[2] # Lift coefficient, having rotated to account for alpha
+  else:
+      lift_current = 0 # placeholder value
+
+  if kwargs[&#x27;Cycle&#x27;] &lt; flow_settling_period:
+      alpha_new = alpha_init
+  else:
+      if (kwargs[&#x27;Cycle&#x27;] % update_period) == 0:
+          d_cL_required = lift_target - lift_current
+          d_alpha = relaxation_factor / assumed_d_cL_d_alpha *  d_cL_required
+          alpha_new = alpha_current + d_alpha
+          print(&quot;Alpha updated from {} to {}&quot;.format(alpha_current, alpha_new), flush = True)
+      else:
+          alpha_new = alpha_current
+
+  dict_out = {
+      &quot;temperature&quot;: 300,
+      &quot;pressure&quot;: 101325.0,
+      &#x27;v&#x27;: {
+          &#x27;mach&#x27; : 0.15,
+          &#x27;vector&#x27; : zutil.vector_from_angle(alpha_new, 0.0)
+          },
+      &quot;reynolds no&quot;: 6.0e6,
+      &quot;eddy viscosity ratio&quot;: 1.0,
+      &quot;monitor&quot;: { # Monitor entries can be floats or lists of floats
+                    &quot;prefix&quot;: &quot;lift_target&quot;,
+                    &quot;alpha&quot;: alpha_new,   # Extra keys can be added to a driven IC dictionary,
+                    &quot;lift&quot;: lift_current,  # allowing monitoring of key parameters flow in the _report.csv
+                  },
+  }
+
+  return dict_out
+</code></pre>
+<pre><code class="language-python">{&quot;reference_conditions&quot;: {&quot;IC_2&quot;: example_ic_func}}
+</code></pre></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/setting-up/python-functions-in-the-deck/index.html#ramp-cfl-function">Ramp CFL Function</a><a href="guide/setting-up/python-functions-in-the-deck/index.html#transform-function">Transform Function</a><a href="guide/setting-up/python-functions-in-the-deck/index.html#initialisation-function">Initialisation Function</a><a href="guide/setting-up/python-functions-in-the-deck/index.html#driven-initial-condition">Driven initial condition</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

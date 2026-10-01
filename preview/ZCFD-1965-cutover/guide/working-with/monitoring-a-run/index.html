@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Monitoring a run · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/working-with/monitoring-a-run.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/monitoring-a-run-DIuInAqt.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Working with</span><span> / <b>Monitoring a run</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="monitoring-a-run">Monitoring a run</h1>
+<p>zMon is a run monitor that opens in a web browser. It plots the residuals, forces, moments and monitor points of a
+running case as the solver writes them, alongside the solver log, and can ask the solver to stop cleanly.</p>
+<h2 id="starting-zmon">Starting zMon</h2>
+<p>zMon is installed with zCFD. Activate the zCFD environment, change to the case directory and name the control file:</p>
+<pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+cd ~/zcfd_tutorial_1/
+zmon naca0012.py
+</code></pre>
+<p>zMon prints the address it is serving, such as <code>zMon is at http://localhost:40213</code>, and opens that address in the
+default browser. Where no browser can be opened, it prints the address for you to open by hand. Run <code>zmon</code> without a
+file to start with the file browser instead. zMon keeps running until you press <em>Ctrl + C</em> in its terminal; closing
+the browser tab leaves it running.</p>
+<p>To use zMon outside a zCFD installation, install it from PyPI:</p>
+<pre><code class="language-bash">pip install zmon
+</code></pre>
+<p>The command accepts these options:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Option</th><th>Effect</th></tr></thead><tbody><tr><td><code>--port</code></td><td>The port to listen on. Without it, zMon uses the port in the <code>ZMON_PORT</code> environment variable, or else an unused port chosen by the operating system.</td></tr><tr><td><code>--host</code></td><td>The address to bind, by default <code>127.0.0.1</code>. Any other address, such as <code>0.0.0.0</code>, exposes the file browser to anyone who can reach it over the network.</td></tr><tr><td><code>--no-browser</code></td><td>Print the address without opening a browser.</td></tr><tr><td><code>--exit-when-idle</code></td><td>Shut down once no browser is connected. zMon waits 30 seconds for the first browser, and stops shortly after the last one disconnects.</td></tr><tr><td><code>--version</code></td><td>Print the installed version and exit.</td></tr></tbody></table></div>
+<h2 id="opening-a-run">Opening a run</h2>
+<p>zMon opens a run from either of two files:</p>
+<ul>
+<li><strong>The control file.</strong> zMon reads the deck to find every file the solver writes for it: each model&#x27;s report file,
+the run log and the real time step. This is the usual way to open a run, and the only one from which the run
+can be stopped.</li>
+<li><strong>A report file.</strong> Opening a <code>&lt;model&gt;_report.csv</code> directly shows that model&#x27;s plots and nothing else. There is no
+deck to read, so the time step is unknown and the plots are drawn against cycles and time steps rather than
+simulated seconds.</li>
+</ul>
+<p>A control file can be opened before the solver has started. zMon predicts the report file of each entry under the
+deck&#x27;s <a href="reference/input-deck/index.html#model"><code>model</code></a> key, and the plots fill in once the solver begins writing them.</p>
+<p>The file browser opens when zMon is started without a file, and from the <em>Open File</em> button on the toolbar. It lists
+one directory at a time, with a filter box, pinned folders and recently opened files and folders. Two kinds of file
+carry a badge: <code>report</code> marks a report file, and <code>control</code> marks a control file with a mesh of the same name beside
+it. Several files can be selected and opened together.</p>
+<p>Each opened run appears as a tab across the top of the page, so several runs can be watched at once. Closing a tab
+stops zMon watching that run; it does not affect the solver.</p>
+<h2 id="reading-the-dashboard">Reading the dashboard</h2>
+<p>Every panel reads the model&#x27;s report file, which the solver appends to every
+<a href="reference/solver/output-settings/index.html#report-frequency"><code>frequency</code></a> cycles. zMon checks the file each second and adds new
+rows to the plots as they arrive, so the dashboard updates at the reporting interval. The columns themselves are
+described in <a href="guide/working-with/post-processing-and-visualisation/index.html#the-report-file">The report file</a>.</p>
+<p><strong>Drag and Lift.</strong> Two summary cards show the latest value of a force coefficient with a short history beneath it.
+Each card has a menu listing every <a href="reference/solver/output-settings/index.html#report-forces"><code>forces</code></a> block in the report,
+split into total, pressure, friction and transformed components. The X, Y and Z buttons choose the direction, which
+is X for drag and Z for lift until changed.</p>
+<p><strong>Residuals.</strong> The plot has one line per equation, drawn from the report&#x27;s residual columns on a logarithmic axis. The momentum
+components <code>rhoV[0]</code>, <code>rhoV[1]</code> and <code>rhoV[2]</code> are labelled <code>rhoU</code>, <code>rhoV</code> and <code>rhoW</code>. When the report carries
+<a href="reference/solver/output-settings/index.html#report-residual-statistics"><code>residual_statistics</code></a> columns, a row of buttons above
+the plot switches between the residual itself and the <code>Rinf</code>, <code>Rrms</code>, <code>Rtop</code> and <code>Neff</code> families; hovering over a
+button describes the measure. <code>Neff</code> is a count of cells and is drawn on a linear axis. The measures are explained in
+<a href="guide/working-with/post-processing-and-visualisation/index.html#residual-statistics-columns">Residual statistics columns</a>.</p>
+<p><strong>Monitor points.</strong> This panel lists every other named column in the report. One or more can be plotted
+together. It holds the <a href="reference/solver/output-settings/index.html#report-monitor"><code>monitor</code></a> columns and the
+<a href="reference/solver/output-settings/index.html#report-mass-flow"><code>mass_flow</code></a> columns, named as described in
+<a href="guide/working-with/post-processing-and-visualisation/index.html#monitor-points">Monitor points</a> and
+<a href="guide/working-with/post-processing-and-visualisation/index.html#mass-flow">Mass flow</a>.</p>
+<p><strong>Force and moment panels.</strong> Six plots, one for each force and moment direction, each with a menu of the matching
+columns. Choosing a column in any one panel moves the other five to the same forces block and component. The column
+names follow <a href="guide/working-with/post-processing-and-visualisation/index.html#output-names">Output names</a>. Zooming along the
+horizontal axis of one force or moment plot applies the same range to the others; a double-click resets the view.</p>
+<p>Any panel can be closed with the cross at its corner and restored from the panel menu on the toolbar. The browser
+remembers which panels were open.</p>
+<h3 id="cycles-time-steps-and-spectra">Cycles, time steps and spectra</h3>
+<p>A strip of buttons at the edge of each plot chooses the horizontal axis:</p>
+<ul>
+<li><strong>Cycle</strong> plots every report row against the solver cycle.</li>
+<li><strong>Time step</strong> plots against the real time step of an unsteady run. When zMon has read the deck and
+<a href="reference/solver/time-settings/index.html#type"><code>type</code></a> is unsteady, the axis is the simulated time in seconds, from
+<a href="reference/solver/time-settings/index.html#time-step"><code>time_step</code></a>.</li>
+</ul>
+<p>In either mode a second pair of buttons chooses between every inner cycle, drawn as a sawtooth, and one converged value
+per real time step: the last inner cycle for forces and monitor points, and the smallest residual for the residuals.
+Once the report shows an unsteady run, zMon switches the panels to the time-step axis, and all but the residuals to
+converged values.</p>
+<p>In time-step mode, the monitor-point, force and moment panels and the two summary cards offer a frequency view: the
+amplitude spectrum of the converged values. A plot&#x27;s spectrum covers the range visible in its time view, so zooming
+in on the time view first excludes the start-up transient. The frequency is in hertz when the time step is known, and
+in cycles per time step otherwise.</p>
+<h2 id="overset-runs">Overset runs</h2>
+<p>An overset run opened from its control file appears as one tab with a sub-tab for each model, named by its key under
+<a href="reference/input-deck/index.html#model"><code>model</code></a>, and an <em>Overview</em> sub-tab. Each model&#x27;s sub-tab is the full dashboard for that
+model&#x27;s report file. A dot beside each model&#x27;s name shows whether its report has been written in the last
+30 seconds (green), not recently (amber), or not at all (red).</p>
+<p>The Overview shows two things across all the models, each model in a colour of its own:</p>
+<ul>
+<li><strong>Combined residuals.</strong> The density residual of every model on one plot, or the first residual column where there
+is no density equation. The buttons above the plot show or hide each model.</li>
+<li><strong>Forces and moments summary.</strong> A table of each model&#x27;s latest transformed total force and moment, with their sum
+across all the models, and thrust and torque where a model reports a rotating zone. It reads the transformed
+columns only, so it is populated only for forces blocks that set a
+<a href="reference/solver/output-settings/index.html#report-forces-transform"><code>transform</code></a>.</li>
+</ul>
+<p>The layout of an overset deck is described in <a href="guide/working-with/overset-meshes/index.html">Overset meshes</a>.</p>
+<h2 id="log-and-cycle-time">Log and cycle time</h2>
+<p>Below the plots, the <em>Log Output</em> panel shows the last 500 lines of the run log, <code>&lt;case&gt;.log</code> in the case directory,
+with the solver&#x27;s colours preserved. It refreshes every two seconds. In an overset run every sub-tab shows the same
+log, because the run writes one.</p>
+<p>The <em>Cycle Time</em> card shows the latest <code>AvgCycleTime</code> value from the report, the mean wall-clock time of a solver
+cycle over the last reporting interval, with its history beneath it. Its meaning, and why it is not comparable between
+runs, is covered in <a href="guide/working-with/post-processing-and-visualisation/index.html#cycle-time-column">Cycle time column</a>.</p>
+<h2 id="stopping-a-run">Stopping a run</h2>
+<p>The <em>Stop</em> button on the toolbar asks the solver to stop cleanly. After confirmation, zMon writes an empty file named
+<code>&lt;case&gt;.stop</code> into the case directory, where <code>&lt;case&gt;</code> is the control file&#x27;s name without <code>.py</code>. One file stops the
+whole run, including every model of an overset run. Creating the file by hand has the same effect:</p>
+<pre><code class="language-bash">touch naca0012.stop
+</code></pre>
+<p>The solver looks for the file each time it writes a report row. A steady run writes its final output and stops at the
+end of that cycle. A dual time-stepping run completes the current real time step first. The solver deletes the file
+when it acts on it, and removes any left over from an earlier run when it starts.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The stop request reaches the solver only when the run was opened from its control file. A report file opened on its
+own lies inside the output directory, and a stop file written beside it is never read.</p></div></aside>
+<h2 id="what-zmon-needs-to-read-a-run">What zMon needs to read a run</h2>
+<p>To open a control file, zMon executes it in a separate Python interpreter and reads the run&#x27;s layout with the same
+<code>zutil</code> routines that zCFD&#x27;s own post-processing tools use. Three things follow:</p>
+<ul>
+<li><strong>A zCFD environment.</strong> The interpreter running zMon must be able to import <code>zutil</code>. It can do so inside an activated zCFD environment, but not in an installation made with <code>pip install zmon</code> alone. There, opening a control file fails with a message to run zMon in a zCFD environment. A report file opens in either.</li>
+<li><strong>A single deck for the run.</strong> The control file must declare <code>&quot;config_version&quot;: 2</code>, with every mesh as an entry
+under <a href="reference/input-deck/index.html#model"><code>model</code></a>. A driver file that lists mesh and control-file pairs in an <code>override</code>
+dictionary is refused, with a message describing the single-deck form.</li>
+<li><strong>The solver&#x27;s own layout.</strong> zMon expects the files where the solver writes them: <code>&lt;case&gt;.log</code> beside the control
+file, and each model&#x27;s report at <code>&lt;case&gt;_OUTPUT/&lt;model&gt;/&lt;model&gt;_report.csv</code>. A run whose output has been moved or
+renamed cannot be resolved from its control file, though its report files can still be opened directly.</li>
+</ul>
+<p>A control file that takes longer than 20 seconds to execute is abandoned with a timeout message.</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/working-with/monitoring-a-run/index.html#starting-zmon">Starting zMon</a><a href="guide/working-with/monitoring-a-run/index.html#opening-a-run">Opening a run</a><a href="guide/working-with/monitoring-a-run/index.html#reading-the-dashboard">Reading the dashboard</a><a href="guide/working-with/monitoring-a-run/index.html#overset-runs">Overset runs</a><a href="guide/working-with/monitoring-a-run/index.html#log-and-cycle-time">Log and cycle time</a><a href="guide/working-with/monitoring-a-run/index.html#stopping-a-run">Stopping a run</a><a href="guide/working-with/monitoring-a-run/index.html#what-zmon-needs-to-read-a-run">What zMon needs to read a run</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>2 · Steady-state RANS · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/2-steady-state-rans.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/2-steady-state-rans-BbYMU-as.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><a href="tutorials/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Tutorials</span></a><a href="tutorials/1-simple-aerofoil/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">1 · Simple aerofoil</span></a><a href="tutorials/2-steady-state-rans/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">2 · Steady-state RANS</span></a><a href="tutorials/3-time-accurate-solution/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">3 · Time-accurate solution</span></a><a href="tutorials/4-aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a><a href="tutorials/5-overset-meshes/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">5 · Overset meshes</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>2 · Steady-state RANS</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="steady-state-rans">Steady-state RANS</h1>
+<p><a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> showed how to run a case in zCFD and visualise the results. This
+tutorial uses a more complex case to show more of the features of the solver: the 30P30N aerofoil, which is a 2D multi element aerofoil, developed as an acoustic benchmark case
+<a href="tutorials/2-steady-state-rans/index.html#citations">[1]</a>. The geometry of this case can be seen below:</p>
+<figure class="figure"><img src="images/tutorial-2-30p30n.png" alt="30P 30N" loading="lazy"/><figcaption>30P 30N</figcaption></figure>
+<p>The first step is a steady state RANS solution.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The required meshes and control dictionary can be found <a href="https://zcfd.zenotech.com/tutorials/2/30p30n_tutorial_2.zip">here</a>.
+The case has 64,000 cells, and will run in less than 10 minutes on an NVIDIA RTX 3060 GPU.</p><p>This case is run as a steady state simulation, using an implicit time marching scheme. The Reynolds Averaged
+Navier-Stokes equations are solved using Menter&#x27;s SST turbulence model with wall functions.</p><h2 id="step-2-control-dictionary-breakdown">Step 2. Control Dictionary Breakdown</h2><p>The setup for this case is very similar to the previous NACA0012 cases, but the control dictionary does feature
+some extra terms which can be useful for a more streamlined workflow. As in
+<a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>, settings are nested under a top-level <code>solver</code> key and a <code>model</code> key,
+one entry per mesh.</p><h3 id="reference-variables">Reference variables</h3><p>At the top of the control file, the key variables for the case - Reynolds number, Mach number, temperature etc...
+are all hard coded, and then referred to later in the script. In cases where you might want to run many
+simulations with slightly different values to change, this can be an effective way to ensure consistency with
+variables. Additionally this allows implicit values such as the reference velocity, and freestream Mach to be
+calculated automatically in the script.</p><pre><code class="language-python"># create variables to assign main experimental parameters
+reynolds = 1.71e6
+mach = 0.17
+T = 295.56
+p = 101325
+R = 287.6
+gamma = 1.4
+reference_length = 0.457
+alpha = 5.5
+
+# calculate implicit values
+rho = p / (R * T)
+U = math.sqrt(gamma * R * T) * mach
+
+# assign each mesh zone to a boundary
+wall = [6]
+symmetry = [4,5]
+farfield =[7]
+</code></pre><h3 id="scale">Scale</h3><p>In this case a scaling is applied to convert the size of the mesh. The .h5 mesh file was generated with units of
+inches, whereas the flow conditions are specified in SI units, therefore a scaling of 0.0254 is applied to
+convert the mesh into metres. The z (spanwise) direction has been scaled to be 1 metre wide. The mesh has only a
+single cell in the z direction so no spanwise flow is expected - making the z extent of the mesh 1 metre means that the forces and moments reported by zCFD will already be per unit span.</p><p>Mesh scaling is a property of a specific mesh, so it is set under that mesh&#x27;s own entry in <code>model</code>, in a
+<code>transforms</code> sub-dictionary.</p><pre><code class="language-python"># scale the mesh to match the experimental data
+&quot;transforms&quot;: {&quot;scale&quot;: [0.0254, 0.0254, 0.0254 / 0.127]},
+</code></pre><h3 id="inflow-vector">Inflow vector</h3><p>This case simulates the aerofoil at an angle of attack of 4 degrees. Rather than rotating
+the mesh, it is easier to rotate the inflow vector relative to the mesh, an example of a Galilean transformation.
+The <code>zutil</code> function <code>vector_from_angle()</code> calculates the inflow vector given an x-z angle of attack, x-y angle of
+attack and flow speed.</p><pre><code class="language-python">&quot;IC_1&quot;: {
+    &quot;temperature&quot;: T,
+    &quot;pressure&quot;: p,
+    &quot;v&quot;: {
+        # calculate the inflow vector based on the angle of attack
+        &quot;vector&quot;: zutil.vector_from_angle(0.0, alpha, U),
+    },
+    &quot;reynolds no&quot;: reynolds,
+    &quot;reference length&quot;: reference_length,
+    &quot;turbulence intensity&quot;: 0.01,
+    &quot;eddy viscosity ratio&quot;: 0.1,
+    &quot;ambient turbulence intensity&quot;: 1e-20,
+    &quot;ambient eddy viscosity ratio&quot;: 1e-20,
+},
+</code></pre><h3 id="transform">Transform</h3><p>The lift and drag forces acting on a body are defined relative to the freestream flow, lift normal and drag
+parallel. Where the relative inflow vector has been rotated to a specific angle of attack, it is also
+useful to rotate the force report by the same vector. The transformed forces will appear as Ft_ terms in the
+report file.</p><pre><code class="language-python"># define a function to rotate the output forces by the angle of attack
+def my_transform(x,y,z):
+    v = [x,y,z]
+    v =  zutil.rotate_vector(v,0.0,alpha)
+    return {&#x27;v1&#x27; : v[0], &#x27;v2&#x27; : v[1], &#x27;v3&#x27; : v[2]}
+</code></pre><h2 id="step-3-running-the-case">Step 3. Running the case</h2><p>You can run the case as you did for <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>, but with the following
+<strong>run_zcfd</strong> command:</p><pre><code class="language-bash">run_zcfd -m 30p30n_coarse.h5 -c 30p30n_steady.py
+</code></pre><h2 id="step-4-monitoring-convergence">Step 4. Monitoring convergence</h2><p>Open the case in zMon to follow the residuals for the continuity, momentum and energy equations, and those of the
+turbulence model, as the solver runs:</p><pre><code class="language-bash">zmon 30p30n_steady.py
+</code></pre><p>The plots update as the solver appends to 30p30n_steady_report.csv. The same plots can be made after the run, or
+automatically, with a <a href="tutorials/1-simple-aerofoil/index.html#step-5-checking-convergence">post-processing script</a> as in the first tutorial.</p><figure class="figure"><img src="images/tutorial-2-figure-1.png" alt="Convergence" loading="lazy"/><figcaption>Convergence</figcaption></figure><p>You will notice that case is set to run for 1000 cycles but looking at the plots, it looks like the residuals are
+still converging. The next step restarts the solver from where it finished and runs on for another 1000 cycles.</p><h3 id="performing-a-restart">Performing a restart</h3><p>To restart the solver, update the <em>&#x27;restart&#x27;</em> parameter, which lives under <code>initialisation</code> (nested
+under <code>solver</code>) — <code>{&quot;solver&quot;: {&quot;initialisation&quot;: {&quot;restart&quot;: True}}}</code>. If this is set to <em>False</em> the solver will
+always perform a fresh start, if it is <em>True</em> then a results file will be read in and the solve will start based
+on the data in that file. To enable the restart edit <em>30p30n_steady.py</em> and change restart to <em>True</em>. You will
+also need to update <em>&#x27;cycles&#x27;</em> to 2000 - since this is a steady simulation, <code>cycles</code> lives under
+<code>convergence_control</code> (nested under <code>solver</code>) — <code>{&quot;solver&quot;: {&quot;convergence_control&quot;: {&quot;cycles&quot;: 2000}}}</code>.</p><pre><code class="language-python">parameters[&quot;solver&quot;][&quot;initialisation&quot;][&quot;restart&quot;] = True
+parameters[&quot;solver&quot;][&quot;convergence control&quot;][&quot;cycles&quot;] = 2000
+</code></pre><p>By default zCFD will look for a results file with the same name as the current case file, appended with
+&#x27;_results.h5&#x27;. Here it looks for &quot;30p30n_steady_results.h5&quot;. When you have edited the control
+dictionary, restart the simulation again using the same <strong>run_zcfd</strong> command:</p><pre><code class="language-bash">run_zcfd -m 30p30n_coarse.h5 -c 30p30n_steady.py
+</code></pre><p>zMon follows the restarted run, which appends to the same report. Once the solver has finished, the residuals
+look converged:</p><figure class="figure"><img src="images/tutorial-2-figure-1a.png" alt="Convergence" loading="lazy"/><figcaption>Convergence</figcaption></figure><h2 id="step-5-plotting-force-convergence">Step 5. Plotting force convergence</h2><p>The force convergence history of interest is that of the x and y forces, transformed by the
+inflow vector, so the wall_Ftx and wall_Fty series in zMon&#x27;s forces panel are of interest.</p><figure class="figure"><img src="images/tutorial-2-figure-2.png" alt="Forces Ftx" loading="lazy"/><figcaption>Forces Ftx</figcaption></figure><figure class="figure"><img src="images/tutorial-2-figure-3.png" alt="Forces Fty" loading="lazy"/><figcaption>Forces Fty</figcaption></figure><p>Which show reasonable agreement with experimental results, and additionally that the forces are at least nearing
+convergence. The grid for this case is still extremely coarse, accounting for the differences in lift and drag
+coefficients.</p><h2 id="step-6-paraview">Step 6. ParaView</h2><p>Opening ParaView, and loading in the <code>30p30n_steady_wall.vtkhdf</code> results will allow you to view the aerofoil
+surface results:</p><figure class="figure"><img src="images/tutorial-2-figure-4.png" alt="30p30n C_p shaded" loading="lazy"/><figcaption>30p30n C_p shaded</figcaption></figure><p>To get a continuous plot of cp against x/c you need to use a plot over sorted lines filter. To do this:</p><ol>
+<li>On the surface data apply a <em>&#x27;cell data to point data&#x27;</em> filter.</li>
+<li>On the <em>cell data to point data</em> apply a <em>&#x27;slice&#x27;</em> filter, ensuring the slice uses a z normal, and is centred
+through the middle of the aerofoil</li>
+<li>On the <em>slice</em> data apply a <em>&#x27;plot on sorted lines&#x27;</em> filter and click apply. This will then bring up a new
+<em>&#x27;line graph&#x27;</em> view.</li>
+<li>Ensure all 3 segments are selected in the composite data set dialogue box, then ensure only the cp variables
+are selected in the series parameters. Finally for the X Array name, select <em>&#x27;Points_X&#x27;</em></li>
+<li>Modify the style and markers until you are happy with the result.</li>
+</ol><figure class="figure"><img src="images/tutorial-2-figure-5.png" alt="cp against x/c" loading="lazy"/><figcaption>cp against x/c</figcaption></figure></div>
+<h2 id="citations">Citations</h2>
+<ol>
+<li>Zhang, Yufei &amp; Chen, Haixin &amp; Wang, Kan &amp; Wang, Meng. (2017). Aeroacoustic Prediction of a Multi-Element
+Airfoil Using Wall-Modeled Large-Eddy Simulation. AIAA Journal. 55. 1-15. 10.2514/1.J055853.</li>
+</ol></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/2-steady-state-rans/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/2-steady-state-rans/index.html#step-2-control-dictionary-breakdown">Step 2. Control Dictionary Breakdown</a><a href="tutorials/2-steady-state-rans/index.html#step-3-running-the-case">Step 3. Running the case</a><a href="tutorials/2-steady-state-rans/index.html#step-4-monitoring-convergence">Step 4. Monitoring convergence</a><a href="tutorials/2-steady-state-rans/index.html#step-5-plotting-force-convergence">Step 5. Plotting force convergence</a><a href="tutorials/2-steady-state-rans/index.html#step-6-paraview">Step 6. ParaView</a><a href="tutorials/2-steady-state-rans/index.html#citations">Citations</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

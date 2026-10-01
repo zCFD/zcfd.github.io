@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Running zCFD · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/setting-up/running-zcfd.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/running-zcfd-Cel5ed-s.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Setting up</span><span> / <b>Running zCFD</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="running-zcfd">Running zCFD</h1>
+<p>zCFD is primarily run from the command line; you can run it on your local machine or submit it to a batch scheduler for parallel execution. The following sections give information on how to execute zCFD.</p>
+<h2 id="command-line-execution">Command Line Execution</h2>
+<p>zCFD includes an in-built command-line environment, which should be activated either when run directly or via a cluster management and job scheduling system, such as Slurm.</p>
+<pre><code class="language-bash">source /INSTALL_LOCATION/zCFD-version/bin/activate
+</code></pre>
+<p>This sets up the environment to enable execution of the specific version. When within the command-line environment, the command prompt will show a zCFD prefix:</p>
+<pre><code class="language-bash">(zCFD) &gt;
+</code></pre>
+<p>To deactivate the command line environment, returning the environment to the previous state use:</p>
+<pre><code class="language-bash">deactivate
+</code></pre>
+<p>Your command prompt should return to its normal appearance.</p>
+<p>To run zCFD on the command-line:</p>
+<pre><code class="language-bash">run_zcfd -n &lt;num_tasks&gt; -d &lt;device_type&gt; -p &lt;mesh_name&gt; -c &lt;case_name&gt;
+</code></pre>
+<p>See <a href="reference/command-line/invocation-and-flags/index.html">Command line invocation and flags</a> for what each of these flags means and for the full input validation and batch submission reference.</p>
+<p>For example, to run zCFD from the command-line environment on a desktop computer with a single 12-core CPU processor and no GPU:</p>
+<pre><code class="language-bash">run_zcfd -n 1 -d cpu -p &lt;mesh_name&gt; -c &lt;case_name&gt;
+</code></pre>
+<p>By default, zCFD will use all 12 cores via OpenMP unless a specific number is required. To run the above case using only 6 cores (there will be one thread per CPU core):</p>
+<pre><code class="language-bash">run_zcfd -n 1 -d cpu -o 6 -p &lt;mesh_name&gt; -c &lt;case_name&gt;
+</code></pre>
+<p>or</p>
+<pre><code class="language-bash">export OMP_NUM_THREADS=6; run_zcfd -n 1 -d cpu -p &lt;mesh_name&gt; -c &lt;case_name&gt;
+</code></pre>
+<p>To run zCFD on a desktop computer with a single CPU and two GPUs:</p>
+<pre><code class="language-bash">run_zcfd -n 2 -d gpu -p &lt;mesh_name&gt; -c &lt;case_name&gt;
+</code></pre>
+<h2 id="multiple-meshes-and-overset-cases">Multiple Meshes and Overset Cases</h2>
+<p>A case with more than one mesh (see <a href="guide/working-with/overset-meshes/index.html">overset</a>) is run from a single control dictionary: each mesh is a named entry under the top-level <code>model</code> key, run together with the same <code>run_zcfd -c &lt;case_name&gt;</code> invocation used for a single-mesh case — there is no separate <code>-p</code>/mesh argument or override file for these cases.</p>
+<p>An example control dictionary for a background domain with a single rotating turbine:</p>
+<pre><code class="language-python">parameters = {
+    &quot;config_version&quot;: 2,
+    &quot;solver&quot;: {....},
+    &quot;model&quot;: {
+        &quot;background&quot;: {&quot;mesh&quot;: &quot;background.h5&quot;, ....},
+        &quot;turbine&quot;: {&quot;mesh&quot;: &quot;turbine.h5&quot;, ....},
+    },
+}
+</code></pre>
+<pre><code class="language-bash">run_zcfd -n 2 -d gpu -c &lt;case_name&gt;
+</code></pre>
+<h2 id="what-a-run-writes">What a run writes</h2>
+<p>A run of the control file <code>&lt;case&gt;.py</code> writes these files into the directory it is started from:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>File or directory</th><th>Contents</th></tr></thead><tbody><tr><td><code>&lt;case&gt;.log</code></td><td>the screen output of the run. Earlier logs are kept as <code>&lt;case&gt;.log.1</code> to <code>&lt;case&gt;.log.10</code>, the most recent first</td></tr><tr><td><code>&lt;case&gt;_status.yaml</code></td><td>the status file, described below</td></tr><tr><td><code>&lt;case&gt;_report.ipynb</code></td><td>a Jupyter notebook that plots the report file</td></tr><tr><td><code>&lt;case&gt;_OUTPUT/&lt;model&gt;/</code></td><td>the output of each entry under <code>model</code>: its report file <code>&lt;model&gt;_report.csv</code>, its checkpoint <code>&lt;model&gt;_results.h5</code> and its solution files</td></tr><tr><td><code>&lt;case&gt;_OUTPUT/LOGGING/</code></td><td>one log for each MPI rank, <code>&lt;case&gt;.&lt;rank&gt;.log</code></td></tr></tbody></table></div>
+<p>The solution files are described in <a href="guide/working-with/post-processing-and-visualisation/index.html#the-output-directory">The output directory</a>.</p>
+<h3 id="the-status-file">The status file</h3>
+<p><code>&lt;case&gt;_status.yaml</code> is a YAML file written once, before the solve starts, and left unchanged while the run proceeds. It records how the run was started:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Key</th><th>Contents</th></tr></thead><tbody><tr><td><code>case</code></td><td>the control file</td></tr><tr><td><code>num processor</code></td><td>the number of MPI ranks</td></tr><tr><td><code>mesh</code></td><td>the file name of each mesh, with its MD5 checksum</td></tr><tr><td><code>version</code></td><td>the zCFD version</td></tr><tr><td><code>date</code></td><td>the time and date the run started, as <code>HH:MM:SS DD-MM-YYYY</code></td></tr><tr><td><code>nodes</code></td><td>the host name of each node the run used</td></tr><tr><td><code>devices</code></td><td>the CPU or GPU used by each rank</td></tr><tr><td><code>model_ordering</code></td><td>the entries under <code>model</code>, in the order the solver advances them</td></tr></tbody></table></div>
+<p>Three things read it:</p>
+<ul>
+<li><strong>A restart from another case.</strong> When <a href="reference/solver/initialisation/index.html#restart-casename"><code>restart_casename</code></a> names another case, the run reads that case&#x27;s status file to find its models and its meshes. The run stops if the status file is missing, or if a mesh of the same name now has a different checksum.</li>
+<li><strong>Post-processing.</strong> The <code>zutil</code> tools that open a run&#x27;s output read the partition count and the model names from it.</li>
+<li><strong>The checkpoint.</strong> A copy is stored in each <code>&lt;model&gt;_results.h5</code>, so the record survives the run directory, as described in <a href="guide/working-with/post-processing-and-visualisation/index.html#what-a-checkpoint-records-about-the-run">What a checkpoint records about the run</a>.</li>
+</ul>
+<h2 id="running-in-parallel">Running in parallel</h2>
+<p>zCFD uses Intel MPI (Message Passing Interface) to enable running over multiple machines or multiple GPUs, either in one machine or across multiple. A paid licence is required for this functionality. This is achieved by decomposing the domain into parallel regions that are distributed to each MPI rank. MPI can use high-bandwidth network interconnects such as infiniband or AWS&#x27; Elastic Fabric adaptor,</p>
+<p>There are two main strategies for running the code in parallel:</p>
+<p><strong>Hybrid MPI/OpenMP</strong> runs one MPI process per socket, reducing the number of MPI ranks at larger core counts. Running in hybrid mode assigns multiple cores to each MPI rank, allowing it to reduce the communication overheads associated with running in parallel.</p>
+<p><strong>Full MPI</strong> runs one MPI process per core and is typically the best strategy for low core count runs or GPU based runs. For GPU runs, you can run 1 MPI rank per GPU available on the node, or multiple MPI ranks per GPU. When running multiple ranks per GPU, the ranks will share the GPU resources. This can be useful for smaller problem sizes, testing and development, or workloads with low GPU utilisation.</p>
+<p>To run in parallel you add the -n option to the run_zcfd script. The provided argument is the number of MPI processes to launch.</p>
+<h3 id="hybrid-mpiopenmp">Hybrid MPI/OpenMP</h3>
+<p>This is the default mode for zCFD. It will auto detect the number of sockets on each node and set the number of OpenMP threads appropriately. The –tpn option to run_zcfd can be used to set the number of MPI processes to launch on each node. The number of OpenMP threads will be set automatically by dividing the total number of cores between all processes.</p>
+<p>For example, if you had two hosts with 2 x 12 core CPUs per host and you wanted to run Hybrid MPI/OpenMP you would request 1 MPI rank per CPU socket and zCFD will automatically set the number of OpenMP threads per rank to match the number of cores per socket (12 in this example).</p>
+<pre><code class="language-bash">run_zcfd -m &lt;mesh_name&gt; -c &lt;case_name&gt; -n 4 –tpn 2
+</code></pre>
+<p>The number of OpenMP threads assigned to each rank can be overridden by setting <strong>OMP_NUM_THREADS</strong> in the calling environment.</p>
+<h3 id="full-mpi">Full MPI</h3>
+<p>This is achieved by running zCFD with <strong>OMP_NUM_THREADS</strong> set to 1 and passing -n <!-- -->&lt;tasks&gt;<!-- --> where tasks is the number of MPI ranks.</p>
+<p>For example, if you had two hosts with 2 x 12 core CPUs per host and wanted to run full MPI with 1 MPI rank per core you could do the following:</p>
+<pre><code class="language-bash">export OMP_NUM_THREADS=1
+run_zcfd -p &lt;mesh_name&gt; -c &lt;case_name&gt; -n 48 –tpn 24
+</code></pre>
+<h3 id="gpu-parallel-execution">GPU Parallel Execution</h3>
+<p>zCFD automatically assigns GPUs to MPI ranks when running on GPU-enabled nodes.</p>
+<p><strong>Single Rank per GPU:</strong> This is the default and recommended configuration for most workloads. Each MPI rank gets exclusive access to one GPU.</p>
+<pre><code class="language-bash"># For a node with 4 GPUs, run 4 ranks (1 per GPU)
+run_zcfd -p &lt;mesh_name&gt; -c &lt;case_name&gt; -n 4
+</code></pre>
+<p><strong>Multiple Ranks per GPU (Experimental):</strong> To enable multiple MPI ranks sharing GPUs, set the <code>ZCFD_DEV_OVERSUBSCRIBE_GPU</code> environment variable (see <a href="reference/command-line/environment-variables/index.html">Command line environment variables</a>). This is an experimental feature primarily intended for debugging and testing. When enabled, ranks will be assigned to GPUs using modulo arithmetic (rank % num_gpus).</p>
+<aside class="admon admon-warning"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17h.01"></path></svg>Warning</div><div class="admon-b"><p>GPU oversubscription is an experimental feature. It may result in reduced performance and is primarily intended for debugging purposes with limited GPU resources.</p></div></aside>
+<p>This can be useful for:</p>
+<ul>
+<li>Testing and development with limited GPU resources</li>
+<li>Debugging with smaller problem sizes</li>
+<li>Workloads with low GPU compute utilisation</li>
+</ul>
+<pre><code class="language-bash"># For a node with 4 GPUs, run 8 ranks (2 per GPU) - experimental
+export ZCFD_DEV_OVERSUBSCRIBE_GPU=1
+run_zcfd -p &lt;mesh_name&gt; -c &lt;case_name&gt; -n 8
+</code></pre>
+<p><strong>Example assignments with oversubscription enabled:</strong></p>
+<ul>
+<li>4 GPUs, 4 ranks: GPU assignment [0,1,2,3]</li>
+<li>4 GPUs, 8 ranks: GPU assignment [0,1,2,3,0,1,2,3]</li>
+<li>4 GPUs, 6 ranks: GPU assignment [0,1,2,3,0,1]</li>
+</ul>
+<p>See <a href="reference/command-line/parallel-invocation/index.html">Command line parallel invocation</a> for running across multiple machines, libfabric provider selection and other advanced parallel settings.</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/setting-up/running-zcfd/index.html#command-line-execution">Command Line Execution</a><a href="guide/setting-up/running-zcfd/index.html#multiple-meshes-and-overset-cases">Multiple Meshes and Overset Cases</a><a href="guide/setting-up/running-zcfd/index.html#what-a-run-writes">What a run writes</a><a href="guide/setting-up/running-zcfd/index.html#running-in-parallel">Running in parallel</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

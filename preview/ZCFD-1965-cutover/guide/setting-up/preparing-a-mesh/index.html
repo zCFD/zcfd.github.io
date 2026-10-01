@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Preparing a mesh · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/setting-up/preparing-a-mesh.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/preparing-a-mesh-4CB1XgJj.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Setting up</span><span> / <b>Preparing a mesh</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="preparing-a-mesh">Preparing a mesh</h1>
+<p>zCFD uses unstructured meshes written in an <a href="http://www.hdfgroup.org/HDF5/">HDF5</a> file format. HDF5 provides a flexible, self describing specification supporting parallel I/O that can be tuned per filesystem type (e.g NFS, GPFS, Lustre etc).</p>
+<p>Meshes from a wide variety of sources can be converted into this format as follows:</p>
+<h2 id="openfoam-xxx">OpenFOAM-x.x.x</h2>
+<p>A range of converters for popular mesh types is provided by a special version of the open-source CFD code OpenFOAM, available freely for download <a href="https://github.com/zCFD/foamTozCFD.git">here</a>.</p>
+<p>Once downloaded and installed, the version of OpenFOAM will convert a range of file formats to the zCFD format. Prior to running any of these, you will need to activate your OpenFOAM environment using</p>
+<pre><code class="language-bash">source $FOAM_INST_DIR/OpenFOAM-x.x.x/etc/bashrc
+</code></pre>
+<h2 id="openfoam-mesh-converter">OpenFOAM Mesh Converter</h2>
+<p>To convert from an OpenFOAM format mesh to zCFD, run the following command in the MESH directory.</p>
+<pre><code class="language-python">foamTozCFD
+</code></pre>
+<p>This will create a new folder called <em>zInterface/</em> containing the HDF5 file.</p>
+<h2 id="zcfd-mesh-converter-utility">zCFD Mesh Converter Utility</h2>
+<p>The converter for various mesh files is a utility called <em>convert_mesh</em>. This is included in the path set by activating the zCFD command line environment.</p>
+<p>To run the utility, use</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt; &lt;new_filename&gt;.h5
+</code></pre>
+<p>The utility auto-detects the format from the file extension. You can also explicitly specify the format using the <code>-f</code> flag:</p>
+<pre><code class="language-bash">(zCFD): convert_mesh -f &lt;format&gt; &lt;filename&gt; &lt;new_filename&gt;.h5
+</code></pre>
+<p>The following mesh formats are supported:</p>
+<h3 id="fluent-mesh-converter">Fluent Mesh Converter</h3>
+<p>The converter supports <a href="http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent">ANSYS Fluent</a> files (<code>.msh</code>, <code>.cas</code>, <code>.msh.gz</code>, <code>.cas.gz</code>).</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.msh &lt;new_filename&gt;.h5
+</code></pre>
+<p>This produces the zCFD HDF5 file and a zone helper file, <code>&lt;new_filename&gt;_zone.py</code>, which maps the zone names in the Fluent file to zone numbers. See <a href="guide/setting-up/preparing-a-mesh/index.html#zone-numbers">Zone numbers</a>.</p>
+<h3 id="fluent-cff-mesh-converter">Fluent CFF Mesh Converter</h3>
+<p>The converter also supports Fluent CFF format files (<code>.msh.h5</code>, <code>.cas.h5</code>).</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.msh.h5 &lt;new_filename&gt;.h5
+</code></pre>
+<p>This produces the zCFD HDF5 file and a zone helper file, <code>&lt;new_filename&gt;_zone.py</code>.</p>
+<h3 id="su2-mesh-converter">SU2 Mesh Converter</h3>
+<p>SU2 is an open source CFD solver (<a href="https://su2code.github.io/">https://su2code.github.io/</a>). Conversion of 2D meshes is not supported, as they are not handled in zCFD.</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.su2 &lt;new_filename&gt;.h5
+</code></pre>
+<p>This produces the zCFD HDF5 file and a zone file, <code>&lt;new_filename&gt;_zones.py</code>.</p>
+<h3 id="cgns-mesh-converter">CGNS Mesh Converter</h3>
+<p>This utility will convert an unstructured, non-chimera, hexahedral mesh in CGNS (ref) format. The converter will handle meshes with element types (HEXA_8):</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.cgns &lt;new_filename&gt;.h5
+</code></pre>
+<p>This produces the zCFD HDF5 file and a zone helper file, <code>&lt;new_filename&gt;_zone.py</code>. If you require support for additional element types please contact us: <a href="mailto:zcfd@zenotech.com"><code>zcfd@zenotech.com</code></a>.</p>
+<h3 id="ugrid-mesh-converter">UGRID Mesh Converter</h3>
+<p>UGRID is a NASA format for meshes. You must follow the naming convention for UGRID files, which describes the format and <em>endian-ness</em> of the file data (&quot;ascii8&quot;, &quot;b8&quot;, &quot;lb8&quot;, or &quot;r8&quot;) depending upon which language (C or FORTRAN) was used to create the file. The mapbc file is optional and if provided as an extra argument, boundary conditions will be read from it; otherwise, they default to wall.</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.[ascii8, b8, lb8, r8].ugrid &lt;new_filename&gt;.h5 &lt;filename&gt;.mapbc
+</code></pre>
+<p>This produces the zCFD HDF5 file.</p>
+<h3 id="cba-mesh-converter">CBA Mesh Converter</h3>
+<p>The converter supports structured multiblock meshes in the University of Bristol UOBSMB / <em>flowcode</em> CBA format (<code>.blk</code>). A CBA file is plain text: a header line giving the block count, a symmetry flag and a format version, then each block in turn — a dimension line (<code>ni nj nk</code>), the block&#x27;s grid points (with <em>i</em> varying fastest, then <em>j</em>, then <em>k</em>), and six footer lines, one per face, always in the order <code>imin, imax, jmin, jmax, kmin, kmax</code>. Each footer line is <code>type neighbour_block orientation</code>: for an inter-block face (type <code>2</code>) the other two numbers give the 1-based partner block and the 1-based partner face (<code>1</code> = <code>imin</code> ... <code>6</code> = <code>kmax</code>); for any other type they are ignored. A 2D block (<code>nk</code> = 1) is extruded by one cell along <em>y</em>, by the <code>--span</code> distance.</p>
+<p>Every boundary face carries a type code. Without a zone file, each type maps to a default zone:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Type</th><th>Default zone name</th><th><code>bc</code></th><th>Zone tag</th><th>Meaning</th></tr></thead><tbody><tr><td><code>-2</code></td><td><code>symmetry</code></td><td><code>symmetry</code></td><td><code>7</code></td><td>symmetry plane</td></tr><tr><td><code>-1</code></td><td><code>aero_wall</code></td><td><code>wall</code></td><td><code>4</code></td><td>aerodynamic (solid) wall</td></tr><tr><td><code>0</code></td><td><code>wall</code></td><td><code>wall</code></td><td><code>3</code></td><td>wall</td></tr><tr><td><code>1</code></td><td><code>farfield</code></td><td><code>farfield</code></td><td><code>2</code></td><td>farfield</td></tr><tr><td><code>2</code></td><td>n/a</td><td>n/a</td><td>n/a</td><td>inter-block interface, not a boundary</td></tr><tr><td><code>3</code></td><td><code>periodic_downstream</code></td><td><code>periodic</code></td><td><code>5</code></td><td>periodic (downstream side)</td></tr><tr><td><code>4</code></td><td><code>periodic_upstream</code></td><td><code>periodic</code></td><td><code>6</code></td><td>periodic (upstream side)</td></tr></tbody></table></div>
+<p>To convert, run through <em>convert_mesh</em> using the <code>.blk</code> extension, or explicitly with <code>-f cba</code>:</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.blk &lt;new_filename&gt;.h5
+</code></pre>
+<p>or run the converter directly:</p>
+<pre><code class="language-bash">(zCFD): cba_convert &lt;filename&gt;.blk &lt;new_filename&gt;.h5 [options]
+</code></pre>
+<p>Any options given after the two filenames on a <em>convert_mesh</em> command line are passed straight through to <code>cba_convert</code>. Its options are:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Option</th><th>Meaning</th></tr></thead><tbody><tr><td><code>input</code></td><td>the CBA (<code>.blk</code>) mesh to read</td></tr><tr><td><code>output</code></td><td>the zCFD <em>.h5</em> mesh to write</td></tr><tr><td><code>--zones FILE</code></td><td>a zone definition YAML file, overriding the default zone assignment above</td></tr><tr><td><code>--write-zones FILE</code></td><td>also write the resolved zone assignment to FILE as YAML, and continue converting</td></tr><tr><td><code>--no-weld</code></td><td>keep each block&#x27;s nodes separate instead of welding coincident nodes at block boundaries</td></tr><tr><td><code>--span VALUE</code></td><td>extrusion distance for a 2D mesh (default <code>1.0</code>)</td></tr><tr><td><code>--quiet</code></td><td>suppress the summary report</td></tr></tbody></table></div>
+<p>This produces the zCFD HDF5 file. A zone file is optional for CBA meshes: see <a href="guide/setting-up/preparing-a-mesh/index.html#structured-mesh-zone-files">Structured Mesh Zone Files</a>.</p>
+<h3 id="plot3d-mesh-converter">Plot3D Mesh Converter</h3>
+<p>The converter also reads ASCII (formatted), whole-format Plot3D structured multiblock grids (<code>.p3d</code>, <code>.fmt</code>). The file is a plain sequence of numbers: an optional block-count line, then one dimension line per block (<code>ni nj nk</code>, or <code>ni nj</code> for a 2D block), then for each block in turn all of its <em>x</em> coordinates, then all of its <em>y</em> coordinates, then (for a 3D block) all of its <em>z</em> coordinates — again with <em>i</em> varying fastest, then <em>j</em>, then <em>k</em>. A single block with no leading count line is also accepted. An extra <em>IBLANK</em> integer following each point&#x27;s coordinates is tolerated and ignored, and FORTRAN-style repeat counts (for example <code>12*0.0</code> for twelve repetitions of <code>0.0</code>) are expanded. A 2D grid (no <em>k</em> dimension) is extruded by one cell along <em>z</em>, by the <code>--span</code> distance.</p>
+<p>Binary (unformatted) Plot3D files, and the plane-by-plane streamed layout some codes write instead of the whole-block layout, are not supported; both are rejected rather than silently misread.</p>
+<p>Unlike a CBA file, a Plot3D grid carries no connectivity or boundary information: block-to-block interfaces are discovered from coincident nodes after welding, and every boundary face must be assigned to a zone by hand — see <a href="guide/setting-up/preparing-a-mesh/index.html#structured-mesh-zone-files">Structured Mesh Zone Files</a>. A zone file is therefore mandatory.</p>
+<p>To convert, run through <em>convert_mesh</em> using the <code>.p3d</code> or <code>.fmt</code> extension, or explicitly with <code>-f plot3d</code>:</p>
+<pre><code class="language-bash">(zCFD): convert_mesh &lt;filename&gt;.p3d &lt;new_filename&gt;.h5 --zones &lt;zonefile&gt;.yml
+</code></pre>
+<p>or run the converter directly:</p>
+<pre><code class="language-bash">(zCFD): plot3d_convert &lt;filename&gt;.p3d &lt;new_filename&gt;.h5 --zones &lt;zonefile&gt;.yml [options]
+</code></pre>
+<p>Any options given after the two filenames on a <em>convert_mesh</em> command line are passed straight through to <em>plot3d_convert</em>. Its options are:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Option</th><th>Meaning</th></tr></thead><tbody><tr><td><code>input</code></td><td>the Plot3D (<code>.p3d</code>/<code>.fmt</code>) grid to read</td></tr><tr><td><code>output</code></td><td>the zCFD <em>.h5</em> mesh to write</td></tr><tr><td><code>--zones FILE</code></td><td>the zone definition YAML file (required, unless only <code>--write-zones</code> is given)</td></tr><tr><td><code>--write-zones FILE</code></td><td>write a zone template covering every discovered boundary face to FILE</td></tr><tr><td><code>--no-weld</code></td><td>keep each block&#x27;s nodes separate instead of welding coincident nodes at block boundaries</td></tr><tr><td><code>--span VALUE</code></td><td>extrusion distance for a 2D grid (default <code>1.0</code>)</td></tr><tr><td><code>--quiet</code></td><td>suppress the summary report</td></tr></tbody></table></div>
+<p>This produces the zCFD HDF5 file.</p>
+<h3 id="structured-mesh-zone-files">Structured Mesh Zone Files</h3>
+<p>A zone file is optional for a CBA mesh — omit <code>--zones</code> and the default mapping in <a href="guide/setting-up/preparing-a-mesh/index.html#cba-mesh-converter">CBA Mesh Converter</a> is used — and mandatory for a Plot3D grid, which carries no boundary information of its own.</p>
+<p>A zone file is YAML, with a single top-level <code>zones</code> map keyed by an integer zone tag; each tag must be unique. Here is a complete zone file for a 4-block ONERA M6 wing grid (block 1 is upstream of the wing, blocks 2 and 3 run along the wing, block 4 is downstream past the tip):</p>
+<pre><code class="language-yaml">zones:
+  3:
+    name: wing
+    bc: wall
+    patches:
+      - { block: 2, face: jmin }
+      - { block: 3, face: jmin }
+  7:
+    name: symmetry
+    bc: symmetry
+    patches:
+      - { block: 1, face: kmin }
+      - { block: 2, face: kmin }
+      - { block: 3, face: kmin }
+      - { block: 4, face: kmin }
+  9:
+    name: farfield
+    bc: farfield
+    patches:
+      - { block: 1, face: imin }
+      - { block: 1, face: jmax }
+      - { block: 2, face: jmax }
+      - { block: 3, face: jmax }
+      - { block: 4, face: imax }
+      - { block: 4, face: jmax }
+</code></pre>
+<p>Each zone takes:</p>
+<ul>
+<li><code>name</code> — a free-text label, used only in the summary report (defaults to <code>zone_&lt;tag&gt;</code> if omitted).</li>
+<li><code>bc</code> — required; one of <code>wall</code>, <code>inflow</code>, <code>outflow</code>, <code>symmetry</code>, <code>farfield</code>, <code>periodic</code>. This is what the solver acts on; the zone tag itself is an identifier for grouping and reporting.</li>
+<li><code>patches</code> — an optional list of explicit block faces belonging to this zone. <code>block</code> is the 1-based block number; <code>face</code> is one of <code>imin</code>, <code>imax</code>, <code>jmin</code>, <code>jmax</code>, <code>kmin</code>, <code>kmax</code>.</li>
+<li><code>cba_type</code> — CBA only, optional; a raw CBA footer type code (see <a href="guide/setting-up/preparing-a-mesh/index.html#cba-mesh-converter">CBA Mesh Converter</a>). Every boundary patch still carrying that type code, and not already claimed by an explicit patch in this or any other zone, is added to this zone.</li>
+</ul>
+<p>A patch normally covers the whole block face. To assign only part of a face, add a 1-based, inclusive node-index range on one or both of the face&#x27;s two in-plane axes:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Face</th><th>In-plane axes</th></tr></thead><tbody><tr><td><code>imin</code>, <code>imax</code></td><td><code>j</code>, <code>k</code></td></tr><tr><td><code>jmin</code>, <code>jmax</code></td><td><code>i</code>, <code>k</code></td></tr><tr><td><code>kmin</code>, <code>kmax</code></td><td><code>i</code>, <code>j</code></td></tr></tbody></table></div>
+<pre><code class="language-yaml">zones:
+  3:
+    name: inlet_strip
+    bc: inflow
+    patches:
+      - { block: 1, face: imax, j: [1, 5], k: [1, 3] }
+</code></pre>
+<p>If a patch is listed explicitly, it always takes that zone, even where a <code>cba_type</code> catch-all on another zone would otherwise have matched it: explicit patches take precedence over <code>cba_type</code> membership.</p>
+<p>To find the boundary faces available on a mesh without working them out by hand, write a template and edit it:</p>
+<pre><code class="language-bash">(zCFD): cba_convert mesh.blk mesh.h5 --write-zones zones.yml
+(zCFD): plot3d_convert grid.p3d grid.h5 --write-zones zones.yml
+</code></pre>
+<p>For a CBA mesh this writes the <em>currently resolved</em> zone assignment (the defaults above, or whatever <code>--zones</code> produced if it was also given) and still converts the mesh. For a Plot3D grid, if <code>--zones</code> is not also given, it instead writes a single template zone (tag <code>3</code>, <code>bc: wall</code>) covering every discovered boundary face — split into as many patches as the discovered block structure needs — and stops without writing an <em>.h5</em> file. Either way, edit the <code>name</code>, <code>bc</code> and grouping of the written zones as needed, then rerun with <code>--zones zones.yml</code>.</p>
+<h3 id="structured-mesh-conversion-checks">Structured Mesh Conversion Checks</h3>
+<p>The converter runs the same checks on every structured mesh, regardless of source format:</p>
+<ul>
+<li><strong>Node welding.</strong> Coincident nodes at block boundaries are merged into a single global node, within a tolerance derived from the mesh itself (the smaller of one billionth of the mesh&#x27;s bounding-box diagonal, and a thousandth of the shortest genuine edge in the mesh). <code>--no-weld</code> keeps every block&#x27;s nodes separate; interfaces are still paired even when nodes are not welded.</li>
+<li><strong>Interface pairing.</strong> For a CBA mesh, every inter-block face declared in the file&#x27;s footers is checked: the partner face must exist, must point back to the same face (reciprocity), and its nodes must actually coincide with the partner&#x27;s. For a Plot3D grid, which declares no connectivity, interfaces are discovered instead, purely from which welded nodes turn out to be shared between two blocks.</li>
+<li><strong>Handedness.</strong> Every block&#x27;s node ordering is classified as right- or left-handed from its signed volume, and face winding is adjusted per block so that outward normals and cell volumes come out correctly either way. Mixed handedness across blocks in the same mesh is not an error.</li>
+<li><strong>Six faces per cell, one or two cells per face.</strong> Every cell ends up bounded by exactly six faces, and every face by exactly one cell (a boundary face) or two (an interior or interface face) — never zero, and never more than two.</li>
+<li><strong>Positive volumes.</strong> Every cell&#x27;s volume, computed from its bounding faces, must be strictly positive.</li>
+<li><strong>Periodic pairing.</strong> Boundary faces with <code>bc: periodic</code> are grouped by zone tag and checked pairwise: each periodic zone must map onto exactly one other periodic zone under a pure rotation about the <em>x</em>, <em>y</em> or <em>z</em> axis, and that mapping must be reciprocal. The axis and angle found for each pair are reported.</li>
+</ul>
+<p>If any of these fail, conversion stops before a mesh is written, with a message naming the blocks and faces involved:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Failure</th><th>What it means</th></tr></thead><tbody><tr><td>unreciprocated interface</td><td>CBA only. One face&#x27;s footer names another face as its interface partner, but that face&#x27;s own footer either is not an interface or names a different partner. Fix the footer on the side that is wrong.</td></tr><tr><td>non-coincident interface</td><td>A declared CBA interface&#x27;s nodes do not coincide with its partner&#x27;s at all — the two blocks are offset from one another where they are meant to meet. Check the grid geometry at that face.</td></tr><tr><td>partial-face abutment</td><td>The same check as above, but only part of a declared CBA interface abuts its partner — a step or a sliver mismatch rather than a full offset. The faces reported are the ones left unpaired.</td></tr><tr><td>undeclared coincidence</td><td>Two block faces (CBA) are geometrically coincident, but neither declares the other as its interface partner. Either move the blocks apart, or add the missing interface footer.</td></tr><tr><td>degenerate block face</td><td>A block face has folded onto itself: the block is collapsed at that face, or wrapped with too few cells to keep the face distinct from itself, so some of its quads coincide with each other.</td></tr><tr><td>uncovered boundary quads</td><td>Some boundary quads were never placed in a zone. The message gives the 1-based node-index range on the face&#x27;s two in-plane axes — paste it directly into a <code>patches</code> entry in the zone file to cover the gap. The same check, reported as quads assigned to <em>more than one</em> zone, catches overlapping patches.</td></tr><tr><td>duplicate zone tag</td><td>Two zones in the zone file use the same tag. Tags must be unique; give one of them a different tag.</td></tr></tbody></table></div>
+<p>Node welding that merges genuinely distinct nodes, rather than the two sides of a declared self-interface, is also rejected — the message names the block and the two node indices involved.</p>
+<h3 id="structured-mesh-conversion-report">Structured Mesh Conversion Report</h3>
+<p>Unless <code>--quiet</code> is given, both converters print a summary once conversion succeeds:</p>
+<ul>
+<li>the block count, and the CBA symmetry flag (always <code>0</code> for a Plot3D grid)</li>
+<li>the cell count</li>
+<li>the node count, raw and welded, and how many nodes were merged</li>
+<li>the face count, split into interior, interface and boundary faces</li>
+<li>every interface pair, with its face-quad count and whether it was found transposed and/or axis-reversed relative to its partner</li>
+<li>the resolved zones — tag, <code>name</code>, <code>bc</code> and the number of boundary faces each ended up with</li>
+<li>how many blocks came out right-handed versus left-handed</li>
+<li>the periodic pairs found (axis and angle in degrees), or <code>none</code></li>
+<li>the minimum cell volume</li>
+<li>the weld tolerance used, and the shortest genuine edge it was derived from</li>
+<li>the time taken in each phase of the conversion (welding, face-building, zone resolution, assembly, checks)</li>
+</ul>
+<p>This is the quickest way to confirm a mesh converted the way you expect — in particular, that the interface and zone face counts match what you know about the mesh, and that the minimum cell volume is sensible.</p>
+<h2 id="zone-numbers">Zone numbers</h2>
+<p>Every boundary face of a converted mesh belongs to a numbered zone, and a boundary condition lists the zone numbers it applies to in <a href="reference/model/boundary-conditions/index.html"><code>zones</code></a>. Fluid zones select cells by number in the same way. The source mesh names its zones, so the converters record which name became which number:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Converter</th><th>File written beside the mesh</th><th>Contents</th></tr></thead><tbody><tr><td>Fluent, Fluent CFF, CGNS</td><td><code>&lt;new_filename&gt;_zone.py</code></td><td>the zone helper described below</td></tr><tr><td>SU2</td><td><code>&lt;new_filename&gt;_zones.py</code></td><td>a single dict, <code>zones</code>, from zone name to number</td></tr><tr><td>CBA, Plot3D</td><td>none</td><td>the numbers are the tags in the zone file, if used</td></tr></tbody></table></div>
+<p>The zone helper defines:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Name</th><th>Contents</th></tr></thead><tbody><tr><td><code>zone_name_to_id</code></td><td>a dict from each boundary zone name to its zone number</td></tr><tr><td><code>to_id(names)</code></td><td>the zone numbers of a list of boundary zone names</td></tr><tr><td><code>fluid_zone</code></td><td>a dict from each fluid zone name to its zone number</td></tr></tbody></table></div>
+<p>The Fluent and Fluent CFF helpers also hold one list of zone names for each Fluent boundary type: <code>wall</code>, <code>symmetry</code>, <code>farfield</code>, <code>velocity_inlet</code>, <code>pressure_inlet</code>, <code>pressure_outlet</code> and <code>interior</code>. The CGNS helper adds <code>from_id(id)</code>, which returns the name of a zone number.</p>
+<p>The directory of the control file is on the Python import path while the file is read, so a helper beside it can be imported by name. This keeps the deck in terms of the names given in the mesh generator:</p>
+<pre><code class="language-python">from wing_zone import to_id
+
+{
+    &quot;boundary_conditions&quot;: {
+        &quot;BC_1&quot;: {&quot;type&quot;: &quot;wall&quot;, &quot;zones&quot;: to_id([&quot;wing_upper&quot;, &quot;wing_lower&quot;])},
+        &quot;BC_2&quot;: {&quot;type&quot;: &quot;symmetry&quot;, &quot;zones&quot;: to_id([&quot;symmetry&quot;])},
+    },
+}
+</code></pre>
+<p>A helper whose name is not a valid Python module name, such as one beginning with a digit, is loaded with <code>zutil.get_zone_info</code> instead. It takes the file name, with or without <code>.py</code>, relative to the control file, and returns the helper as a module:</p>
+<pre><code class="language-python">import zutil
+
+zone = zutil.get_zone_info(&quot;2d_aerofoil_zone&quot;)
+
+{&quot;boundary_conditions&quot;: {&quot;BC_1&quot;: {&quot;type&quot;: &quot;wall&quot;, &quot;zones&quot;: zone.to_id([&quot;aerofoil&quot;])}}}
+</code></pre>
+<h3 id="how-a-number-in-zones-is-matched">How a number in <code>zones</code> is matched</h3>
+<p>Each boundary zone of the mesh takes the boundary condition whose <code>zones</code> contains its zone number. A zone that no boundary condition names by number falls back to its boundary type code, listed in <a href="guide/setting-up/preparing-a-mesh/index.html#the-zcfd-mesh-file">The zCFD mesh file</a>: it takes the boundary condition whose <code>zones</code> contains that code. A zone that matches neither way stops the run, with a message naming the zone and its code:</p>
+<pre><code class="language-text">Unable to determine boundary condition for zone 12 (ref: 3)
+</code></pre>
+<aside class="admon admon-warning"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17h.01"></path></svg>Warning</div><div class="admon-b"><p>The fallback applies to every zone left unnamed. In a mesh with a zone numbered <code>3</code> and several unnamed wall zones, <code>&quot;zones&quot;: [3]</code> also applies to every wall zone, since <code>3</code> is the code for a wall. List every zone by number to rule this out.</p></div></aside>
+<h2 id="the-zcfd-mesh-file">The zCFD mesh file</h2>
+<p>A zCFD mesh is an HDF5 file holding one group, <code>mesh</code>. The group carries two attributes, <code>numCells</code> and <code>numFaces</code>, and the datasets below. Every index counts from zero.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Dataset</th><th>Shape</th><th>Contents</th></tr></thead><tbody><tr><td><code>nodeVertex</code></td><td>nodes × 3, float</td><td>the coordinates of each node, in mesh units</td></tr><tr><td><code>faceType</code></td><td>faces × 1, integer</td><td>the number of nodes of each face</td></tr><tr><td><code>faceNodes</code></td><td>(sum of <code>faceType</code>) × 1</td><td>the node indices of each face in turn, in face order</td></tr><tr><td><code>faceCell</code></td><td>faces × 2, integer</td><td>the left and right cell of each face</td></tr><tr><td><code>faceBC</code></td><td>faces × 1, integer</td><td>the boundary type code of each face, <code>0</code> for an interior face</td></tr><tr><td><code>faceInfo</code></td><td>faces × 2, integer</td><td>the zone number of each face in the first column; the converters write <code>0</code> in the second</td></tr><tr><td><code>cellZone</code></td><td>cells × 1, integer</td><td>optional; the fluid zone number of each cell. Without it, every cell is in fluid zone <code>0</code></td></tr></tbody></table></div>
+<p>The left cell of every face is a real cell, numbered below <code>numCells</code>. The right cell of an interior face is also a real cell. The right cell of a boundary face is a halo cell: halo cells are numbered from <code>numCells</code> upwards, one for each boundary face.</p>
+<p>The node order of a face defines its normal by the right-hand rule. That normal must point out of the left cell and into the right cell, so on a boundary face it points out of the domain. A face wound the other way gives its cells wrong volumes.</p>
+<p>All the faces of a zone carry the same boundary type code. The codes the solver recognises are:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Code</th><th>Boundary type</th></tr></thead><tbody><tr><td><code>0</code></td><td>interior face</td></tr><tr><td><code>3</code></td><td>wall</td></tr><tr><td><code>4</code></td><td>inflow</td></tr><tr><td><code>5</code></td><td>outflow</td></tr><tr><td><code>7</code></td><td>symmetry</td></tr><tr><td><code>9</code></td><td>farfield</td></tr><tr><td><code>18</code></td><td>periodic</td></tr><tr><td><code>20</code></td><td>overset</td></tr><tr><td><code>21</code></td><td>immersed wall</td></tr><tr><td><code>22</code></td><td>sliding</td></tr></tbody></table></div>
+<p>The <code>type</code> of the boundary condition that names a zone in the control file decides how the solver treats that zone; the code in the mesh does not.</p>
+<h2 id="initial-placement">Initial placement</h2>
+<p>The model&#x27;s <a href="reference/model/transforms/index.html"><code>transforms</code></a> sets a single static affine transform applied to the whole mesh when it is read, before the solver starts.</p>
+<p>It takes two keys, which may be given together:</p>
+<ul>
+<li><a href="reference/model/transforms/index.html#scale"><code>scale</code></a> multiplies the <em>x</em>, <em>y</em> and <em>z</em> coordinates of every node by the three factors given.</li>
+<li><a href="reference/model/transforms/index.html#transform-matrix"><code>transform_matrix</code></a> is a 4 × 4 affine matrix applied to every node.</li>
+</ul>
+<p>Where both are given, <code>transform_matrix</code> is applied first and <code>scale</code> second. The matrix therefore acts in the units of the mesh file: where <code>scale</code> converts millimetres to metres, a translation in the matrix is given in millimetres.</p>
+<p>A plain unit conversion needs only <code>scale</code>:</p>
+<pre><code class="language-python"># Scale from mm to metres
+parameters[&quot;model&quot;][&quot;wing&quot;][&quot;transforms&quot;] = {&quot;scale&quot;: [0.001, 0.001, 0.001]}
+</code></pre>
+<pre><code class="language-python"># Scale from inches to metres
+parameters[&quot;model&quot;][&quot;wing&quot;][&quot;transforms&quot;] = {&quot;scale&quot;: [0.0254, 0.0254, 0.0254]}
+</code></pre>
+<p>A plain anisotropic mesh stretch also needs only <code>scale</code>:</p>
+<pre><code class="language-python">{
+    &quot;model&quot;: {
+        &quot;canopy_dacosta&quot;: {
+            &quot;transforms&quot;: {&quot;scale&quot;: [50.0, 1.0, 1.0]},
+            &quot;mesh&quot;: &quot;canopy_dacosta.h5&quot;,
+            ...
+        }
+    }
+}
+</code></pre>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p><code>scale</code> applies to the mesh only — not interpolated surface outputs etc.</p></div></aside>
+<p>Build <code>transform_matrix</code> with the <code>zutil.transform</code> helpers. Each returns a 4 × 4 numpy array. Given an existing matrix as its optional last argument, <code>A2B</code>, a helper applies its own transform after that matrix, so a chain of calls applies the transforms in the order written:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Helper</th><th>Transform</th></tr></thead><tbody><tr><td><code>rotate(axis, angle_deg, A2B)</code></td><td>a rotation by <code>angle_deg</code> degrees about <code>axis</code>, through the origin, by the right-hand rule</td></tr><tr><td><code>translate(point_b, point_c, A2B)</code></td><td>a translation by <code>point_c</code> minus <code>point_b</code></td></tr><tr><td><code>scale(scale_factors, A2B)</code></td><td>a scaling of <em>x</em>, <em>y</em> and <em>z</em> by the three factors</td></tr></tbody></table></div>
+<pre><code class="language-python">import zutil.transform
+
+# Two 90-degree rotations about x, then 10 degrees about y, composed in order
+mesh_transform = zutil.transform.rotate([1, 0, 0], 90.0)
+mesh_transform = zutil.transform.rotate([1, 0, 0], 90.0, mesh_transform)
+mesh_transform = zutil.transform.rotate([0, 1, 0], 10.0, mesh_transform)
+
+{&quot;model&quot;: {&quot;naca0012&quot;: {&quot;transforms&quot;: {&quot;transform_matrix&quot;: mesh_transform}}}}
+</code></pre>
+<p>The matrix is an
+<a href="https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html">affine transform</a>
+(<a href="https://en.wikipedia.org/wiki/Affine_transformation">Wikipedia</a>): the upper left 3 × 3 block describes a rotation,
+reflection, scaling or shear, or any combination of them, and the fourth column a translation. Here a rotation, a
+scaling and a translation are applied in turn:</p>
+<pre><code class="language-python">import zutil.transform
+
+A2B = zutil.transform.rotate([0.0, 1.0, 0.0], 10.0)
+B2C = zutil.transform.scale([0.1, 0.1, 0.1], A2B)
+C2D = zutil.transform.translate([0.0, 0.0, 0.0], [-1.0, 0.0, 0.0], B2C)
+
+parameters[&quot;model&quot;][&quot;wing&quot;][&quot;transforms&quot;] = {&quot;transform_matrix&quot;: C2D}
+</code></pre>
+<p>Rotations follow the conventions of
+<a href="https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html">pytransform3d</a> and are active: the mesh is
+rotated, not the axes. A matrix built directly with <a href="https://dfki-ric.github.io/pytransform3d">pytransform3d</a> can be
+given as <code>transform_matrix</code> in the same way.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p><a href="reference/model/transforms/index.html#transform-func"><code>transform_func</code></a> is accepted by validation but not read by the solver, so it has no effect on the mesh. Use <code>transform_matrix</code> to place the mesh.</p></div></aside></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/setting-up/preparing-a-mesh/index.html#openfoam-xxx">OpenFOAM-x.x.x</a><a href="guide/setting-up/preparing-a-mesh/index.html#openfoam-mesh-converter">OpenFOAM Mesh Converter</a><a href="guide/setting-up/preparing-a-mesh/index.html#zcfd-mesh-converter-utility">zCFD Mesh Converter Utility</a><a href="guide/setting-up/preparing-a-mesh/index.html#zone-numbers">Zone numbers</a><a href="guide/setting-up/preparing-a-mesh/index.html#the-zcfd-mesh-file">The zCFD mesh file</a><a href="guide/setting-up/preparing-a-mesh/index.html#initial-placement">Initial placement</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

@@ -1,0 +1,1948 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Choosing boundary conditions · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/choosing/choosing-boundary-conditions.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');d.setAttribute('data-python',g('zdocs.python')==='show'?'show':'hide');d.setAttribute('data-rendering',g('zdocs.rendering')==='zui'?'zui':'site');})();</script>
+    <link rel="modulepreload" href="./assets/choosing-boundary-conditions-mGlUeWYs.js">
+    <script type="module" crossorigin src="./assets/index-t-mSc4k0.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-GA45L-e8.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="guide/concepts/what-zcfd-is/index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-1965-cutover">ZCFD-1965-cutover</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><a href="guide/concepts/what-zcfd-is/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">What zCFD is</span></a><a href="guide/concepts/how-the-deck-works/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">How the deck works</span></a><div class="tsec">Setting up</div><a href="guide/setting-up/installation-and-licensing/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Installation and licensing</span></a><a href="guide/setting-up/preparing-a-mesh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Preparing a mesh</span></a><a href="guide/setting-up/running-zcfd/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Running zCFD</span></a><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Python functions in the deck</span></a><div class="tsec">Choosing…</div><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a turbulence model</span></a><a href="guide/choosing/choosing-a-wall-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a wall model</span></a><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a time-marching scheme</span></a><a href="guide/choosing/choosing-a-limiter/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a limiter</span></a><a href="guide/choosing/choosing-a-linear-solver/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a linear solver</span></a><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Choosing a fluid-zone model</span></a><a href="guide/choosing/choosing-boundary-conditions/index.html" class="trow sel" aria-current="page"><span class="tind conn mid"></span><span class="tlab dim">Choosing boundary conditions</span></a><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Choosing initialisation and reference state</span></a><div class="tsec">Working with</div><a href="guide/working-with/aeroacoustics-fwh/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Aeroacoustics (FWH)</span></a><a href="guide/working-with/fluid-structure-interaction/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Fluid–structure interaction</span></a><a href="guide/working-with/monitoring-a-run/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Monitoring a run</span></a><a href="guide/working-with/overset-meshes/index.html" class="trow"><span class="tind conn mid"></span><span class="tlab dim">Overset meshes</span></a><a href="guide/working-with/post-processing-and-visualisation/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Post-processing and visualisation</span></a><div class="tsec">Troubleshooting</div><a href="guide/troubleshooting/troubleshooting/index.html" class="trow"><span class="tind conn"></span><span class="tlab dim">Troubleshooting</span></a></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Choosing…</span><span> / <b>Choosing boundary conditions</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="choosing-boundary-conditions">Choosing boundary conditions</h1>
+<p>Which boundary condition should each boundary of the mesh take?</p>
+<p>Give every solid surface a wall, and choose its wall model separately. Close an external flow with a farfield on the
+compressible solver, and an internal flow with an inflow and an outflow; the incompressible solver always uses the
+latter pair. Put a symmetry condition on a plane of mirror symmetry. Where a boundary is not closed at all but joined
+to another part of the domain, whether an overlapping mesh, an abutting rotating mesh or its own periodic partner, make
+it an interface.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th><code>type</code></th><th>Use it for</th><th>Selected by <code>kind</code></th><th>Names its flow state with</th></tr></thead><tbody><tr><td><a href="reference/model/boundary-conditions/wall/index.html"><code>wall</code></a></td><td>solid surfaces; see <a href="guide/choosing/choosing-a-wall-model/index.html">Choosing a wall model</a></td><td><code>slip</code>, <code>no slip</code>, <code>wall function</code></td><td>—</td></tr><tr><td><a href="reference/model/boundary-conditions/farfield/index.html"><code>farfield</code></a></td><td>open boundaries of an external flow, compressible solver only</td><td><code>riemann</code>, <code>pressure</code>, <code>supersonic</code>, <code>preconditioned</code></td><td><code>condition</code></td></tr><tr><td><a href="reference/model/boundary-conditions/inflow/index.html"><code>inflow</code></a></td><td>inlets</td><td><code>default</code>, <code>pressure</code>, <code>massflow</code></td><td><code>reference</code></td></tr><tr><td><a href="reference/model/boundary-conditions/outflow/index.html"><code>outflow</code></a></td><td>outlets</td><td><code>pressure</code>, <code>massflow</code>, <code>radial pressure gradient</code></td><td><code>reference</code></td></tr><tr><td><a href="reference/model/boundary-conditions/mass-flow/index.html"><code>mass flow</code></a></td><td>a mass flow rate set on the boundary</td><td>—</td><td>—</td></tr><tr><td><a href="reference/model/boundary-conditions/symmetry/index.html"><code>symmetry</code></a></td><td>planes of mirror symmetry</td><td>—</td><td>—</td></tr><tr><td><a href="reference/model/boundary-conditions/interface/index.html"><code>interface</code></a></td><td>overset boundaries, sliding interfaces and periodic pairs</td><td><code>overset</code>, <code>sliding</code>, <code>periodic</code></td><td>—</td></tr></tbody></table></div>
+<h2 id="declaring-a-boundary-condition">Declaring a boundary condition</h2>
+<p>Boundary conditions are a dictionary of named blocks under the mesh&#x27;s model entry. Each block is keyed by a name of
+your choosing, conventionally <code>BC_1</code>, <code>BC_2</code> and so on, and describes one boundary condition:</p>
+<pre><code class="language-python">parameters = {
+    &quot;config_version&quot;: 2,
+    &quot;solver&quot;: {...},
+    &quot;model&quot;: {
+        &quot;naca0012&quot;: {
+            &quot;mesh&quot;: &quot;naca0012_0449.h5&quot;,
+            &quot;boundary_conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [2, 3], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {&quot;zones&quot;: [4], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: [1],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+            },
+        }
+    },
+}
+</code></pre>
+<p>Every block requires a <code>type</code>, which selects the boundary condition applied to its zones, and <code>zones</code>, which lists
+those zones. Most types also take a <code>kind</code>, which selects a variant of the type with its own further keys. A wall&#x27;s
+<code>kind</code>, for example, chooses between <code>slip</code>, <code>no slip</code> and <code>wall function</code>, and the keys available below it change with
+the choice.</p>
+<h2 id="zones">Zones</h2>
+<p><a href="reference/model/boundary-conditions/index.html"><code>zones</code></a> is a list of the integer zone numbers of the mesh to which the
+boundary condition applies. The converters record which source zone name became which number; see
+<a href="guide/setting-up/preparing-a-mesh/index.html#zone-numbers">Zone numbers</a>, which also explains how a number is matched.</p>
+<h2 id="wall">Wall</h2>
+<p>See <a href="guide/choosing/choosing-a-wall-model/index.html">Choosing a wall model</a>.</p>
+<h2 id="farfield">Farfield</h2>
+<p>A farfield boundary closes an external flow, and switches between inflow and outflow face by face according to the
+local flow direction. It names its flow state through <code>condition</code>, a <a href="reference/solver/reference-conditions/index.html">reference condition</a>
+entry. The incompressible solver has no farfield boundary; close an incompressible domain with inflow and outflow
+boundaries instead.</p>
+<p>The <a href="reference/model/boundary-conditions/farfield/index.html#kind"><code>kind</code></a> sets how each face is treated:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th><code>kind</code></th><th>Treatment</th></tr></thead><tbody><tr><td><code>riemann</code></td><td>Riemann invariants for a non-reflecting inflow; a viscous outflow takes the pressure from outside.</td></tr><tr><td><code>pressure</code></td><td>a pressure boundary for both inflow and outflow.</td></tr><tr><td><code>supersonic</code></td><td>the upstream state on inflow and outflow alike.</td></tr><tr><td><code>preconditioned</code></td><td>the reference state imposed as a supersonic inflow on every face.</td></tr></tbody></table></div>
+<p>The <a href="reference/model/boundary-conditions/farfield/index.html#driver"><code>driver</code></a> block drives a farfield&#x27;s inflow towards a target
+force coefficient by adjusting a control variable, the angle of attack or the velocity magnitude. State the target,
+its value and the control mode; the controller handles the feedback loop. It acts only on report cycles: from
+<a href="reference/model/boundary-conditions/farfield/index.html#driver-settling-period"><code>settling_period</code></a> onwards, on each reported
+cycle that is a multiple of <a href="reference/model/boundary-conditions/farfield/index.html#driver-update-period"><code>update_period</code></a>.
+Choose an <code>update_period</code> that falls on report cycles, or the control variable stays at its initial value.</p>
+<aside class="admon admon-warning"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17h.01"></path></svg>Warning</div><div class="admon-b"><p>Angle-of-attack control has failed to engage in at least one case, reporting zero update on every cycle
+instead of converging the angle onto the target. Check that the angle of attack changes in the report before relying
+on the driver for angle-of-attack control.</p></div></aside>
+<h2 id="inflow">Inflow</h2>
+<p>An inflow boundary takes one of three kinds, selected by
+<a href="reference/model/boundary-conditions/inflow/index.html#kind"><code>kind</code></a>:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th><code>kind</code></th><th>The inflow state is set from</th></tr></thead><tbody><tr><td><code>default</code></td><td>the reference condition alone; this is the incompressible solver&#x27;s velocity inlet</td></tr><tr><td><code>pressure</code></td><td>a total pressure ratio and a total temperature ratio relative to the reference condition</td></tr><tr><td><code>massflow</code></td><td>a mass flow rate or a mass flow ratio</td></tr></tbody></table></div>
+<p>All three name their flow state through <a href="reference/model/boundary-conditions/inflow/index.html#reference"><code>reference</code></a>, a
+<a href="reference/solver/reference-conditions/index.html">reference condition</a> entry. The key is <code>reference</code>, not <code>condition</code>, which
+belongs to the farfield. The flow enters normal to the boundary. The <code>pressure</code> kind also accepts a
+<a href="reference/model/boundary-conditions/inflow/index.html#direction"><code>direction</code></a>, but the solver does not read it.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>A mass flow rate is given in kg/s, and can be used only if the mesh is in metres. A mass flow ratio is
+non-dimensional, with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">A_{in}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> in mesh units: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>a</mi><mi>s</mi><mi>s</mi><mi>f</mi><mi>l</mi><mi>o</mi><mi>w</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mo>=</mo><msub><mi>ρ</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><msub><mi>U</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><msub><mi>A</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><msub><mi>ρ</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><msub><mi>U</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">massflowratio = \rho_{in} U_{in} A_{in}/(\rho_{ref} U_{ref})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em"></span><span class="mord mathnormal">ma</span><span class="mord mathnormal">ss</span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mord mathnormal" style="margin-right:0.0197em">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.0269em">w</span><span class="mord mathnormal" style="margin-right:0.0278em">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathnormal">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>.</p></div></aside>
+<h2 id="outflow">Outflow</h2>
+<p>An outflow boundary is a pressure, mass flow or radial-pressure-gradient outlet, selected by
+<a href="reference/model/boundary-conditions/outflow/index.html#kind"><code>kind</code></a> as for an <a href="guide/choosing/choosing-boundary-conditions/index.html#inflow">inflow</a>. All three kinds name their
+flow state through <a href="reference/model/boundary-conditions/outflow/index.html#reference"><code>reference</code></a>.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>A mass flow rate is given in kg/s, and can be used only if the mesh is in metres. A mass flow ratio is
+non-dimensional, with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">A_{out}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> in mesh units: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>a</mi><mi>s</mi><mi>s</mi><mi>f</mi><mi>l</mi><mi>o</mi><mi>w</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mo>=</mo><msub><mi>ρ</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><msub><mi>U</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><msub><mi>A</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><msub><mi>ρ</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><msub><mi>U</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">massflowratio = \rho_{out} U_{out} A_{out}/(\rho_{ref} U_{ref})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em"></span><span class="mord mathnormal">ma</span><span class="mord mathnormal">ss</span><span class="mord mathnormal" style="margin-right:0.1076em">f</span><span class="mord mathnormal" style="margin-right:0.0197em">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.0269em">w</span><span class="mord mathnormal" style="margin-right:0.0278em">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathnormal">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>.</p></div></aside>
+<figure class="demo zc-figure" data-setting="reference/model/boundary-conditions/outflow#kind" data-case="pipe"><div class="demo-cap">Demonstration: what <a href="reference/model/boundary-conditions/outflow/index.html#kind"><code>kind</code></a> does<!-- --> <span class="tag real">From the <!-- -->pipe<!-- --> case</span></div><div class="demo-body-md"><figure class="figure"><span class="zc-figure zc-inline" role="img" aria-label="Outlet mass flow against cycle in a turbulent pipe, for a mass-flow outlet and a static-pressure outlet, with the imposed mass flow marked" title="A mass-flow outlet scales the exit velocity until the flow through it matches the request. It settles at 9.989 kg/s, 0.1 per cent under the 10 kg/s requested. A pressure outlet fixes the exit pressure, and the flow follows from the pressure drop along the pipe. At a ratio of 101238/101325 it settles at 8.888 kg/s, 11 per cent lower, with a drop from inlet to outlet of 87 Pa against 109 Pa."><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 504 302.4" xmlns="http://www.w3.org/2000/svg" version="1.1" class="zc-figure-svg" focusable="false" aria-hidden="true">
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="pipe-outflow-kind-figure_1">
+  <g id="pipe-outflow-kind-patch_1">
+   <path d="M 0 302.4 
+L 504 302.4 
+L 504 0 
+L 0 0 
+L 0 302.4 
+z
+" style="fill: none"/>
+  </g>
+  <g id="pipe-outflow-kind-axes_1">
+   <g id="pipe-outflow-kind-patch_2">
+    <path d="M 34.76024 269.39976 
+L 488.23976 269.39976 
+L 488.23976 3.00024 
+L 34.76024 3.00024 
+L 34.76024 269.39976 
+z
+" style="fill: none"/>
+   </g>
+   <g id="pipe-outflow-kind-matplotlib.axis_1">
+    <g id="pipe-outflow-kind-xtick_1">
+     <g id="pipe-outflow-kind-line2d_1">
+      <path class="zc-stroke-grid" d="M 34.76024 269.39976 
+L 34.76024 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_2"/>
+     <g id="pipe-outflow-kind-text_1">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(31.57024 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-87" d="M 3520 2291 
+Q 3520 1690 3390 1250 
+Q 3261 810 3037 522 
+Q 2813 234 2507 93 
+Q 2202 -48 1853 -48 
+Q 1501 -48 1198 93 
+Q 896 234 672 522 
+Q 448 810 320 1250 
+Q 192 1690 192 2291 
+Q 192 2893 320 3334 
+Q 448 3776 672 4065 
+Q 896 4355 1198 4496 
+Q 1501 4637 1853 4637 
+Q 2202 4637 2507 4496 
+Q 2813 4355 3037 4065 
+Q 3261 3776 3390 3334 
+Q 3520 2893 3520 2291 
+z
+M 2928 2291 
+Q 2928 2816 2840 3173 
+Q 2752 3530 2603 3747 
+Q 2454 3965 2259 4059 
+Q 2064 4154 1853 4154 
+Q 1642 4154 1446 4059 
+Q 1251 3965 1104 3747 
+Q 957 3530 869 3173 
+Q 781 2816 781 2291 
+Q 781 1766 869 1411 
+Q 957 1056 1104 838 
+Q 1251 621 1446 526 
+Q 1642 432 1853 432 
+Q 2064 432 2259 526 
+Q 2454 621 2603 838 
+Q 2752 1056 2840 1411 
+Q 2928 1766 2928 2291 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_2">
+     <g id="pipe-outflow-kind-line2d_3">
+      <path class="zc-stroke-grid" d="M 91.44518 269.39976 
+L 91.44518 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_4"/>
+     <g id="pipe-outflow-kind-text_2">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(81.87518 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-8c" d="M 3142 4336 
+Q 3142 4214 3067 4136 
+Q 2992 4058 2810 4058 
+L 1370 4058 
+L 1158 2854 
+Q 1341 2896 1502 2913 
+Q 1664 2931 1818 2931 
+Q 2176 2931 2451 2825 
+Q 2726 2720 2910 2534 
+Q 3094 2349 3188 2096 
+Q 3283 1843 3283 1546 
+Q 3283 1181 3156 886 
+Q 3030 592 2808 382 
+Q 2586 173 2285 61 
+Q 1984 -51 1635 -51 
+Q 1434 -51 1248 -11 
+Q 1062 29 900 96 
+Q 739 163 601 249 
+Q 464 336 358 432 
+L 534 675 
+Q 592 758 685 758 
+Q 749 758 829 708 
+Q 909 659 1024 598 
+Q 1139 538 1294 488 
+Q 1450 438 1664 438 
+Q 1904 438 2096 515 
+Q 2288 592 2425 734 
+Q 2563 877 2636 1075 
+Q 2710 1274 2710 1520 
+Q 2710 1734 2648 1907 
+Q 2586 2080 2459 2201 
+Q 2333 2323 2144 2390 
+Q 1955 2458 1702 2458 
+Q 1530 2458 1342 2429 
+Q 1155 2400 960 2336 
+L 602 2442 
+L 970 4586 
+L 3142 4586 
+L 3142 4336 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8c"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_3">
+     <g id="pipe-outflow-kind-line2d_5">
+      <path class="zc-stroke-grid" d="M 148.13012 269.39976 
+L 148.13012 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_6"/>
+     <g id="pipe-outflow-kind-text_3">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(135.37012 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-88" d="M 800 435 
+L 1782 435 
+L 1782 3562 
+Q 1782 3696 1792 3846 
+L 976 3146 
+Q 934 3110 892 3102 
+Q 851 3094 816 3100 
+Q 781 3107 750 3126 
+Q 720 3146 704 3168 
+L 525 3414 
+L 1891 4595 
+L 2355 4595 
+L 2355 435 
+L 3258 435 
+L 3258 0 
+L 800 0 
+L 800 435 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_4">
+     <g id="pipe-outflow-kind-line2d_7">
+      <path class="zc-stroke-grid" d="M 204.81506 269.39976 
+L 204.81506 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_8"/>
+     <g id="pipe-outflow-kind-text_4">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(192.05506 281.75476) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8c" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_5">
+     <g id="pipe-outflow-kind-line2d_9">
+      <path class="zc-stroke-grid" d="M 261.5 269.39976 
+L 261.5 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_10"/>
+     <g id="pipe-outflow-kind-text_5">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(248.74 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-89" d="M 1891 4637 
+Q 2182 4637 2435 4550 
+Q 2688 4464 2873 4299 
+Q 3059 4134 3164 3897 
+Q 3270 3661 3270 3360 
+Q 3270 3104 3193 2885 
+Q 3117 2666 2985 2467 
+Q 2854 2269 2683 2080 
+Q 2512 1891 2320 1699 
+L 1110 464 
+Q 1238 499 1369 520 
+Q 1501 541 1622 541 
+L 3158 541 
+Q 3251 541 3305 486 
+Q 3360 432 3360 346 
+L 3360 0 
+L 301 0 
+L 301 195 
+Q 301 256 326 320 
+Q 352 384 406 438 
+L 1875 1914 
+Q 2058 2099 2208 2270 
+Q 2358 2442 2464 2614 
+Q 2570 2787 2627 2964 
+Q 2685 3142 2685 3344 
+Q 2685 3546 2621 3698 
+Q 2557 3850 2446 3949 
+Q 2336 4048 2185 4097 
+Q 2035 4147 1862 4147 
+Q 1686 4147 1539 4096 
+Q 1392 4045 1278 3953 
+Q 1165 3862 1088 3737 
+Q 1011 3613 979 3462 
+Q 941 3350 875 3313 
+Q 810 3277 691 3293 
+L 394 3344 
+Q 438 3658 568 3899 
+Q 698 4141 894 4304 
+Q 1091 4467 1344 4552 
+Q 1597 4637 1891 4637 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-89"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_6">
+     <g id="pipe-outflow-kind-line2d_11">
+      <path class="zc-stroke-grid" d="M 318.18494 269.39976 
+L 318.18494 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_12"/>
+     <g id="pipe-outflow-kind-text_6">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(305.42494 281.75476) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-89"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8c" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_7">
+     <g id="pipe-outflow-kind-line2d_13">
+      <path class="zc-stroke-grid" d="M 374.86988 269.39976 
+L 374.86988 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_14"/>
+     <g id="pipe-outflow-kind-text_7">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(362.10988 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-8a" d="M 1914 4637 
+Q 2205 4637 2451 4553 
+Q 2698 4470 2875 4316 
+Q 3053 4163 3152 3945 
+Q 3251 3728 3251 3462 
+Q 3251 3245 3195 3073 
+Q 3139 2902 3035 2772 
+Q 2931 2643 2784 2553 
+Q 2637 2464 2454 2410 
+Q 2902 2291 3128 2012 
+Q 3354 1734 3354 1315 
+Q 3354 998 3234 745 
+Q 3114 493 2906 315 
+Q 2698 138 2421 43 
+Q 2144 -51 1827 -51 
+Q 1462 -51 1203 40 
+Q 944 131 765 291 
+Q 586 451 470 670 
+Q 355 890 275 1146 
+L 522 1248 
+Q 618 1290 709 1270 
+Q 800 1251 842 1165 
+Q 883 1075 945 950 
+Q 1008 826 1117 710 
+Q 1226 595 1394 515 
+Q 1562 435 1821 435 
+Q 2061 435 2241 513 
+Q 2422 592 2542 717 
+Q 2662 842 2723 995 
+Q 2784 1149 2784 1299 
+Q 2784 1485 2736 1638 
+Q 2688 1792 2557 1904 
+Q 2426 2016 2197 2080 
+Q 1968 2144 1610 2144 
+L 1610 2557 
+Q 1904 2560 2110 2621 
+Q 2317 2682 2446 2787 
+Q 2576 2893 2635 3040 
+Q 2694 3187 2694 3366 
+Q 2694 3565 2632 3712 
+Q 2570 3859 2461 3955 
+Q 2352 4051 2203 4099 
+Q 2054 4147 1882 4147 
+Q 1709 4147 1560 4096 
+Q 1411 4045 1297 3953 
+Q 1184 3862 1107 3737 
+Q 1030 3613 998 3462 
+Q 957 3350 894 3313 
+Q 832 3277 714 3293 
+L 416 3344 
+Q 461 3658 589 3899 
+Q 717 4141 913 4304 
+Q 1110 4467 1364 4552 
+Q 1619 4637 1914 4637 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8a"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_8">
+     <g id="pipe-outflow-kind-line2d_15">
+      <path class="zc-stroke-grid" d="M 431.55482 269.39976 
+L 431.55482 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_16"/>
+     <g id="pipe-outflow-kind-text_8">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(418.79482 281.75476) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8a"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8c" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-xtick_9">
+     <g id="pipe-outflow-kind-line2d_17">
+      <path class="zc-stroke-grid" d="M 488.23976 269.39976 
+L 488.23976 3.00024 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_18"/>
+     <g id="pipe-outflow-kind-text_9">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(475.47976 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-8b" d="M 2835 1654 
+L 3530 1654 
+L 3530 1328 
+Q 3530 1277 3499 1241 
+Q 3469 1206 3405 1206 
+L 2835 1206 
+L 2835 0 
+L 2336 0 
+L 2336 1206 
+L 301 1206 
+Q 237 1206 190 1243 
+Q 144 1280 131 1334 
+L 74 1626 
+L 2304 4586 
+L 2835 4586 
+L 2835 1654 
+z
+M 2336 3546 
+Q 2336 3629 2341 3726 
+Q 2346 3824 2362 3926 
+L 691 1654 
+L 2336 1654 
+L 2336 3546 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8b"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(116 0)"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(174 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-text_10">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(247.735938 297.15726) scale(0.115 -0.115)">
+      <defs>
+       <path id="pipe-outflow-kind-Lato-Regular-6" d="M 3805 947 
+Q 3856 947 3894 906 
+L 4141 640 
+Q 3859 314 3457 131 
+Q 3056 -51 2486 -51 
+Q 1994 -51 1590 120 
+Q 1187 291 902 600 
+Q 618 909 461 1341 
+Q 304 1773 304 2291 
+Q 304 2810 467 3242 
+Q 630 3674 926 3984 
+Q 1222 4294 1635 4465 
+Q 2048 4637 2547 4637 
+Q 3037 4637 3411 4480 
+Q 3786 4323 4070 4054 
+L 3866 3770 
+Q 3846 3738 3816 3717 
+Q 3786 3696 3734 3696 
+Q 3677 3696 3593 3758 
+Q 3510 3821 3376 3897 
+Q 3242 3974 3040 4036 
+Q 2838 4099 2544 4099 
+Q 2189 4099 1894 3976 
+Q 1600 3853 1387 3619 
+Q 1174 3386 1056 3050 
+Q 938 2714 938 2291 
+Q 938 1862 1061 1526 
+Q 1184 1190 1397 958 
+Q 1610 726 1899 604 
+Q 2189 483 2525 483 
+Q 2730 483 2894 507 
+Q 3059 531 3198 582 
+Q 3338 634 3458 712 
+Q 3578 790 3696 899 
+Q 3750 947 3805 947 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-40" d="M 1440 -957 
+Q 1411 -1021 1368 -1059 
+Q 1325 -1098 1235 -1098 
+L 813 -1098 
+L 1405 189 
+L 67 3242 
+L 560 3242 
+Q 634 3242 677 3205 
+Q 720 3168 736 3123 
+L 1603 1082 
+Q 1629 1008 1651 939 
+Q 1674 870 1690 797 
+Q 1731 941 1786 1085 
+L 2627 3123 
+Q 2646 3174 2692 3208 
+Q 2739 3242 2797 3242 
+L 3248 3242 
+L 1440 -957 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-24" d="M 2707 2666 
+Q 2682 2630 2656 2611 
+Q 2630 2592 2586 2592 
+Q 2538 2592 2480 2632 
+Q 2422 2672 2337 2720 
+Q 2253 2768 2129 2808 
+Q 2006 2848 1827 2848 
+Q 1587 2848 1404 2763 
+Q 1222 2678 1099 2518 
+Q 976 2358 913 2131 
+Q 851 1904 851 1622 
+Q 851 1328 918 1099 
+Q 986 870 1109 715 
+Q 1232 560 1406 478 
+Q 1581 397 1798 397 
+Q 2006 397 2140 446 
+Q 2275 496 2363 557 
+Q 2451 618 2510 667 
+Q 2570 717 2627 717 
+Q 2698 717 2736 662 
+L 2896 454 
+Q 2790 323 2656 230 
+Q 2522 138 2366 75 
+Q 2211 13 2041 -16 
+Q 1872 -45 1696 -45 
+Q 1392 -45 1131 67 
+Q 870 179 678 392 
+Q 486 605 377 915 
+Q 269 1226 269 1622 
+Q 269 1984 369 2291 
+Q 470 2598 664 2820 
+Q 858 3043 1141 3168 
+Q 1424 3293 1792 3293 
+Q 2134 3293 2395 3182 
+Q 2656 3072 2858 2870 
+L 2707 2666 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-a3" d="M 1040 4714 
+L 1040 0 
+L 470 0 
+L 470 4714 
+L 1040 4714 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-27" d="M 1779 3293 
+Q 2070 3293 2318 3195 
+Q 2566 3098 2747 2914 
+Q 2928 2730 3030 2459 
+Q 3133 2189 3133 1843 
+Q 3133 1709 3104 1664 
+Q 3075 1619 2995 1619 
+L 829 1619 
+Q 835 1312 912 1085 
+Q 989 858 1123 706 
+Q 1258 554 1443 478 
+Q 1629 403 1859 403 
+Q 2074 403 2229 452 
+Q 2384 502 2496 560 
+Q 2608 618 2683 667 
+Q 2758 717 2813 717 
+Q 2883 717 2922 662 
+L 3082 454 
+Q 2976 326 2829 232 
+Q 2682 138 2514 77 
+Q 2346 16 2166 -14 
+Q 1987 -45 1811 -45 
+Q 1475 -45 1192 68 
+Q 909 182 702 401 
+Q 496 621 381 944 
+Q 266 1267 266 1686 
+Q 266 2026 370 2320 
+Q 474 2614 669 2830 
+Q 864 3046 1145 3169 
+Q 1427 3293 1779 3293 
+z
+M 1792 2874 
+Q 1379 2874 1142 2635 
+Q 906 2397 848 1974 
+L 2621 1974 
+Q 2621 2173 2565 2337 
+Q 2509 2502 2401 2622 
+Q 2294 2742 2140 2808 
+Q 1987 2874 1792 2874 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-6"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-40" transform="translate(65.09375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-24" transform="translate(115.234375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-a3" transform="translate(162.984375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(186.578125 0)"/>
+     </g>
+    </g>
+   </g>
+   <g id="pipe-outflow-kind-matplotlib.axis_2">
+    <g id="pipe-outflow-kind-ytick_1">
+     <g id="pipe-outflow-kind-line2d_19">
+      <path class="zc-stroke-grid" d="M 34.76024 250.668736 
+L 488.23976 250.668736 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_20"/>
+     <g id="pipe-outflow-kind-text_11">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(24.88024 255.096236) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-a5" d="M 1856 -51 
+Q 1514 -51 1229 40 
+Q 944 131 739 300 
+Q 534 470 422 712 
+Q 310 954 310 1254 
+Q 310 1696 540 1982 
+Q 771 2269 1200 2390 
+Q 838 2525 654 2792 
+Q 470 3059 470 3430 
+Q 470 3683 569 3904 
+Q 669 4125 851 4288 
+Q 1034 4451 1288 4544 
+Q 1542 4637 1856 4637 
+Q 2166 4637 2422 4544 
+Q 2678 4451 2860 4288 
+Q 3043 4125 3142 3904 
+Q 3242 3683 3242 3430 
+Q 3242 3059 3056 2792 
+Q 2870 2525 2512 2390 
+Q 2941 2269 3171 1982 
+Q 3402 1696 3402 1254 
+Q 3402 954 3288 712 
+Q 3174 470 2971 300 
+Q 2768 131 2483 40 
+Q 2198 -51 1856 -51 
+z
+M 1856 403 
+Q 2080 403 2257 465 
+Q 2435 528 2558 641 
+Q 2682 755 2747 913 
+Q 2813 1072 2813 1264 
+Q 2813 1501 2734 1669 
+Q 2656 1837 2523 1942 
+Q 2390 2048 2217 2097 
+Q 2045 2147 1856 2147 
+Q 1667 2147 1494 2097 
+Q 1322 2048 1189 1942 
+Q 1056 1837 977 1669 
+Q 899 1501 899 1264 
+Q 899 1072 964 913 
+Q 1030 755 1153 641 
+Q 1277 528 1454 465 
+Q 1632 403 1856 403 
+z
+M 1856 2605 
+Q 2080 2605 2238 2673 
+Q 2397 2742 2496 2856 
+Q 2595 2970 2640 3117 
+Q 2685 3264 2685 3421 
+Q 2685 3581 2632 3721 
+Q 2579 3862 2475 3968 
+Q 2371 4074 2216 4134 
+Q 2061 4195 1856 4195 
+Q 1651 4195 1496 4134 
+Q 1341 4074 1237 3968 
+Q 1133 3862 1080 3721 
+Q 1027 3581 1027 3421 
+Q 1027 3264 1072 3117 
+Q 1117 2970 1216 2856 
+Q 1315 2742 1473 2673 
+Q 1632 2605 1856 2605 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-a5"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-ytick_2">
+     <g id="pipe-outflow-kind-line2d_21">
+      <path class="zc-stroke-grid" d="M 34.76024 206.561235 
+L 488.23976 206.561235 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_22"/>
+     <g id="pipe-outflow-kind-text_12">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(24.88024 210.988735) scale(0.11 -0.11)">
+       <defs>
+        <path id="pipe-outflow-kind-Lato-Regular-8e" d="M 2237 1827 
+Q 2307 1920 2368 2003 
+Q 2429 2086 2483 2170 
+Q 2307 2029 2086 1955 
+Q 1866 1882 1619 1882 
+Q 1360 1882 1128 1968 
+Q 896 2054 720 2222 
+Q 544 2390 440 2635 
+Q 336 2880 336 3197 
+Q 336 3498 448 3760 
+Q 560 4022 761 4217 
+Q 963 4413 1241 4525 
+Q 1520 4637 1853 4637 
+Q 2182 4637 2451 4528 
+Q 2720 4419 2912 4224 
+Q 3104 4029 3208 3757 
+Q 3312 3485 3312 3155 
+Q 3312 2957 3275 2779 
+Q 3238 2602 3169 2430 
+Q 3101 2259 3001 2091 
+Q 2902 1923 2778 1747 
+L 1661 134 
+Q 1619 74 1542 37 
+Q 1466 0 1366 0 
+L 842 0 
+L 2237 1827 
+z
+M 2765 3222 
+Q 2765 3437 2696 3611 
+Q 2627 3786 2505 3907 
+Q 2384 4029 2216 4094 
+Q 2048 4160 1846 4160 
+Q 1635 4160 1462 4091 
+Q 1290 4022 1165 3900 
+Q 1040 3779 973 3609 
+Q 906 3440 906 3238 
+Q 906 3021 968 2849 
+Q 1030 2678 1147 2560 
+Q 1264 2442 1432 2381 
+Q 1600 2320 1808 2320 
+Q 2038 2320 2216 2395 
+Q 2394 2470 2515 2595 
+Q 2637 2720 2701 2883 
+Q 2765 3046 2765 3222 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8e"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-ytick_3">
+     <g id="pipe-outflow-kind-line2d_23">
+      <path class="zc-stroke-grid" d="M 34.76024 162.453733 
+L 488.23976 162.453733 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_24"/>
+     <g id="pipe-outflow-kind-text_13">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 166.881233) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(58 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-ytick_4">
+     <g id="pipe-outflow-kind-line2d_25">
+      <path class="zc-stroke-grid" d="M 34.76024 118.346232 
+L 488.23976 118.346232 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_26"/>
+     <g id="pipe-outflow-kind-text_14">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 122.773732) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88" transform="translate(58 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-ytick_5">
+     <g id="pipe-outflow-kind-line2d_27">
+      <path class="zc-stroke-grid" d="M 34.76024 74.238731 
+L 488.23976 74.238731 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_28"/>
+     <g id="pipe-outflow-kind-text_15">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 78.666231) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-89" transform="translate(58 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-ytick_6">
+     <g id="pipe-outflow-kind-line2d_29">
+      <path class="zc-stroke-grid" d="M 34.76024 30.13123 
+L 488.23976 30.13123 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="pipe-outflow-kind-line2d_30"/>
+     <g id="pipe-outflow-kind-text_16">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 34.55873) scale(0.11 -0.11)">
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-88"/>
+       <use xlink:href="#pipe-outflow-kind-Lato-Regular-8a" transform="translate(58 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-text_17">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(12.25774 194.567891) rotate(-90) scale(0.115 -0.115)">
+      <defs>
+       <path id="pipe-outflow-kind-Lato-Regular-13" d="M 4822 2291 
+Q 4822 1776 4659 1345 
+Q 4496 915 4198 604 
+Q 3901 294 3483 123 
+Q 3066 -48 2560 -48 
+Q 2054 -48 1638 123 
+Q 1222 294 924 604 
+Q 627 915 464 1345 
+Q 301 1776 301 2291 
+Q 301 2806 464 3236 
+Q 627 3667 924 3979 
+Q 1222 4291 1638 4464 
+Q 2054 4637 2560 4637 
+Q 3066 4637 3483 4464 
+Q 3901 4291 4198 3979 
+Q 4496 3667 4659 3236 
+Q 4822 2806 4822 2291 
+z
+M 4186 2291 
+Q 4186 2714 4070 3050 
+Q 3955 3386 3744 3618 
+Q 3533 3850 3232 3974 
+Q 2931 4099 2560 4099 
+Q 2192 4099 1891 3974 
+Q 1590 3850 1377 3618 
+Q 1165 3386 1049 3050 
+Q 934 2714 934 2291 
+Q 934 1869 1049 1534 
+Q 1165 1200 1377 968 
+Q 1590 736 1891 613 
+Q 2192 490 2560 490 
+Q 2931 490 3232 613 
+Q 3533 736 3744 968 
+Q 3955 1200 4070 1534 
+Q 4186 1869 4186 2291 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-3c" d="M 989 3242 
+L 989 1174 
+Q 989 806 1157 604 
+Q 1325 403 1670 403 
+Q 1920 403 2141 521 
+Q 2362 640 2547 851 
+L 2547 3242 
+L 3117 3242 
+L 3117 0 
+L 2778 0 
+Q 2656 0 2624 118 
+L 2579 467 
+Q 2368 234 2105 91 
+Q 1843 -51 1504 -51 
+Q 1238 -51 1035 37 
+Q 832 125 694 285 
+Q 557 445 488 672 
+Q 419 899 419 1174 
+L 419 3242 
+L 989 3242 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-3b" d="M 1446 -51 
+Q 1062 -51 856 163 
+Q 650 378 650 781 
+L 650 2765 
+L 259 2765 
+Q 208 2765 173 2795 
+Q 138 2826 138 2890 
+L 138 3117 
+L 669 3184 
+L 800 4186 
+Q 810 4234 843 4264 
+Q 877 4294 931 4294 
+L 1219 4294 
+L 1219 3178 
+L 2157 3178 
+L 2157 2765 
+L 1219 2765 
+L 1219 819 
+Q 1219 614 1318 515 
+Q 1418 416 1574 416 
+Q 1664 416 1729 440 
+Q 1795 464 1843 493 
+Q 1891 522 1924 546 
+Q 1958 570 1984 570 
+Q 2029 570 2064 515 
+L 2230 243 
+Q 2083 106 1875 27 
+Q 1667 -51 1446 -51 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-2" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-31" d="M 451 0 
+L 451 3242 
+L 794 3242 
+Q 915 3242 944 3123 
+L 986 2790 
+Q 1165 3011 1389 3152 
+Q 1613 3293 1907 3293 
+Q 2234 3293 2437 3110 
+Q 2640 2928 2730 2618 
+Q 2800 2794 2910 2922 
+Q 3021 3050 3158 3133 
+Q 3296 3216 3451 3254 
+Q 3606 3293 3766 3293 
+Q 4022 3293 4222 3211 
+Q 4422 3130 4561 2973 
+Q 4701 2816 4774 2587 
+Q 4848 2358 4848 2064 
+L 4848 0 
+L 4275 0 
+L 4275 2064 
+Q 4275 2445 4108 2641 
+Q 3942 2838 3629 2838 
+Q 3488 2838 3361 2788 
+Q 3235 2739 3139 2643 
+Q 3043 2547 2987 2401 
+Q 2931 2256 2931 2064 
+L 2931 0 
+L 2358 0 
+L 2358 2064 
+Q 2358 2454 2201 2646 
+Q 2045 2838 1744 2838 
+Q 1533 2838 1353 2724 
+Q 1174 2611 1024 2416 
+L 1024 0 
+L 451 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-21" d="M 2512 0 
+Q 2429 0 2384 27 
+Q 2339 54 2314 134 
+L 2250 438 
+Q 2122 323 1998 232 
+Q 1875 141 1742 78 
+Q 1610 16 1458 -17 
+Q 1306 -51 1120 -51 
+Q 931 -51 764 1 
+Q 598 54 475 160 
+Q 352 266 280 427 
+Q 208 589 208 810 
+Q 208 1002 313 1179 
+Q 419 1357 656 1494 
+Q 893 1632 1273 1720 
+Q 1654 1808 2208 1821 
+L 2208 2074 
+Q 2208 2451 2045 2644 
+Q 1882 2838 1568 2838 
+Q 1357 2838 1214 2785 
+Q 1072 2733 968 2667 
+Q 864 2602 789 2549 
+Q 714 2496 640 2496 
+Q 582 2496 540 2526 
+Q 499 2557 470 2602 
+L 368 2784 
+Q 637 3043 947 3171 
+Q 1258 3299 1635 3299 
+Q 1907 3299 2118 3209 
+Q 2330 3120 2474 2960 
+Q 2618 2800 2691 2573 
+Q 2765 2346 2765 2074 
+L 2765 0 
+L 2512 0 
+z
+M 1290 349 
+Q 1440 349 1565 379 
+Q 1690 410 1800 466 
+Q 1910 522 2011 603 
+Q 2112 685 2208 787 
+L 2208 1459 
+Q 1814 1446 1537 1396 
+Q 1261 1347 1086 1267 
+Q 912 1187 833 1078 
+Q 755 970 755 835 
+Q 755 707 796 614 
+Q 838 522 910 462 
+Q 982 403 1080 376 
+Q 1178 349 1290 349 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-39" d="M 2339 2707 
+Q 2301 2637 2221 2637 
+Q 2173 2637 2112 2672 
+Q 2051 2707 1963 2750 
+Q 1875 2794 1753 2830 
+Q 1632 2867 1466 2867 
+Q 1322 2867 1206 2830 
+Q 1091 2794 1009 2730 
+Q 928 2666 885 2581 
+Q 842 2496 842 2397 
+Q 842 2272 914 2189 
+Q 986 2106 1104 2045 
+Q 1222 1984 1372 1937 
+Q 1523 1891 1681 1838 
+Q 1840 1786 1990 1722 
+Q 2141 1658 2259 1562 
+Q 2378 1466 2450 1326 
+Q 2522 1187 2522 992 
+Q 2522 768 2442 577 
+Q 2362 387 2205 248 
+Q 2048 109 1821 29 
+Q 1594 -51 1296 -51 
+Q 957 -51 681 59 
+Q 406 170 214 342 
+L 349 560 
+Q 374 602 409 624 
+Q 445 646 499 646 
+Q 557 646 621 601 
+Q 685 557 776 502 
+Q 867 448 998 403 
+Q 1130 358 1325 358 
+Q 1491 358 1616 401 
+Q 1741 445 1824 518 
+Q 1907 592 1947 688 
+Q 1987 784 1987 893 
+Q 1987 1027 1915 1115 
+Q 1843 1203 1724 1265 
+Q 1606 1328 1454 1374 
+Q 1302 1421 1144 1472 
+Q 986 1523 834 1588 
+Q 682 1654 563 1753 
+Q 445 1853 373 1998 
+Q 301 2144 301 2352 
+Q 301 2538 377 2709 
+Q 454 2880 601 3009 
+Q 749 3139 963 3216 
+Q 1178 3293 1453 3293 
+Q 1773 3293 2027 3192 
+Q 2282 3091 2467 2915 
+L 2339 2707 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-2a" d="M 669 0 
+L 669 2755 
+L 310 2797 
+Q 240 2813 198 2846 
+Q 157 2880 157 2944 
+L 157 3178 
+L 669 3178 
+L 669 3350 
+Q 669 3619 750 3860 
+Q 832 4102 998 4281 
+Q 1165 4461 1414 4566 
+Q 1664 4672 1997 4672 
+Q 2243 4672 2472 4653 
+Q 2701 4634 2915 4630 
+L 3302 4630 
+L 3302 0 
+L 2736 0 
+L 2736 4230 
+Q 2563 4237 2388 4246 
+Q 2214 4256 2083 4256 
+Q 1667 4256 1444 4017 
+Q 1222 3779 1222 3350 
+L 1222 3178 
+L 2064 3178 
+L 2064 2765 
+L 1238 2765 
+L 1238 0 
+L 669 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-33" d="M 1818 3293 
+Q 2173 3293 2457 3174 
+Q 2742 3056 2944 2838 
+Q 3146 2621 3253 2312 
+Q 3360 2003 3360 1622 
+Q 3360 1238 3253 931 
+Q 3146 624 2944 406 
+Q 2742 189 2457 72 
+Q 2173 -45 1818 -45 
+Q 1459 -45 1172 72 
+Q 886 189 684 406 
+Q 483 624 376 931 
+Q 269 1238 269 1622 
+Q 269 2003 376 2312 
+Q 483 2621 684 2838 
+Q 886 3056 1172 3174 
+Q 1459 3293 1818 3293 
+z
+M 1818 400 
+Q 2298 400 2534 721 
+Q 2771 1043 2771 1619 
+Q 2771 2198 2534 2521 
+Q 2298 2845 1818 2845 
+Q 1574 2845 1393 2761 
+Q 1213 2678 1093 2521 
+Q 973 2365 913 2136 
+Q 854 1907 854 1619 
+Q 854 1043 1092 721 
+Q 1331 400 1818 400 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-3e" d="M 106 3242 
+L 554 3242 
+Q 621 3242 667 3206 
+Q 714 3171 730 3123 
+L 1350 1037 
+Q 1376 925 1398 817 
+Q 1421 710 1437 605 
+Q 1462 710 1494 817 
+Q 1526 925 1562 1037 
+L 2246 3136 
+Q 2262 3184 2302 3216 
+Q 2342 3248 2400 3248 
+L 2650 3248 
+Q 2714 3248 2755 3216 
+Q 2797 3184 2813 3136 
+L 3482 1037 
+Q 3514 925 3542 816 
+Q 3571 707 3597 602 
+Q 3616 707 3640 814 
+Q 3664 922 3693 1037 
+L 4326 3123 
+Q 4342 3174 4387 3208 
+Q 4432 3242 4493 3242 
+L 4922 3242 
+L 3872 0 
+L 3421 0 
+Q 3338 0 3306 109 
+L 2589 2307 
+Q 2563 2381 2547 2456 
+Q 2531 2531 2515 2605 
+Q 2499 2531 2481 2454 
+Q 2464 2378 2442 2304 
+L 1712 109 
+Q 1683 0 1584 0 
+L 1155 0 
+L 106 3242 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-6e" d="M 582 -925 
+L 582 4906 
+L 1760 4906 
+L 1760 4682 
+Q 1760 4618 1717 4574 
+Q 1674 4531 1603 4531 
+L 1062 4531 
+L 1062 -547 
+L 1603 -547 
+Q 1674 -547 1717 -592 
+Q 1760 -637 1760 -701 
+L 1760 -925 
+L 582 -925 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-30" d="M 1024 4714 
+L 1024 1939 
+L 1171 1939 
+Q 1235 1939 1278 1956 
+Q 1322 1974 1370 2029 
+L 2394 3126 
+Q 2438 3181 2488 3211 
+Q 2538 3242 2621 3242 
+L 3136 3242 
+L 1942 1971 
+Q 1856 1862 1757 1802 
+Q 1814 1763 1860 1713 
+Q 1907 1664 1949 1600 
+L 3216 0 
+L 2707 0 
+Q 2634 0 2581 24 
+Q 2528 48 2490 112 
+L 1424 1440 
+Q 1376 1507 1329 1528 
+Q 1283 1549 1187 1549 
+L 1024 1549 
+L 1024 0 
+L 451 0 
+L 451 4714 
+L 1024 4714 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-2b" d="M 1581 3296 
+Q 1792 3296 1974 3249 
+Q 2157 3203 2307 3114 
+L 3187 3114 
+L 3187 2902 
+Q 3187 2797 3053 2768 
+L 2685 2717 
+Q 2794 2509 2794 2253 
+Q 2794 2016 2702 1822 
+Q 2611 1629 2451 1491 
+Q 2291 1354 2067 1280 
+Q 1843 1206 1581 1206 
+Q 1350 1206 1149 1261 
+Q 1046 1197 993 1123 
+Q 941 1050 941 979 
+Q 941 864 1035 805 
+Q 1130 746 1283 720 
+Q 1437 694 1633 688 
+Q 1830 682 2036 667 
+Q 2243 653 2440 617 
+Q 2637 582 2790 502 
+Q 2944 422 3038 281 
+Q 3133 141 3133 -83 
+Q 3133 -291 3029 -486 
+Q 2925 -682 2729 -834 
+Q 2534 -986 2251 -1077 
+Q 1968 -1168 1613 -1168 
+Q 1258 -1168 992 -1097 
+Q 726 -1027 550 -908 
+Q 374 -790 286 -635 
+Q 198 -480 198 -310 
+Q 198 -70 348 96 
+Q 499 262 758 362 
+Q 614 426 531 533 
+Q 448 640 448 822 
+Q 448 893 473 968 
+Q 499 1043 552 1116 
+Q 605 1190 681 1257 
+Q 758 1325 861 1376 
+Q 621 1510 486 1734 
+Q 352 1958 352 2253 
+Q 352 2490 443 2683 
+Q 534 2877 697 3013 
+Q 861 3149 1086 3222 
+Q 1312 3296 1581 3296 
+z
+M 2608 -176 
+Q 2608 -58 2541 16 
+Q 2474 90 2360 131 
+Q 2246 173 2096 190 
+Q 1946 208 1778 217 
+Q 1610 227 1437 236 
+Q 1264 246 1104 269 
+Q 925 186 811 61 
+Q 698 -64 698 -237 
+Q 698 -346 754 -440 
+Q 810 -534 925 -603 
+Q 1040 -672 1214 -712 
+Q 1389 -752 1626 -752 
+Q 1856 -752 2038 -710 
+Q 2221 -669 2347 -592 
+Q 2474 -515 2541 -409 
+Q 2608 -304 2608 -176 
+z
+M 1581 1584 
+Q 1754 1584 1885 1632 
+Q 2016 1680 2105 1766 
+Q 2195 1853 2240 1973 
+Q 2285 2093 2285 2237 
+Q 2285 2534 2104 2710 
+Q 1923 2886 1581 2886 
+Q 1235 2886 1054 2710 
+Q 874 2534 874 2237 
+Q 874 2093 920 1973 
+Q 966 1853 1056 1766 
+Q 1146 1680 1277 1632 
+Q 1408 1584 1581 1584 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-63" d="M 765 -67 
+Q 723 -179 635 -233 
+Q 547 -288 454 -288 
+L 214 -288 
+L 2138 4502 
+Q 2176 4605 2254 4659 
+Q 2333 4714 2435 4714 
+L 2678 4714 
+L 765 -67 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-6f" d="M 198 -701 
+Q 198 -637 241 -592 
+Q 285 -547 355 -547 
+L 896 -547 
+L 896 4531 
+L 355 4531 
+Q 285 4531 241 4574 
+Q 198 4618 198 4682 
+L 198 4906 
+L 1376 4906 
+L 1376 -925 
+L 198 -925 
+L 198 -701 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-13"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3c" transform="translate(79.296875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3b" transform="translate(135.046875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-a3" transform="translate(170.890625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(194.484375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3b" transform="translate(246.78125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(282.625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-31" transform="translate(308.21875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-21" transform="translate(390.46875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(440.171875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(483.46875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(526.765625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2a" transform="translate(552.359375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-33" transform="translate(611.3125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3e" transform="translate(667.265625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(743.765625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-6e" transform="translate(769.359375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-30" transform="translate(799.953125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2b" transform="translate(850.75 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-63" transform="translate(902.75 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(944.203125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-6f" transform="translate(984.5 0)"/>
+     </g>
+    </g>
+   </g>
+   <g id="pipe-outflow-kind-line2d_31">
+    <path class="zc-stroke-series-1" d="M 35.893939 162.216409 
+L 38.161336 163.092478 
+L 40.428734 163.790996 
+L 51.765722 164.348978 
+L 52.899421 164.514164 
+L 54.03312 165.044383 
+L 55.166818 166.566139 
+L 56.300517 169.397816 
+L 57.434216 172.859615 
+L 58.567915 175.912886 
+L 59.701614 178.021985 
+L 60.835312 179.200581 
+L 61.969011 179.64684 
+L 63.10271 179.472653 
+L 64.236409 178.558303 
+L 65.370108 176.630544 
+L 66.503806 173.564359 
+L 67.637505 169.872343 
+L 68.771204 166.688882 
+L 69.904903 164.731131 
+L 71.038602 163.876765 
+L 72.1723 163.707204 
+L 74.439698 164.161708 
+L 75.573397 164.369084 
+L 77.840794 164.404334 
+L 83.509288 164.153043 
+L 88.044084 164.300351 
+L 97.113674 164.744171 
+L 100.51477 164.640693 
+L 106.183264 164.153043 
+L 115.252855 163.193937 
+L 124.322445 162.65459 
+L 127.723542 162.150869 
+L 132.258337 161.442635 
+L 139.06053 160.812599 
+L 143.595325 160.50801 
+L 146.996421 160.504438 
+L 150.397518 160.74294 
+L 167.403 162.26146 
+L 173.071494 162.485029 
+L 184.408482 162.524738 
+L 201.413964 162.693878 
+L 220.686843 163.075484 
+L 234.291229 163.240838 
+L 254.697807 163.140347 
+L 305.714253 162.920015 
+L 340.858916 162.866804 
+L 488.23976 162.924768 
+L 488.23976 162.924768 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="pipe-outflow-kind-line2d_32">
+    <path class="zc-stroke-series-2" d="M 35.893939 137.9158 
+L 39.295035 25.742675 
+L 40.428734 15.237141 
+L 41.562433 15.109309 
+L 42.696132 16.629761 
+L 44.963529 20.337296 
+L 47.230927 24.580231 
+L 49.498324 29.366799 
+L 51.765722 34.578929 
+L 52.899421 37.60305 
+L 54.03312 42.049739 
+L 55.166818 49.847557 
+L 56.300517 62.119617 
+L 57.434216 78.210096 
+L 59.701614 116.758265 
+L 61.969011 157.458652 
+L 63.10271 175.984438 
+L 64.236409 191.083716 
+L 65.370108 201.155271 
+L 66.503806 206.080104 
+L 67.637505 207.601692 
+L 69.904903 208.328436 
+L 71.038602 209.259147 
+L 72.1723 210.755161 
+L 75.573397 216.201464 
+L 78.974493 220.926871 
+L 81.241891 223.716442 
+L 85.776686 229.082529 
+L 86.910385 230.678612 
+L 88.044084 232.487078 
+L 90.311481 236.754406 
+L 95.979975 248.246217 
+L 98.247373 251.875725 
+L 99.381072 253.362758 
+L 100.51477 254.629731 
+L 101.648469 255.678413 
+L 102.782168 256.498664 
+L 103.915867 257.057361 
+L 105.049566 257.290691 
+L 106.183264 257.106807 
+L 107.316963 256.407154 
+L 108.450662 255.124932 
+L 109.584361 253.265589 
+L 110.71806 250.92274 
+L 112.985457 245.434688 
+L 117.520252 234.289024 
+L 122.055048 223.641441 
+L 124.322445 218.702853 
+L 126.589843 214.292507 
+L 128.85724 210.420161 
+L 131.124638 206.985073 
+L 133.392036 204.029433 
+L 134.525734 202.809109 
+L 135.659433 201.816352 
+L 136.793132 201.088978 
+L 137.926831 200.651594 
+L 139.06053 200.507861 
+L 140.194228 200.633801 
+L 141.327927 200.974269 
+L 145.862722 202.841708 
+L 153.798614 205.227547 
+L 159.467108 207.54154 
+L 169.670397 211.747118 
+L 173.071494 212.948724 
+L 176.47259 213.929997 
+L 179.873686 214.678404 
+L 183.274783 215.188726 
+L 186.675879 215.429922 
+L 190.076976 215.404684 
+L 194.611771 215.080874 
+L 199.146566 214.547962 
+L 204.81506 213.669452 
+L 217.285747 211.632409 
+L 221.820542 211.177863 
+L 227.489036 210.845893 
+L 233.15753 210.702791 
+L 239.959723 210.762101 
+L 250.163012 211.120488 
+L 266.034795 211.659919 
+L 277.371783 211.793347 
+L 290.976169 211.702951 
+L 320.452338 211.417756 
+L 348.794808 211.473995 
+L 390.741663 211.488423 
+L 488.23976 211.483754 
+L 488.23976 211.483754 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="pipe-outflow-kind-line2d_33">
+    <path class="zc-stroke-reference" d="M 34.76024 162.453733 
+L 488.23976 162.453733 
+" clip-path="url(#pipe-outflow-kind-pdc9619b7ba)" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #6b6b6b; stroke-width: 1.2"/>
+   </g>
+   <g id="pipe-outflow-kind-patch_3">
+    <path class="zc-stroke-ink" d="M 34.76024 269.39976 
+L 34.76024 3.00024 
+" style="fill: none; stroke: #262624; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="pipe-outflow-kind-patch_4">
+    <path class="zc-stroke-ink" d="M 34.76024 269.39976 
+L 488.23976 269.39976 
+" style="fill: none; stroke: #262624; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="pipe-outflow-kind-legend_1">
+    <g id="pipe-outflow-kind-line2d_34">
+     <path class="zc-stroke-series-1" d="M 337.890385 227.17226 
+L 347.390385 227.17226 
+L 356.890385 227.17226 
+" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: square"/>
+    </g>
+    <g id="pipe-outflow-kind-text_18">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(364.490385 230.49726) scale(0.095 -0.095)">
+      <defs>
+       <path id="pipe-outflow-kind-Lato-Regular-11" d="M 2842 1658 
+Q 2880 1581 2915 1496 
+Q 2950 1411 2986 1328 
+Q 3018 1414 3053 1499 
+Q 3088 1584 3130 1661 
+L 4685 4480 
+Q 4723 4554 4769 4570 
+Q 4816 4586 4899 4586 
+L 5357 4586 
+L 5357 0 
+L 4813 0 
+L 4813 3370 
+Q 4813 3437 4816 3513 
+Q 4819 3590 4826 3670 
+L 3254 803 
+Q 3181 659 3030 659 
+L 2941 659 
+Q 2790 659 2717 803 
+L 1110 3680 
+Q 1120 3597 1125 3517 
+Q 1130 3437 1130 3370 
+L 1130 0 
+L 586 0 
+L 586 4586 
+L 1043 4586 
+Q 1126 4586 1171 4570 
+Q 1216 4554 1258 4480 
+L 2842 1658 
+L 2842 1658 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-66" d="M 400 2160 
+L 1981 2160 
+L 1981 1677 
+L 400 1677 
+L 400 2160 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-11"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-21" transform="translate(91.34375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(141.046875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(184.34375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-66" transform="translate(227.640625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2a" transform="translate(264.796875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-33" transform="translate(323.75 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3e" transform="translate(379.703125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(456.203125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-33" transform="translate(481.796875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3c" transform="translate(538.5 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3b" transform="translate(594.25 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-a3" transform="translate(630.09375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(653.6875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3b" transform="translate(705.984375 0)"/>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-line2d_35">
+     <path class="zc-stroke-series-2" d="M 337.890385 241.42226 
+L 347.390385 241.42226 
+L 356.890385 241.42226 
+" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
+    </g>
+    <g id="pipe-outflow-kind-text_19">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(364.490385 244.74726) scale(0.095 -0.095)">
+      <defs>
+       <path id="pipe-outflow-kind-Lato-Regular-16" d="M 1203 1715 
+L 1203 0 
+L 586 0 
+L 586 4586 
+L 1939 4586 
+Q 2374 4586 2696 4485 
+Q 3018 4384 3229 4198 
+Q 3440 4013 3544 3750 
+Q 3648 3488 3648 3165 
+Q 3648 2845 3536 2579 
+Q 3424 2314 3208 2122 
+Q 2992 1930 2673 1822 
+Q 2355 1715 1939 1715 
+L 1203 1715 
+z
+M 1203 2208 
+L 1939 2208 
+Q 2205 2208 2408 2278 
+Q 2611 2349 2750 2475 
+Q 2890 2602 2960 2778 
+Q 3030 2954 3030 3165 
+Q 3030 3603 2760 3849 
+Q 2490 4096 1939 4096 
+L 1203 4096 
+L 1203 2208 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-38" d="M 451 0 
+L 451 3242 
+L 778 3242 
+Q 870 3242 905 3206 
+Q 941 3171 954 3085 
+L 989 2592 
+Q 1142 2925 1368 3112 
+Q 1594 3299 1917 3299 
+Q 2019 3299 2113 3276 
+Q 2208 3254 2282 3206 
+L 2240 2781 
+Q 2221 2701 2144 2701 
+Q 2099 2701 2012 2720 
+Q 1926 2739 1818 2739 
+Q 1664 2739 1542 2692 
+Q 1421 2646 1326 2558 
+Q 1232 2470 1158 2342 
+Q 1085 2214 1024 2048 
+L 1024 0 
+L 451 0 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-16"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-38" transform="translate(59.09375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(93.453125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(146.25 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(189.546875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3c" transform="translate(232.84375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-38" transform="translate(288.59375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(322.953125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(375.75 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-33" transform="translate(401.34375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3c" transform="translate(458.046875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3b" transform="translate(513.796875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-a3" transform="translate(549.640625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(573.234375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3b" transform="translate(625.53125 0)"/>
+     </g>
+    </g>
+    <g id="pipe-outflow-kind-line2d_36">
+     <path class="zc-stroke-reference" d="M 337.890385 255.67226 
+L 347.390385 255.67226 
+L 356.890385 255.67226 
+" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #6b6b6b; stroke-width: 1.2"/>
+    </g>
+    <g id="pipe-outflow-kind-text_20">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(364.490385 258.99726) scale(0.095 -0.095)">
+      <defs>
+       <path id="pipe-outflow-kind-Lato-Regular-d" d="M 1206 0 
+L 586 0 
+L 586 4586 
+L 1206 4586 
+L 1206 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-36" d="M 451 -1098 
+L 451 3242 
+L 794 3242 
+Q 915 3242 944 3123 
+L 992 2739 
+Q 1200 2992 1469 3145 
+Q 1738 3299 2083 3299 
+Q 2365 3299 2592 3192 
+Q 2819 3085 2979 2875 
+Q 3139 2666 3225 2355 
+Q 3312 2045 3312 1642 
+Q 3312 1283 3216 974 
+Q 3120 666 2939 440 
+Q 2758 214 2497 84 
+Q 2237 -45 1910 -45 
+Q 1613 -45 1400 54 
+Q 1187 154 1024 336 
+L 1024 -1098 
+L 451 -1098 
+z
+M 1898 2838 
+Q 1619 2838 1409 2710 
+Q 1200 2582 1024 2349 
+L 1024 781 
+Q 1178 570 1365 483 
+Q 1552 397 1782 397 
+Q 2237 397 2480 720 
+Q 2723 1043 2723 1642 
+Q 2723 1958 2667 2185 
+Q 2611 2413 2505 2558 
+Q 2400 2704 2246 2771 
+Q 2093 2838 1898 2838 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-26" d="M 2794 0 
+Q 2672 0 2640 118 
+L 2589 512 
+Q 2381 259 2113 107 
+Q 1846 -45 1501 -45 
+Q 1222 -45 995 62 
+Q 768 170 608 378 
+Q 448 586 361 896 
+Q 275 1206 275 1610 
+Q 275 1968 371 2277 
+Q 467 2586 646 2813 
+Q 826 3040 1086 3169 
+Q 1347 3299 1674 3299 
+Q 1971 3299 2184 3198 
+Q 2397 3098 2563 2915 
+L 2563 4714 
+L 3133 4714 
+L 3133 0 
+L 2794 0 
+z
+M 1686 416 
+Q 1968 416 2177 544 
+Q 2387 672 2563 906 
+L 2563 2470 
+Q 2403 2682 2217 2768 
+Q 2032 2854 1802 2854 
+Q 1350 2854 1107 2531 
+Q 864 2208 864 1610 
+Q 864 1293 918 1067 
+Q 973 842 1078 696 
+Q 1184 550 1337 483 
+Q 1491 416 1686 416 
+z
+" transform="scale(0.015625)"/>
+       <path id="pipe-outflow-kind-Lato-Regular-54" d="M 342 394 
+Q 342 544 446 649 
+Q 550 755 723 755 
+Q 819 755 892 720 
+Q 966 685 1016 622 
+Q 1066 560 1091 478 
+Q 1117 397 1117 301 
+Q 1117 157 1077 1 
+Q 1037 -154 958 -306 
+Q 880 -458 768 -602 
+Q 656 -746 512 -867 
+L 416 -774 
+Q 390 -752 380 -733 
+Q 371 -714 371 -685 
+Q 371 -662 385 -640 
+Q 400 -618 419 -598 
+Q 451 -563 500 -504 
+Q 550 -445 601 -368 
+Q 653 -291 696 -198 
+Q 739 -106 758 0 
+L 717 0 
+Q 550 0 446 110 
+Q 342 221 342 394 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-d"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-31" transform="translate(27.25 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-36" transform="translate(109.5 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-33" transform="translate(165.546875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(222.25 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-27" transform="translate(265.546875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-26" transform="translate(318.34375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(374.34375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-31" transform="translate(399.9375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-21" transform="translate(482.1875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(531.890625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(575.1875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(618.484375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2a" transform="translate(644.078125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-33" transform="translate(703.03125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-3e" transform="translate(758.984375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-54" transform="translate(835.1875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(857.890625 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-88" transform="translate(883.484375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-87" transform="translate(941.484375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2" transform="translate(999.484375 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-30" transform="translate(1025.078125 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-2b" transform="translate(1075.875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-63" transform="translate(1127.875 0)"/>
+      <use xlink:href="#pipe-outflow-kind-Lato-Regular-39" transform="translate(1169.328125 0)"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pipe-outflow-kind-pdc9619b7ba">
+   <rect x="34.76024" y="3.00024" width="453.47952" height="266.39952"/>
+  </clipPath>
+ </defs>
+</svg>
+</span><figcaption>Outlet mass flow against cycle in a turbulent pipe, for a mass-flow outlet and a static-pressure outlet, with the imposed mass flow marked</figcaption></figure><p>Both runs use the same mesh, Menter SST with wall functions and a total-pressure inlet; only the outlet changes. The pressure ratio is not tuned to the 10 kg/s target: a pressure outlet sets the pressure, and the flow follows.</p></div><div class="dv-prov"><span>setting <a href="reference/model/boundary-conditions/outflow/index.html#kind"><code>kind</code></a></span><span>values <b>massflow, pressure</b></span><span>case <b>pipe</b></span></div></figure>
+<h2 id="mass-flow">Mass flow</h2>
+<p>A <code>mass flow</code> boundary, <code>{&quot;type&quot;: &quot;mass flow&quot;}</code>, is declared with a mass flow rate,
+<a href="reference/model/boundary-conditions/mass-flow/index.html#mass-flow"><code>mass_flow</code></a>, and has no <code>kind</code> and no reference condition.
+Its spelling differs from the <code>massflow</code> kind of an inflow or outflow: <code>mass flow</code> is a <code>type</code>, <code>massflow</code> a <code>kind</code>.</p>
+<aside class="admon admon-warning"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17h.01"></path></svg>Warning</div><div class="admon-b"><p>A <code>mass flow</code> boundary validates, but the solver does not recognise the type and stops at setup. Use an inflow or
+outflow of <code>kind</code> <code>massflow</code> to set a mass flow.</p></div></aside>
+<h2 id="interface">Interface</h2>
+<p>An interface boundary, <code>{&quot;type&quot;: &quot;interface&quot;}</code>, joins a boundary to another part of the domain rather than closing it:
+the solution on one side is supplied by the other. The
+<a href="reference/model/boundary-conditions/interface/index.html#kind"><code>kind</code></a> selects how the two sides are joined:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th><code>kind</code></th><th>Use it where</th><th>What crosses the join</th></tr></thead><tbody><tr><td><code>overset</code></td><td>this mesh overlaps another</td><td>fringe values, taken from the mesh beneath</td></tr><tr><td><code>sliding</code></td><td>two meshes meet on a shared surface of revolution with non-matching faces</td><td>a conservative flux</td></tr><tr><td><code>periodic</code></td><td>two boundaries of the same mesh are one surface, related by a rotation or a translation</td><td>the flow leaving one boundary enters the other</td></tr></tbody></table></div>
+<p>Every interface names what it connects to in its
+<a href="reference/model/boundary-conditions/interface/index.html#connection"><code>connection</code></a> block. What the connection holds depends on
+the <code>kind</code>, and is described under each heading below.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>A case with an overset or sliding interface requires an implicit pseudo-time scheme, <code>&quot;implicit euler&quot;</code>, <code>&quot;lu-sgs&quot;</code> or
+<code>&quot;mf-gmres&quot;</code>; an explicit scheme alongside either is rejected at validation. See
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#scheme">Choosing a time-marching scheme</a>.</p></div></aside>
+<h3 id="overset">Overset</h3>
+<p>An overset interface goes on the outer boundaries of a mesh that is overset on one or more other meshes. Its
+connection names the model or models whose meshes provide donor data; without a connection, the solver maps against
+every preceding model. See <a href="guide/working-with/overset-meshes/index.html">Overset meshes</a> for how an overset case is set up and
+solved.</p>
+<pre><code class="language-python">&quot;BC_2&quot;: {
+    &quot;zones&quot;: [10],
+    &quot;type&quot;: &quot;interface&quot;,
+    &quot;kind&quot;: &quot;overset&quot;,
+    &quot;connection&quot;: {&quot;model&quot;: [&quot;background&quot;]},
+},
+</code></pre>
+<h3 id="sliding">Sliding</h3>
+<p>A sliding interface joins two models whose meshes abut without overlapping on a shared cylindrical, conical or annular
+surface, typically a rotating region and the stationary region around it. The faces on the two sides need not match.
+The two face sets are clipped against each other into a common set of intersection polygons, one numerical flux is
+computed for each polygon, and that flux is applied to the cell on each side. The interface is therefore conservative,
+not interpolated.</p>
+<p>A sliding interface is declared on both models, and each names the other. The connection gives the model and the
+boundary on the other side; that boundary must itself be a sliding interface whose connection names this one back.</p>
+<p>The interface must be a surface of revolution about the axis of the rotating fluid zone on either side. When neither
+side rotates, the two meshes are joined directly, and the axis is found from the shape of the interface itself.</p>
+<p>The interface may be a cylinder, a cone, a flat annulus, a spherical band, a disc or spherical cap that reaches the
+axis, or a whole sphere centred on the axis. It must cover the full circle about the axis; a periodic sector is not
+supported. The summary printed at the start of the run names the shape the solver found, which is a quick check that
+the right zones were listed.</p>
+<p>A closed or compound surface, such as the two faces and the side of a drum, can be declared either way:</p>
+<ul>
+<li>as one sliding interface on each side that lists every zone. The solver groups the zones into single surfaces, a
+cylinder meshed as two zones counting as one, and pairs each surface with the matching one on the other side;</li>
+<li>as one sliding interface per surface, each naming its partner, when the pairing should be stated explicitly.</li>
+</ul>
+<p>A zone that matches no surface on the other side stops the run at setup, with the zone, the model and the shape it
+was found to have.</p>
+<pre><code class="language-python">&quot;outer&quot;: {&quot;boundary_conditions&quot;: {
+    &quot;BC_2&quot;: {&quot;zones&quot;: [10, 63, 62], &quot;type&quot;: &quot;interface&quot;, &quot;kind&quot;: &quot;sliding&quot;,
+             &quot;connection&quot;: {&quot;model&quot;: &quot;disc&quot;, &quot;boundary&quot;: &quot;BC_1&quot;}}}},
+&quot;disc&quot;: {&quot;boundary_conditions&quot;: {
+    &quot;BC_1&quot;: {&quot;zones&quot;: [21, 22, 23], &quot;type&quot;: &quot;interface&quot;, &quot;kind&quot;: &quot;sliding&quot;,
+             &quot;connection&quot;: {&quot;model&quot;: &quot;outer&quot;, &quot;boundary&quot;: &quot;BC_2&quot;}}}},
+</code></pre>
+<p>A rotor and the stator around it, each connected to the other:</p>
+<pre><code class="language-python">&quot;model&quot;: {
+    &quot;rotor&quot;: {
+        &quot;mesh&quot;: &quot;rotor.h5&quot;,
+        &quot;boundary_conditions&quot;: {
+            &quot;BC_3&quot;: {
+                &quot;zones&quot;: [21],
+                &quot;type&quot;: &quot;interface&quot;,
+                &quot;kind&quot;: &quot;sliding&quot;,
+                &quot;connection&quot;: {&quot;model&quot;: &quot;stator&quot;, &quot;boundary&quot;: &quot;BC_2&quot;},
+            },
+        },
+    },
+    &quot;stator&quot;: {
+        &quot;mesh&quot;: &quot;stator.h5&quot;,
+        &quot;boundary_conditions&quot;: {
+            &quot;BC_2&quot;: {
+                &quot;zones&quot;: [20],
+                &quot;type&quot;: &quot;interface&quot;,
+                &quot;kind&quot;: &quot;sliding&quot;,
+                &quot;connection&quot;: {&quot;model&quot;: &quot;rotor&quot;, &quot;boundary&quot;: &quot;BC_3&quot;},
+            },
+        },
+    },
+},
+</code></pre>
+<p>Two settings trade conservation against other properties of the interface:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Setting</th><th><code>conservative</code> / <code>segment</code> (the defaults)</th><th><code>free stream</code> / <code>parent</code></th></tr></thead><tbody><tr><td><a href="reference/model/boundary-conditions/interface/index.html#area"><code>area</code></a></td><td>both sides use the mean of the two parent area maps: conservative to round-off, closure error first order in cell width</td><td>each side uses its own parent map: closure and free-stream preservation exact, conservation deficit second order</td></tr><tr><td><a href="reference/model/boundary-conditions/interface/index.html#flux"><code>flux</code></a></td><td>one flux per intersection polygon, with a shared area vector, so the two sides cancel exactly</td><td>one flux per parent face, against the area-weighted average of its donors: quieter as cells pass, but not conservative</td></tr></tbody></table></div>
+<p>The two <code>area</code> settings are identical on a planar interface and for matching meshes. Under <code>parent</code> the flux does not
+change when the intersection pattern changes, so the noise a rotating interface makes as cells pass one another is
+lower; but each side fluxes its own faces and nothing cancels. <code>segment</code> is the default for that reason.</p>
+<p><a href="reference/model/boundary-conditions/interface/index.html#segment-capacity-factor"><code>segment_capacity_factor</code></a>,
+<a href="reference/model/boundary-conditions/interface/index.html#sliver-tolerance"><code>sliver_tolerance</code></a> and
+<a href="reference/model/boundary-conditions/interface/index.html#closure-tolerance"><code>closure_tolerance</code></a> are rarely needed. The first
+sizes the segment storage reserved for each interface face; setup sweeps a full revolution, and stops with the factor
+actually needed if it is too small. The closure tolerance is the largest fraction of a face&#x27;s area that may be left
+uncovered before setup stops, so that a real gap between the two sides, from mismatched radii, a partial annulus or a
+wrong axis, shows at setup rather than as a silent leak.</p>
+<p>To rotate the mesh itself rather than run the rotating side as a reference frame, set <code>moving_mesh</code> on its rotating
+fluid zone; see <a href="guide/choosing/choosing-a-fluid-zone-model/index.html#rotating-and-translating-zones">Choosing a fluid-zone model</a>.</p>
+<h3 id="periodic">Periodic</h3>
+<p>A periodic interface treats two boundaries of the same mesh as one surface: the flow leaving one boundary enters the
+other. It is declared in pairs. Each boundary&#x27;s connection names the other boundary of the pair, and that boundary
+must name this one back.</p>
+<p>Each side carries the <a href="reference/model/boundary-conditions/interface/index.html#transform"><code>transform</code></a> that maps it onto the
+other, so the two transforms must be inverses of each other. A rotation of θ about an axis pairs with a rotation of −θ
+about the same axis line, or equivalently θ about the reversed axis; a translation by a vector pairs with the
+translation by its negative. Both sides of a pair use the same transform <code>type</code>, <code>&#x27;linear&#x27;</code> or <code>&#x27;rotated&#x27;</code>.</p>
+<aside class="admon admon-warning"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17h.01"></path></svg>Warning</div><div class="admon-b"><p>The incompressible solver supports only the <code>&#x27;linear&#x27;</code>, translational, periodic transform; <code>&#x27;rotated&#x27;</code> periodic
+interfaces need the compressible solver. A rotated pair on an incompressible case,
+<code>{&quot;solver_settings&quot;: {&quot;type&quot;: &quot;incompressible&quot;}}</code>, passes validation but is ignored, with a warning in the log.</p></div></aside>
+<p>A linear periodic pair:</p>
+<pre><code class="language-python">&quot;BC_3&quot;: {
+    &quot;zones&quot;: [11],
+    &quot;type&quot;: &quot;interface&quot;,
+    &quot;kind&quot;: &quot;periodic&quot;,
+    &quot;connection&quot;: {&quot;boundary&quot;: &quot;BC_4&quot;},
+    &quot;transform&quot;: {&quot;type&quot;: &quot;linear&quot;, &quot;vector&quot;: [0.0, 0.0, 1.0]},
+},
+&quot;BC_4&quot;: {
+    &quot;zones&quot;: [12],
+    &quot;type&quot;: &quot;interface&quot;,
+    &quot;kind&quot;: &quot;periodic&quot;,
+    &quot;connection&quot;: {&quot;boundary&quot;: &quot;BC_3&quot;},
+    &quot;transform&quot;: {&quot;type&quot;: &quot;linear&quot;, &quot;vector&quot;: [0.0, 0.0, -1.0]},
+},
+</code></pre>
+<p>A rotated periodic pair for a 120° sector:</p>
+<pre><code class="language-python">&quot;BC_5&quot;: {
+    &quot;zones&quot;: [5],
+    &quot;type&quot;: &quot;interface&quot;,
+    &quot;kind&quot;: &quot;periodic&quot;,
+    &quot;connection&quot;: {&quot;boundary&quot;: &quot;BC_6&quot;},
+    &quot;transform&quot;: {
+        &quot;type&quot;: &quot;rotated&quot;,
+        &quot;theta&quot;: math.radians(120.0),
+        &quot;axis&quot;: [1.0, 0.0, 0.0],
+        &quot;origin&quot;: [0.0, 0.0, 0.0],
+    },
+},
+&quot;BC_6&quot;: {
+    &quot;zones&quot;: [6],
+    &quot;type&quot;: &quot;interface&quot;,
+    &quot;kind&quot;: &quot;periodic&quot;,
+    &quot;connection&quot;: {&quot;boundary&quot;: &quot;BC_5&quot;},
+    &quot;transform&quot;: {
+        &quot;type&quot;: &quot;rotated&quot;,
+        &quot;theta&quot;: math.radians(-120.0),
+        &quot;axis&quot;: [1.0, 0.0, 0.0],
+        &quot;origin&quot;: [0.0, 0.0, 0.0],
+    },
+},
+</code></pre>
+<h2 id="reference-entries">Reference entries</h2>
+<ul>
+<li><a href="reference/model/boundary-conditions/index.html">Boundary conditions</a>, with <code>type</code> and <code>zones</code></li>
+<li><a href="reference/model/boundary-conditions/wall/index.html"><code>wall</code></a>, <a href="reference/model/boundary-conditions/farfield/index.html"><code>farfield</code></a>,
+<a href="reference/model/boundary-conditions/inflow/index.html"><code>inflow</code></a>, <a href="reference/model/boundary-conditions/outflow/index.html"><code>outflow</code></a>,
+<a href="reference/model/boundary-conditions/mass-flow/index.html"><code>mass flow</code></a>,
+<a href="reference/model/boundary-conditions/symmetry/index.html"><code>symmetry</code></a> and
+<a href="reference/model/boundary-conditions/interface/index.html"><code>interface</code></a></li>
+<li><a href="reference/solver/reference-conditions/index.html">Reference conditions</a></li>
+</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/choosing/choosing-boundary-conditions/index.html#declaring-a-boundary-condition">Declaring a boundary condition</a><a href="guide/choosing/choosing-boundary-conditions/index.html#zones">Zones</a><a href="guide/choosing/choosing-boundary-conditions/index.html#wall">Wall</a><a href="guide/choosing/choosing-boundary-conditions/index.html#farfield">Farfield</a><a href="guide/choosing/choosing-boundary-conditions/index.html#inflow">Inflow</a><a href="guide/choosing/choosing-boundary-conditions/index.html#outflow">Outflow</a><a href="guide/choosing/choosing-boundary-conditions/index.html#mass-flow">Mass flow</a><a href="guide/choosing/choosing-boundary-conditions/index.html#interface">Interface</a><a href="guide/choosing/choosing-boundary-conditions/index.html#reference-entries">Reference entries</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

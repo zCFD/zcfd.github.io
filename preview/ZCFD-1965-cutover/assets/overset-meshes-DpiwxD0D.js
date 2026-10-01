@@ -1,0 +1,259 @@
+var e=`
+# Overset meshes
+
+zCFD is capable of automatically oversetting multiple meshes into a single simulation. An overset case is defined
+entirely within one control file: every mesh in the simulation is declared as its own named entry directly under the
+control file's top-level \`model\` key, each carrying its own \`mesh\` path, and each mesh that receives donor data from
+another mesh must declare an overset interface on its hole-cutting surface (see
+[Overset interface](#overset-interface) below).
+
+## Setting up an overset case
+
+One model entry is the background mesh, typically the largest of the meshes that the others overlap with. Each
+further entry is a mesh that oversets onto another entry (the background mesh, or another overset mesh), declared
+through an overset interface whose \`connection\` names the donor model(s) (see below).
+
+Example \`model\` structure (one background mesh, a refinement region overset onto it, and two further meshes overset
+onto the refinement region):
+
+\`\`\`python
+"model": {
+    "background": {"mesh": "back1.h5", ...},
+    "refinement_region": {"mesh": "back2.h5", ...},
+    "cylinder_1": {"mesh": "back3.h5", ...},
+    "cylinder_2": {"mesh": "back3.h5", ...},
+}
+\`\`\`
+
+Run the case with a plain:
+
+\`\`\`bash
+(zCFD)> run_zcfd -c oversetmulticylinder.py
+\`\`\`
+
+All meshes are read from the \`mesh\` key of each entry under \`model\`; no separate mesh/case file pairing and no
+command-line mesh argument is needed.
+
+## Overset interface
+
+Overset mapping options are set directly on the boundary condition that marks a mesh's overset (hole-cutting)
+surface, using \`'type': 'interface'\` with \`'kind': 'overset'\` inside that model's \`boundary_conditions\` block \u2014 see
+the [\`interface\`](/reference/model/boundary-conditions/interface) boundary condition reference and
+[Interface](../choosing/choosing-boundary-conditions.md#interface).
+
+Example usage, adapted from a real multi-mesh overset testcase (one background mesh, a refinement region overset onto
+it, and two further meshes overset onto the refinement region):
+
+\`\`\`python
+parameters = {
+    ...
+    "model": {
+        "background": {
+            "mesh": "back1.h5",
+            "boundary_conditions": {
+                "BC_1": {"zones": [9, 11], "type": "symmetry"},
+                "BC_2": {"zones": [10], "type": "farfield", "condition": "IC_1", "kind": "riemann"},
+            },
+        },
+        "refinement_region": {
+            "mesh": "back2.h5",
+            "boundary_conditions": {
+                "BC_1": {"zones": [9, 11], "type": "symmetry"},
+                "BC_2": {
+                    "zones": [10],
+                    "type": "interface",
+                    "kind": "overset",
+                    "connection": {"model": ["background"]},
+                },
+            },
+        },
+        "cylinder_1": {
+            "mesh": "back3.h5",
+            "boundary_conditions": {
+                "BC_1": {"zones": [11, 12], "type": "symmetry"},
+                "BC_2": {
+                    "zones": [13],
+                    "type": "interface",
+                    "kind": "overset",
+                    "connection": {"model": ["refinement_region"]},
+                },
+                "BC_3": {"zones": [10], "type": "wall", "kind": "no slip"},
+            },
+        },
+    },
+    ...
+}
+\`\`\`
+
+### interpolation_method
+
+[**interpolation_method**](/reference/model/boundary-conditions/interface#interpolation-method) selects how the donor
+value is built once the containing cell is known: \`nearest cell\` takes that cell's value directly, \`inverse distance\`
+is a distance-weighted average over the cell and its neighbours, \`green-gauss\` is a Green-Gauss linear reconstruction
+about the donor cell centre, and \`least-squares\` (the default) is a least-squares linear reconstruction about the same
+point. Each method is described under [Interpolation](#interpolation) below.
+
+### additional_active_layers
+
+Adds additional active cells which may have been made inactive by an overlapping mesh. For example, where a rotating domain is used, the resolution of the rotating boundary may result in rotated overset mesh boundary points, entering
+cells made inactive. This will result in no mapping between background and overset meshes at these points. To resolve
+this issue, it is possible to add additional active cells (for safety) to ensure a mapping between overset and
+background meshes. Whilst not necessary, this parameter may be useful if issues with mapping between meshes occur.
+
+### moving_mesh_halo_layers
+
+Relevant only when the overset mesh is itself moving (see the rotating/translating fluid zone motion types with
+\`moving_mesh: True\` in the [fluid zones](/reference/model/fluid-zones/rotating#moving-mesh) reference). Controls how
+many halo fringe layers are kept around the re-cut hole each time the mesh moves; a value of 0 treats every blanked
+cell as a halo, which is safe but conservative, while N > 0 is sufficient when the hole is re-cut every real time step
+and avoids remapping cells that don't need it.
+
+### blank_enclosed_cells
+
+Coverage blanks a background cell by testing whether each of its nodes lies inside an overset cell, which cannot see
+the cells inside the overset mesh's own solid bodies \u2014 a blade, a hub, a fuselage \u2014 since the overset mesh has no
+cells inside its walls. Left active, those cells solve as fluid inside a solid with no donor to correct them, and
+appear as islands in the middle of the hole in the \`overset\` output variable.
+
+With [**blank_enclosed_cells**](/reference/model/boundary-conditions/interface#blank-enclosed-cells) on (the
+default), a flood fill from the active cells outside the overset mesh's bounding box identifies what the hole walls
+in, blanks it, and keeps it out of the halo set. It only runs for an overset mesh that has a wall boundary: a mesh
+with no wall encloses nothing, and one carrying an inward-facing overset interface has deliberately left its interior
+to the background. The count blanked is logged at each hole cut.
+
+### connection
+
+The [**connection**](/reference/model/boundary-conditions/interface#connection)'s \`model\` names the model(s) whose
+mesh supplies donor data at this overset interface, and is used to derive the blanking priority order: models are
+topologically sorted so that a model always appears after the model(s) it connects to, with root meshes (no overset
+interfaces) placed first. Naming the connection explicitly is preferred to omitting it, as it avoids building mappers
+for mesh pairs that do not overlap. The \`model\` accepts either a single model name or a list, as shown in the example
+above.
+
+::: {.note}
+There is no control-file option for detailed per-mesh-pair mapper diagnostics. The underlying C++ verbose-mapping flag
+exists, but nothing in the current control-file schema or launcher wires a value to it, so it cannot be enabled from a
+control deck.
+:::
+
+## How overset works in the solver
+
+Each mesh in an overset case keeps its own solver, its own partitioning and its own boundary conditions. Nothing is
+merged into a single mesh. The coupling is a set of directed mesh pairs, and everything below happens per pair.
+
+### Mesh ordering
+
+The connection on each overset interface defines a directed graph over the models, which is required to be acyclic.
+The models are topologically sorted so that a model always appears after the model or models it connects to, with
+root meshes (those with no overset interface) first. That order is used for hole cutting, for the data exchange and
+for advancing the solvers, so donor data is always one step ahead of the mesh that consumes it.
+
+Each edge of the graph becomes a mapping pair holding two mappers: a _forward_ mapper carrying data from the overset
+mesh into the background mesh, and a _reverse_ mapper carrying data from the background mesh into the overset mesh.
+
+### Hole cutting
+
+For each pair, every node of the background mesh is tested against the cells of the overset mesh. A background cell
+is blanked when **all** of its nodes are found inside the overset mesh; a cell with even one uncovered node stays
+active. Blanked cells take no part in the solution.
+
+This minimal blanking is recorded before anything else modifies it, and is what the \`overset\` output variable
+reports. \`additional_active_layers\` then runs N sweeps over the interior faces, and on each sweep any blanked cell
+sharing a face with an active cell is promoted back to active. The hole therefore shrinks by N cell layers, which is
+how an overlap band \u2014 a region where both meshes hold a valid solution \u2014 is created.
+
+When one mesh is the background of several overset meshes, all of its active flags are reset once, then every pair's
+hole is cut, and only then is any mapping computed. Cutting and mapping pair by pair would let a later pair's reset
+erase an earlier pair's hole.
+
+### Fringe cells
+
+The cells that receive interpolated data are drawn from the blanked set. By default the fringe is the two layers of
+blanked cells adjacent to the remaining active region.
+
+When the overset mesh moves, a cell blanked now may be uncovered by the next hole cut, so every blanked cell is
+treated as a fringe cell. That is safe but means interpolating the whole hole volume. Setting
+\`moving_mesh_halo_layers\` to N replaces this with an N-layer fringe, which is sufficient when the hole is re-cut every
+real time step.
+
+### Donor search
+
+Donors are found with a bounding volume hierarchy built over the donor mesh \u2014 on the GPU when a device is present, on
+the host otherwise. The tree is built once per mesh and reused until the meshes move.
+
+For a moving mesh the mesh coordinates and the tree are **not** moved. The rigid body motion is carried as a
+transform and applied to the _query points_ instead, mapping them into the donor mesh's own frame before the search.
+This is why a rotating overset case costs little more per remap than a static one.
+
+A donor only counts if it is itself active. A fringe point that lands in a blanked region of the donor mesh finds
+nothing, and that face falls back to the unmapped face treatment rather than to interpolated data. This is the usual
+reason to increase \`additional_active_layers\`.
+
+### Interpolation
+
+\`interpolation_method\` selects the interpolant once the donor cell is known:
+
+- **nearest cell** \u2014 the value of the containing cell is taken directly, with unit weight. This is a
+  piecewise-constant transfer, first-order accurate.
+- **inverse distance** \u2014 the containing cell and its neighbours are combined with weights $(R - d)/(R + 4d)$, where
+  $d$ is the distance from the query point to each donor cell centre and $R$ is 1.2 times the largest of those
+  distances.
+- **green-gauss** \u2014 a Green-Gauss linear reconstruction about the donor cell centre, evaluated at the query point.
+- **least-squares** \u2014 a least-squares linear reconstruction about the donor cell centre, evaluated at the query
+  point.
+
+\`nearest cell\` and \`inverse distance\` combine cell values, so they return the donor field at a point offset from the
+query point; \`green-gauss\` and \`least-squares\` reconstruct a gradient and evaluate it at the query point itself.
+
+### What is exchanged, and when
+
+The exchange runs **once per pseudo-time cycle**, before any solver advances, and moves both the conserved cell data
+and the cell gradients. Walking the models in topological order, each model first sends the data it owns as a donor,
+then receives the data it needs as a dependent, and is then synchronised to the device and has its parallel halos
+updated before the next model is handled.
+
+The exchange is not repeated between the stages of a multi-stage scheme. An explicit Runge-Kutta march would
+therefore advance the interior several times against interface data that is frozen for the whole cycle, and for that
+reason an overset case requires one of the implicit pseudo-time schemes, \`implicit euler\`, \`lu-sgs\` or \`mf-gmres\`
+(see [Choosing a time-marching scheme](../choosing/choosing-a-time-marching-scheme.md#scheme)). A control file that
+asks for an explicit scheme alongside an overset interface is rejected at validation.
+
+### Moving meshes
+
+An overset mesh attached to a rotating fluid zone with \`moving_mesh: True\` (see
+[Rotating and translating zones](../choosing/choosing-a-fluid-zone-model.md#rotating-and-translating-zones)) is solved
+in its own mesh-attached frame; only the mapped data crosses between frames. At the end of each real time step the
+accumulated rotation angle is advanced and the momentum components of the current solution and of both stored time
+levels are counter-rotated, so that the time history the dual-time scheme differences is expressed consistently in
+the current frame.
+
+At the end of a real time step, if either mesh of a pair reports that it has moved, the per-mesh record of which
+faces are mapped is cleared and **all** pairs are re-cut and re-mapped \u2014 not only the stale ones, because cutting one
+donor's holes begins with a full reset of its active flags. Clearing the record matters on a moving mesh: a face
+mapped at a previous position but now outside donor coverage would otherwise stay marked as found and its fringe cell
+would be left unfilled.
+
+### Blanked cells in the rest of the solver
+
+Blanking is not confined to the mapper:
+
+- the residual is zeroed in blanked cells, so they cannot drive the solution or contribute to the reported residual
+  norms;
+- the implicit update is masked by the same flag, so a blanked row is left untouched;
+- multigrid agglomeration propagates the flag to the coarse levels, and a coarse cell is marked blanked if **any** of
+  its children is blanked. A coarse cell with a mixture of active and blanked children logs
+  \`Parents are mixed active and inactive\`. A large count means the coarsening and the hole boundary are poorly
+  aligned.
+
+### Practical consequences
+
+- Meshes must genuinely overlap. A hole cut exactly to the overset mesh's own footprint leaves no band in which both
+  meshes hold an independently computed solution, and the fringe then draws its donors from cells that are
+  themselves interpolated. Use \`additional_active_layers\` to open a real overlap band.
+- Keep cell sizes similar across the interface. The transfer is at best a distance-weighted average of donor cell
+  values, so a coarse donor cannot represent a gradient the fine receiver resolves.
+- Use an implicit pseudo-time scheme. Multigrid is not available with the implicit schemes, so an overset case runs
+  without it.
+- A body inside a hole is not seen by the mesh whose cells are blanked, so a wall must always live in the mesh that
+  resolves it.
+`;export{e as default};

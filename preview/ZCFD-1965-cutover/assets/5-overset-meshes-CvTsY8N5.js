@@ -1,0 +1,311 @@
+var e=`
+# Overset meshes
+
+There are various situations in CFD modelling when it is useful to be able to place one mesh over the top of
+another one, effectively blanking out the cells in the lower level mesh in favour of the mesh on top, while
+maintaining solution accuracy across the interface.
+
+- A higher order of solution accuracy may be wanted in a region of the original finite volume mesh. The overset
+  mesh would be designed for a higher order simulation than elsewhere in the flow domain.
+- A simulation may need a component that is not part of the original mesh, for example
+  a rotating component added to a static mesh. The overset mesh would be designed for the rotating
+  component, and would be placed over the static mesh.
+- A specific mesh may already exist for a rotating component (such as a propeller) that is to be
+  added to models of different aircraft without having to re-create the propeller mesh. The propeller meshes
+  (there may be several) are overset on the aircraft mesh, allowing for a fully coupled solution.
+- There may be components in relative motion, such as a train entering a tunnel. In this case the mesh for the
+  train can overset the background mesh for the tunnel, and the train can move into the tunnel without the need
+  for any new mesh generation. The solver handles the changing mesh mapping across the boundary as the
+  train moves, including preservation of the solution accuracy with a region of overlapping meshes.
+- There may already be a high quality mesh for an aircraft or a cityscape, and a new component
+  or a new building is to be included without regenerating the entire mesh. It may be simpler to include any changes into a new
+  mesh of a small region, and apply it like a patch as an overset mesh.
+
+This is called an overset mesh technique, and is supported by zCFD. In all cases, the flow solutions are
+calculated separately on each mesh, with the solver managing the interfaces and interpolation accuracy. zCFD will
+support different solution methods, different orders of spatial accuracy on each mesh, and arbitrarily large
+numbers of overset meshes in each simulation. Each overset boundary condition can name the meshes it takes donor
+data from, and the solver uses this to work out which mesh is active in each part of the flow domain. zCFD
+automatically manages the data exchange between all meshes, including parallel partitions.
+
+::: {.track when="deck"}
+
+## Example 1 - Multiple Overset Cylinder Test Case
+
+![Two cylinders, with overlapping near-field overset conformal meshes (Back 3 and Back 4), where both near-field meshes overset the regular Cartesian Back 2 mesh, which in turn oversets the coarse Back 1 mesh.](/images/tutorial-5-oversetmulticylinder-meshes.png)
+
+There are 4 meshes involved in this case. A single control dictionary called "oversetmulticylinder.py" declares
+one named entry per mesh under its top-level \`model\` key, each entry carrying its own \`mesh\` path:
+
+\`\`\`python
+"model": {
+    "background": {"mesh": "back1.h5", ...},
+    "refinement_region": {"mesh": "back2.h5", ...},
+    "cylinder_2": {"mesh": "back3.h5", ...},
+    "cylinder_1": {"mesh": "back3.h5", ...},
+}
+\`\`\`
+
+Note that in this case, the "back3.h5" mesh defining a cylinder has been used twice, once for "cylinder_1" and
+once for "cylinder_2". This is OK, because the "cylinder_1" and "cylinder_2" model entries each apply a different
+transformation (down and up along the y-axis respectively). The solver knows that the meshes are used for
+different solutions, in different parts of the flow domain. Also note that the translated mesh for "cylinder_1"
+overlaps the translated mesh for "cylinder_2" (the mesh between the two cylinders). This is also OK because each
+model entry's overset interface explicitly names its own donor mesh in its connection - the solver builds
+"cylinder_1" and "cylinder_2" oversetting "refinement_region", which oversets "background". In each case, the
+active solution is the one on the top-level oversetting mesh.
+
+The files for running the case are available for download [here](https://zcfd.zenotech.com/tutorials/5/oversetmulticylinder.zip).
+
+For each of the meshes, a transformation has been defined under that mesh's \`transforms\` key, for example the
+"background" entry (the "back1.h5" mesh) is moved according to the transformation defined by the following lines:
+
+\`\`\`python
+"transforms": {
+    "transform matrix": zutil.transform.translate(
+        [0.0, 0.0, 0.0], [0.0, 0.0, -1.5]
+    )
+},
+\`\`\`
+
+This tells the solver to use the inbuilt transformation function in zutil to translate the mesh down in the
+z-axis by 1.5 units. The lowest level mesh (i.e. that does not overset any other meshes) does not require any
+other modification, providing that the order of solution spatial accuracy supported by the meshes that overset it
+are that same as its own accuracy. For all of the meshes that overset at least one other mesh, a special boundary
+condition must be applied to any zone (boundary) where information is to be exchanged between meshes. For
+example, in the "cylinder_2" entry the following line is used:
+
+\`\`\`python
+"BC_2": {
+    "zones": [13],
+    "type": "interface",
+    "kind": "overset",
+    "connection": {"model": ["refinement_region"]},
+},
+\`\`\`
+
+For the "cylinder_2" model (the "back3.h5" mesh, translated down in y), zone 13 (comprising boundary faces
+excluding symmetry planes and the cylinder surface) is designated as an overset interface, and its connection
+names "refinement_region" as the donor mesh it exchanges data with. Naming the donor mesh explicitly
+like this is the preferred form: it tells the solver exactly which mesh pairs need a mapper built, rather than
+checking every preceding mesh in the model dictionary for overlap. The software automatically
+calculates the necessary mapping and interpolation coefficients to preserve the spatial accuracy of the overset
+solution.
+
+The "Multiple Overset Cylinder" test case runs in a few minutes on a GPU, with the simple command:
+
+\`\`\`bash
+run_zcfd -c oversetmulticylinder.py
+\`\`\`
+
+The usual command line arguments specifying the mesh are not required (and are ignored if given) - all four
+meshes are read from the \`mesh\` key of each entry under \`model\` in "oversetmulticylinder.py".
+
+When complete, the following outputs should be produced:
+
+\`\`\`bash
+oversetmulticylinder_OUTPUT/background/
+oversetmulticylinder_OUTPUT/refinement_region/
+oversetmulticylinder_OUTPUT/cylinder_1/
+oversetmulticylinder_OUTPUT/cylinder_2/
+oversetmulticylinder.log
+oversetmulticylinder_status.yaml
+\`\`\`
+
+Each of the four model subdirectories under "oversetmulticylinder_OUTPUT" contains that mesh's own report,
+checkpoint and volume/surface solution files (e.g. "cylinder_1/cylinder_1_report.csv",
+"cylinder_1/cylinder_1.vtkhdf"), named after the model's key in the control dictionary rather than the mesh
+filename. From a post-processing perspective, overset grids offer a significant advantage: independent solutions
+that only exchange boundary data during computation. This independence can save post-processing time and memory,
+as not all solution files are needed to analyse specific regions. However, a separate step is necessary to
+combine these independent solutions for domain-wide processing, such as extracting cross-sections. ParaView can
+be used to illustrate this combination process.
+
+### Post-processing using ParaView
+
+To combine the 4 overset meshes into a single solution that can be operated on as though it were a single
+object, use the "Append Datasets" filter in ParaView.
+
+- Launch ParaView so that you can load the solution files (locally or remotely).
+- Load the 4 files "oversetmulticylinder_OUTPUT/background/background.vtkhdf",
+  ".../refinement_region/refinement_region.vtkhdf", ".../cylinder_1/cylinder_1.vtkhdf" and
+  ".../cylinder_2/cylinder_2.vtkhdf".
+- Highlight all 4 files on the navigation tree (on the left) and select "Filters > Append Datasets". This will
+  create a new item in the navigation tree called "AppendDatasets1" that acts on all four datasets at once.
+- The volumetric data output for this case contains a variable called "overset" which is 0 or 1 for any cell in
+  the meshes. 0 means that the cell has been overset by another mesh, and 1 means that the cell is the active
+  cell in that location. Use the "Filters > Threshold" filter to select only the cells in the "AppendDatasets1"
+  combined dataset that have an "overset" value of 1 (do this by changing the lower threshold value from 0 to
+  1). This will create a new item in the navigation tree called "Threshold1" excluding any cells that have been
+  overset by cells in another mesh.
+- Use the "Filters > Cell Data to Point Data" filter to interpolate the cell data from "Threshold1" to the mesh
+  nodes. This makes subsequent interpolation operations in ParaView more accurate. This will create a new item
+  in the navigation tree called "CellDatatoPointData1".
+- Use the "Filters > Slice" filter to extract the solution from "CellDatatoPointData1" onto a plane with normal
+  in the "Z" direction. This contains data from all 4 meshes.
+- Colour the new "Slice1" object by "V" "Magnitude", selecting "Surface With Edges" in the visualisation toolbar.
+
+Other post-processing steps such as streamlines or animations will also work with overset meshes in the same
+manner. If the meshes are in relative motion throughout an unsteady simulation, ParaView will automatically
+update their positions.
+
+- [Optional] The "refinement_region" solution will show through behind the "cylinder_1" and "cylinder_2" overset
+  solutions because of the holes where the cylinders are. Any solution is non-physical, and an easy way to mask
+  this effect is to insert some simple geometry to show the location of the cylinders. Use "Sources > Cylinder"
+  to create a unit diameter cylinder at [0,0,0] and rotate it 90 degrees about the x-axis, then translate it in
+  the y-axis by -0.8 in y to put it into place. Repeat, but with a translation of +0.8 for the other cylinder.
+- [Optional] The above steps will produce the image below:
+
+![Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder.](/images/tutorial-5-postprocessing-paraview-raw.png)
+
+To create the image in the validation page, you can force ParaView to bring the overset meshes to the foreground
+by treating each of the overset meshes independently, and adding a small incremental offset normal to the slice
+plane to each cylinder mesh (0.0, 0.001, 0.0015, 0.002). This will better reflect what the solver will actually
+see, as the overset cells in the background meshes will not be active.
+
+![The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh.](/images/tutorial-5-postprocessing-paraview-notebook.png)
+
+## Example 2 - Train Tunnel Test Case
+
+![The (white) mesh around the train is "overset" on a (yellow) background mesh for the tunnel. Moving the train mesh through the tunnel mesh simulates the unsteady motion of the train without needing to re-create a new mesh at each physical time step.](/images/tutorial-5-tunnel-mesh.png)
+
+This test case demonstrates the zCFD overset capabilities to predict the micro pressure wave generated as a train
+enters a tunnel, and is a good example of a practical application of overset meshing.
+The simulation set up follows that described in Section 7.6 of Railway applications \u2014 Aerodynamics \u2014 Part 5:
+Requirements and test procedures for aerodynamics in tunnels. To avoid transients, the train is linearly
+accelerated from 0 to 250 km/hr over 1.5 seconds.
+
+For the reference train entering the reference tunnel at 250 km/hr, the maximum entry pressure gradient dp/dt
+should be in the range of 8800 Pa/s to 9500 Pa/s. These values are used to validate the simulation.
+
+The input control dictionary for the train in this case also shows how to programmatically define the motion of
+a mesh in time:
+
+\`\`\`python
+def linear_accel(**kwargs):
+    t = kwargs["time"]
+    dt = kwargs["time_step"]
+    u = [-69.4, 0, 0]
+    if t < 1.5:
+        u[0] = -(t / 1.5) * 69.4
+    return {"velocity": tuple(u)}
+\`\`\`
+
+This function returns the velocity to be applied to a fluid zone, which is then defined under the "train" mesh's
+\`model\` entry by:
+
+\`\`\`python
+"FZ_1": {
+    "type": "translating",
+    "zones": [6],
+    "velocity": [-69.4, 0.0, 0.0],
+    "translation function": linear_accel,
+    "moving mesh": True,
+},
+\`\`\`
+
+The fluid zone's \`velocity\` is a single vector in m/s - there is no separate \`vector\`/\`mach\` split for a
+translating zone. The \`moving_mesh\` field is set directly on the fluid zone; setting it is only permitted in an
+unsteady run, on a mesh that also declares an overset or sliding interface (as the "train" mesh does, for the zone
+where it exchanges data with the tunnel background mesh), since a moving mesh with nothing to exchange data with is
+meaningless.
+Setting \`moving_mesh\` to \`True\` forces a recalculation of the physical location of the mesh, including the
+recalculation of any overset mappings, every real time step.
+
+The unsteady time-marching settings that apply to the whole case live under the control dictionary's top-level
+\`solver\` key, split between \`time_settings\` (what is being marched) and \`convergence_control\` (how each step
+converges):
+
+\`\`\`python
+"time settings": {
+    "type": "unsteady",
+    "total time": 3.6,
+    "time step": 0.001,
+    "order": 1,
+    "start": 0,
+},
+"convergence control": {
+    "scheme": {"name": "implicit euler", "stage": 1},
+    "cfl": 30,
+    "cycles": 5,
+},
+\`\`\`
+
+The meshes and control files for the train and the tunnel can be downloaded from [here](https://zcfd.zenotech.com/tutorials/5/traintunnel.zip).
+
+The train tunnel case is larger than the previous case in this tutorial: the train mesh has 1.31m cells and the
+tunnel has 7.35m cells. To run this case in implicit mode on a GPU will require approximately 48GB RAM.
+
+The case can be run with the command
+
+\`\`\`bash
+run_zcfd -c traintunnel.py
+\`\`\`
+
+### Post-processing
+
+To plot the entry pressure gradient over time, copy the following Python code into a file 'create_plot.py'. The
+pressure monitor is defined on the "background" (tunnel) mesh, so its report is written to
+"traintunnel_OUTPUT/background/background_report.csv":
+
+\`\`\`python
+# Compute maximum entry pressure gradient dp/dt
+import matplotlib.pyplot as plt
+
+ts = 0.001
+file_name = "traintunnel_OUTPUT/background/background_report.csv"
+p_data = []
+with open(file_name) as fp:
+    line = fp.readline().split()
+    count = 0
+    val = 0
+    while line:
+        line = fp.readline().split()
+        if len(line) > 0:
+            c = int(line[0])
+            if c != count:
+                count = count + 1
+                val = float(line[7])
+                p_data.append(val)
+
+    p_grad_data = []
+    time = []
+    for i in range(len(p_data)-1):
+       if ts*i < 4:
+            p_grad_data.append((p_data[i+1] - p_data[i]) / ts)
+            time.append(ts * i)
+
+plt.minorticks_on()
+plt.grid(which="both")
+plt.title('Maximum entry pressure gradient = '+str(round(max(p_grad_data),6))+' Pa/s')
+plt.xlabel("Time [s]")
+plt.ylabel("dPdt [Pa/s]")
+plt.xlim(0, 3.6)
+plt.ylim(-100, 12000)
+plt.plot(time, p_grad_data, label="250km/hr @ 15oC")
+plt.plot([time[0],time[-1]],[8800,8800],label='min valid dP/dT',c='grey')
+plt.plot([time[0],time[-1]],[9700,9700],label='max valid dP/dT',c='grey')
+plt.show()
+plt.savefig("EntryPressureGradient.png")
+plt.close()
+\`\`\`
+
+Then run the code in the same directory as the solution files with the command:
+
+\`\`\`bash
+python create_plot.py
+\`\`\`
+
+This will create the following plot, showing the maximum entry pressure gradient as a function of time. The
+maximum entry pressure gradient is 9656.0 Pa/s, which is within the range of values specified [8800.0, 9700.0] in
+the standard.
+
+![Entry Pressure Gradient.](/images/tutorial-5-entry-pressure-gradient.png)
+
+:::
+
+## Citations
+
+1. EN 14067-5:2006 - Railway applications - Aerodynamics - Part 5: Requirements and test procedures for
+   aerodynamics in tunnels, [see](https://standards.iteh.ai/catalog/standards/cen/ea6cb49e-c40a-4b8b-a059-c6debdb91dc7/en-14067-5-2006)
+`;export{e as default};
