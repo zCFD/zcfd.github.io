@@ -29,13 +29,13 @@ the log and monitoring a run in zMon. The run takes about fifteen seconds on an 
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_6_lid_driven_cavity.tgz).
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.08.14860/tutorial_6_lid_driven_cavity.tgz).
 It contains a mesh file (\`cavity.h5\`), a zCFD control file (\`cavity.py\`), and Ghia's tabulated centreline velocities
 at Re 400 (\`ghia_re400.csv\`).
 
 \`\`\`bash
 cd ~
-wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_6_lid_driven_cavity.tgz
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_6_lid_driven_cavity.tgz
 tar xzf tutorial_6_lid_driven_cavity.tgz
 cd tutorial_6_lid_driven_cavity
 \`\`\`

@@ -29,12 +29,12 @@ first run takes under two minutes and the restart about a minute.
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_2_high_lift_multi_element_aerofoil.tgz).
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.08.14860/tutorial_2_high_lift_multi_element_aerofoil.tgz).
 It contains a mesh file (`30p30n.h5`) and a zCFD control file (`30p30n.py`).
 
 ```bash
 cd ~
-wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_2_high_lift_multi_element_aerofoil.tgz
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_2_high_lift_multi_element_aerofoil.tgz
 tar xzf tutorial_2_high_lift_multi_element_aerofoil.tgz
 cd tutorial_2_high_lift_multi_element_aerofoil
 ```
@@ -172,7 +172,7 @@ parameters = {
 Unlike the first tutorial's file, this one runs a little ordinary Python before the dictionary, to set the flow
 conditions once and work out values from them. The first two headings cover that code.
 
-### Reference variables
+### `reynolds`, `mach`, `T`, `p`, `R`, `gamma`, `reference_length`, `alpha`, `U`, `wall`, `symmetry`, `farfield`
 
 The control file is Python, so it can do more than list settings. After importing `math` and `zutil`, its first
 lines set the key values for the case once, by name, and the dictionary refers to them:

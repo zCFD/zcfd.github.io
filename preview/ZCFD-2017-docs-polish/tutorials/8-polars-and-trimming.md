@@ -28,13 +28,13 @@ minutes, and the trim about five.
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_8_aerofoil_polar_and_trim.tgz).
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.08.14860/tutorial_8_aerofoil_polar_and_trim.tgz).
 It contains the mesh (`naca0012.h5`) and four control files: `naca0012.py` at zero angle of attack,
 `naca0012_alpha5.py` and `naca0012_alpha10.py` for the polar, and `naca0012_target_cl.py` for the trim.
 
 ```bash
 cd ~
-wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_8_aerofoil_polar_and_trim.tgz
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_8_aerofoil_polar_and_trim.tgz
 tar xzf tutorial_8_aerofoil_polar_and_trim.tgz
 cd tutorial_8_aerofoil_polar_and_trim
 ```

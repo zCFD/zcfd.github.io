@@ -25,11 +25,11 @@ RTX 3060. The Python step in Step 5 also uses ParaView's Python modules, which c
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_7_rotor_in_hover.tgz).
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.08.14860/tutorial_7_rotor_in_hover.tgz).
 
 \`\`\`bash
 cd ~
-wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_7_rotor_in_hover.tgz
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_7_rotor_in_hover.tgz
 tar xzf tutorial_7_rotor_in_hover.tgz
 cd tutorial_7_rotor_in_hover
 \`\`\`

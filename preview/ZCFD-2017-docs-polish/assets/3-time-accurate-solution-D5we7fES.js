@@ -23,12 +23,12 @@ running a case and reading its output. The run takes about four minutes on an NV
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_3_cylinder_shedding.tgz).
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.08.14860/tutorial_3_cylinder_shedding.tgz).
 It contains a mesh file (\`cylinder.h5\`) and a zCFD control file (\`cylinder.py\`).
 
 \`\`\`bash
 cd ~
-wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_3_cylinder_shedding.tgz
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_3_cylinder_shedding.tgz
 tar xzf tutorial_3_cylinder_shedding.tgz
 cd tutorial_3_cylinder_shedding
 \`\`\`
