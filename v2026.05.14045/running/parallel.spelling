@@ -1,1 +1,0 @@
-source/running/parallel.rst:54: (gpus) ["pus", "pugs", "gnus", "opus", "Apus", "g pus", "GPU"]  environment variable. This is an experimental feature primarily intended for debugging and testing. When enabled, ranks will be assigned to GPUs using modulo arithmetic (rank % num_gpus).
