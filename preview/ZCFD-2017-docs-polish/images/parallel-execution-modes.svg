@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="650" viewBox="0 0 600 650" version="1.1">
+<rect class="zc-stroke-series-1" x="10" y="14" width="18" height="12" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="32" y="24" font-family="Lato, Manrope, sans-serif" font-size="10">MPI rank on a CPU</text>
+<rect class="zc-stroke-series-2" x="130" y="14" width="18" height="12" rx="2" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="152" y="24" font-family="Lato, Manrope, sans-serif" font-size="10">MPI rank on a GPU</text>
+<path class="zc-stroke-series-1" d="M 258 14 L 258 26" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="266" y="24" font-family="Lato, Manrope, sans-serif" font-size="10">OpenMP thread</text>
+<rect class="zc-fill-series-2" x="350" y="14" width="18" height="12" rx="2" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="372" y="24" font-family="Lato, Manrope, sans-serif" font-size="10">GPU</text>
+<rect class="zc-stroke-reference" x="404" y="14" width="18" height="12" rx="2" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="426" y="24" font-family="Lato, Manrope, sans-serif" font-size="10">node</text>
+<path class="zc-stroke-ink" d="M 466 20 L 486 20" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<text class="zc-fill-ink" style="fill: #262624" x="492" y="24" font-family="Lato, Manrope, sans-serif" font-size="10">MPI exchange</text>
+<g transform="translate(0 40)">
+<rect class="zc-stroke-grid" x="0" y="0" width="290" height="190" rx="6" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="18" font-family="Lato, Manrope, sans-serif" font-size="12" font-weight="700">One CPU, many cores</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="33" font-family="Lato, Manrope, sans-serif" font-size="10">One MPI rank; OpenMP threads share its partition.</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="46" font-family="Lato, Manrope, sans-serif" font-size="10">Threads default to every CPU of the machine.</text>
+<rect class="zc-stroke-reference" x="10" y="56" width="270" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="16" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">one machine</text>
+<rect class="zc-stroke-series-1" x="70" y="72" width="150" height="56" rx="3" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="75" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 0</text>
+<path class="zc-stroke-series-1" d="M 80 93 L 80 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 92 93 L 92 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 104 93 L 104 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 116 93 L 116 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 128 93 L 128 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 140 93 L 140 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 152 93 L 152 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 164 93 L 164 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 176 93 L 176 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 188 93 L 188 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 200 93 L 200 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 212 93 L 212 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="160" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 1 -d cpu -c &lt;case&gt;</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="176" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 1 -d cpu -o 6 -c &lt;case&gt;</text>
+</g>
+<g transform="translate(310 40)">
+<rect class="zc-stroke-grid" x="0" y="0" width="290" height="190" rx="6" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="18" font-family="Lato, Manrope, sans-serif" font-size="12" font-weight="700">One GPU</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="33" font-family="Lato, Manrope, sans-serif" font-size="10">One MPI rank drives the GPU through CUDA.</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="46" font-family="Lato, Manrope, sans-serif" font-size="10">Chosen by -d gpu, or detected when -d is omitted.</text>
+<rect class="zc-stroke-reference" x="10" y="56" width="270" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="16" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">one machine</text>
+<rect class="zc-stroke-series-2" x="40" y="72" width="90" height="44" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="45" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 0</text>
+<rect class="zc-fill-series-2" x="180" y="76" width="60" height="36" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="190" y="127" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 0</text>
+<path class="zc-stroke-ink" d="M 130 94 L 180 94" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<text class="zc-fill-ink" style="fill: #262624" x="141" y="89" font-family="Lato, Manrope, sans-serif" font-size="9">CUDA</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="160" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 1 -d gpu -c &lt;case&gt;</text>
+</g>
+<g transform="translate(0 250)">
+<rect class="zc-stroke-grid" x="0" y="0" width="290" height="190" rx="6" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="18" font-family="Lato, Manrope, sans-serif" font-size="12" font-weight="700">Hybrid MPI/OpenMP</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="33" font-family="Lato, Manrope, sans-serif" font-size="10">One rank per socket, OpenMP threads within each.</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="46" font-family="Lato, Manrope, sans-serif" font-size="10">MPI: shared memory in a node, libfabric between.</text>
+<rect class="zc-stroke-reference" x="10" y="56" width="125" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="16" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">node 0</text>
+<rect class="zc-stroke-series-1" x="17" y="72" width="53" height="56" rx="3" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="22" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 0</text>
+<path class="zc-stroke-series-1" d="M 27 93 L 27 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 37 93 L 37 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 47 93 L 47 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 57 93 L 57 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="75" y="72" width="53" height="56" rx="3" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="80" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 1</text>
+<path class="zc-stroke-series-1" d="M 85 93 L 85 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 95 93 L 95 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 105 93 L 105 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 115 93 L 115 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-reference" x="155" y="56" width="125" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="161" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">node 1</text>
+<rect class="zc-stroke-series-1" x="162" y="72" width="53" height="56" rx="3" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="167" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 2</text>
+<path class="zc-stroke-series-1" d="M 172 93 L 172 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 182 93 L 182 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 192 93 L 192 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 202 93 L 202 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="220" y="72" width="53" height="56" rx="3" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="225" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 3</text>
+<path class="zc-stroke-series-1" d="M 230 93 L 230 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 240 93 L 240 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 250 93 L 250 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 260 93 L 260 121" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-ink" d="M 135 100 L 155 100" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="160" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 4 -t 2 -d cpu -c &lt;case&gt;</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="176" font-family="Lato, Manrope, sans-serif" font-size="10">threads per rank = node CPUs / ranks per node</text>
+</g>
+<g transform="translate(310 250)">
+<rect class="zc-stroke-grid" x="0" y="0" width="290" height="190" rx="6" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="18" font-family="Lato, Manrope, sans-serif" font-size="12" font-weight="700">One rank per GPU</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="33" font-family="Lato, Manrope, sans-serif" font-size="10">Rank n of a node uses GPU n of that node.</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="46" font-family="Lato, Manrope, sans-serif" font-size="10">MPI between ranks, CUDA on each GPU.</text>
+<rect class="zc-stroke-reference" x="10" y="56" width="125" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="16" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">node 0</text>
+<rect class="zc-stroke-series-2" x="17" y="70" width="53" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="22" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 0</text>
+<rect class="zc-fill-series-2" x="17" y="102" width="53" height="18" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="29" y="131" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 0</text>
+<path class="zc-stroke-ink" d="M 43.5 92 L 43.5 102" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<rect class="zc-stroke-series-2" x="75" y="70" width="53" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="80" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 1</text>
+<rect class="zc-fill-series-2" x="75" y="102" width="53" height="18" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="87" y="131" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 1</text>
+<path class="zc-stroke-ink" d="M 101.5 92 L 101.5 102" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<rect class="zc-stroke-reference" x="155" y="56" width="125" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="161" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">node 1</text>
+<rect class="zc-stroke-series-2" x="162" y="70" width="53" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="167" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 2</text>
+<rect class="zc-fill-series-2" x="162" y="102" width="53" height="18" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="174" y="131" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 0</text>
+<path class="zc-stroke-ink" d="M 188.5 92 L 188.5 102" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<rect class="zc-stroke-series-2" x="220" y="70" width="53" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="225" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 3</text>
+<rect class="zc-fill-series-2" x="220" y="102" width="53" height="18" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="232" y="131" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 1</text>
+<path class="zc-stroke-ink" d="M 246.5 92 L 246.5 102" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<path class="zc-stroke-ink" d="M 135 81 L 155 81" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="160" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 4 -t 2 -d gpu -c &lt;case&gt;</text>
+</g>
+<g transform="translate(0 460)">
+<rect class="zc-stroke-grid" x="0" y="0" width="290" height="190" rx="6" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="18" font-family="Lato, Manrope, sans-serif" font-size="12" font-weight="700">Full MPI</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="33" font-family="Lato, Manrope, sans-serif" font-size="10">One single-threaded rank per core.</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="46" font-family="Lato, Manrope, sans-serif" font-size="10">MPI between every rank, OpenMP set to one thread.</text>
+<rect class="zc-stroke-reference" x="10" y="56" width="125" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="16" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">node 0</text>
+<rect class="zc-stroke-series-1" x="18" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 25 81 L 25 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="37" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 44 81 L 44 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="56" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 63 81 L 63 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="75" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 82 81 L 82 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="94" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 101 81 L 101 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="113" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 120 81 L 120 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="18" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 25 107 L 25 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="37" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 44 107 L 44 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="56" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 63 107 L 63 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="75" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 82 107 L 82 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="94" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 101 107 L 101 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="113" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 120 107 L 120 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-reference" x="155" y="56" width="125" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="161" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">node 1</text>
+<rect class="zc-stroke-series-1" x="163" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 170 81 L 170 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="182" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 189 81 L 189 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="201" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 208 81 L 208 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="220" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 227 81 L 227 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="239" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 246 81 L 246 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="258" y="78" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 265 81 L 265 89" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="163" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 170 107 L 170 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="182" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 189 107 L 189 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="201" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 208 107 L 208 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="220" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 227 107 L 227 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="239" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 246 107 L 246 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<rect class="zc-stroke-series-1" x="258" y="104" width="14" height="14" rx="2" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-series-1" d="M 265 107 L 265 115" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+<path class="zc-stroke-ink" d="M 135 100 L 155 100" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="160" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">export OMP_NUM_THREADS=1</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="176" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 48 -t 24 -d cpu -c &lt;case&gt;</text>
+</g>
+<g transform="translate(310 460)">
+<rect class="zc-stroke-grid" x="0" y="0" width="290" height="190" rx="6" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="18" font-family="Lato, Manrope, sans-serif" font-size="12" font-weight="700">Ranks sharing a GPU (experimental)</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="33" font-family="Lato, Manrope, sans-serif" font-size="10">Rank n uses GPU n mod G, for G GPUs on the node.</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="46" font-family="Lato, Manrope, sans-serif" font-size="10">Shown: four ranks on two GPUs.</text>
+<rect class="zc-stroke-reference" x="10" y="56" width="270" height="80" rx="4" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+<text class="zc-fill-ink" style="fill: #262624" x="16" y="67" font-family="Lato, Manrope, sans-serif" font-size="9">one machine, two GPUs</text>
+<rect class="zc-stroke-series-2" x="20" y="70" width="55" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="26" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 0</text>
+<rect class="zc-stroke-series-2" x="85" y="70" width="55" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="91" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 1</text>
+<rect class="zc-stroke-series-2" x="150" y="70" width="55" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="156" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 2</text>
+<rect class="zc-stroke-series-2" x="215" y="70" width="55" height="22" rx="3" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+<text class="zc-fill-ink" style="fill: #262624" x="221" y="85" font-family="Lato, Manrope, sans-serif" font-size="9">rank 3</text>
+<rect class="zc-fill-series-2" x="52" y="104" width="70" height="16" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="74" y="131" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 0</text>
+<rect class="zc-fill-series-2" x="168" y="104" width="70" height="16" rx="3" style="fill: #eb6834; stroke: none"/>
+<text class="zc-fill-ink" style="fill: #262624" x="190" y="131" font-family="Lato, Manrope, sans-serif" font-size="9">GPU 1</text>
+<path class="zc-stroke-ink" d="M 47.5 92 L 87 104" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<path class="zc-stroke-ink" d="M 112.5 92 L 203 104" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<path class="zc-stroke-ink" d="M 177.5 92 L 87 104" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<path class="zc-stroke-ink" d="M 242.5 92 L 203 104" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="160" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">export ZCFD_DEV_OVERSUBSCRIBE_GPU=1</text>
+<text class="zc-fill-ink" style="fill: #262624" x="10" y="176" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="10">run_zcfd -n 4 -d gpu -c &lt;case&gt;</text>
+</g>
+</svg>

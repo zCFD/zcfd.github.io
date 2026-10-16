@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>5 · Overset meshes · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/5-overset-meshes.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/5-overset-meshes-B7h6TCBI.js">
+    <script type="module" crossorigin src="./assets/index-FgxSx1t3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPicbpDq.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-2017-docs-polish">ZCFD-2017-docs-polish</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow sel"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink" aria-current="page"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>5 · Overset meshes</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="overset-meshes">Overset meshes</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>A CFD solver divides the space round an object into small cells, the <em>mesh</em>, and solves the flow equations in
+each cell. An <em>overset</em> mesh is a second mesh placed over the first. Where it lies, its cells take over: the cells
+of the mesh beneath are switched off, which is called <em>hole cutting</em>. Along the edge of the overlap, the
+<em>interface</em>, each mesh takes the values it needs from the nearest active cells of the other, its <em>donor</em> cells.
+This is useful when:</p>
+<ul>
+<li>a region needs a finer or different mesh than the one around it;</li>
+<li>a component is added to an existing mesh, such as a propeller on an aircraft, or a new building in a cityscape,
+without regenerating the whole mesh;</li>
+<li>parts move relative to each other, such as a train entering a tunnel.</li>
+</ul>
+<p>zCFD solves the flow separately on each mesh, finds where each mesh is active, and handles the exchange between all
+of them, including when a run is split across several GPUs. Each overset boundary names the meshes it takes its data from.
+<a href="guide/working-with/overset-meshes/index.html">Overset meshes</a> describes how this works.</p>
+<p>This tutorial has two examples. The first places two cylinders over a refinement region over a background mesh, to
+show how overset meshes are set up and viewed. The second moves a train into a tunnel and checks the pressure wave
+it makes against a European standard.</p>
+<h2 id="what-you-need">What you need?</h2>
+<p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first. The cylinders take about two and a half minutes on an NVIDIA RTX 3060. The train
+in a tunnel is far larger, about 8 million cells, and needs about 48 GB of GPU memory.</p>
+<div class="track-lone"><h2 id="example-1-overset-cylinders">Example 1. Overset cylinders</h2><figure class="figure"><img src="images/tutorial-5-overset-meshes.png" alt="The four meshes at mid-span: the coarse background (orange), the regular Cartesian refinement region (blue), and the two cylinder meshes (green and purple). The two cylinder meshes overlap each other, both overset the refinement region, and the refinement region in turn oversets the background." loading="lazy"/><figcaption>The four meshes at mid-span: the coarse background (orange), the regular Cartesian refinement region (blue), and the two cylinder meshes (green and purple). The two cylinder meshes overlap each other, both overset the refinement region, and the refinement region in turn oversets the background.</figcaption></figure><p>Four meshes make up this case: a coarse background, a finer refinement region over it, and a mesh round each of two
+cylinders over that.</p><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The bundle can be downloaded <a href="https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_5_overset_cylinders.tgz">here</a>.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_5_overset_cylinders.tgz
+tar xzf tutorial_5_overset_cylinders.tgz
+cd tutorial_5_overset_cylinders
+</code></pre><p>It contains the control file <code>overset_cylinders.py</code> and three meshes: <code>background.h5</code>, <code>refinement_region.h5</code> and
+<code>cylinder.h5</code>, which both cylinders use.</p><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>overset_cylinders.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
+the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
+name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
+page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><p>Here <code>model</code> has one entry for each of the four meshes.</p><pre><code class="language-python">parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;equations&quot;: {&quot;type&quot;: &quot;viscous&quot;, &quot;precondition&quot;: True},
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 277.7777,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [1.0, 0.0, 0.0], &quot;mach&quot;: 0.2},
+                &quot;reynolds no&quot;: 20.0,
+                &quot;reference length&quot;: 1.0,
+            }
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;},
+        &quot;numerical scheme&quot;: {&quot;order&quot;: &quot;second&quot;},
+        &quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;},
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;, &quot;stage&quot;: 1},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 20,
+                &quot;cfl viscous factor&quot;: 1.0e-6,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.05, &quot;initial&quot;: 0.1}],
+            },
+            &quot;cycles&quot;: 2000,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 5,
+                &quot;monitor&quot;: {
+                    &quot;MR_1&quot;: {
+                        &quot;name&quot;: &quot;probe&quot;,
+                        &quot;point&quot;: [1.07, 0.25, 0.313],
+                        &quot;variables&quot;: [&quot;cp&quot;],
+                    }
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;format&quot;: &quot;vtk&quot;,
+                &quot;surface variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;cp&quot;],
+                &quot;volume variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;mach&quot;, &quot;cp&quot;, &quot;overset&quot;],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;background&quot;: {
+            &quot;mesh&quot;: &quot;background.h5&quot;,
+            &quot;transforms&quot;: {
+                &quot;transform&quot;: [
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, -0.5],
+                    [0.0, 0.0, 0.0, 1.0],
+                ]
+            },
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [9, 11], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [10],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+            },
+        },
+        &quot;refinement_region&quot;: {
+            &quot;mesh&quot;: &quot;refinement_region.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [9, 11], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [10],
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;overset&quot;,
+                    &quot;connection&quot;: {&quot;model&quot;: [&quot;background&quot;]},
+                    &quot;additional active layers&quot;: 3,
+                },
+            },
+        },
+        &quot;cylinder_2&quot;: {
+            &quot;mesh&quot;: &quot;cylinder.h5&quot;,
+            &quot;transforms&quot;: {
+                &quot;transform&quot;: [
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, -0.8],
+                    [0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 1.0],
+                ]
+            },
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [11, 12], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [13],
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;overset&quot;,
+                    &quot;connection&quot;: {&quot;model&quot;: [&quot;refinement_region&quot;]},
+                    &quot;additional active layers&quot;: 3,
+                },
+                &quot;BC_3&quot;: {&quot;zones&quot;: [10], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+            },
+        },
+        &quot;cylinder_1&quot;: {
+            &quot;mesh&quot;: &quot;cylinder.h5&quot;,
+            &quot;transforms&quot;: {
+                &quot;transform&quot;: [
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, 0.8],
+                    [0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 1.0],
+                ]
+            },
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [11, 12], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [13],
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;overset&quot;,
+                    &quot;connection&quot;: {&quot;model&quot;: [&quot;refinement_region&quot;]},
+                    &quot;additional active layers&quot;: 3,
+                },
+                &quot;BC_3&quot;: {&quot;zones&quot;: [10], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+            },
+        },
+    },
+}
+</code></pre><h3 id="config-version"><code>config version</code></h3><p><code>&quot;config version&quot;: 2</code> says which layout of the control file this is. It may be written with a space or an underscore.</p><h3 id="solver"><code>solver</code></h3><p><code>solver</code> holds the settings shared by all four meshes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p><a href="reference/solver/solver-settings/index.html"><code>solver settings</code></a> chooses the solver.</p><ul>
+<li><code>type</code>: <code>compressible</code>, the density-based solver.</li>
+</ul><h4 id="equations"><code>equations</code></h4><p><a href="reference/solver/equations/index.html"><code>equations</code></a> sets which equations are solved.</p><ul>
+<li><code>type</code>: <code>viscous</code>, the laminar Navier–Stokes equations; the flow round each cylinder is laminar at a Reynolds
+number of 20. The Reynolds number compares the flow&#x27;s inertia with its viscosity.</li>
+<li><code>precondition</code>: <code>True</code>, low-Mach-number preconditioning, recommended below about Mach 0.3.</li>
+</ul><h4 id="fluid-properties"><code>fluid properties</code></h4><p><a href="reference/solver/fluid-properties/index.html"><code>fluid properties</code></a> describes the gas.</p><ul>
+<li><code>material</code>: <code>air</code>, an ideal gas, with <code>gamma</code> 1.4 and <code>gas constant</code> 287.0 J/kg/K.</li>
+<li><code>sutherlands const</code>: 110.4 K, for the viscosity&#x27;s change with temperature.</li>
+<li><code>prandtl no</code> 0.72 and <code>turbulent prandtl no</code> 0.9; the turbulent one plays no part in a laminar run.</li>
+</ul><h4 id="reference-conditions"><code>reference conditions</code></h4><p><a href="reference/solver/reference-conditions/index.html"><code>reference conditions</code></a> defines named flow states.</p><h5 id="ic_1"><code>IC_1</code></h5><p><code>IC_1</code> is the freestream.</p><ul>
+<li><code>temperature</code> 277.7777 K and <code>pressure</code> 101325 Pa.</li>
+<li><code>v</code>: <code>vector</code> [1, 0, 0] and <code>mach</code> 0.2, so the flow runs along +x at 66.8 m/s.</li>
+<li><code>reynolds no</code>: 20, based on the <code>reference length</code>, 1.0 m, the diameter of each cylinder. Above a Reynolds
+number of about 47, a single cylinder sheds vortices: they peel off alternately behind it, so the flow never
+settles to a steady state. Two cylinders 1.6 diameters apart behave more like one
+wider body, so they start to shed sooner; 20 is chosen to stay below that, so the flow settles to a steady state.
+The run confirms it by converging.</li>
+</ul><h4 id="initialisation"><code>initialisation</code></h4><p><a href="reference/solver/initialisation/index.html"><code>initialisation</code></a> sets the starting state.</p><ul>
+<li><code>initial conditions</code>: <code>IC_1</code> in every cell of every mesh.</li>
+</ul><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p><a href="reference/solver/numerical-scheme/index.html"><code>numerical scheme</code></a> sets the spatial discretisation.</p><ul>
+<li><code>order</code>: <code>second</code>, with the default Roe flux and van Albada limiter.
+<a href="guide/choosing/choosing-a-limiter/index.html">Choosing a limiter</a> covers both.</li>
+</ul><h4 id="time-settings"><code>time settings</code></h4><p><a href="reference/solver/time-settings/index.html"><code>time settings</code></a> says how the run advances.</p><ul>
+<li><code>type</code>: <code>steady</code>. The flow at this Reynolds number does not change in time, so the solver simply iterates, in a
+made-up <em>pseudo-time</em>, until the solution stops changing. <a href="guide/choosing/choosing-a-time-marching-scheme/index.html">Choosing a time-marching scheme</a>
+explains the choice.</li>
+</ul><h4 id="convergence-control"><code>convergence control</code></h4><p><a href="reference/solver/convergence-control/index.html"><code>convergence control</code></a> sets how the pseudo-time iterations converge to the
+steady state.</p><h5 id="scheme"><code>scheme</code></h5><ul>
+<li><code>name</code>: <code>implicit euler</code>. An overset case needs an implicit pseudo-time scheme; see
+<a href="guide/working-with/overset-meshes/index.html#practical-consequences">Practical consequences</a>.</li>
+<li><code>stage</code>: 1. It has no effect under implicit Euler, which has only one stage.</li>
+</ul><h5 id="cfl"><code>cfl</code></h5><ul>
+<li><code>cfl</code>: 20, the pseudo-time CFL number. This overset stack diverges in its first cycles at 100 or more.</li>
+<li><code>cfl viscous factor</code>: 1.0e-6. It scales the viscous part of each cell&#x27;s pseudo-time step estimate, so at this
+value the convective wave speeds alone set the step.</li>
+<li><code>cfl ramp</code>: starts at 0.1 and grows by 1.05 a cycle, so the first cycles, from a flow that has not yet seen the
+cylinders, are gentle.</li>
+</ul><h5 id="cycles"><code>cycles</code></h5><ul>
+<li><code>cycles</code>: 2000, enough for the residuals, which measure how far the equations are from being satisfied, to fall
+several orders of magnitude, and for the probe to settle.</li>
+</ul><h4 id="output-settings"><code>output settings</code></h4><p><a href="reference/solver/output-settings/index.html"><code>output settings</code></a> sets the report, written as the run goes, and the solution
+files. Each model gets its own report and solution files, in its own folder.</p><h5 id="report"><code>report</code></h5><ul>
+<li><code>frequency</code>: a row every 5 cycles in each model&#x27;s report, with that model&#x27;s residuals.</li>
+<li><code>monitor</code>: <code>MR_1</code>, <code>name</code>d <code>probe</code>, records <code>cp</code> at the <code>point</code> [1.07, 0.25, 0.313], between and behind the
+cylinders. Every model&#x27;s report has the column <code>probe_cp</code>, but only the model whose active cell holds the point
+fills it: here the refinement region. In the others it stays zero.</li>
+</ul><h5 id="solution"><code>solution</code></h5><ul>
+<li><code>format</code>: <code>vtk</code>, VTK HDF files for ParaView.</li>
+<li><code>surface variables</code>: <code>V</code>, <code>p</code>, <code>T</code>, <code>rho</code> and <code>cp</code> on each model&#x27;s boundaries.</li>
+<li><code>volume variables</code>: the same, with <code>mach</code>, and <code>overset</code>: 0 in a cell another mesh has taken over, 1 in a cell
+that is active, and 2 in a cell kept active only by <code>additional active layers</code>, in the band where two meshes
+overlap. <a href="tutorials/5-overset-meshes/index.html#step-5-post-process">Step 5</a> uses it to show only the active cells.</li>
+<li>With no <code>frequency</code> set, the solution files and the checkpoint are written once, at the end of the run.</li>
+</ul><h3 id="model"><code>model</code></h3><p><a href="reference/model/index.html"><code>model</code></a> has one entry for each mesh. Each name, such as <code>background</code>, names that model&#x27;s output
+folder, <code>overset_cylinders_OUTPUT/background/</code>, and its files. The order matters: each mesh oversets meshes before
+it in the list. <code>background</code> is walked in full below; the others differ only as each says.</p><h4 id="background"><code>background</code></h4><p>The coarse mesh beneath the others, 100 m square.</p><h5 id="mesh"><code>mesh</code></h5><p><code>background.h5</code>, 10,000 cells.</p><h5 id="transforms"><code>transforms</code></h5><p><a href="reference/model/transforms/index.html"><code>transforms</code></a> places the mesh when it is read.</p><ul>
+<li><code>transform</code>: a 4 × 4 matrix whose last column translates the mesh. Here it moves the mesh 0.5 m down z, so that its
+span, built from z = 0.5 to 1.5, lines up with the other meshes&#x27; span, z = 0 to 1.
+<a href="guide/working-with/placing-and-moving-a-mesh/index.html">Placing and moving a mesh</a> describes the matrix.</li>
+</ul><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p><a href="reference/model/boundary-conditions/index.html"><code>boundary conditions</code></a> assign a condition to each group of the mesh&#x27;s zones.</p><h6 id="bc_1"><code>BC_1</code></h6><ul>
+<li><code>zones</code> [9, 11], the two faces normal to the span, <code>type</code> <code>symmetry</code>, so one cell across the span is enough.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><ul>
+<li><code>zones</code> [10], the outer boundary, <code>type</code> <a href="guide/choosing/choosing-boundary-conditions/index.html#farfield"><code>farfield</code></a>
+with <code>condition</code> <code>IC_1</code> and <code>kind</code> <code>riemann</code>.</li>
+</ul><h4 id="refinement_region"><code>refinement_region</code></h4><p>A finer Cartesian mesh round both cylinders, 12,800 cells in <code>refinement_region.h5</code>, with no transform.</p><h5 id="boundary-conditions-1"><code>boundary conditions</code></h5><p>Its <code>BC_1</code> is the same symmetry. Its <code>BC_2</code> is where it meets the background:</p><h6 id="bc_2-1"><code>BC_2</code></h6><ul>
+<li><code>zones</code>: [10], the outer boundary of the refinement region.</li>
+<li><code>type</code> <code>interface</code> and <code>kind</code> <code>overset</code>: the boundary of an overset mesh. The background cells that lie under
+the refinement region are not solved, and the two meshes exchange the solution across this boundary.</li>
+<li><code>connection</code>: <code>model</code> <code>[&quot;background&quot;]</code>, the mesh it takes its data from. Naming it tells the solver exactly which
+pair of meshes to map; without it, the solver maps against every model before this one.</li>
+<li><code>additional active layers</code>: 3. The hole the refinement region cuts in the background would otherwise match its
+own outline exactly, leaving no band where both meshes are solved, and the interface faces would find no active
+cell to take their data from. Three extra layers of background cells are kept active round the hole, so the two
+meshes overlap. <a href="guide/working-with/overset-meshes/index.html#donor-search">Donor search</a> explains why this matters.</li>
+</ul><p><a href="guide/working-with/overset-meshes/index.html#overset-interface">Overset interface</a> lists its other settings.</p><h4 id="cylinder_2"><code>cylinder_2</code></h4><p>The lower cylinder: <code>cylinder.h5</code>, 5040 cells round a cylinder of 1 m diameter.</p><ul>
+<li><code>transforms</code>: <code>transform</code> moves it 0.8 m down y.</li>
+<li><code>BC_1</code>: symmetry on zones [11, 12].</li>
+<li><code>BC_2</code>: an overset interface on zone 13, its outer boundary, with <code>connection</code> <code>model</code> <code>[&quot;refinement_region&quot;]</code> and,
+for the same reason as the refinement region&#x27;s, <code>additional active layers</code> 3.</li>
+<li><code>BC_3</code>: zone 10, the cylinder surface, a no-slip <code>wall</code>.</li>
+</ul><h4 id="cylinder_1"><code>cylinder_1</code></h4><p>The upper cylinder: the same mesh and conditions as <code>cylinder_2</code>, moved 0.8 m up y instead. One mesh file can serve
+several models, each placed by its own transform.</p><p>The two cylinder meshes overlap each other between the cylinders. That is allowed, because each names its own
+donor, the refinement region; in each place the solution is taken from the topmost mesh.</p><h2 id="step-3-run">Step 3. Run</h2><p>In the activated environment, check the control file and run it:</p><pre><code class="language-bash">cd ~/tutorial_5_overset_cylinders/
+validate_input overset_cylinders.py
+run_zcfd -c overset_cylinders.py
+</code></pre><p>All four meshes are read from the <code>mesh</code> key of each model. These are extracts from the log of a run of this
+tutorial, <code>overset_cylinders.log</code>, with <code>...</code> marking lines left out:</p><pre><code class="language-text">Parameters validated successfully
+...
+ Reading file background.h5
+ Global Mesh Stats: Cells: 10000 Faces: 40200
+...
+ Reading file refinement_region.h5
+ Global Mesh Stats: Cells: 12800 Faces: 51440
+...
+ Reading file cylinder.h5
+ Global Mesh Stats: Cells: 5040 Faces: 20280
+...
+Overset hole cut: blanked 168 background cells enclosed by the hole (inside the overset mesh&#x27;s solid bodies)
+...
+Overset mapping: 104 of 288 (36.1111%) background halo centres found no active donor cell in the overset mesh. Those faces fall back to the unmapped face treatment instead of interpolated data. The meshes do not overlap deeply enough: increase &#x27;additional active layers&#x27; on the overset interface.
+...
+============================================================
+ Overset Mesh Hierarchy (4 models, 6 pairs)
+============================================================
+ background                  [root]
+ └── refinement_region       [overset]
+     ├── cylinder_2              [overset]
+     └── cylinder_1              [overset]
+ Peer overlaps: background ↔ cylinder_2, background ↔ cylinder_1, cylinder_2 ↔ cylinder_1
+============================================================
+...
+ Solve Complete: 2000 cycles in 2m 27.7s (avg 73.8 ms/cycle)
+...
+zCFD finished: all requested cycles are complete (2000 in total).
+</code></pre><ul>
+<li>Each mesh is read in turn; <code>cylinder.h5</code> is read twice, once for each cylinder.</li>
+<li>The hole cut blanks the background cells inside each cylinder.</li>
+<li>The hierarchy shows which mesh oversets which, as the <code>connection</code> entries ask.</li>
+<li>As the run goes, a report box every few cycles gives each model&#x27;s residuals separately.</li>
+<li>The log may print a few lines starting <code>Overset mapping:</code>. Each reports the share of an interface&#x27;s halo cells,
+the extra cells along the interface that hold the other mesh&#x27;s values, that found no active donor cell to take
+data from; those faces use the unmapped-face treatment
+instead of interpolated data. They are diagnostics, not errors. The three <code>additional active layers</code> set above
+reduce them, and this case converges cleanly with the few that remain.
+<a href="guide/working-with/overset-meshes/index.html#donor-search">Donor search</a> explains these lines.</li>
+<li>The run ends after its 2000 cycles.</li>
+</ul><h3 id="output-files">Output files</h3><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td><code>overset_cylinders.log</code></td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>overset_cylinders_status.yaml</code></td><td>How the run was started: version, date, control file, meshes.</td></tr><tr><td><code>overset_cylinders_OUTPUT/background/</code></td><td>The background&#x27;s report, checkpoint, volume and surface files.</td></tr><tr><td><code>overset_cylinders_OUTPUT/refinement_region/</code></td><td>The same for the refinement region.</td></tr><tr><td><code>overset_cylinders_OUTPUT/cylinder_1/</code></td><td>The same for the upper cylinder.</td></tr><tr><td><code>overset_cylinders_OUTPUT/cylinder_2/</code></td><td>The same for the lower cylinder.</td></tr><tr><td><code>overset_cylinders_OUTPUT/LOGGING/</code></td><td>A separate log for each MPI rank, used for debugging.</td></tr></tbody></table></div><p>Each model folder holds files named after the model, such as <code>cylinder_1/cylinder_1_report.csv</code> and
+<code>cylinder_1/cylinder_1.vtkhdf</code>.</p><h2 id="step-4-monitor">Step 4. Monitor</h2><p>Open the run in zMon:</p><pre><code class="language-bash">zmon overset_cylinders.py
+</code></pre><p>zMon shows each model&#x27;s residuals and monitors against cycle;
+<a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a> describes the panels.</p><ul>
+<li>Each model has its own residuals. The cylinder meshes start with the largest, as the flow first meets the
+cylinders, and fall more than four orders of magnitude. The refinement region starts from the uniform freestream,
+so its residual starts near zero, rises as the disturbance reaches it, then falls. The background&#x27;s residual stays
+at round-off level, around 10<!-- -->&lt;sup&gt;<!-- -->-18<!-- -->&lt;/sup&gt;<!-- -->, throughout.</li>
+<li>The <code>probe_cp</code> monitor sits in the wake between and behind the cylinders. Choose the refinement region&#x27;s report:
+it is the mesh whose active cell holds the point, and the other models show zero. Once the run has converged the
+probe holds a steady value.</li>
+</ul><h2 id="step-5-post-process">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><h3 id="python">Python</h3><p>This script prints each model&#x27;s largest and final density residual, and the final value at the probe. Save it as
+<code>print_convergence.py</code> beside the control file:</p><pre><code class="language-python">from zutil.fileutils import get_zcfd_result
+
+result = get_zcfd_result(&quot;overset_cylinders.py&quot;)
+for model, report in result.model_reports.items():
+    rho = report.data[&quot;rho&quot;]
+    print(f&quot;{model}: density residual fell from {rho.max():.1e} to {rho.iloc[-1]:.1e}&quot;)
+probe = result.model_reports[&quot;refinement_region&quot;].data[&quot;probe_cp&quot;]
+print(f&quot;probe cp at the end of the run: {probe.iloc[-1]:.3f}&quot;)
+</code></pre><pre><code class="language-bash">python print_convergence.py
+</code></pre><h3 id="paraview">ParaView</h3><p>Overset meshes keep their solutions separate, so you can load only the meshes covering the region you want. To
+view the whole domain as one, combine them in ParaView:</p><ul>
+<li>Load the four files <code>overset_cylinders_OUTPUT/background/background.vtkhdf</code>,
+<code>.../refinement_region/refinement_region.vtkhdf</code>, <code>.../cylinder_1/cylinder_1.vtkhdf</code> and
+<code>.../cylinder_2/cylinder_2.vtkhdf</code>.</li>
+<li>Select all four in the pipeline browser and apply <em>Filters &gt; Append Datasets</em>. The new <em>AppendDatasets1</em> acts on
+all four at once.</li>
+<li>Apply <em>Filters &gt; Threshold</em> to <em>AppendDatasets1</em> on the <code>overset</code> variable, with the lower threshold raised from 0
+to 1. <em>Threshold1</em> keeps only the active cells.</li>
+<li>Apply <em>Filters &gt; Cell Data to Point Data</em> to <em>Threshold1</em>, which makes later interpolation more accurate.</li>
+<li>Apply <em>Filters &gt; Slice</em> with its normal along z. The slice holds data from all four meshes.</li>
+<li>Colour <em>Slice1</em> by <code>V</code> <em>Magnitude</em>, with <em>Surface With Edges</em> in the representation toolbar.</li>
+</ul><p>Streamlines and other filters work the same way. Where meshes move during an unsteady run, ParaView updates their
+positions.</p><p>The cylinder meshes have holes where the cylinders are, so the refinement region shows through behind them. To hide
+it, add a cylinder of unit diameter with <em>Sources &gt; Cylinder</em> at [0, 0, 0], rotate it 90° about x and translate it
+by −0.8 in y; repeat with +0.8 for the other cylinder. The view then looks like this:</p><figure class="figure"><img src="images/tutorial-5-postprocessing-paraview-raw.png" alt="Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder." loading="lazy"/><figcaption>Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder.</figcaption></figure><p>To bring the cylinder meshes to the front instead, view each mesh separately and give each cylinder mesh a small
+offset towards the viewer, normal to the slice (0.0, 0.001, 0.0015, 0.002). That is closer to what the solver
+sees, since the covered cells of the meshes beneath are not solved.</p><figure class="figure"><img src="images/tutorial-5-overset-offset.png" alt="The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh." loading="lazy"/><figcaption>The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh.</figcaption></figure><h2 id="example-2-train-in-a-tunnel">Example 2. Train in a tunnel</h2><figure class="figure"><img src="images/tutorial-5-tunnel-mesh.png" alt="The train (white) inside the tunnel mesh: the open-air region round the portal (orange, drawn see-through) and the tunnel bore (blue). The mesh round the train is overset on the tunnel mesh, so moving it through the tunnel simulates the train&#x27;s motion without making a new mesh at each physical time step." loading="lazy"/><figcaption>The train (white) inside the tunnel mesh: the open-air region round the portal (orange, drawn see-through) and the tunnel bore (blue). The mesh round the train is overset on the tunnel mesh, so moving it through the tunnel simulates the train&#x27;s motion without making a new mesh at each physical time step.</figcaption></figure><p>A train entering a tunnel pushes a pressure wave ahead of it, which leaves the far end as a micro pressure wave: a
+boom. This example predicts the wave, with the set-up of Section 7.6 of EN 14067-5, <em>Railway applications —
+Aerodynamics — Part 5: Requirements and test procedures for aerodynamics in tunnels</em> <a href="tutorials/5-overset-meshes/index.html#citations">[1]</a>. For the
+reference train entering the reference tunnel at 250 km/h, the maximum entry pressure gradient dp/dt should lie
+between 8800 Pa/s and 9700 Pa/s.</p><h2 id="step-1-download-the-files-1">Step 1. Download the files</h2><p>The bundle can be downloaded <a href="https://zcfd.zenotech.com/ZCFD-2017-docs-polish/traintunnel.tgz">here</a>.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/traintunnel.tgz
+tar xzf traintunnel.tgz
+cd traintunnel
+</code></pre><p>It contains the control file <code>traintunnel.py</code> and two meshes: <code>tunnel.h5</code>, 7.07 million cells, and <code>train.h5</code>,
+1.06 million.</p><h2 id="step-2-walk-through-the-input-1">Step 2. Walk through the input</h2><p>The control file, <code>traintunnel.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
+the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
+name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
+page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><p>Here <code>model</code> has two entries, the tunnel and the train. Where a block works as in the cylinders above, it
+is covered briefly.</p><pre><code class="language-python">parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;},
+        &quot;equations&quot;: {&quot;type&quot;: &quot;euler&quot;},
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 292.7777,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [1.0, 0.0, 0.0], &quot;mach&quot;: 1e-10},
+                &quot;reference length&quot;: 1.0,
+            }
+        },
+        &quot;time settings&quot;: {
+            &quot;type&quot;: &quot;unsteady&quot;,
+            &quot;kind&quot;: &quot;dual time stepping&quot;,
+            &quot;total time&quot;: 3.6,
+            &quot;time step&quot;: 0.001,
+            &quot;start&quot;: 0,
+            &quot;order&quot;: 1,
+        },
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;, &quot;stage&quot;: 1},
+            &quot;cfl&quot;: {&quot;cfl&quot;: 30},
+            &quot;cycles&quot;: 5,
+        },
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;second&quot;,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;ideal gas&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 10,
+                &quot;monitor&quot;: {
+                    &quot;MR_1&quot;: {
+                        &quot;name&quot;: &quot;probe&quot;,
+                        &quot;point&quot;: [-140, 1.5, 0],
+                        &quot;variables&quot;: [&quot;p&quot;],
+                    }
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;format&quot;: &quot;vtk&quot;,
+                &quot;surface variables&quot;: [&quot;overset&quot;, &quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;],
+                &quot;volume variables&quot;: [&quot;overset&quot;, &quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;m&quot;, &quot;sponge&quot;],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;background&quot;: {
+            &quot;mesh&quot;: &quot;tunnel.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [11, 13], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [12],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;sponge layer damping&quot;: {
+                        &quot;distance&quot;: 20.0,
+                        &quot;damping factor&quot;: 2.037495,
+                        &quot;condition&quot;: &quot;IC_1&quot;,
+                    },
+                },
+            },
+        },
+        &quot;train&quot;: {
+            &quot;mesh&quot;: &quot;train.h5&quot;,
+            &quot;transforms&quot;: {
+                &quot;transform&quot;: [
+                    [1.0, 0.0, 0.0, 110.0],
+                    [0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 1.0],
+                ],
+                &quot;motion&quot;: {
+                    &quot;type&quot;: &quot;translating&quot;,
+                    &quot;velocity&quot;: [-69.4, 0.0, 0.0],
+                    &quot;moving mesh&quot;: True,
+                    &quot;ramp time&quot;: 1.5,
+                },
+            },
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [10], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {&quot;zones&quot;: [9], &quot;type&quot;: &quot;interface&quot;, &quot;kind&quot;: &quot;overset&quot;},
+                &quot;BC_3&quot;: {&quot;zones&quot;: [8], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;slip&quot;},
+            },
+        },
+    },
+}
+</code></pre><h3 id="config-version-1"><code>config version</code></h3><p><code>&quot;config version&quot;: 2</code>, the layout of the control file.</p><h3 id="solver-1"><code>solver</code></h3><p><code>solver</code> holds the settings shared by both meshes.</p><h4 id="solver-settings-1"><code>solver settings</code></h4><ul>
+<li><code>type</code>: <code>compressible</code>, the density-based solver.</li>
+</ul><h4 id="initialisation-1"><code>initialisation</code></h4><ul>
+<li><code>initial conditions</code>: <code>IC_1</code> in every cell: still air everywhere, with the train at rest.</li>
+</ul><h4 id="equations-1"><code>equations</code></h4><ul>
+<li><code>type</code>: <code>euler</code>, the inviscid Euler equations. The pressure wave is a compressible, inviscid effect, so viscosity
+is left out, which keeps a case of this size affordable.</li>
+</ul><h4 id="reference-conditions-1"><code>reference conditions</code></h4><h5 id="ic_1-1"><code>IC_1</code></h5><ul>
+<li><code>temperature</code> 292.7777 K (19.6 °C) and <code>pressure</code> 101325 Pa.</li>
+<li><code>v</code>: <code>vector</code> [1, 0, 0] and <code>mach</code> 1e-10: still air. The train moves; the air does not. The Mach number is not set
+to exactly zero, because the solver scales by it.</li>
+<li><code>reference length</code>: 1.0 m.</li>
+</ul><h4 id="time-settings-1"><code>time settings</code></h4><ul>
+<li><code>type</code> <code>unsteady</code>, <code>kind</code> <code>dual time stepping</code>: the train moves, so the run follows the flow in time. Each
+physical time step is solved like a small steady problem, by the inner iterations set in <code>convergence control</code>.</li>
+<li><code>total time</code>: 3.6 s, long enough for the train to accelerate and enter the tunnel.</li>
+<li><code>time step</code>: 0.001 s, 3600 steps.</li>
+<li><code>start</code>: 0, no steady cycles first.</li>
+<li><code>order</code>: 1, first order in time.</li>
+</ul><h4 id="convergence-control-1"><code>convergence control</code></h4><ul>
+<li><code>scheme</code>: <code>implicit euler</code>. Its <code>stage</code> of 1 has no effect.</li>
+<li><code>cfl</code>: 30, without a ramp.</li>
+<li><code>cycles</code>: 5 inner cycles per time step.</li>
+</ul><h4 id="numerical-scheme-1"><code>numerical scheme</code></h4><ul>
+<li><code>order</code>: <code>second</code>, with the default Roe flux and van Albada limiter.</li>
+</ul><h4 id="fluid-properties-1"><code>fluid properties</code></h4><ul>
+<li><code>material</code>: <code>ideal gas</code>, with <code>gamma</code> 1.4 and <code>gas constant</code> 287.0 J/kg/K.</li>
+<li><code>sutherlands const</code> and <code>prandtl no</code> play no part in an Euler run, which has no viscosity or heat conduction.</li>
+</ul><h4 id="output-settings-1"><code>output settings</code></h4><h5 id="report-1"><code>report</code></h5><ul>
+<li><code>frequency</code>: a row every 10 cycles.</li>
+<li><code>monitor</code>: <code>MR_1</code>, <code>name</code>d <code>probe</code>, records the pressure <code>p</code> at the <code>point</code> [-140, 1.5, 0], inside the tunnel. It
+falls in the tunnel mesh, so its column <code>probe_p</code> is filled in
+<code>traintunnel_OUTPUT/background/background_report.csv</code>. Its history gives the entry pressure gradient in Step 5.</li>
+</ul><h5 id="solution-1"><code>solution</code></h5><ul>
+<li><code>format</code>: <code>vtk</code>, VTK HDF files for ParaView.</li>
+<li><code>surface variables</code>: <code>overset</code>, <code>V</code>, <code>p</code>, <code>T</code> and <code>rho</code>.</li>
+<li><code>volume variables</code>: the same, with the Mach number <code>m</code> and <code>sponge</code>, the damping applied by the sponge layer
+below.</li>
+</ul><h3 id="model-1"><code>model</code></h3><h4 id="background-1"><code>background</code></h4><p>The tunnel and the air round it. Its name gives the output folder, <code>traintunnel_OUTPUT/background/</code>.</p><h5 id="mesh-1"><code>mesh</code></h5><p><code>tunnel.h5</code>, 7.07 million cells.</p><h5 id="boundary-conditions-2"><code>boundary conditions</code></h5><h6 id="bc_1-1"><code>BC_1</code></h6><ul>
+<li><code>zones</code> [11, 13], <code>type</code> <code>symmetry</code>.</li>
+</ul><h6 id="bc_2-2"><code>BC_2</code></h6><ul>
+<li><code>zones</code>: [12], the outer boundary.</li>
+<li><code>type</code>: <code>farfield</code>, with <code>kind</code> <code>riemann</code> and <code>condition</code> <code>IC_1</code>.</li>
+<li><code>sponge layer damping</code>: within <code>distance</code> 20 m of the farfield, the solution is damped towards its <code>condition</code>,
+<code>IC_1</code>, at a rate rising to the <code>damping factor</code>, 2.037495, at the boundary. The sponge absorbs pressure waves
+before they reach the farfield, where they would reflect back into the domain.</li>
+</ul><h4 id="train"><code>train</code></h4><p>The train, with its output in <code>traintunnel_OUTPUT/train/</code>.</p><h5 id="mesh-2"><code>mesh</code></h5><p><code>train.h5</code>, 1.06 million cells.</p><h5 id="transforms-1"><code>transforms</code></h5><ul>
+<li><code>transform</code>: a 4 × 4 matrix whose last column places the train 110 m along x before it starts to move.</li>
+<li><code>motion</code>: how the train moves during the run.<!-- -->
+<ul>
+<li><code>type</code>: <code>translating</code>, a straight-line motion.</li>
+<li><code>velocity</code>: [-69.4, 0, 0] m/s, 250 km/h towards −x and the tunnel.</li>
+<li><code>moving mesh</code>: <code>True</code>, so the train mesh itself moves through the tunnel mesh. Every time step it is moved to
+the position the motion gives at the end of the step, and its overset mappings are recalculated.</li>
+<li><code>ramp time</code>: 1.5 s. The speed rises linearly from rest to the full velocity over the first 1.5 s, which avoids
+the transients of an impulsive start.</li>
+</ul>
+</li>
+</ul><p>A moving mesh is allowed only in an unsteady compressible run, on a mesh that also has an overset or sliding
+interface. <a href="guide/working-with/placing-and-moving-a-mesh/index.html">Placing and moving a mesh</a> describes <code>transforms</code>.</p><h5 id="boundary-conditions-3"><code>boundary conditions</code></h5><h6 id="bc_1-2"><code>BC_1</code></h6><ul>
+<li><code>zones</code> [10], <code>type</code> <code>symmetry</code>.</li>
+</ul><h6 id="bc_2-3"><code>BC_2</code></h6><ul>
+<li><code>zones</code> [9], the outer boundary of the train mesh, <code>type</code> <code>interface</code>, <code>kind</code> <code>overset</code>. It names no
+<code>connection</code>, so it is mapped against every model before it: here only the tunnel.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><ul>
+<li><code>zones</code>: [8], the train&#x27;s surface.</li>
+<li><code>type</code> <code>wall</code> with <code>kind</code> <code>slip</code>: in the Euler equations the flow slides along a wall rather than stopping at it.</li>
+</ul><h2 id="step-3-run-1">Step 3. Run</h2><p>The case needs about 48 GB of GPU memory. Run it in the activated environment:</p><pre><code class="language-bash">validate_input traintunnel.py
+run_zcfd -c traintunnel.py
+</code></pre><h2 id="step-4-monitor-1">Step 4. Monitor</h2><pre><code class="language-bash">zmon traintunnel.py
+</code></pre><p>zMon shows each model&#x27;s residuals, and the <code>probe_p</code> monitor in the reports panel of the background model: the
+pressure inside the tunnel rising as the train enters.</p><h2 id="step-5-post-process-1">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><h3 id="python-1">Python</h3><p>This script plots the entry pressure gradient: how fast the pressure inside the tunnel rises, the time derivative
+of <code>probe_p</code>. Save it as <code>plot_entry_pressure_gradient.py</code> in the case directory:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+from zutil.fileutils import get_zcfd_result
+
+time_step = 0.001
+result = get_zcfd_result(&quot;traintunnel.py&quot;)
+p = np.array(result.model_reports[&quot;background&quot;].get_array(&quot;probe_p&quot;))
+dpdt = np.diff(p) / time_step
+time = time_step * np.arange(len(dpdt))
+
+fig, ax = plt.subplots()
+ax.minorticks_on()
+ax.grid(which=&quot;both&quot;)
+ax.set_title(f&quot;Maximum entry pressure gradient = {dpdt.max():.1f} Pa/s&quot;)
+ax.set_xlabel(&quot;Time [s]&quot;)
+ax.set_ylabel(&quot;dPdt [Pa/s]&quot;)
+ax.set_xlim(0, 3.6)
+ax.set_ylim(-100, 12000)
+ax.plot(time, dpdt, label=&quot;250 km/h&quot;)
+ax.axhline(8800, label=&quot;min valid dP/dT&quot;, c=&quot;grey&quot;)
+ax.axhline(9700, label=&quot;max valid dP/dT&quot;, c=&quot;grey&quot;)
+ax.legend()
+fig.savefig(&quot;EntryPressureGradient.png&quot;)
+</code></pre><p>Run it:</p><pre><code class="language-bash">python plot_entry_pressure_gradient.py
+</code></pre><p>It plots the entry pressure gradient against time. The maximum is 9660 Pa/s, within the 8800 Pa/s to 9700 Pa/s
+the standard specifies.</p><figure class="figure"><img src="images/tutorial-5-entry-pressure-gradient.png" alt="Entry Pressure Gradient." loading="lazy"/><figcaption>Entry Pressure Gradient.</figcaption></figure></div>
+<h2 id="citations">Citations</h2>
+<ol>
+<li>EN 14067-5<!-- -->:2006<!-- --> - Railway applications - Aerodynamics - Part 5: Requirements and test procedures for
+aerodynamics in tunnels, <a href="https://standards.iteh.ai/catalog/standards/cen/ea6cb49e-c40a-4b8b-a059-c6debdb91dc7/en-14067-5-2006">see</a></li>
+</ol></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/5-overset-meshes/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/5-overset-meshes/index.html#what-you-need">What you need?</a><a href="tutorials/5-overset-meshes/index.html#example-1-overset-cylinders">Example 1. Overset cylinders</a><a href="tutorials/5-overset-meshes/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/5-overset-meshes/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/5-overset-meshes/index.html#step-3-run">Step 3. Run</a><a href="tutorials/5-overset-meshes/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/5-overset-meshes/index.html#step-5-post-process">Step 5. Post-process</a><a href="tutorials/5-overset-meshes/index.html#example-2-train-in-a-tunnel">Example 2. Train in a tunnel</a><a href="tutorials/5-overset-meshes/index.html#step-1-download-the-files-1">Step 1. Download the files</a><a href="tutorials/5-overset-meshes/index.html#step-2-walk-through-the-input-1">Step 2. Walk through the input</a><a href="tutorials/5-overset-meshes/index.html#step-3-run-1">Step 3. Run</a><a href="tutorials/5-overset-meshes/index.html#step-4-monitor-1">Step 4. Monitor</a><a href="tutorials/5-overset-meshes/index.html#step-5-post-process-1">Step 5. Post-process</a><a href="tutorials/5-overset-meshes/index.html#citations">Citations</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

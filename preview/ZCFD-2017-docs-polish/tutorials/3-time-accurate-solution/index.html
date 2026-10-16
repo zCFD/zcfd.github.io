@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>3 · Time-accurate solution · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/3-time-accurate-solution.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/3-time-accurate-solution-B88rLq8O.js">
+    <script type="module" crossorigin src="./assets/index-FgxSx1t3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPicbpDq.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-2017-docs-polish">ZCFD-2017-docs-polish</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow sel"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink" aria-current="page"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>3 · Time-accurate solution</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="time-accurate-solution">Time-accurate solution</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>Some flows never settle to a steady state. Behind a cylinder, swirling vortices peel off each side in turn and are
+carried away downstream, and the flow repeats over and over at a definite frequency. This is vortex shedding, the
+same effect that makes wires hum in the wind.</p>
+<p>The previous tutorials looked for a steady answer. Here the answer changes with time, so the run has to follow it
+step by step in real time: a time-accurate run. The flow is a cylinder in a slow, smooth (laminar) flow at a
+Reynolds number of 150. You record the pressure at one point in the wake and measure the shedding frequency from
+it.</p>
+<figure class="figure"><img src="images/tutorial-3-cylinder.png" alt="Pressure coefficient round the cylinder and in its wake at 1.6 s" loading="lazy"/><figcaption>Pressure coefficient round the cylinder and in its wake at 1.6 s</figcaption></figure>
+<h2 id="what-you-need">What you need?</h2>
+<p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for activating zCFD,
+running a case and reading its output. The run takes about four minutes on an NVIDIA RTX 3060.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_3_cylinder_shedding.tgz">here</a>.
+It contains a mesh file (<code>cylinder.h5</code>) and a zCFD control file (<code>cylinder.py</code>).</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_3_cylinder_shedding.tgz
+tar xzf tutorial_3_cylinder_shedding.tgz
+cd tutorial_3_cylinder_shedding
+</code></pre><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>cylinder.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
+the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
+name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
+page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><pre><code class="language-python">parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;viscous&quot;,
+            &quot;precondition&quot;: True,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 277.7777,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [0.0, 1.0, 0.0], &quot;mach&quot;: 0.2},
+                &quot;reynolds no&quot;: 150,
+                &quot;reference length&quot;: 1.0,
+            },
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: False},
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;second&quot;,
+            &quot;inviscid flux scheme&quot;: &quot;roe&quot;,
+        },
+        &quot;time settings&quot;: {
+            &quot;type&quot;: &quot;unsteady&quot;,
+            &quot;kind&quot;: &quot;dual time stepping&quot;,
+            &quot;total time&quot;: 1.6,
+            &quot;time step&quot;: 0.002,
+            &quot;order&quot;: &quot;second&quot;,
+            &quot;start&quot;: 0,
+        },
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 200,
+                &quot;cfl viscous factor&quot;: 1.0e-6,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.05, &quot;initial&quot;: 0.1}],
+            },
+            &quot;cycles&quot;: 5,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 5,
+                &quot;monitor&quot;: {
+                    &quot;MR_1&quot;: {
+                        &quot;name&quot;: &quot;probe&quot;,
+                        &quot;point&quot;: [0.25, 1.07, 0.313],
+                        &quot;variables&quot;: [&quot;cp&quot;],
+                    },
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;format&quot;: &quot;vtk&quot;,
+                &quot;surface variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;cp&quot;],
+                &quot;volume variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;m&quot;, &quot;cp&quot;],
+                &quot;frequency&quot;: {
+                    &quot;volume data&quot;: 5,
+                    &quot;surface data&quot;: 5,
+                    &quot;checkpoint&quot;: 20,
+                },
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;cylinder&quot;: {
+            &quot;mesh&quot;: &quot;cylinder.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [2], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {&quot;zones&quot;: [3], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: [1],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+            },
+        },
+    },
+}
+</code></pre><p>If you have worked through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>, the parts that are new here are
+<code>time settings</code>, <code>convergence control</code> and <code>output settings</code>.</p><h3 id="config-version"><code>config version</code></h3><p>The version of the control-file format. <code>2</code> is the current format, which zCFD checks before it reads anything else.</p><h3 id="solver"><code>solver</code></h3><p>Everything shared by the whole simulation: the equations, the flow conditions, how the run marches in time and what
+it writes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Which solver runs the case. <a href="reference/solver/solver-settings/index.html">Reference</a>.</p><ul>
+<li><code>type</code>: <code>&quot;compressible&quot;</code>, the density-based solver. At Mach 0.2 the flow is nearly incompressible, but the
+compressible solver with preconditioning handles it well.</li>
+</ul><h4 id="equations"><code>equations</code></h4><p>Which equations are solved. <a href="reference/solver/equations/index.html">Reference</a>.</p><ul>
+<li><code>type</code>: <code>&quot;viscous&quot;</code>, the Navier–Stokes equations with no turbulence model. At a Reynolds number of 150 the flow
+round the cylinder is laminar: smooth and orderly, apart from the vortices themselves, so no turbulence model is
+needed.</li>
+<li><code>precondition</code>: <code>True</code> switches on low-Mach-number preconditioning, which keeps the solver efficient and accurate
+at low Mach numbers. It is recommended below about Mach 0.3.</li>
+</ul><h4 id="fluid-properties"><code>fluid properties</code></h4><p>The gas the flow is made of. <a href="reference/solver/fluid-properties/index.html">Reference</a>.</p><ul>
+<li><code>material</code>: <code>&quot;air&quot;</code>.</li>
+<li><code>gamma</code>: 1.4, the ratio of specific heats.</li>
+<li><code>gas constant</code>: 287 J/kg/K.</li>
+<li><code>sutherlands const</code>: 110.4 K, the constant in Sutherland&#x27;s law, which gives the viscosity&#x27;s change with
+temperature.</li>
+<li><code>prandtl no</code>: 0.72, the laminar Prandtl number, which relates heat conduction to viscosity. There is no turbulent
+Prandtl number, as there is no turbulence model.</li>
+</ul><h4 id="reference-conditions"><code>reference conditions</code></h4><p>Named flow states, which the initialisation and the boundary conditions refer to.
+<a href="reference/solver/reference-conditions/index.html">Reference</a>.</p><h5 id="ic_1"><code>IC_1</code></h5><p>The freestream.</p><ul>
+<li><code>temperature</code>: 277.78 K.</li>
+<li><code>pressure</code>: 101325 Pa.</li>
+<li><code>v</code>: the velocity, as a direction and a Mach number: Mach 0.2 along y, which is the flow direction in this mesh.</li>
+<li><code>reynolds no</code>: 150. Instead of a viscosity, the state gives a Reynolds number, and zCFD works out the viscosity
+that produces it.</li>
+<li><code>reference length</code>: 1 m, the cylinder&#x27;s diameter, which the Reynolds number is based on.</li>
+</ul><h4 id="initialisation"><code>initialisation</code></h4><p>How the flow field starts. <a href="reference/solver/initialisation/index.html">Reference</a>.</p><ul>
+<li><code>initial conditions</code>: <code>&quot;IC_1&quot;</code> fills the domain with the freestream. The uniform start is symmetric, so the wake
+takes a while to break symmetry and begin shedding.</li>
+<li><code>restart</code>: <code>False</code>, a fresh start rather than a continuation of an earlier run.</li>
+</ul><p><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html">Choosing initialisation and reference state</a>
+covers both.</p><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p>How the equations are discretised in space. <a href="reference/solver/numerical-scheme/index.html">Reference</a>.</p><ul>
+<li><code>order</code>: <code>&quot;second&quot;</code> reconstructs every flow variable to second order, with the default limiter keeping it free of
+overshoots.</li>
+<li><code>inviscid flux scheme</code>: <code>&quot;roe&quot;</code>, Roe&#x27;s scheme for the flow between cells.</li>
+</ul><p><a href="guide/choosing/choosing-a-spatial-scheme/index.html">Choosing a spatial scheme</a> covers both.</p><h4 id="time-settings"><code>time settings</code></h4><p>What kind of run this is, and how it advances in physical time. This is what makes the run time-accurate.
+<a href="reference/solver/time-settings/index.html">Reference</a>.</p><ul>
+<li><code>type</code>: <code>&quot;unsteady&quot;</code>, a solution that changes with time.</li>
+<li><code>kind</code>: <code>&quot;dual time stepping&quot;</code>. The run advances in real (physical) time steps. At each one it has to find the
+flow at the new time, and it does that the same way a steady run finds its answer: by repeating cycles, called
+inner cycles, that home in on it. The inner cycles march in an artificial time, pseudo-time, that only matters
+inside the step. <code>convergence control</code>, below, sets that inner loop.</li>
+<li><code>total time</code>: 1.6 s of physical time.</li>
+<li><code>time step</code>: 0.002 s per step, so the run takes 1.6 / 0.002 = 800 time steps. The step must be small enough to
+follow the flow&#x27;s fastest changes; the shedding period here is about 0.09 s, more than 40 steps.</li>
+<li><code>order</code>: <code>&quot;second&quot;</code>, a second-order backward difference for the time derivative. The first steps build up to it
+from first order.</li>
+<li><code>start</code>: 0, the number of steady cycles to run before time stepping begins. None here: the run marches from the
+uniform start straight away.</li>
+</ul><p><a href="guide/choosing/choosing-a-time-marching-scheme/index.html#dual-time-stepping">Dual time stepping</a> describes the options.</p><h4 id="convergence-control"><code>convergence control</code></h4><p>The inner pseudo-time loop that converges each physical time step, set just as it sets the whole solve in a steady
+run. <a href="reference/solver/convergence-control/index.html">Reference</a>.</p><h5 id="scheme"><code>scheme</code></h5><ul>
+<li><code>name</code>: <code>&quot;implicit euler&quot;</code>, which takes each pseudo-time step by solving a linear system, allowing large steps.</li>
+</ul><h5 id="cfl"><code>cfl</code></h5><p>The CFL number sets the size of each pseudo-time step.</p><ul>
+<li><code>cfl</code>: 200, the CFL number the ramp climbs to.</li>
+<li><code>cfl viscous factor</code>: scales the viscous part of each cell&#x27;s pseudo-time step estimate. At 10<!-- -->&lt;sup&gt;<!-- -->-6<!-- -->&lt;/sup&gt;<!-- --> it
+leaves the convective wave speeds alone to set the step.</li>
+<li><code>cfl ramp</code>: starts at 0.1 and multiplies the CFL by 1.05 each cycle until it reaches 200, so the first cycles,
+far from the answer, take small steps.</li>
+</ul><h5 id="cycles"><code>cycles</code></h5><ul>
+<li>5 inner cycles per physical time step, so the run makes 800 × 5 = 4000 cycles in all.</li>
+</ul><p>The time step and the number of inner cycles together set the cost and accuracy of the run. Too large a time step,
+or too few inner cycles, and the faster unsteady features are lost; too small a step, or too many cycles, and the
+run costs more for no gain. Check a new case by repeating it with a smaller time step or more inner cycles, and
+making sure the result you care about, here the shedding frequency, does not change.
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#cfl-control">CFL control</a> describes the ways to set the CFL.</p><h4 id="output-settings"><code>output settings</code></h4><p>What zCFD writes, and how often. There are two kinds of output: the <code>report</code>, a table that grows as the run goes,
+and the <code>solution</code>, flow fields for viewing. <a href="reference/solver/output-settings/index.html">Reference</a>.</p><h5 id="report"><code>report</code></h5><p>The report is the CSV file <code>cylinder_report.csv</code>: one row of residuals, and of any forces and monitors, at a time.
+zMon plots it as the run goes.</p><ul>
+<li><code>frequency</code>: 5, a row every 5 cycles. With 5 inner cycles per time step, that is one row per time step, at the end
+of its inner loop.</li>
+<li><code>monitor</code>: monitor points, each of which records flow variables at a point. This deck has one, <code>MR_1</code>:<!-- -->
+<ul>
+<li><code>name</code>: <code>&quot;probe&quot;</code>. The report names its columns after it.</li>
+<li><code>point</code>: (0.25, 1.07, 0.313), just behind the cylinder, where the shed vortices pass.</li>
+<li><code>variables</code>: <code>[&quot;cp&quot;]</code>, the pressure coefficient. The monitor adds a <code>probe_cp</code> column to the report.</li>
+</ul>
+</li>
+</ul><p>The pressure at the probe rises and falls as each vortex passes, so its history gives the shedding frequency.
+<a href="reference/solver/output-settings/report/index.html#monitor">Monitor points</a> lists the options.</p><h5 id="solution"><code>solution</code></h5><p>The flow fields written for viewing in ParaView, and the checkpoint for restarting.</p><ul>
+<li><code>format</code>: <code>&quot;vtk&quot;</code>, VTK HDF files.</li>
+<li><code>surface variables</code>: written on the boundaries: velocity <code>V</code>, pressure <code>p</code>, temperature <code>T</code>, density <code>rho</code> and
+pressure coefficient <code>cp</code>.</li>
+<li><code>volume variables</code>: written in every cell: the same, plus the Mach number <code>m</code>.</li>
+<li><code>frequency</code>: in a time-accurate run it counts physical time steps, and each output is kept rather than overwritten,
+so the files hold the flow&#x27;s history. A dictionary sets each kind separately:<!-- -->
+<ul>
+<li><code>volume data</code>: every 5 time steps, or every 0.01 s of physical time.</li>
+<li><code>surface data</code>: every 5 time steps.</li>
+<li><code>checkpoint</code>: every 20 time steps, the file a restart reads.</li>
+</ul>
+</li>
+</ul><p>Volume output is the slowest and largest, so on a large case write it rarely and rely on surface data, monitor
+points and <a href="reference/solver/output-settings/solution/frequency/index.html#volume-interpolate">interpolated volume data</a>
+for high-frequency data. <a href="guide/working-with/post-processing-and-visualisation/index.html#output-variables">Output variables</a>
+lists every variable.</p><h3 id="model"><code>model</code></h3><p>One entry per mesh, each with its own boundary conditions. <a href="reference/model/index.html">Reference</a>.</p><h4 id="cylinder"><code>cylinder</code></h4><p>The only model. Its name, <code>cylinder</code>, names its output folder, <code>cylinder_OUTPUT/cylinder/</code>, and its output files.</p><h5 id="mesh"><code>mesh</code></h5><ul>
+<li><code>&quot;cylinder.h5&quot;</code>, a zCFD mesh with 80,000 cells. The cylinder has a diameter of 1 m and is centred on the origin,
+with its span along x and a single cell across it.</li>
+</ul><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p>A condition for each group of boundary faces. The groups are the mesh&#x27;s zones, numbered when the mesh was made, and
+each condition names its zones in a <code>zones</code> list.
+<a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing boundary conditions</a> describes every type.</p><h6 id="bc_1"><code>BC_1</code></h6><ul>
+<li><code>zones</code>: <code>[2]</code>, the two faces normal to the span.</li>
+<li><code>type</code>: <code>&quot;symmetry&quot;</code>, which makes the flow behave as if the cylinder were infinitely long, so it stays 2D.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><ul>
+<li><code>zones</code>: <code>[3]</code>, the cylinder surface.</li>
+<li><code>type</code>: <code>&quot;wall&quot;</code>, with <code>kind</code> <code>&quot;no slip&quot;</code>: the flow velocity is zero at the surface.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><ul>
+<li><code>zones</code>: <code>[1]</code>, the outer boundary.</li>
+<li><code>type</code>: <code>&quot;farfield&quot;</code>, which lets flow pass in and out of the domain.</li>
+<li><code>condition</code>: <code>&quot;IC_1&quot;</code>, the freestream state outside.</li>
+<li><code>kind</code>: <code>&quot;riemann&quot;</code>, which passes waves out without reflecting them back into the domain.</li>
+</ul><h2 id="step-3-run">Step 3. Run</h2><p>Activate zCFD as in <a href="tutorials/1-simple-aerofoil/index.html#step-3-run">Simple aerofoil</a>, then check and run the case:</p><pre><code class="language-bash">cd ~/tutorial_3_cylinder_shedding/
+validate_input cylinder.py
+run_zcfd -c cylinder.py
+</code></pre><p>These are extracts from the log of a run of this tutorial, with <code>...</code> marking lines left out:</p><pre><code class="language-text">Parameters validated successfully
+...
+ Reading file cylinder.h5
+ Global Mesh Stats: Cells: 80000 Faces: 320400
+...
+  Viscosity:    0.566148 Ns/m^2 @ 277.778 K
+  Speed:        66.8165 m/s
+...
+  Mach:         0.2
+  Reynolds No:  150 @ 277.778 K
+...
+Starting solve loop
+...
+Cycle      5 | Step    1 t=0.004s | CFL 200.000 | MG 1 |    33.3 ms | Total     0.325s
++--------------------------------------------------------------------------------------+
+| Report: Cycle 5  Wall time: 0.325s                                                   |
+...
+| Residuals:                                                                           |
+|   rho      4.6237E-03  rhoV[0]  2.5934E-12  rhoV[1]  2.4954E-03  rhoV[2]  1.7882E-03 |
+|   rhoE     1.1779E-02                                                                |
+| Inner convergence:                                                                   |
+|   Inner 5/5: 0.89 orders (ratio 1.36e-03, residual 1.19 orders, 11596 cells)         |
+| Reports:                                                                             |
+|   probe_cp -5.8776E-02                                                               |
++--------------------------------------------------------------------------------------+
+Real time cycle 1 complete: 5 inner cycles, 0.89 orders dropped
+...
+Real time cycle 799 complete: 5 inner cycles, 0.84 orders dropped
+...
+ Solve Complete: 4000 cycles in 1m 10.6s (avg 17.6 ms/cycle)
+...
+zCFD finished: all requested cycles are complete (4000 in total).
+</code></pre><ul>
+<li>The reference conditions are printed in dimensional form. The viscosity is very high because the Reynolds number
+is only 150 on a 1 m cylinder at 67 m/s.</li>
+<li>The cycle line now shows the time step (<code>Step</code>) and the physical time it has reached (<code>t</code>), as well as the inner
+cycle.</li>
+<li>The report box gains an <code>Inner convergence</code> line, saying how far the inner cycles dropped the residual in that
+time step, and a <code>Reports</code> section with the monitor point&#x27;s value.</li>
+<li>At the end of each time step, a line sums up its inner loop. Here five inner cycles drop the residual by under
+one order of magnitude per step.</li>
+<li>The run ends after 800 time steps of 5 cycles each.</li>
+</ul><h3 id="output-files">Output files</h3><p>The output follows the same pattern as the first tutorial, named after the control file and the model:</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td><code>cylinder.log</code></td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>cylinder_status.yaml</code></td><td>A YAML file recording how the run was started.</td></tr><tr><td><code>cylinder_OUTPUT/cylinder/cylinder_report.csv</code></td><td>The report: residuals and the <code>probe_cp</code> monitor, one row per time step.</td></tr><tr><td><code>cylinder_OUTPUT/cylinder/cylinder_results.h5</code></td><td>The checkpoint, for restarting the run.</td></tr><tr><td><code>cylinder_OUTPUT/cylinder/cylinder.vtkhdf</code></td><td>The volume data. One file holds every time step written, 160 in this run.</td></tr><tr><td><code>cylinder_OUTPUT/cylinder/cylinder_wall.vtkhdf</code> etc</td><td>One file for each boundary condition type, holding the surface data at every time step.</td></tr></tbody></table></div><h2 id="step-4-monitor">Step 4. Monitor</h2><p>Open the run in zMon, as in the previous tutorials:</p><pre><code class="language-bash">zmon cylinder.py
+</code></pre><p>For an unsteady run, zMon can plot against physical time instead of cycle, showing one point per time step. The
+plots below are zMon&#x27;s panels drawn that way; <a href="tutorials/3-time-accurate-solution/index.html#step-5-post-process">Step 5</a> shows how to plot the same data yourself.</p><h3 id="residuals">Residuals</h3><figure class="figure"><img src="images/tutorial-3-residuals.png" alt="Residuals of the cylinder run against physical time" loading="lazy"/><figcaption>Residuals of the cylinder run against physical time</figcaption></figure><p>Each point is the residual at the end of a time step. They fall quickly from the uniform start, then sit between
+10<!-- -->&lt;sup&gt;<!-- -->-5<!-- -->&lt;/sup&gt;<!-- --> and 10<!-- -->&lt;sup&gt;<!-- -->-3<!-- -->&lt;/sup&gt;<!-- -->. Once shedding begins, from about 0.7 s, they rise a little and oscillate at the
+shedding frequency: the flow is changing all the time, so there is no steady state for the residuals to fall
+towards. <code>rhoV[0]</code>, the momentum along the span (x), stays near round-off throughout, because the flow has no
+velocity in that direction.</p><h3 id="monitor-points">Monitor points</h3><p>zMon&#x27;s monitor points panel shows the <code>probe_cp</code> column the monitor adds to the report:</p><figure class="figure"><img src="images/tutorial-3-probe-cp.png" alt="Pressure coefficient at the probe against physical time" loading="lazy"/><figcaption>Pressure coefficient at the probe against physical time</figcaption></figure><p>The pressure behind the cylinder settles at first, then from about 0.7 s starts to oscillate as the wake breaks
+symmetry and vortices are shed. By 1.2 s the oscillation is regular. Its frequency gives the shedding frequency:
+the cylinder sheds at 11.5 Hz. Engineers usually quote it as a Strouhal number, the frequency times the
+diameter divided by the flow speed, which lets cylinders of any size and speed be compared: here it is 0.17.</p><h2 id="step-5-post-process">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><h3 id="python">Python</h3><p>This script draws the plots in <a href="tutorials/3-time-accurate-solution/index.html#step-4-monitor">Step 4</a> and measures the shedding frequency. It keeps the last report
+row of each time step (<code>groupby(&quot;RealTimeStep&quot;).last()</code>) and turns the step number into time with the 0.002 s time
+step. It then finds the peaks of <code>probe_cp</code> after 1.2 s, once the shedding is
+regular: the frequency is the number of periods between the first and last peak divided by the time between them.
+The Strouhal number divides by the flow speed, 66.82 m/s, which the log prints. Save the script as
+<code>shedding_frequency.py</code> in the case directory:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+
+from zutil.fileutils import get_zcfd_result
+
+report = get_zcfd_result(&quot;cylinder.py&quot;).report.data
+steps = report.groupby(&quot;RealTimeStep&quot;).last()
+time = steps.index * 0.002
+
+fig, ax = plt.subplots()
+for column in [&quot;rho&quot;, &quot;rhoV[0]&quot;, &quot;rhoV[1]&quot;, &quot;rhoV[2]&quot;, &quot;rhoE&quot;]:
+    ax.semilogy(time, steps[column], label=column)
+ax.set_xlabel(&quot;Time (s)&quot;)
+ax.set_ylabel(&quot;Residual&quot;)
+ax.legend()
+fig.savefig(&quot;residuals.png&quot;, dpi=200)
+
+fig, ax = plt.subplots()
+ax.plot(time, steps[&quot;probe_cp&quot;])
+ax.set_xlabel(&quot;Time (s)&quot;)
+ax.set_ylabel(&quot;probe_cp&quot;)
+fig.savefig(&quot;probe.png&quot;, dpi=200)
+
+cp = steps[&quot;probe_cp&quot;].to_numpy()
+peaks = [time[i] for i in range(1, len(cp) - 1) if time[i] &gt; 1.2 and cp[i - 1] &lt; cp[i] &gt; cp[i + 1]]
+frequency = (len(peaks) - 1) / (peaks[-1] - peaks[0])
+print(f&quot;Shedding frequency {frequency:.2f} Hz, Strouhal number {frequency * 1.0 / 66.82:.3f}&quot;)
+</code></pre><p>Run it:</p><pre><code class="language-bash">python shedding_frequency.py
+</code></pre><p>It writes <code>residuals.png</code> and <code>probe.png</code>, and prints the shedding frequency and the Strouhal number:</p><pre><code class="language-text">Shedding frequency 11.49 Hz, Strouhal number 0.172
+</code></pre><h3 id="paraview">ParaView</h3><h4 id="flow-field">Flow field</h4><p>The solution output frequency is 5, so the solver writes visualisation data every 5 time steps. All of them are
+stored in a single <code>cylinder.vtkhdf</code> file in the <code>cylinder_OUTPUT/cylinder/</code> directory.</p><p>Launch ParaView and load <code>cylinder_OUTPUT/cylinder/cylinder.vtkhdf</code>. ParaView shows one time step at a time, and
+you can move through them with the icons at the top of the screen:</p><figure class="figure"><img src="images/tutorial-3-paraview-time.png" alt="ParaView&#x27;s time controls" loading="lazy"/><figcaption>ParaView&#x27;s time controls</figcaption></figure><h4 id="animation">Animation</h4><p>For unsteady data it is often useful to output an animation of the solution. This can be done in ParaView by
+either exporting an image per timestep and then using a third party tool to stitch the images into a video or by
+saving the animation directly. The advantage of the first approach is that it can easily be scripted and is more
+suitable for large cases.
+Since this case is small, this tutorial exports an mp4 video directly from ParaView. The steps to do this are:</p><ol>
+<li>
+<p>Launch ParaView and load <code>cylinder_OUTPUT/cylinder/cylinder.vtkhdf</code>.</p>
+</li>
+<li>
+<p>Set the view up to shade the output by <em>&quot;cp&quot;</em> and zoom/move the image until you are happy with the view:</p>
+</li>
+</ol><figure class="figure"><img src="images/tutorial-3-paraview.png" alt="Cp shaded" loading="lazy"/><figcaption>Cp shaded</figcaption></figure><ol start="3">
+<li>Select <em>&#x27;File-&gt;Save Animation&#x27;</em> in ParaView. To export as video select your preferred format, the format will
+depend on your Operating System but for Windows you should be able to select &quot;MP4 files&quot; and on Linux &quot;FFMPEG
+AVI&quot;. Give the file a name and click OK.</li>
+<li>On the next screen you can set the target resolution, frame rate and the timesteps to export. Set the Image
+resolution to 1920x1080 (FHD) and the frame rate to 24. To export only the end of the simulation (where the oscillation is established), set the Frame Window from 80 to 160.</li>
+<li>Click OK to export the animation. This will take some time.</li>
+</ol><p>You should now have an exported video of the unsteady simulation.</p></div></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/3-time-accurate-solution/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/3-time-accurate-solution/index.html#what-you-need">What you need?</a><a href="tutorials/3-time-accurate-solution/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/3-time-accurate-solution/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/3-time-accurate-solution/index.html#step-3-run">Step 3. Run</a><a href="tutorials/3-time-accurate-solution/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/3-time-accurate-solution/index.html#step-5-post-process">Step 5. Post-process</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

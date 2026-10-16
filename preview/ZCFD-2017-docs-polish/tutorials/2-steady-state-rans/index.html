@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>2 · Steady-state RANS · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/2-steady-state-rans.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/2-steady-state-rans-C5GFcV8s.js">
+    <script type="module" crossorigin src="./assets/index-FgxSx1t3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPicbpDq.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-2017-docs-polish">ZCFD-2017-docs-polish</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow sel"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink" aria-current="page"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>2 · Steady-state RANS</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="steady-state-rans">Steady-state RANS</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p><a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> showed how to run a case in zCFD and look at the results. This tutorial
+uses a harder case to show more of the solver: the 30P30N, a high-lift aerofoil of the kind a wing uses for take-off
+and landing. It has three parts: a slat at the front, the main element, and a flap at the back, with gaps between
+them. It is a well-known test case, first developed to study the noise these wings make <a href="tutorials/2-steady-state-rans/index.html#citations">[1]</a>.</p>
+<p>You run it at an angle of attack, the angle between the oncoming flow and the aerofoil&#x27;s chord, and report the lift
+(the force across the flow) and the drag (the force along it). The first run stops before the answer has settled, so
+you then restart it from where it stopped and carry it on.</p>
+<figure class="figure"><img src="images/tutorial-2-30p30n.png" alt="30P 30N" loading="lazy"/><figcaption>30P 30N</figcaption></figure>
+<h2 id="what-you-need">What you need?</h2>
+<p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for activating zCFD,
+running a case and reading its output. The case has 64,000 cells. On an NVIDIA RTX 3060 the
+first run takes under two minutes and the restart about a minute.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_2_high_lift_multi_element_aerofoil.tgz">here</a>.
+It contains a mesh file (<code>30p30n.h5</code>) and a zCFD control file (<code>30p30n.py</code>).</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_2_high_lift_multi_element_aerofoil.tgz
+tar xzf tutorial_2_high_lift_multi_element_aerofoil.tgz
+cd tutorial_2_high_lift_multi_element_aerofoil
+</code></pre><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>30p30n.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
+the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
+name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
+page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><pre><code class="language-python">import math
+
+import zutil
+
+reynolds = 1.71e6
+mach = 0.17
+T = 295.56
+p = 101325
+R = 287.6
+gamma = 1.4
+reference_length = 0.457
+alpha = 5.5
+
+U = math.sqrt(gamma * R * T) * mach
+
+wall = [6]
+symmetry = [4, 5]
+farfield = [7]
+
+
+def my_transform(*, vector):
+    return zutil.rotate_vector(vector, alpha, 0.0)
+
+
+parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;, &quot;partitioner&quot;: &quot;metis&quot;},
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;rans&quot;,
+            &quot;turbulence&quot;: {
+                &quot;model&quot;: &quot;sst&quot;,
+                &quot;limit mut&quot;: False,
+                &quot;production&quot;: &quot;strain-compressible&quot;,
+            },
+            &quot;precondition&quot;: True,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: gamma,
+            &quot;gas constant&quot;: R,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: T,
+                &quot;pressure&quot;: p,
+                &quot;v&quot;: {&quot;vector&quot;: zutil.vector_from_angle(alpha, 0.0, U)},
+                &quot;reynolds no&quot;: reynolds,
+                &quot;reference length&quot;: reference_length,
+                &quot;turbulence intensity&quot;: 0.01,
+                &quot;eddy viscosity ratio&quot;: 0.1,
+            },
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: False},
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;euler_second&quot;,
+            &quot;inviscid flux scheme&quot;: &quot;roe&quot;,
+        },
+        &quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;},
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 50.0,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.1, &quot;initial&quot;: 1.0}],
+            },
+            &quot;cycles&quot;: 1000,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 50,
+                &quot;forces&quot;: {
+                    &quot;FR_1&quot;: {
+                        &quot;name&quot;: &quot;wall&quot;,
+                        &quot;zones&quot;: wall,
+                        &quot;transform&quot;: my_transform,
+                        &quot;reference area&quot;: 0.4572,
+                    },
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;frequency&quot;: 500,
+                &quot;surface variables&quot;: [&quot;p&quot;, &quot;cp&quot;, &quot;V&quot;],
+                &quot;volume variables&quot;: [
+                    &quot;V&quot;,
+                    &quot;p&quot;,
+                    &quot;T&quot;,
+                    &quot;rho&quot;,
+                    &quot;var_6&quot;,
+                    &quot;eddy&quot;,
+                    &quot;turbulencekineticenergy&quot;,
+                    &quot;turbulenceeddyfrequency&quot;,
+                    &quot;walldist&quot;,
+                ],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;30p30n&quot;: {
+            &quot;mesh&quot;: &quot;30p30n.h5&quot;,
+            &quot;transforms&quot;: {&quot;scale&quot;: [0.0254, 0.0254 / 0.127, 0.0254]},
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: symmetry, &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {&quot;zones&quot;: wall, &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: farfield,
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+            },
+        },
+    },
+}
+</code></pre><p>Unlike the first tutorial&#x27;s file, this one runs a little ordinary Python before the dictionary, to set the flow
+conditions once and work out values from them. The first two headings cover that code.</p><h3 id="reference-variables">Reference variables</h3><p>The control file is Python, so it can do more than list settings. After importing <code>math</code> and <code>zutil</code>, its first
+lines set the key values for the case once, by name, and the dictionary refers to them:</p><ul>
+<li><code>reynolds</code>: 1.71 million, the Reynolds number based on the chord: how strongly the flow&#x27;s momentum outweighs its
+viscosity.</li>
+<li><code>mach</code>: 0.17, the freestream Mach number: the flow speed as a fraction of the speed of sound.</li>
+<li><code>T</code> and <code>p</code>: 295.56 K and 101325 Pa, the freestream temperature and pressure.</li>
+<li><code>R</code> and <code>gamma</code>: the gas constant, 287.6 J/kg/K, and the ratio of specific heats, 1.4.</li>
+<li><code>reference_length</code>: 0.457 m, the aerofoil&#x27;s chord, which the Reynolds number is based on.</li>
+<li><code>alpha</code>: 5.5°, the angle of attack.</li>
+<li><code>U</code>: the freestream speed, worked out from the Mach number and the speed of sound, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><mi>γ</mi><mi>R</mi><mi>T</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{\gamma R T}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.2106em"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8294em"><span class="svg-align" style="top:-3em"><span class="pstrut" style="height:3em"></span><span class="mord" style="padding-left:0.833em"><span class="mord mathnormal" style="margin-right:0.0556em">γ</span><span class="mord mathnormal" style="margin-right:0.0077em">R</span><span class="mord mathnormal" style="margin-right:0.1389em">T</span></span></span><span style="top:-2.7894em"><span class="pstrut" style="height:3em"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2106em"><span></span></span></span></span></span></span></span></span>: 58.6 m/s.</li>
+<li><code>wall</code>, <code>symmetry</code> and <code>farfield</code>: the mesh zones that the forces and boundary conditions use.</li>
+</ul><p>To run a variation of the case, change one value here, and every setting that uses it follows.</p><h3 id="my_transform"><code>my_transform</code></h3><p>A function that turns a force from the mesh&#x27;s axes into the flow&#x27;s. Lift and drag are defined relative to the
+freestream, lift normal to it and drag along it. <code>zutil.rotate_vector(vector, alpha, 0.0)</code> rotates a vector through
+the angle of attack, so that its x component is the drag and its z component the lift. The force report below
+applies it.</p><h3 id="config-version"><code>config version</code></h3><p>The version of the control-file format. <code>2</code> is the current format.</p><h3 id="solver"><code>solver</code></h3><p>Everything shared by the whole simulation.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Which solver runs the case, and how it is parallelised. <a href="reference/solver/solver-settings/index.html">Reference</a>.</p><ul>
+<li><code>type</code>: <code>&quot;compressible&quot;</code>, the density-based solver.</li>
+<li><code>partitioner</code>: <code>&quot;metis&quot;</code>, the library that splits the mesh between processes when the run is parallel. The
+default is <code>&quot;scotch&quot;</code>; either works for this case.</li>
+</ul><h4 id="equations"><code>equations</code></h4><p>Which equations are solved. <a href="reference/solver/equations/index.html">Reference</a>.</p><ul>
+<li><code>type</code>: <code>&quot;rans&quot;</code>, the Reynolds-averaged Navier–Stokes equations, which solve for the average flow and use a
+turbulence model for the effect of turbulent eddies, as in <a href="tutorials/1-simple-aerofoil/index.html#equations">Simple aerofoil</a>.</li>
+<li><code>turbulence</code>: the turbulence model and its options.<!-- -->
+<ul>
+<li><code>model</code>: <code>&quot;sst&quot;</code>, Menter&#x27;s SST model. The mesh is fine enough next to the surfaces to resolve the boundary
+layer all the way down to the wall.</li>
+<li><code>limit mut</code>: <code>False</code> switches off the SST model&#x27;s limit on the eddy viscosity, which is on by default. The eddy
+viscosity is the extra viscosity the turbulence model adds to represent the mixing done by turbulent eddies.</li>
+<li><code>production</code>: <code>&quot;strain-compressible&quot;</code> sets how the model works out how fast turbulence is generated: from how
+quickly the flow is being stretched (the strain rate), instead of the default, from how fast it is spinning (the
+vorticity).</li>
+</ul>
+</li>
+<li><code>precondition</code>: <code>True</code> switches on low-Mach-number preconditioning, recommended below about Mach 0.3.</li>
+</ul><p><a href="guide/choosing/choosing-a-turbulence-model/index.html">Choosing a turbulence model</a> compares the models and options.</p><h4 id="fluid-properties"><code>fluid properties</code></h4><p>The gas the flow is made of. <a href="reference/solver/fluid-properties/index.html">Reference</a>.</p><ul>
+<li><code>material</code>: <code>&quot;air&quot;</code>.</li>
+<li><code>gamma</code> and <code>gas constant</code>: taken from the reference variables.</li>
+<li><code>sutherlands const</code>: 110.4 K, for Sutherland&#x27;s law of viscosity.</li>
+<li><code>prandtl no</code> and <code>turbulent prandtl no</code>: 0.72 and 0.9, which relate heat conduction to viscosity in the laminar
+flow and the turbulence.</li>
+</ul><h4 id="reference-conditions"><code>reference conditions</code></h4><p>Named flow states, which the initialisation and the boundary conditions refer to.
+<a href="reference/solver/reference-conditions/index.html">Reference</a>.</p><h5 id="ic_1"><code>IC_1</code></h5><p>The freestream, built from the reference variables.</p><ul>
+<li><code>temperature</code> and <code>pressure</code>: 295.56 K and 101325 Pa.</li>
+<li><code>v</code>: the velocity. Its <code>vector</code> comes from <code>zutil.vector_from_angle(alpha, beta, U)</code>, which gives the velocity for
+an angle of attack <code>alpha</code> and a sideslip <code>beta</code>, in degrees, at speed <code>U</code>. Following the ESDU convention for
+aerodynamic axes, the angle of attack turns the flow from x towards z, so the flow meets the aerofoil at 5.5°, with
+no sideslip. The aerofoil stays where it is in the mesh, and the flow is turned instead.</li>
+<li><code>reynolds no</code> and <code>reference length</code>: a Reynolds number of 1.71 million on the 0.457 m chord. zCFD works out the
+viscosity from them.</li>
+<li><code>turbulence intensity</code>: 0.01, so the velocity fluctuations in the incoming flow are 1% of its speed.</li>
+<li><code>eddy viscosity ratio</code>: 0.1, the ratio of eddy viscosity to molecular viscosity in the incoming flow. Together
+with the intensity, it sets the turbulence the SST model starts from.</li>
+</ul><h4 id="initialisation"><code>initialisation</code></h4><p>How the flow field starts. <a href="reference/solver/initialisation/index.html">Reference</a>.</p><ul>
+<li><code>initial conditions</code>: <code>&quot;IC_1&quot;</code>, the freestream everywhere.</li>
+<li><code>restart</code>: <code>False</code>, a fresh start. Step 3 turns it on to carry the run on.</li>
+</ul><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p>How the equations are discretised in space. <a href="reference/solver/numerical-scheme/index.html">Reference</a>.</p><ul>
+<li><code>order</code>: <code>&quot;euler_second&quot;</code>, second order for the flow variables and first order for the turbulence variables,
+with the default limiter, as in <a href="tutorials/1-simple-aerofoil/index.html#numerical-scheme">Simple aerofoil</a>.</li>
+<li><code>inviscid flux scheme</code>: <code>&quot;roe&quot;</code>, Roe&#x27;s scheme for the flow between cells.</li>
+</ul><h4 id="time-settings"><code>time settings</code></h4><p><a href="reference/solver/time-settings/index.html">Reference</a>.</p><ul>
+<li><code>type</code>: <code>&quot;steady&quot;</code>, a solution that does not change with time.</li>
+</ul><h4 id="convergence-control"><code>convergence control</code></h4><p>How the solver marches towards the steady solution, once per cycle. <a href="reference/solver/convergence-control/index.html">Reference</a>.</p><ul>
+<li><code>scheme</code>: <code>implicit euler</code>, which solves a linear system each cycle and allows large steps.</li>
+<li><code>cfl</code>: the CFL number ramps from 1 by a factor of 1.1 each cycle up to 50.</li>
+<li><code>cycles</code>: 1000. As Step 4 shows, that is not quite enough, and Step 3 carries the run on with a restart.</li>
+</ul><h4 id="output-settings"><code>output settings</code></h4><p>What zCFD writes, and how often. <a href="reference/solver/output-settings/index.html">Reference</a>.</p><h5 id="report"><code>report</code></h5><p>The report is the CSV file <code>30p30n_report.csv</code>: one row of residuals and forces at a time, which zMon plots.</p><ul>
+<li><code>frequency</code>: 50, a row every 50 cycles.</li>
+<li><code>forces</code>: force blocks, each summing the pressure and friction forces on a set of zones. This deck has one,
+<code>FR_1</code>:<!-- -->
+<ul>
+<li><code>name</code>: <code>&quot;wall&quot;</code>. The report names the block&#x27;s columns after it: <code>wall_Fx</code>, <code>wall_Fy</code> and <code>wall_Fz</code> are the
+forces in mesh axes, split into pressure (<code>wall_Fpx</code>, ...) and friction (<code>wall_Ffx</code>, ...) parts, and
+<code>wall_Mx</code> and so on are the moments.</li>
+<li><code>zones</code>: the <code>wall</code> zones from the top of the file, zone 6: the slat, main element and flap together.</li>
+<li><code>transform</code>: <code>my_transform</code>. The report gains the transformed forces and moments, in columns starting
+<code>wall_Ft</code> and <code>wall_Mt</code>: <code>wall_Ftx</code> is the drag and <code>wall_Ftz</code> the lift.</li>
+<li><code>reference area</code>: 0.4572 m², the chord times the 1 m span. Forces are reported as coefficients against <code>IC_1</code>
+and this area, so <code>wall_Ftx</code> and <code>wall_Ftz</code> are the drag and lift coefficients.</li>
+</ul>
+</li>
+</ul><h5 id="solution"><code>solution</code></h5><p>The flow fields written for viewing in ParaView.</p><ul>
+<li><code>frequency</code>: 500. In a steady run, zCFD writes the fields every 500 cycles, each time replacing the last, so a
+run that stops early still leaves a recent solution.</li>
+<li><code>surface variables</code>: on the boundaries: pressure <code>p</code>, pressure coefficient <code>cp</code> and velocity <code>V</code>.</li>
+<li><code>volume variables</code>: in every cell: velocity, pressure, temperature and density, the sixth solved variable <code>var_6</code>
+(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mi>k</mi></mrow><annotation encoding="application/x-tex">\rho k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em"></span><span class="mord mathnormal">ρ</span><span class="mord mathnormal" style="margin-right:0.0315em">k</span></span></span></span>), the eddy viscosity <code>eddy</code>, the turbulence kinetic energy and eddy frequency, and <code>walldist</code>, the distance to
+the nearest wall, which the SST model uses.</li>
+</ul><p><a href="guide/working-with/post-processing-and-visualisation/index.html#output-variables">Output variables</a> lists every variable.</p><h3 id="model"><code>model</code></h3><p>One entry per mesh, each with its own boundary conditions. <a href="reference/model/index.html">Reference</a>.</p><h4 id="30p30n"><code>30p30n</code></h4><p>The only model. Its name, <code>30p30n</code>, names its output folder, <code>30p30n_OUTPUT/30p30n/</code>, and its output files.</p><h5 id="mesh"><code>mesh</code></h5><ul>
+<li><code>&quot;30p30n.h5&quot;</code>, a zCFD mesh with 64,000 cells and a single cell across the span. It follows the ESDU convention for
+aerodynamic axes: x points downstream along the chord, z points up and y runs along the span. It was built in
+inches.</li>
+</ul><h5 id="transforms"><code>transforms</code></h5><p>Changes made to the mesh as it is read, without editing the file. <a href="reference/model/transforms/index.html">Reference</a>.</p><ul>
+<li><code>scale</code>: multiplies the x, y and z coordinates of the file. 0.0254 turns inches into metres. The y factor,
+0.0254 / 0.127, stretches the 5 inch span to 1 m: there is no spanwise flow, and a 1 m span makes the reported
+forces per unit span.</li>
+</ul><p><a href="guide/working-with/placing-and-moving-a-mesh/index.html">Placing and moving a mesh</a> describes the other ways to place a
+mesh.</p><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p>A condition for each group of boundary faces, named by the zone lists at the top of the file.
+<a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing boundary conditions</a> describes every type.</p><h6 id="bc_1"><code>BC_1</code></h6><ul>
+<li><code>zones</code>: <code>symmetry</code>, zones 4 and 5, the two faces normal to the span.</li>
+<li><code>type</code>: <code>&quot;symmetry&quot;</code>, so the flow behaves as if the aerofoil were infinitely long and stays 2D.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><ul>
+<li><code>zones</code>: <code>wall</code>, zone 6, the surfaces of the slat, main element and flap.</li>
+<li><code>type</code>: <code>&quot;wall&quot;</code>, with <code>kind</code> <code>&quot;no slip&quot;</code>: the flow velocity is zero at the surface.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><ul>
+<li><code>zones</code>: <code>farfield</code>, zone 7, the outer boundary.</li>
+<li><code>type</code>: <code>&quot;farfield&quot;</code>, with <code>condition</code> <code>&quot;IC_1&quot;</code>, the freestream outside.</li>
+<li><code>kind</code>: <code>&quot;riemann&quot;</code>, which passes waves out without reflecting them back into the domain.</li>
+</ul><h2 id="step-3-run">Step 3. Run</h2><p>Activate zCFD as in <a href="tutorials/1-simple-aerofoil/index.html#step-3-run">Simple aerofoil</a>, then check and run the case:</p><pre><code class="language-bash">cd ~/tutorial_2_high_lift_multi_element_aerofoil/
+validate_input 30p30n.py
+run_zcfd -c 30p30n.py
+</code></pre><p>These are extracts from the log of a run of this tutorial, with <code>...</code> marking lines left out:</p><pre><code class="language-text">Parameters validated successfully
+...
+ Reading file 30p30n.h5
+ Global Mesh Stats: Cells: 63957 Faces: 256413
+...
+  Viscosity:    1.86824e-05 Ns/m^2 @ 295.56 K
+  Speed:        58.6449 m/s
+...
+  Mach:         0.17
+  Reynolds No:  1.71e+06 @ 295.56 K
+...
+Starting solve loop
+...
+Cycle     50 | Step    0 t=0s | CFL  50.000 | MG 1 |    39.9 ms | Total     1.328s
++------------------------------------------------------------------------------------------+
+| Report: Cycle 50  Wall time: 1.328s                                                      |
+...
+| Residuals:                                                                               |
+|   rho       5.0013E-01  rhoV[0]   1.0090E+00  rhoV[1]   1.7333E-11  rhoV[2]   8.5874E-01 |
+|   rhoE      1.7070E+00  rhok      4.4082E-07  rhoOmega  1.4652E+05                       |
++------------------------------------------------------------------------------------------+
+...
+ Solve Complete: 1000 cycles in 36.943s (avg 36.9 ms/cycle)
+...
+zCFD finished: all requested cycles are complete (1000 in total).
+</code></pre><p>The lines are the same as in the first tutorial. The viscosity is worked out from the Reynolds number, and the
+speed, 58.6 m/s, from the Mach number. In the report box every 50 cycles, <code>rhoV[1]</code>, the momentum along the span (y),
+stays below 10<!-- -->&lt;sup&gt;<!-- -->-10<!-- -->&lt;/sup&gt;<!-- -->: with a single cell across the span, no flow develops in that direction.</p><h3 id="restarting-the-run">Restarting the run</h3><p>Step 4 shows that after 1000 cycles the residuals are still falling. Rather than start again, restart the run from
+where it stopped. In <code>30p30n.py</code>, turn on <code>restart</code> under <code>initialisation</code>, and raise <code>cycles</code> under
+<code>convergence control</code> to 2000, the total the run should reach:</p><pre><code class="language-python">&quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: True},
+</code></pre><pre><code class="language-python">&quot;cycles&quot;: 2000,
+</code></pre><p>With <code>restart</code> on, zCFD reads the checkpoint the previous run of the same control file wrote,
+<code>30p30n_OUTPUT/30p30n/30p30n_results.h5</code>, and carries on from cycle 1001. Run it with the same command:</p><pre><code class="language-bash">run_zcfd -c 30p30n.py
+</code></pre><p>The log says where it restarted from:</p><pre><code class="language-text"> Restarting solution from results file 30p30n_OUTPUT/30p30n/30p30n
+...
+Cycle   1001 | Step    0 t=0s | CFL   1.100 | MG 1 |    97.1 ms | Total     0.097s
+...
+Cycle   2000 | Step    0 t=0s | CFL  50.000 | MG 1 |    23.1 ms | Total    25.001s
++------------------------------------------------------------------------------------------+
+| Report: Cycle 2000  Wall time: 25.001s                                                   |
+...
+| Residuals:                                                                               |
+|   rho       4.4183E-04  rhoV[0]   5.1424E-03  rhoV[1]   1.6681E-14  rhoV[2]   1.3771E-03 |
+|   rhoE      1.0785E-03  rhok      8.6709E-06  rhoOmega  1.5141E+03                       |
++------------------------------------------------------------------------------------------+
+...
+zCFD finished: all requested cycles are complete (2000 in total).
+</code></pre><p>The CFL ramp starts again from its initial value, so the first restarted cycles take small steps.
+<a href="guide/choosing/choosing-initialisation-and-reference-state/index.html">Choosing initialisation and reference state</a>
+covers restarts in full.</p><h3 id="output-files">Output files</h3><p>The output follows the same pattern as the first tutorial, named after the control file and the model. The
+restarted run appends to the same report.</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td><code>30p30n.log</code></td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>30p30n_status.yaml</code></td><td>A YAML file recording how the run was started.</td></tr><tr><td><code>30p30n_OUTPUT/30p30n/30p30n_report.csv</code></td><td>The report: residuals and forces, including the <code>wall_Ftx</code> and <code>wall_Ftz</code> columns.</td></tr><tr><td><code>30p30n_OUTPUT/30p30n/30p30n_results.h5</code></td><td>The checkpoint, which the restart reads.</td></tr><tr><td><code>30p30n_OUTPUT/30p30n/30p30n.vtkhdf</code></td><td>The volume data.</td></tr><tr><td><code>30p30n_OUTPUT/30p30n/30p30n_wall.vtkhdf</code> etc</td><td>One file for each boundary condition type, with the surface data.</td></tr></tbody></table></div><h2 id="step-4-monitor">Step 4. Monitor</h2><p>Open the case in zMon to follow the residuals and forces as the solver runs:</p><pre><code class="language-bash">zmon 30p30n.py
+</code></pre><p>zMon follows the restarted run too, which appends to the same report. The plots below are the
+panels as zMon draws them; <a href="tutorials/2-steady-state-rans/index.html#step-5-post-process">Step 5</a> shows how to plot the same data yourself.</p><h3 id="residuals">Residuals</h3><figure class="figure"><img src="images/tutorial-2-figure-1.png" alt="Residuals over the first 1000 cycles" loading="lazy"/><figcaption>Residuals over the first 1000 cycles</figcaption></figure><p>After the first 1000 cycles the residuals are still falling, which is why the run is restarted. By the end of the
+restarted run they have levelled off:</p><figure class="figure"><img src="images/tutorial-2-figure-1a.png" alt="Residuals over the whole 2000 cycles, after the restart" loading="lazy"/><figcaption>Residuals over the whole 2000 cycles, after the restart</figcaption></figure><h3 id="forces">Forces</h3><p>The forces of interest are the transformed ones, <code>wall_Ftx</code> (drag) and <code>wall_Ftz</code> (lift), in zMon&#x27;s forces panel:</p><figure class="figure"><img src="images/tutorial-2-figure-2.png" alt="Drag (Ftx) and lift (Ftz) against cycle" loading="lazy"/><figcaption>Drag (Ftx) and lift (Ftz) against cycle</figcaption></figure><p>Both have converged by the end of the restarted run, with a lift coefficient of 2.77 and a drag coefficient of
+0.055. The grid for this case is still extremely coarse, so these lift and drag coefficients are not a validation
+of the 30P30N.</p><h2 id="step-5-post-process">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><h3 id="python">Python</h3><p>This script draws the plots in <a href="tutorials/2-steady-state-rans/index.html#step-4-monitor">Step 4</a> and prints the final lift and drag coefficients. It is the
+first tutorial&#x27;s script with the transformed force columns, <code>wall_Ftx</code> and <code>wall_Ftz</code>. Save it as
+<code>plot_convergence.py</code> in the case directory:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+
+from zutil.fileutils import get_zcfd_result
+
+report = get_zcfd_result(&quot;30p30n.py&quot;).report.data
+
+fig, ax = plt.subplots()
+for column in [&quot;rho&quot;, &quot;rhoV[0]&quot;, &quot;rhoV[1]&quot;, &quot;rhoV[2]&quot;, &quot;rhoE&quot;, &quot;rhok&quot;, &quot;rhoOmega&quot;]:
+    ax.semilogy(report[&quot;Cycle&quot;], report[column], label=column)
+ax.set_xlabel(&quot;Cycle&quot;)
+ax.set_ylabel(&quot;Residual&quot;)
+ax.legend()
+fig.savefig(&quot;residuals.png&quot;, dpi=200)
+
+fig, (drag, lift) = plt.subplots(1, 2, figsize=(10, 4))
+drag.plot(report[&quot;Cycle&quot;], report[&quot;wall_Ftx&quot;])
+drag.set_title(&quot;Drag coefficient (wall_Ftx)&quot;)
+lift.plot(report[&quot;Cycle&quot;], report[&quot;wall_Ftz&quot;])
+lift.set_title(&quot;Lift coefficient (wall_Ftz)&quot;)
+for ax in (drag, lift):
+    ax.set_xlabel(&quot;Cycle&quot;)
+fig.savefig(&quot;forces.png&quot;, dpi=200)
+
+final = report.iloc[-1]
+print(f&quot;Lift coefficient {final[&#x27;wall_Ftz&#x27;]:.2f}, drag coefficient {final[&#x27;wall_Ftx&#x27;]:.3f}&quot;)
+</code></pre><p>Run it:</p><pre><code class="language-bash">python plot_convergence.py
+</code></pre><p>It writes <code>residuals.png</code> and <code>forces.png</code>, and prints:</p><pre><code class="language-text">Lift coefficient 2.77, drag coefficient 0.055
+</code></pre><h3 id="paraview">ParaView</h3><p>Open <code>30p30n_OUTPUT/30p30n/30p30n_wall.vtkhdf</code> in ParaView to see the results on the aerofoil surfaces, here
+coloured by the pressure coefficient:</p><figure class="figure"><img src="images/tutorial-2-figure-4.png" alt="30p30n C_p shaded" loading="lazy"/><figcaption>30p30n C_p shaded</figcaption></figure><p>To plot the pressure coefficient along the chord (x/c, the distance from the front divided by the chord), use a
+&quot;Plot On Sorted Lines&quot; filter:</p><ol>
+<li>On the surface data apply a <em>&#x27;cell data to point data&#x27;</em> filter.</li>
+<li>On the <em>cell data to point data</em> apply a <em>&#x27;slice&#x27;</em> filter, ensuring the slice uses a y normal, and is centred
+through the middle of the span.</li>
+<li>On the <em>slice</em> data apply a <em>&#x27;plot on sorted lines&#x27;</em> filter and click apply. This will then bring up a new
+<em>&#x27;line graph&#x27;</em> view.</li>
+<li>Ensure all 3 segments are selected in the composite data set dialogue box, then ensure only the cp variables
+are selected in the series parameters. Finally for the X Array name, select <code>Points_X</code></li>
+<li>Modify the style and markers until you are happy with the result.</li>
+</ol><figure class="figure"><img src="images/tutorial-2-figure-5.png" alt="cp against x/c" loading="lazy"/><figcaption>cp against x/c</figcaption></figure></div>
+<h2 id="citations">Citations</h2>
+<ol>
+<li>Zhang, Yufei &amp; Chen, Haixin &amp; Wang, Kan &amp; Wang, Meng. (2017). Aeroacoustic Prediction of a Multi-Element
+Airfoil Using Wall-Modeled Large-Eddy Simulation. AIAA Journal. 55. 1-15. 10.2514/1.J055853.</li>
+</ol></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/2-steady-state-rans/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/2-steady-state-rans/index.html#what-you-need">What you need?</a><a href="tutorials/2-steady-state-rans/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/2-steady-state-rans/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/2-steady-state-rans/index.html#step-3-run">Step 3. Run</a><a href="tutorials/2-steady-state-rans/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/2-steady-state-rans/index.html#step-5-post-process">Step 5. Post-process</a><a href="tutorials/2-steady-state-rans/index.html#citations">Citations</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

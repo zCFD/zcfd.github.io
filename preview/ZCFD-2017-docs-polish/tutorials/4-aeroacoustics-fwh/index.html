@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>4 · Aeroacoustics (FWH) · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/4-aeroacoustics-fwh.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/4-aeroacoustics-fwh-Edu3sxAa.js">
+    <script type="module" crossorigin src="./assets/index-FgxSx1t3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPicbpDq.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-2017-docs-polish">ZCFD-2017-docs-polish</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow sel"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink" aria-current="page"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>4 · Aeroacoustics (FWH)</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="aeroacoustics-fwh">Aeroacoustics (FWH)</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>The vortices shed by the cylinder in <a href="tutorials/3-time-accurate-solution/index.html">Time-accurate solution</a> make a tone that can be
+heard far away. This tutorial predicts that sound at two microphones, or <em>observers</em>, with the
+<a href="guide/working-with/aeroacoustics-fwh/index.html">Ffowcs Williams–Hawkings (FWH) solver</a> that comes with zCFD.</p>
+<p>Simulating the air all the way out to a distant microphone would need an enormous mesh. An FWH solver avoids that.
+zCFD solves the flow only near the cylinder, where the sound is made, and records the flow, as the run goes, on a
+closed <em>FWH surface</em> round the cylinder. After the run, the FWH solver uses those recordings to work out the sound
+that reaches each observer, without solving the flow in between. You will run the CFD (computational fluid
+dynamics) simulation, run the FWH solver in two ways, and plot and listen to what each observer hears.</p>
+<h2 id="what-you-need">What you need?</h2>
+<p>Work through <a href="tutorials/3-time-accurate-solution/index.html">Time-accurate solution</a> first: this tutorial runs the same cylinder,
+and relies on it for running an unsteady case and viewing it in ParaView. The CFD run takes about ten minutes on an
+NVIDIA RTX 3060, and the FWH solver a few seconds.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_4_cylinder_noise.tgz">here</a>.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/ZCFD-2017-docs-polish/tutorial_4_cylinder_noise.tgz
+tar xzf tutorial_4_cylinder_noise.tgz
+cd tutorial_4_cylinder_noise
+</code></pre><p>It contains:</p><ul>
+<li><code>cylinder.h5</code>, the mesh, and <code>cylinder_noise.py</code>, the zCFD control file;</li>
+<li><code>fwh_surface_small.stl</code>, the FWH surface this tutorial uses, and <code>fwh_surface_medium.stl</code> and
+<code>fwh_surface_large.stl</code>, two larger ones for the <a href="tutorials/4-aeroacoustics-fwh/index.html#extensions">extensions</a>;</li>
+<li><code>observers.csv</code>, the observer used by the <code>run_fwh</code> utility;</li>
+<li><code>fwh_python.py</code>, which runs the FWH solver from Python;</li>
+<li><code>plot_run_fwh.py</code> and <code>plot_fwh_python.py</code>, which plot what the observers hear.</li>
+</ul><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>cylinder_noise.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
+the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
+name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
+page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><p><code>cylinder_noise.py</code> has the same settings as <code>cylinder.py</code> from
+<a href="tutorials/3-time-accurate-solution/index.html">Time-accurate solution</a>, with two changes: the run lasts 4 seconds instead of 1.6,
+and the output also records the flow on the FWH surface.</p><pre><code class="language-python">parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;viscous&quot;,
+            &quot;precondition&quot;: True,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 277.7777,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [0.0, 1.0, 0.0], &quot;mach&quot;: 0.2},
+                &quot;reynolds no&quot;: 150,
+                &quot;reference length&quot;: 1.0,
+            },
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: False},
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;second&quot;,
+            &quot;inviscid flux scheme&quot;: &quot;roe&quot;,
+        },
+        &quot;time settings&quot;: {
+            &quot;type&quot;: &quot;unsteady&quot;,
+            &quot;kind&quot;: &quot;dual time stepping&quot;,
+            &quot;total time&quot;: 4.0,
+            &quot;time step&quot;: 0.002,
+            &quot;order&quot;: &quot;second&quot;,
+            &quot;start&quot;: 0,
+        },
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 200,
+                &quot;cfl viscous factor&quot;: 1.0e-6,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.05, &quot;initial&quot;: 0.1}],
+            },
+            &quot;cycles&quot;: 5,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 5,
+                &quot;monitor&quot;: {
+                    &quot;MR_1&quot;: {
+                        &quot;point&quot;: [0.25, 1.07, 0.313],
+                        &quot;variables&quot;: [&quot;cp&quot;],
+                    },
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;format&quot;: &quot;vtk&quot;,
+                &quot;surface variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;cp&quot;],
+                &quot;volume variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;m&quot;, &quot;cp&quot;],
+                &quot;fwh interpolate&quot;: [&quot;fwh_surface_small.stl&quot;],
+                &quot;frequency&quot;: {
+                    &quot;fwh interpolate&quot;: 1,
+                    &quot;volume data&quot;: 1000,
+                    &quot;surface data&quot;: 1000,
+                },
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;cylinder&quot;: {
+            &quot;mesh&quot;: &quot;cylinder.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {&quot;zones&quot;: [2], &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_2&quot;: {&quot;zones&quot;: [3], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;no slip&quot;},
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: [1],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+            },
+        },
+    },
+}
+</code></pre><h3 id="config-version"><code>config version</code></h3><p><code>&quot;config version&quot;: 2</code> says which layout of the control file this is. Every current control file declares it.</p><h3 id="solver"><code>solver</code></h3><p><code>solver</code> holds the settings shared by the whole simulation: the physics, the numerics, time marching and output.
+Its blocks are walked below in the order the deck gives them.</p><h4 id="solver-settings"><code>solver settings</code></h4><p><a href="reference/solver/solver-settings/index.html"><code>solver settings</code></a> chooses the solver.</p><ul>
+<li><code>type</code>: <code>compressible</code>, the density-based solver, which suits air at Mach 0.2.</li>
+</ul><h4 id="equations"><code>equations</code></h4><p><a href="reference/solver/equations/index.html"><code>equations</code></a> sets which equations are solved.</p><ul>
+<li><code>type</code>: <code>viscous</code>, the laminar Navier–Stokes equations. At a Reynolds number of 150 the flow round the cylinder
+is laminar, so no turbulence model is needed.</li>
+<li><code>precondition</code>: <code>True</code> switches on low-Mach-number preconditioning, recommended below about Mach 0.3.</li>
+</ul><h4 id="fluid-properties"><code>fluid properties</code></h4><p><a href="reference/solver/fluid-properties/index.html"><code>fluid properties</code></a> describes the gas.</p><ul>
+<li><code>material</code>: <code>air</code>, an ideal gas.</li>
+<li><code>gamma</code>: 1.4, the ratio of specific heats.</li>
+<li><code>gas constant</code>: 287.0 J/kg/K.</li>
+<li><code>sutherlands const</code>: 110.4 K, the constant in Sutherland&#x27;s law, which gives the viscosity&#x27;s change with
+temperature.</li>
+<li><code>prandtl no</code>: 0.72, the laminar Prandtl number, which sets the heat conduction.</li>
+<li><code>turbulent prandtl no</code>: 0.9. It plays no part in a laminar run.</li>
+</ul><h4 id="reference-conditions"><code>reference conditions</code></h4><p><a href="reference/solver/reference-conditions/index.html"><code>reference conditions</code></a> defines named flow states, which the
+initialisation and the boundary conditions refer to by name.</p><h5 id="ic_1"><code>IC_1</code></h5><p><code>IC_1</code> is the freestream.</p><ul>
+<li><code>temperature</code>: 277.7777 K.</li>
+<li><code>pressure</code>: 101325 Pa.</li>
+<li><code>v</code>: the velocity, given as a direction, <code>vector</code> [0, 1, 0], and a <code>mach</code> number, 0.2. The flow runs along +y at
+66.8 m/s, the speed the log prints.</li>
+<li><code>reynolds no</code>: 150. The Reynolds number compares the flow&#x27;s inertia with its viscosity; at 150 the flow is slow
+and viscous enough to stay laminar. zCFD meets it by setting the viscosity.</li>
+<li><code>reference length</code>: 1.0 m, the length the Reynolds number is based on: the cylinder&#x27;s diameter.</li>
+</ul><p>The <code>run_fwh</code> utility in <a href="tutorials/4-aeroacoustics-fwh/index.html#step-5-post-process">Step 5</a> takes its speed of sound and density from this block too.</p><h4 id="initialisation"><code>initialisation</code></h4><p><a href="reference/solver/initialisation/index.html"><code>initialisation</code></a> sets the state the run starts from.</p><ul>
+<li><code>initial conditions</code>: <code>IC_1</code>, so the whole domain starts at the freestream.</li>
+<li><code>restart</code>: <code>False</code>, a fresh start rather than one from an earlier run&#x27;s checkpoint.</li>
+</ul><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p><a href="reference/solver/numerical-scheme/index.html"><code>numerical scheme</code></a> sets how the equations are discretised in space.</p><ul>
+<li><code>order</code>: <code>second</code>, a second-order reconstruction of the flow in each cell, with the default limiter.</li>
+<li><code>inviscid flux scheme</code>: <code>roe</code>, Roe&#x27;s approximate Riemann solver for the flux between cells.</li>
+</ul><p><a href="guide/choosing/choosing-a-limiter/index.html">Choosing a limiter</a> covers the order, the flux scheme and the limiter.</p><h4 id="time-settings"><code>time settings</code></h4><p><a href="reference/solver/time-settings/index.html"><code>time settings</code></a> says how the run advances in physical time.</p><ul>
+<li><code>type</code>: <code>unsteady</code>, a time-accurate run.</li>
+<li><code>kind</code>: <code>dual time stepping</code>. Each physical time step is solved like a small steady problem: an inner loop of
+iterations, in a made-up <em>pseudo-time</em>, drives the flow towards its state at the end of the step. That inner loop
+is set by <code>convergence control</code> below.</li>
+<li><code>total time</code>: 4.0 s of flow. The cylinder tutorial runs 1.6 s; the FWH solver needs a long, settled signal. The
+shedding takes about a second to settle, and the observers then need several seconds of it to resolve the tone.</li>
+<li><code>time step</code>: 0.002 s, so 2000 time steps in all.</li>
+<li><code>order</code>: <code>second</code>, second-order accuracy in time.</li>
+<li><code>start</code>: 0, so no steady cycles are run before the time stepping begins.</li>
+</ul><p><a href="guide/choosing/choosing-a-time-marching-scheme/index.html#dual-time-stepping">Choosing a time-marching scheme</a>
+explains dual time stepping.</p><h4 id="convergence-control"><code>convergence control</code></h4><p><a href="reference/solver/convergence-control/index.html"><code>convergence control</code></a> sets the inner loop that converges each time step.</p><ul>
+<li><code>scheme</code>: <code>name</code> <code>implicit euler</code>, which takes each inner step by solving a linear system, allowing large steps.</li>
+<li><code>cfl</code>: the CFL number, which sets the size of each inner step.<!-- -->
+<ul>
+<li><code>cfl</code>: 200.</li>
+<li><code>cfl viscous factor</code>: 1.0e-6. It scales the viscous part of each cell&#x27;s pseudo-time step estimate, so at this
+value the convective wave speeds alone set the step, as in <a href="tutorials/3-time-accurate-solution/index.html">Time-accurate solution</a>.</li>
+<li><code>cfl ramp</code>: an <code>exponential</code> ramp that starts at 0.1 and multiplies the CFL by 1.05 each cycle. It starts the
+very first time step gently, from a flow that has not yet seen the cylinder; the log shows every inner cycle
+at 200 from the second time step on.</li>
+</ul>
+</li>
+<li><code>cycles</code>: 5 inner cycles per time step. They don&#x27;t fully converge each step: the residuals, which measure how
+far the equations are from being satisfied, fall by a median of about 0.8 orders of magnitude (a factor of about 6) within a step. The Strouhal number in <a href="tutorials/4-aeroacoustics-fwh/index.html#step-5-post-process">Step 5</a> shows the
+shedding is still right.</li>
+</ul><p><a href="guide/choosing/choosing-a-time-marching-scheme/index.html#cfl-control">CFL control</a> describes the other ways to set the
+CFL number.</p><h4 id="output-settings"><code>output settings</code></h4><p><a href="reference/solver/output-settings/index.html"><code>output settings</code></a> sets what zCFD writes during and after the run. It has two
+parts: the <code>report</code>, a table written as the run goes, and the <code>solution</code>, the flow fields written for viewing and
+post-processing.</p><h5 id="report"><code>report</code></h5><p>The report is <code>cylinder_noise_OUTPUT/cylinder/cylinder_report.csv</code>, the table zMon plots.</p><ul>
+<li><code>frequency</code>: 5 cycles. In this run that writes a row at the first and the last inner cycle of every time step,
+each with the residual of every equation.</li>
+<li><code>monitor</code>: monitor points, each recording flow variables at a fixed point. <code>MR_1</code> has a <code>point</code> in the wake,
+[0.25, 1.07, 0.313], and records its <code>variables</code>, the pressure coefficient <code>cp</code>. Without a <code>name</code>, its report
+column is named after its key: <code>mr_1_cp</code>.</li>
+</ul><h5 id="solution"><code>solution</code></h5><p>The solution output is written to files under <code>cylinder_noise_OUTPUT/cylinder/</code>.</p><ul>
+<li><code>format</code>: <code>vtk</code>, VTK HDF files (<em>.vtkhdf</em>) for ParaView.</li>
+<li><code>surface variables</code>: the variables written on the boundary surfaces: velocity <code>V</code>, pressure <code>p</code>, temperature
+<code>T</code>, density <code>rho</code> and pressure coefficient <code>cp</code>.</li>
+<li><code>volume variables</code>: the variables written throughout the domain: the same, with the Mach number <code>m</code>.</li>
+<li><code>fwh interpolate</code>: the FWH surface files to record the flow on, here <code>fwh_surface_small.stl</code>. The flow is
+interpolated to the centre of each of the surface&#x27;s panels and written to
+<code>ACOUSTIC_DATA/fwh_surface_small_FWHData.h5</code>, the FWH solver&#x27;s input.</li>
+<li><code>frequency</code>: how often each kind of output is written, in time steps.<!-- -->
+<ul>
+<li><code>fwh interpolate</code>: 1, every time step, because the FWH solver needs every step.</li>
+<li><code>volume data</code> and <code>surface data</code>: 1000, so only at time steps 1000 and 2000. The cylinder tutorial already
+gives you the flow field in detail.</li>
+</ul>
+</li>
+</ul><p>The FWH surface is made of 1000 flat panels. It surrounds the cylinder and runs far downstream alongside the
+wake. Here its outline, in white, is drawn over the velocity magnitude on the mid-span plane at the end of the
+run. In ParaView, show the surface as <em>Feature Edges</em> with a thicker <em>Line Width</em> to see it beside the volume
+solution:</p><figure class="figure"><img src="images/tutorial-4-cylinder-fwh-surface1.png" alt="The FWH surface&#x27;s outline in white over the velocity magnitude at mid-span, with the cylinder&#x27;s wake inside it" loading="lazy"/><figcaption>The FWH surface&#x27;s outline in white over the velocity magnitude at mid-span, with the cylinder&#x27;s wake inside it</figcaption></figure><p>It encloses the region where the noise is made, but does not cut through the wake. Vortices crossing the surface
+would be read as sound that isn&#x27;t really there, so-called pseudo-sound <a href="tutorials/4-aeroacoustics-fwh/index.html#citations">[1]</a>, <a href="tutorials/4-aeroacoustics-fwh/index.html#citations">[2]</a>.</p><h3 id="model"><code>model</code></h3><p><a href="reference/model/index.html"><code>model</code></a> has one entry per mesh, with that mesh&#x27;s boundary conditions.</p><h4 id="cylinder"><code>cylinder</code></h4><p>The model&#x27;s name, <code>cylinder</code>, names its output folder, <code>cylinder_noise_OUTPUT/cylinder/</code>, and its files.</p><h5 id="mesh"><code>mesh</code></h5><p><code>cylinder.h5</code>, the mesh file, in zCFD&#x27;s native format: 80,000 cells round a cylinder of 1 m diameter centred at
+(0.25, 0, 0), with its span along x and one cell across it.</p><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p><a href="reference/model/boundary-conditions/index.html"><code>boundary conditions</code></a> assign a condition to each group of boundary faces.
+The groups are the mesh&#x27;s zones, numbered when the mesh was made, and each condition lists its zones in <code>zones</code>.
+<a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing boundary conditions</a> describes every type.</p><h6 id="bc_1"><code>BC_1</code></h6><ul>
+<li><code>zones</code>: [2], the two faces normal to the span.</li>
+<li><code>type</code>: <code>symmetry</code>. With symmetry on both, the cylinder behaves as if it were infinitely long, so the mesh needs
+only one cell across the span.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><ul>
+<li><code>zones</code>: [3], the cylinder&#x27;s surface.</li>
+<li><code>type</code>: <code>wall</code>, with <code>kind</code> <code>no slip</code>: the flow velocity is zero at the surface.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><ul>
+<li><code>zones</code>: [1], the outer boundary.</li>
+<li><code>type</code>: <a href="guide/choosing/choosing-boundary-conditions/index.html#farfield"><code>farfield</code></a>.</li>
+<li><code>condition</code>: <code>IC_1</code>, the state the farfield imposes.</li>
+<li><code>kind</code>: <code>riemann</code>, which lets flow and waves leave the domain without reflecting back into it.</li>
+</ul><h2 id="step-3-run">Step 3. Run</h2><p>In the activated environment (see <a href="tutorials/1-simple-aerofoil/index.html#step-3-run">Simple aerofoil</a>), check the control file and
+run it:</p><pre><code class="language-bash">cd ~/tutorial_4_cylinder_noise/
+validate_input cylinder_noise.py
+run_zcfd -c cylinder_noise.py
+</code></pre><p>These are extracts from the log of a run of this tutorial, <code>cylinder_noise.log</code>, with <code>...</code> marking lines left out:</p><pre><code class="language-text">Parameters validated successfully
+...
+ Reading file cylinder.h5
+ Global Mesh Stats: Cells: 80000 Faces: 320400
+...
+  Speed:        66.8165 m/s
+...
+  Reynolds No:  150 @ 277.778 K
+...
+Starting solve loop
+------------------------ Cycle      1  Step    0 t=0.002s ------------------------
+...
+Real time cycle 1000 complete: 5 inner cycles, 0.87 orders dropped
+...
+Inner convergence over 2000 real time cycles: median 0.82 orders dropped, 5-5 inner cycles used
+Only 0% of real time cycles reached 2.0 orders - consider increasing &#x27;cycles&#x27; or &#x27;cfl&#x27;
+ Solve Complete: 10000 cycles in 2m 59.1s (avg 17.9 ms/cycle)
+...
+zCFD finished: all requested cycles are complete (10000 in total).
+</code></pre><ul>
+<li>Each time step runs 5 inner cycles and ends with a line saying how far the residuals fell within it.</li>
+<li>A line starting <code>FWH Interpolate Field Output</code> marks each write of the FWH surface data.</li>
+<li>At the end, a summary gives the median fall in the residuals per time step, here 0.82 orders, with a hint that no
+step reached 2 orders. The Strouhal check in Step 5 shows that is enough for the shedding in this case. This
+extract is from a run on a faster GPU than the RTX 3060. For your own cases, <a href="guide/choosing/choosing-a-time-marching-scheme/index.html#dual-time-stepping">Choosing a time-marching scheme</a>
+discusses the balance between inner cycles and cost.</li>
+</ul><h3 id="output-files">Output files</h3><p>As in the earlier tutorials, the output is named after the control file and the model:</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td><code>cylinder_noise.log</code></td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>cylinder_noise_status.yaml</code></td><td>How the run was started: version, date, control file, mesh, nodes.</td></tr><tr><td><code>cylinder_noise_OUTPUT/cylinder/cylinder_report.csv</code></td><td>The residuals and the monitor point, row by row.</td></tr><tr><td><code>cylinder_noise_OUTPUT/cylinder/cylinder_results.h5</code></td><td>The checkpoint, used to restart the run.</td></tr><tr><td><code>cylinder_noise_OUTPUT/cylinder/cylinder.vtkhdf</code> etc</td><td>Volume and surface data, at time steps 1000 and 2000.</td></tr><tr><td><code>cylinder_noise_OUTPUT/cylinder/ACOUSTIC_DATA/fwh_surface_small_FWHData.h5</code></td><td>The flow on the FWH surface at every time step: the FWH input.</td></tr><tr><td><code>cylinder_noise_OUTPUT/cylinder/ACOUSTIC_DATA/fwh_surface_small_FWHData.xdmf</code></td><td>Opens the FWH surface data in ParaView.</td></tr><tr><td><code>cylinder_noise_OUTPUT/LOGGING/</code></td><td>A separate log for each MPI rank, used for debugging.</td></tr></tbody></table></div><h2 id="step-4-monitor">Step 4. Monitor</h2><p>Open the run in zMon, during or after it:</p><pre><code class="language-bash">zmon cylinder_noise.py
+</code></pre><p><a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a> describes each panel. The plot below shows the
+residuals at the end of each time step against simulated time, as zMon draws them with its x axis set to time; it
+was drawn in zMon&#x27;s style with a script like the one in <a href="tutorials/1-simple-aerofoil/index.html#python">Simple aerofoil</a>.</p><h3 id="residuals">Residuals</h3><figure class="figure"><img src="images/tutorial-4-residuals.png" alt="Residuals at the end of each time step against simulated time" loading="lazy"/><figcaption>Residuals at the end of each time step against simulated time</figcaption></figure><p>The residuals fall over the first half second as the flow settles round the cylinder, then rise as the wake
+starts to shed, and from about 1 s they oscillate steadily, twice per shedding cycle: once for each vortex shed.
+That steady oscillation shows the shedding has settled. <code>rhoU</code>, the momentum along the span, stays at round-off
+level throughout, because the flow has no velocity along the span. The <code>mr_1_cp</code> monitor in zMon&#x27;s reports panel oscillates at the shedding frequency itself.</p><h2 id="step-5-post-process">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><p>The FWH solver post-processes the surface data the run wrote. It can be run in two ways: the
+<a href="guide/working-with/aeroacoustics-fwh/index.html#using-the-zcfd-run_fwh-utility">run_fwh utility</a>, which needs no code,
+and the <a href="guide/working-with/aeroacoustics-fwh/index.html#using-the-zcfd-fwh-python-module">fwh Python module</a>, which
+handles more cases.</p><h3 id="fwh-with-the-run_fwh-utility">FWH with the run_fwh utility</h3><p>The <code>run_fwh</code> utility calculates the noise at an observer <code>Obs1</code>, which stays a fixed distance from the cylinder:
+for a cylinder in a wind tunnel, <code>Obs1</code> would be a microphone on the tunnel wall. <code>run_fwh</code> handles only observers
+that don&#x27;t move relative to the FWH surface, which it calls being in the same
+<a href="guide/working-with/aeroacoustics-fwh/index.html#reference-condition">translational reference frame</a>. <code>Obs1</code> is one.</p><figure class="figure"><img src="images/tutorial-4-fwhdiagram-cyl1-obs1only.svg" alt="FWH Observer and surface motions - CFD frame of reference" loading="lazy"/><figcaption>FWH Observer and surface motions - CFD frame of reference</figcaption></figure><p><code>run_fwh</code> needs three inputs:</p><ul>
+<li>a <a href="guide/working-with/aeroacoustics-fwh/index.html#zcfd-control-file">zCFD control file</a>: <code>cylinder_noise.py</code>, from
+which it finds the FWH surface and its data,
+<code>cylinder_noise_OUTPUT/cylinder/ACOUSTIC_DATA/fwh_surface_small_FWHData.h5</code>;</li>
+<li>a <a href="guide/working-with/aeroacoustics-fwh/index.html#reference-condition">reference condition</a>: the freestream, which
+is <code>IC_1</code> in the control file;</li>
+<li>an <a href="guide/working-with/aeroacoustics-fwh/index.html#observer-csv-file">observers .csv file</a> naming each observer and
+its position. The cylinder&#x27;s centre is at (0.25, 0, 0) and <code>Obs1</code> stays 20 m from it along z, so
+<code>observers.csv</code> holds:</li>
+</ul><pre><code>Obs1, 0.25, 0.0,  20.0
+</code></pre><p>Run it in the activated environment:</p><pre><code class="language-bash">run_fwh -c cylinder_noise.py --reference_condition IC_1 --observer_locations observers.csv
+</code></pre><p>It writes its progress to the screen and to <code>cylinder_noise.fwh.log</code>, and the pressure history at <code>Obs1</code> to
+<code>cylinder_noise.fwh.Obs1.csv</code>. Where there are several noise sources, the contribution of each is broken out,
+with the total alongside.</p><h3 id="fwh-with-the-fwh-python-module">FWH with the fwh Python module</h3><p><code>run_fwh</code> is limited to observers and surfaces in the same translational reference frame, and to cases where no
+two FWH surfaces enclose the same source, since that would
+<a href="guide/working-with/aeroacoustics-fwh/index.html#advanced-use">count the source twice</a>. The
+<a href="guide/working-with/aeroacoustics-fwh/index.html#using-the-zcfd-fwh-python-module">fwh Python module</a> has neither
+limit. This section uses it to calculate the pressure at both <code>Obs1</code> and <code>Obs2</code>, a &#x27;fly-by&#x27; observer that
+<code>run_fwh</code> cannot handle.</p><figure class="figure"><img src="images/tutorial-4-fwhdiagram-cyl1.svg" alt="FWH surface and observer motions - CFD frame of reference" loading="lazy"/><figcaption>FWH surface and observer motions - CFD frame of reference</figcaption></figure><h4 id="observer-and-surface-motions">Observer and surface motions</h4><p>The FWH equations assume a <em>quiescent medium</em>: still air. The CFD freestream is (0, 66.8, 0) m/s, so the FWH
+calculation is carried out in a frame moving with the air. <code>run_fwh</code> makes that change of frame for you; with the
+Python module you give the motions of the surface and observers through the still air yourself.</p><p>In the still-air frame, the cylinder and <code>Obs1</code> fly through the air together. <code>Obs2</code> stands still, like a
+microphone on the ground as the cylinder flies overhead.</p><figure class="figure"><img src="images/tutorial-4-fwhdiagram-cyl2.svg" alt="FWH surface and observer motions - FWH (quiescent medium) frame of reference" loading="lazy"/><figcaption>FWH surface and observer motions - FWH (quiescent medium) frame of reference</figcaption></figure><h4 id="the-script">The script</h4><p><code>fwh_python.py</code> defines the surface, the observers and the solver settings, then calls <code>fwh.solve()</code>:</p><pre><code class="language-python">import json
+import math
+
+from fwh import fwh, motion
+
+c = math.sqrt(1.4 * 277.7777 * 287)
+v_surf = [0, -0.2 * c, 0]
+surfaceCentrePoint = motion.ConstantVelocityPoint([0.0, 0.0, 0.0], v_surf)
+surfaceMotion = motion.NonrotatingSurface(surfaceCentrePoint)
+
+obs1_CFD_frame_posn = [0.25, 0, 20]
+obs1Motion = motion.ConstantVelocityPoint(obs1_CFD_frame_posn, v_surf)
+
+obs2_posn = [obs1_CFD_frame_posn[i] + 2.5 * v_surf[i] for i in range(3)]
+obs2Motion = motion.StationaryPoint(obs2_posn)
+
+solverSettings = {
+    &quot;c&quot;: c,
+    &quot;dt&quot;: 0.002,
+    &quot;rho0&quot;: 101325.0 / (277.7777 * 287),
+    &quot;p0&quot;: 101325.0,
+}
+
+surfaces = {
+    &quot;surf1&quot;: {
+        &quot;motion&quot;: surfaceMotion,
+        &quot;fileName&quot;: &quot;./cylinder_noise_OUTPUT/cylinder/ACOUSTIC_DATA/fwh_surface_small_FWHData.h5&quot;,
+    }
+}
+observers = {&quot;Obs1&quot;: obs1Motion, &quot;Obs2&quot;: obs2Motion}
+
+pOut, tOut = fwh.solve(surfaces, observers, solverSettings)
+
+with open(&quot;./FWH_data.json&quot;, &quot;w&quot;) as f:
+    json.dump({&quot;p&quot;: pOut, &quot;t&quot;: tOut}, f)
+</code></pre><p>The most important idea is that <em>motion classes</em> define how observers and surfaces move. The
+<a href="guide/working-with/aeroacoustics-fwh/index.html#point-observer-motion-classes">point (observer) motions</a> are
+<code>OriginPoint</code>, <code>StationaryPoint</code> and <code>ConstantVelocityPoint</code>; the
+<a href="guide/working-with/aeroacoustics-fwh/index.html#surface-motion-classes">surface motions</a>, which take a point motion
+for their centre, are <code>NonrotatingSurface</code> and <code>RotatingSurface</code>.
+<a href="guide/working-with/aeroacoustics-fwh/index.html#running-the-zcfd-fwh-solver">Running the zCFD FWH solver</a> gives the
+full set-up.</p><ul>
+<li>The speed of sound, density and pressure in <code>solverSettings</code> follow from <code>IC_1</code> in <code>cylinder_noise.py</code>, and
+<code>dt</code> is the 0.002 s between FWH surface outputs.</li>
+<li>A point on the FWH surface moves as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">x</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><msub><mi mathvariant="bold">x</mi><mn>0</mn></msub><mo>+</mo><msub><mi mathvariant="bold">V</mi><mrow><mi>s</mi><mi>u</mi><mi>r</mi><mi>f</mi></mrow></msub><mtext> </mtext><mi>t</mi></mrow><annotation encoding="application/x-tex">\mathbf{x}(t)=\mathbf{x}_0+ \mathbf{V}_{surf}\ t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathbf">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:0.7333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathbf">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.9722em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.016em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord mathnormal">t</span></span></span></span> in the still-air frame,
+where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">x</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\mathbf{x}_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5944em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathbf">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> is its position in <code>fwh_surface_small.stl</code> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">V</mi><mrow><mi>s</mi><mi>u</mi><mi>r</mi><mi>f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathbf{V}_{surf}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9722em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.016em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span></span></span></span> is the surface
+velocity, the freestream reversed.</li>
+<li><code>Obs1</code> stays 20 m from the cylinder&#x27;s centre along z, so it moves as
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">x</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>0.25</mn><mo separator="true">,</mo><mn>0</mn><mo separator="true">,</mo><mn>20</mn><mo stretchy="false">)</mo><mo>+</mo><msub><mi mathvariant="bold">V</mi><mrow><mi>s</mi><mi>u</mi><mi>r</mi><mi>f</mi></mrow></msub><mi>t</mi></mrow><annotation encoding="application/x-tex">\mathbf{x}(t)= (0.25,0,20) + \mathbf{V}_{surf} t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathbf">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mopen">(</span><span class="mord">0.25</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord">20</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.9722em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.016em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.0278em">r</span><span class="mord mathnormal mtight" style="margin-right:0.1076em">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mord mathnormal">t</span></span></span></span>.</li>
+<li><code>Obs2</code> is stationary, and placed where <code>Obs1</code> is at t = 2.5 s.</li>
+</ul><p>Run it in the activated environment:</p><pre><code class="language-bash">python3 fwh_python.py
+</code></pre><p>It prints the <em>valid min and max times</em> for each surface and observer pair: the window in which the observer
+hears every point of the surface. Sound takes time to travel: sound from a surface point at time <em>t</em> reaches an
+observer <em>r/c</em> seconds later, where <em>r</em> is the distance between them and <em>c</em> the speed of sound. So the window
+starts later than the 0.002 s to 4.0 s of surface data, and a larger surface gives a narrower window. The pressure histories are saved to <code>FWH_data.json</code>.</p><h3 id="python">Python</h3><p><code>plot_fwh_python.py</code> plots the data from the <a href="tutorials/4-aeroacoustics-fwh/index.html#fwh-with-the-fwh-python-module">fwh Python module</a>, and
+<code>plot_run_fwh.py</code> does the same for the <a href="tutorials/4-aeroacoustics-fwh/index.html#fwh-with-the-run_fwh-utility">run_fwh utility</a>. Run either, after the
+step whose data it reads:</p><pre><code class="language-bash">python3 plot_fwh_python.py
+</code></pre><p>They use the <em>zutil</em> acoustic functions, which may be useful for your own acoustic post-processing, to plot the
+pressure history <em>p(t)</em> and the power spectral density (PSD), which shows how the sound&#x27;s energy is spread across
+frequencies, at each observer: <code>Obs1_p.png</code> and <code>Obs1_psd.png</code>,
+and from the Python module data also <code>Obs2_p.png</code> and <code>Obs2_psd.png</code>. Both also write <em>.wav</em> files,
+<code>Obs1_playback.wav</code> and <code>Obs2_playback.wav</code>, so you can listen to what each observer hears.</p><p><code>Obs1</code> moves with the cylinder. The noise it hears is dominated by a steady tone at 11.5 Hz, the frequency at
+which the cylinder sheds vortices. As a Strouhal number, the frequency times the diameter divided by the flow
+speed, that is 0.17. Harmonics, whole-number multiples of the tone, show as smaller peaks in the PSD.</p><figure class="figure"><img src="images/tutorial-4-obs1-p.png" alt="Observer 1 p(t)" loading="lazy"/><figcaption>Observer 1 p(t)</figcaption></figure><figure class="figure"><img src="images/tutorial-4-obs1-psd.png" alt="Observer 1 PSD" loading="lazy"/><figcaption>Observer 1 PSD</figcaption></figure><p>The cylinder approaches <code>Obs2</code> until 2.5 s and then moves away. In the <code>Obs2</code> <em>p(t)</em> plot the peaks are closer
+together before 2.5 s than after it: the pitch is higher while the source approaches and lower as it recedes, the
+Doppler shift you hear as a siren passes. It also spreads the shedding peak in the PSD, compared with <code>Obs1</code>&#x27;s.</p><figure class="figure"><img src="images/tutorial-4-obs2-p.png" alt="Observer 2 p(t)" loading="lazy"/><figcaption>Observer 2 p(t)</figcaption></figure><figure class="figure"><img src="images/tutorial-4-obs2-psd.png" alt="Observer 2 PSD" loading="lazy"/><figcaption>Observer 2 PSD</figcaption></figure><h3 id="paraview">ParaView</h3><p><code>cylinder_noise_OUTPUT/cylinder/ACOUSTIC_DATA/fwh_surface_small_FWHData.xdmf</code> opens the FWH surface data in
+ParaView, with the pressure, velocity and density at each panel centre changing with time. Use the <em>Time</em> controls
+to step through it; a <em>Point Gaussian</em> view style, with a larger <em>Gaussian Radius</em> in the <em>Properties</em> panel, makes
+the panel values easier to see. The volume and surface output views as in
+<a href="tutorials/3-time-accurate-solution/index.html">Time-accurate solution</a>.</p><h2 id="extensions">Extensions</h2><p>To become more comfortable with the FWH solver, various extensions to this exercise are possible. Here are some
+suggestions.</p><ol>
+<li>Re-run the zCFD solver, but this time extract FWH data on the cylinder
+<a href="reference/solver/output-settings/index.html#solution">wall</a> instead of <code>fwh_surface_small.stl</code>. Run the FWH solver (using
+the wall data as an <a href="guide/working-with/aeroacoustics-fwh/index.html#how-does-an-fwh-solver-work">impermeable</a> FWH
+surface, one the flow cannot pass through) and compare the results with the <code>fwh_surface_small</code> surface, a
+permeable one that the flow passes through.</li>
+<li>Re-run the zCFD solver, but this time also extract FWH data on the <code>fwh_surface_medium.stl</code> and <code>fwh_surface_large.stl</code>
+surfaces. These are like <code>fwh_surface_small.stl</code> but slightly larger. Run the FWH solver with these surfaces and
+investigate the effect of using different surfaces on the FWH results. You will have to do this using the fwh
+python module to avoid <a href="guide/working-with/aeroacoustics-fwh/index.html#advanced-use">double accounting</a>.</li>
+<li>Add extra observers of your choice to the FWH solver.</li>
+<li>Use the file utility <a href="guide/working-with/aeroacoustics-fwh/index.html#writefwhsurfacefrequenciesfile">writeFWHSurfaceFrequenciesFile</a>
+to visually inspect the spatial distribution of different frequencies in the FWH surface.</li>
+<li>Use the file utility <a href="guide/working-with/aeroacoustics-fwh/index.html#writeblankedofffwhsurfacefile">writeBlankedOffFwhSurfaceFile</a>
+to &#x27;blank off&#x27; all FWH surface cells more than 5 cylinder diameters downstream of the cylinder&#x27;s centre. Run
+the FWH solver using this modified surface, and based on this estimate how much of the shedding noise
+originates more than 5 diameters downstream of the cylinder.</li>
+<li>Use the <code>fwh.fwh_helper_functions</code> module to rewrite <code>fwh_python.py</code> so that the <code>solverSettings</code>
+dictionary is automatically set based on the zCFD control file name and reference condition which were used
+in the <code>run_fwh</code> utility.</li>
+</ol><aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>Since the cylinder CFD simulation is &#x27;2.5D&#x27; (i.e. the mesh only has a single cell in the <em>x</em> direction), the
+distance scaling of <em>p(t)</em> at observers will be non-physical.</p></div></aside></div>
+<p>:::</p>
+<h2 id="citations">Citations</h2>
+<ol>
+<li>Mitchell, B., Lele, S., &amp; Moin, P. (1999). Direct computation of the sound generated by vortex pairing in an
+axisymmetric jet. Journal of Fluid Mechanics, 383, 113-142. 10.1017/S0022112099003869</li>
+<li>Ricciardi, T. R. , Wolf W. R, &amp; Spalart P. R. (2022). On the Application of Incomplete Ffowcs Williams and
+Hawkings Surfaces for Aeroacoustic Predictions. AIAA Journal, 60<!-- -->:3<!-- -->, 1971-1977. 10.2514/1.J061285</li>
+</ol></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/4-aeroacoustics-fwh/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/4-aeroacoustics-fwh/index.html#what-you-need">What you need?</a><a href="tutorials/4-aeroacoustics-fwh/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/4-aeroacoustics-fwh/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/4-aeroacoustics-fwh/index.html#step-3-run">Step 3. Run</a><a href="tutorials/4-aeroacoustics-fwh/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/4-aeroacoustics-fwh/index.html#step-5-post-process">Step 5. Post-process</a><a href="tutorials/4-aeroacoustics-fwh/index.html#extensions">Extensions</a><a href="tutorials/4-aeroacoustics-fwh/index.html#citations">Citations</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

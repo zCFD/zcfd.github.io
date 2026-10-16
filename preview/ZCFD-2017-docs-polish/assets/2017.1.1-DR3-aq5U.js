@@ -1,0 +1,9 @@
+var e=`
+# 2017.1.1
+
+- Moved cfl logic for coarse grids into the driver layer
+- Allow overriding of RungeKutta scheme from users control dictionary
+- Fixed bug with incorrect gradient values being calculated at boundaries
+- Slip walls now extrapolate at the boundary
+- Updated a number of third party dependencies
+`;export{e as default};

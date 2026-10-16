@@ -1,0 +1,176 @@
+# zCFD documentation (ZCFD-2017-docs-polish)
+
+> Every page is also published as Markdown; the links below are relative to this file.
+
+## Guide
+
+### Concepts
+
+- [What is zCFD?](guide/concepts/what-zcfd-is.md)
+- [How the deck works](guide/concepts/how-the-deck-works.md)
+- [Converting an older control file](guide/concepts/converting-an-older-control-file.md)
+
+### Setting up…
+
+- [Installation and licensing](guide/setting-up/installation-and-licensing.md)
+- [Preparing a mesh](guide/setting-up/preparing-a-mesh.md)
+- [Running zCFD](guide/setting-up/running-zcfd.md)
+- [Python functions in the deck](guide/setting-up/python-functions-in-the-deck.md)
+
+### Choosing…
+
+- [Choosing an equation set](guide/choosing/choosing-an-equation-set.md)
+- [Choosing a turbulence model](guide/choosing/choosing-a-turbulence-model.md)
+- [Choosing a wall model](guide/choosing/choosing-a-wall-model.md)
+- [Choosing a time-marching scheme](guide/choosing/choosing-a-time-marching-scheme.md)
+- [Choosing a spatial scheme](guide/choosing/choosing-a-spatial-scheme.md)
+- [Choosing a limiter](guide/choosing/choosing-a-limiter.md)
+- [Choosing a linear solver](guide/choosing/choosing-a-linear-solver.md)
+- [Choosing a fluid-zone model](guide/choosing/choosing-a-fluid-zone-model.md)
+- [Choosing boundary conditions](guide/choosing/choosing-boundary-conditions.md)
+- [Choosing initialisation and reference state](guide/choosing/choosing-initialisation-and-reference-state.md)
+
+### Working with…
+
+- [Aeroacoustics (FWH)](guide/working-with/aeroacoustics-fwh.md)
+- [Fluid–structure interaction](guide/working-with/fluid-structure-interaction.md)
+- [Monitoring a run](guide/working-with/monitoring-a-run.md)
+- [Overset meshes](guide/working-with/overset-meshes.md)
+- [Post-processing and visualisation](guide/working-with/post-processing-and-visualisation.md)
+
+### Troubleshooting
+
+- [Troubleshooting](guide/troubleshooting/troubleshooting.md)
+
+### Working with
+
+- [Trimming to a target](guide/working-with/trimming-to-a-target.md)
+- [Placing and moving a mesh](guide/working-with/placing-and-moving-a-mesh.md)
+
+## Reference
+
+### Input deck
+
+- [Input deck](reference/input-deck.md)
+- [solver](reference/solver.md)
+- [solver settings](reference/solver/solver-settings.md)
+- [linear solver options](reference/solver/solver-settings/linear-solver-options.md)
+- [cell reordering](reference/solver/solver-settings/cell-reordering.md)
+- [equations](reference/solver/equations.md)
+- [turbulence](reference/solver/equations/turbulence.md)
+- [base state](reference/solver/equations/base-state.md)
+- [theta perturbation](reference/solver/equations/theta-perturbation.md)
+- [velocity perturbation](reference/solver/equations/velocity-perturbation.md)
+- [sponge layer](reference/solver/equations/sponge-layer.md)
+- [fluid properties](reference/solver/fluid-properties.md)
+- [reference conditions](reference/solver/reference-conditions.md)
+- [v](reference/solver/reference-conditions/v.md)
+- [profile](reference/solver/reference-conditions/profile.md)
+- [abl](reference/solver/reference-conditions/profile/abl.md)
+- [initialisation](reference/solver/initialisation.md)
+- [time settings](reference/solver/time-settings.md)
+- [scheme](reference/solver/time-settings/scheme.md)
+- [convergence control](reference/solver/convergence-control.md)
+- [inner convergence](reference/solver/convergence-control/inner-convergence.md)
+- [scheme](reference/solver/convergence-control/scheme.md)
+- [cfl](reference/solver/convergence-control/cfl.md)
+- [cfl ramp](reference/solver/convergence-control/cfl/cfl-ramp.md)
+- [viscosity ramp](reference/solver/convergence-control/viscosity-ramp.md)
+- [relaxation ramp](reference/solver/convergence-control/relaxation-ramp.md)
+- [numerical scheme](reference/solver/numerical-scheme.md)
+- [multigrid](reference/solver/numerical-scheme/multigrid.md)
+- [preconditioner](reference/solver/numerical-scheme/preconditioner.md)
+- [output settings](reference/solver/output-settings.md)
+- [solution](reference/solver/output-settings/solution.md)
+- [frequency](reference/solver/output-settings/solution/frequency.md)
+- [report](reference/solver/output-settings/report.md)
+- [monitor](reference/solver/output-settings/report/monitor.md)
+- [forces](reference/solver/output-settings/report/forces.md)
+- [mass flow](reference/solver/output-settings/report/mass-flow.md)
+- [model](reference/model.md)
+- [boundary conditions](reference/model/boundary-conditions.md)
+- [wall](reference/model/boundary-conditions/wall.md)
+- [most](reference/model/boundary-conditions/wall/most.md)
+- [temperature](reference/model/boundary-conditions/wall/temperature.md)
+- [heat flux](reference/model/boundary-conditions/wall/heat-flux.md)
+- [velocity](reference/model/boundary-conditions/wall/velocity.md)
+- [roughness](reference/model/boundary-conditions/wall/roughness.md)
+- [fsi](reference/model/boundary-conditions/wall/fsi.md)
+- [harmonic initial state](reference/model/boundary-conditions/wall/fsi/harmonic-initial-state.md)
+- [farfield](reference/model/boundary-conditions/farfield.md)
+- [sponge layer damping](reference/model/boundary-conditions/farfield/sponge-layer-damping.md)
+- [target](reference/model/boundary-conditions/farfield/target.md)
+- [alpha](reference/model/boundary-conditions/farfield/target/alpha.md)
+- [advanced](reference/model/boundary-conditions/farfield/target/alpha/advanced.md)
+- [axes](reference/model/boundary-conditions/farfield/target/axes.md)
+- [symmetry](reference/model/boundary-conditions/symmetry.md)
+- [inflow](reference/model/boundary-conditions/inflow.md)
+- [outflow](reference/model/boundary-conditions/outflow.md)
+- [interface](reference/model/boundary-conditions/interface.md)
+- [connection](reference/model/boundary-conditions/interface/connection.md)
+- [transform](reference/model/boundary-conditions/interface/transform.md)
+- [fluid zones](reference/model/fluid-zones.md)
+- [momentum](reference/model/fluid-zones/momentum.md)
+- [rotating](reference/model/fluid-zones/rotating.md)
+- [disc](reference/model/fluid-zones/disc.md)
+- [controller](reference/model/fluid-zones/disc/controller.md)
+- [geometry](reference/model/fluid-zones/disc/geometry.md)
+- [discretisation](reference/model/fluid-zones/disc/discretisation.md)
+- [model](reference/model/fluid-zones/disc/model.md)
+- [porous](reference/model/fluid-zones/porous.md)
+- [canopy](reference/model/fluid-zones/canopy.md)
+- [abl](reference/model/fluid-zones/abl.md)
+- [idw transform](reference/model/fluid-zones/idw-transform.md)
+- [rbf transform](reference/model/fluid-zones/rbf-transform.md)
+- [transforms](reference/model/transforms.md)
+- [motion](reference/model/transforms/motion.md)
+
+### Output variables
+
+- [Output variables](reference/output-variables.md)
+
+### Command line
+
+- [Command line invocation and flags](reference/command-line/invocation-and-flags.md)
+- [Environment variables](reference/command-line/environment-variables.md)
+- [Parallel invocation](reference/command-line/parallel-invocation.md)
+
+### File formats
+
+- [Mesh file](reference/file-formats/mesh-file.md)
+
+## Tutorials
+
+### Tutorials
+
+- [Tutorials](tutorials/index.md)
+- [1 · Simple aerofoil](tutorials/1-simple-aerofoil.md)
+- [2 · Steady-state RANS](tutorials/2-steady-state-rans.md)
+- [3 · Time-accurate solution](tutorials/3-time-accurate-solution.md)
+- [4 · Aeroacoustics (FWH)](tutorials/4-aeroacoustics-fwh.md)
+- [5 · Overset meshes](tutorials/5-overset-meshes.md)
+- [6 · Incompressible flow](tutorials/6-incompressible-flow.md)
+- [7 · Rotor in hover](tutorials/7-rotor-in-hover.md)
+- [8 · Polars and trimming to a target](tutorials/8-polars-and-trimming.md)
+
+## Release notes
+
+### Release notes
+
+- [Unreleased](release-notes/unreleased.md)
+- [2023.next](release-notes/2023.next.md)
+- [2021.11.765](release-notes/2021.11.765.md)
+- [2021.07.123](release-notes/2021.07.123.md)
+- [2021.04.122](release-notes/2021.04.122.md)
+- [2019.06.86](release-notes/2019.06.86.md)
+- [2019.01.68](release-notes/2019.01.68.md)
+- [2018.09.62](release-notes/2018.09.62.md)
+- [2018.07.60](release-notes/2018.07.60.md)
+- [2018.05.58](release-notes/2018.05.58.md)
+- [2017.2.3](release-notes/2017.2.3.md)
+- [2017.2.2](release-notes/2017.2.2.md)
+- [2017.2.1](release-notes/2017.2.1.md)
+- [2017.2.0](release-notes/2017.2.0.md)
+- [2017.1.1](release-notes/2017.1.1.md)
+- [2017.1.0](release-notes/2017.1.0.md)
+- [2016.3.0](release-notes/2016.3.0.md)

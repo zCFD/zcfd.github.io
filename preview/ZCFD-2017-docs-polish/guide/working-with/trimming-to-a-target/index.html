@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Trimming to a target · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/working-with/trimming-to-a-target.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/trimming-to-a-target-D8RYOsV2.js">
+    <script type="module" crossorigin src="./assets/index-FgxSx1t3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPicbpDq.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-2017-docs-polish">ZCFD-2017-docs-polish</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><div class="trow"><span class="tind conn mid"></span><a href="guide/concepts/what-zcfd-is/index.html" class="tlink"><span class="tlab dim">What is zCFD?</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/concepts/how-the-deck-works/index.html" class="tlink"><span class="tlab dim">How the deck works</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/concepts/converting-an-older-control-file/index.html" class="tlink"><span class="tlab dim">Converting an older control file</span></a></div><div class="tsec">Setting up…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/installation-and-licensing/index.html" class="tlink"><span class="tlab dim">Installation and licensing</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/preparing-a-mesh/index.html" class="tlink"><span class="tlab dim">Preparing a mesh</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/running-zcfd/index.html" class="tlink"><span class="tlab dim">Running zCFD</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="tlink"><span class="tlab dim">Python functions in the deck</span></a></div><div class="tsec">Choosing…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-an-equation-set/index.html" class="tlink"><span class="tlab dim">Choosing an equation set</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="tlink"><span class="tlab dim">Choosing a turbulence model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-wall-model/index.html" class="tlink"><span class="tlab dim">Choosing a wall model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="tlink"><span class="tlab dim">Choosing a time-marching scheme</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-spatial-scheme/index.html" class="tlink"><span class="tlab dim">Choosing a spatial scheme</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-limiter/index.html" class="tlink"><span class="tlab dim">Choosing a limiter</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-linear-solver/index.html" class="tlink"><span class="tlab dim">Choosing a linear solver</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="tlink"><span class="tlab dim">Choosing a fluid-zone model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-boundary-conditions/index.html" class="tlink"><span class="tlab dim">Choosing boundary conditions</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="tlink"><span class="tlab dim">Choosing initialisation and reference state</span></a></div><div class="tsec">Working with…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/fluid-structure-interaction/index.html" class="tlink"><span class="tlab dim">Fluid–structure interaction</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/monitoring-a-run/index.html" class="tlink"><span class="tlab dim">Monitoring a run</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/overset-meshes/index.html" class="tlink"><span class="tlab dim">Overset meshes</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/working-with/post-processing-and-visualisation/index.html" class="tlink"><span class="tlab dim">Post-processing and visualisation</span></a></div><div class="tsec">Troubleshooting</div><div class="trow"><span class="tind conn"></span><a href="guide/troubleshooting/troubleshooting/index.html" class="tlink"><span class="tlab dim">Troubleshooting</span></a></div><div class="tsec">Working with</div><div class="trow sel"><span class="tind conn mid"></span><a href="guide/working-with/trimming-to-a-target/index.html" class="tlink" aria-current="page"><span class="tlab dim">Trimming to a target</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/working-with/placing-and-moving-a-mesh/index.html" class="tlink"><span class="tlab dim">Placing and moving a mesh</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Working with</span><span> / <b>Trimming to a target</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="trimming-to-a-target">Trimming to a target</h1>
+<p>A farfield can turn its own angle of attack until a force coefficient reaches a value you set. The run trims, holds the
+trimmed angle, and reports the angle it found:</p>
+<pre><code class="language-python">&quot;BC_3&quot;: {
+    &quot;zones&quot;: [1],
+    &quot;type&quot;: &quot;farfield&quot;,
+    &quot;condition&quot;: &quot;IC_1&quot;,
+    &quot;kind&quot;: &quot;riemann&quot;,
+    &quot;target&quot;: {&quot;alpha&quot;: {&quot;cl&quot;: 1.0778, &quot;hold&quot;: 500}},
+}
+</code></pre>
+<p>This asks for the angle of attack that gives a lift coefficient of 1.0778, and for 500 cycles at that angle once it is
+found.</p>
+<h2 id="setting-up-a-trim">Setting up a trim</h2>
+<ol>
+<li>
+<p><strong>Report the force on the body.</strong> The coefficient is read from a force report on the walls of the body, so the
+case needs one under <code>output_settings</code> › <code>report</code> › <code>forces</code>, written as coefficients (the default) with
+<code>reference_area</code> set to the body&#x27;s reference area (it is 1 unless set).
+With more than one force report, name the one to trim with <code>of</code>.</p>
+<pre><code class="language-python">&quot;report&quot;: {&quot;frequency&quot;: 10, &quot;forces&quot;: {&quot;FR_1&quot;: {&quot;name&quot;: &quot;wall&quot;, &quot;zones&quot;: [4]}}},
+</code></pre>
+</li>
+<li>
+<p><strong>Start the farfield near the answer.</strong> The trim starts from the angle of the farfield&#x27;s own condition. Any angle
+works, but a start within a few degrees of the answer saves a step or two. The speed, the Mach number and the
+sideslip of the condition are kept.</p>
+</li>
+<li>
+<p><strong>Add the target</strong> to the farfield, as above: the coefficient (<code>cl</code> or <code>cd</code>) and, usually, a <code>hold</code>.</p>
+</li>
+<li>
+<p><strong>Give the run enough cycles.</strong> <code>cycles</code> stays the budget. Allow for the trim, a few hundred cycles for each step,
+plus the hold. The aerofoil above trims from 0° to 10° in about 2300 cycles on a 449 × 129 mesh.</p>
+</li>
+<li>
+<p><strong>Read the result.</strong> The log ends with the trimmed angle and the coefficient it reached, the report file carries
+the angle and coefficient on every report row, and the status file records whether the target was met. To reuse
+the angle in another run, paste the vector printed on the end line into the condition, or restart from this run.</p>
+</li>
+</ol>
+<p>The run must be steady and compressible. Any other run keeps the condition&#x27;s own angle and says so in a warning.</p>
+<h2 id="what-a-run-does">What a run does</h2>
+<p>The run starts at the angle of the farfield&#x27;s own <code>condition</code>. Before each step it waits for the coefficient to
+settle: three successive means, each over a few report rows, must agree within <code>tolerance</code>. Two are not enough,
+because after a step the coefficient can sit on a short plateau before it falls to its real value. It then steps the angle towards
+the target, by no more than 4° at a time, and waits again. The first step for <code>cl</code> follows from the thin-aerofoil lift
+slope; later steps follow from the slope fitted through the settled values seen so far. The target is met when the
+settled value lies within <code>tolerance</code> of it.</p>
+<p>Well above zero lift, the coefficient creeps towards its settled value for many hundreds of cycles. When the last few
+means are closing in steadily, the run works out the value they are heading for and steps on that, rather than waiting
+for the creep to finish. A step taken this way shows the predicted value in its log line, as <code>cl 0.7531 (heading for 1.0412)</code>. A prediction only ever starts a step; the target is met, and a stall is confirmed, only on a settled value.</p>
+<p>If a higher angle gives less lift rather than more, the aerofoil has stalled. The run does not step beyond the angle of
+greatest measured lift, and a <code>cl</code> target above that lift is reported as not met, naming the peak it measured.</p>
+<p>Drag is the same at plus and minus the same angle, so a <code>cd</code> target is searched for on one side only: on the side of
+the starting angle, or at positive angles when the run starts at 0°.</p>
+<p>Once the target is met the angle is frozen and the run carries on under its ordinary
+<a href="reference/solver/convergence-control/index.html">convergence control</a>. If the coefficient drifts outside <code>tolerance</code> while the
+angle is held, the run trims again.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Key</th><th>Meaning</th></tr></thead><tbody><tr><td><code>cl</code>, <code>cd</code></td><td>the target lift or drag coefficient; give exactly one</td></tr><tr><td><code>hold</code></td><td>the number of cycles to run once the target is met, after which the run stops; left out, the run ends in the ordinary way</td></tr><tr><td><code>tolerance</code></td><td>the largest absolute difference from the target that counts as met; 0.001 for <code>cl</code> and 0.0001 for <code>cd</code> if left out</td></tr><tr><td><code>of</code></td><td>the name of the <a href="reference/solver/output-settings/report/index.html#forces">force report</a> the coefficient comes from</td></tr><tr><td><code>axes</code></td><td>the forward and up axes the angle is measured in; see <a href="guide/working-with/trimming-to-a-target/index.html#axes">Axes</a></td></tr></tbody></table></div>
+<p><code>of</code> may be left out when the deck has a single force report. With more than one it is required, and it must name one
+of them.</p>
+<h3 id="hold-and-cycles">Hold and cycles</h3>
+<p><a href="reference/solver/convergence-control/index.html#cycles"><code>cycles</code></a> remains the budget for the whole run, and the ordinary stops
+still apply, so a <code>hold</code> can only end a run sooner. A run whose budget runs out during the hold stops at the budget and
+says so in a warning, for example <code>held for only 230 of 500 cycles</code>. Allow enough cycles for the trim and the hold
+together.</p>
+<h3 id="when-the-target-is-not-met">When the target is not met</h3>
+<p>A run that reaches the end of its budget without meeting the target still finishes normally: it writes its usual output
+and exits without an error. Its last line states the shortfall plainly, and the status file records the target as not
+met, so a post-processing script can check it without reading the log.</p>
+<h2 id="tuning">Tuning</h2>
+<p>The defaults suit most runs, and a deck need not mention any of this. A run that steps too eagerly, or waits too long,
+can be tuned with an <code>advanced</code> block inside <code>alpha</code>:</p>
+<pre><code class="language-python">&quot;target&quot;: {
+    &quot;alpha&quot;: {
+        &quot;cl&quot;: 1.0778,
+        &quot;hold&quot;: 500,
+        &quot;advanced&quot;: {&quot;max_step&quot;: 1.0, &quot;average_over&quot;: 20},
+    }
+}
+</code></pre>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Key</th><th>Default</th><th>Meaning</th><th>When to change it</th></tr></thead><tbody><tr><td><code>max_step</code></td><td>4</td><td>the largest change of angle in one step, in degrees, up to 6</td><td>lower it near stall or for a sensitive configuration; above 6° a single jump can make the flow solve diverge</td></tr><tr><td><code>relaxation</code></td><td>1</td><td>the fraction of the computed step that is taken, greater than 0 and at most 2</td><td>lower it if the angle overshoots and swings about the target</td></tr><tr><td><code>average_over</code></td><td>10</td><td>the number of report rows averaged into each measurement</td><td>raise it when the coefficient oscillates from row to row</td></tr><tr><td><code>max_wait</code></td><td>1500</td><td>the cycles to wait after a step before stepping anyway, settled or not</td><td>raise it for a flow that settles slowly; lower it to trade accuracy for a shorter trim</td></tr><tr><td><code>slope</code></td><td>see below</td><td>a first guess of the change of the coefficient per degree</td><td>set it when the lift slope is known to differ from that of a thin aerofoil, or for <code>cd</code></td></tr></tbody></table></div>
+<p>Left out, <code>slope</code> is 0.11 per degree for <code>cl</code>, the thin-aerofoil slope of 2π per radian. For <code>cd</code> there is no such
+guess, so the first step is a probe of half <code>max_step</code>.</p>
+<h2 id="axes">Axes</h2>
+<p>The angle of attack is measured in the plane of a forward and an up axis, from forward towards up. Lift is
+perpendicular to the freestream, towards up, and drag lies along it.</p>
+<p>The axes default to forward +x and up +z, the ESDU convention that <code>zutil.vector_from_angle</code> also uses. With angle of
+attack <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> and sideslip <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em"></span><span class="mord mathnormal" style="margin-right:0.0528em">β</span></span></span></span>, the velocity is</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">v</mi><mo>=</mo><mi mathvariant="normal">∣</mi><mi mathvariant="bold">v</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mi>α</mi><mi>cos</mi><mo>⁡</mo><mi>β</mi><mo separator="true">,</mo><mtext>  </mtext><mi>sin</mi><mo>⁡</mo><mi>β</mi><mo separator="true">,</mo><mtext>  </mtext><mi>sin</mi><mo>⁡</mo><mi>α</mi><mi>cos</mi><mo>⁡</mo><mi>β</mi><mo stretchy="false">)</mo><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">\mathbf{v} = |\mathbf{v}| \, (\cos\alpha \cos\beta, \; \sin\beta, \; \sin\alpha \cos\beta),</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4444em"></span><span class="mord mathbf" style="margin-right:0.016em">v</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord">∣</span><span class="mord mathbf" style="margin-right:0.016em">v</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mopen">(</span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0528em">β</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0528em">β</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2778em"></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0528em">β</span><span class="mclose">)</span><span class="mpunct">,</span></span></span></span></span>
+<p>so <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span> turns the flow from +x towards +z and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em"></span><span class="mord mathnormal" style="margin-right:0.0528em">β</span></span></span></span> turns it out of that plane towards +y. A mesh built with
+another up axis states its own:</p>
+<pre><code class="language-python">&quot;target&quot;: {&quot;alpha&quot;: {&quot;cl&quot;: 0.5}, &quot;axes&quot;: {&quot;forward&quot;: &quot;+x&quot;, &quot;up&quot;: &quot;+y&quot;}}
+</code></pre>
+<p>Each axis is one of <code>+x</code>, <code>-x</code>, <code>+y</code>, <code>-y</code>, <code>+z</code> and <code>-z</code>, and the two must be at right angles. Turning the angle keeps
+the speed and the sideslip of the condition unchanged.</p>
+<h2 id="what-the-run-reports">What the run reports</h2>
+<p>Each line of the log about the target begins with <code>target</code>, followed by the boundary condition&#x27;s key as the deck spells it. A line appears only when something changes: once at the start, stating the axes, then at each step,
+when the target is met, and at the end. This is the NACA 0012 at Mach 0.15 trimmed to its lift coefficient at 10°:</p>
+<pre><code class="language-text">target BC_3: trimming alpha (x–z plane, forward +x, up +z) for cl 1.0778, then hold 500 cycles
+target BC_3: cycle  200  alpha  0.000° →  4.000°   cl 0.0000   target 1.0778
+target BC_3: cycle  600  alpha  4.000° →  8.000°   cl 0.4369 (heading for 0.4378)   target 1.0778
+target BC_3: cycle 1100  alpha  8.000° →  9.790°   cl 0.8245 (heading for 0.8808)   target 1.0778
+target BC_3: cycle 1500  alpha  9.790° →  9.934°   cl 1.0397 (heading for 1.0622)   target 1.0778
+target BC_3: cycle 1900  alpha  9.934° →  9.980°   cl 1.0709 (heading for 1.0732)   target 1.0778
+target BC_3: cycle 2100  alpha  9.980° →  9.998°   cl 1.0764   target 1.0778
+target BC_3: cycle 2300  alpha  9.998° →  9.984°   cl 1.0790   target 1.0778
+target BC_3: cycle 2500  cl 1.0782 met at alpha 9.984° — holding 500 cycles
+target BC_3: alpha trimmed to 9.984° for cl 1.0778 (cl 1.0780 at end, cycle 3000); as the condition&#x27;s vector: zutil.vector_from_angle(9.984, 0.000)
+</code></pre>
+<p>The end line also gives the trimmed angle in a form ready to paste into a condition, <code>zutil.vector_from_angle(9.984, 0.000)</code>.
+With axes other than the default it gives the trimmed vector itself.
+A run that does not meet its target ends instead with a warning such as:</p>
+<pre><code class="language-text">target BC_3: cl target NOT met: cl 0.6830 at alpha 6.000° (target 1.0778, 36.6 % short) after 3000 cycles
+</code></pre>
+<p>The coefficient in each of these lines, and in the end line in particular, is the settled value: the mean of the last
+<code>average_over</code> report rows, not a single row.</p>
+<p>The report file gains two columns for each target, written on every report cycle: the angle, <code>&lt;bc&gt;_alpha</code>, in degrees,
+and the coefficient, such as <code>&lt;bc&gt;_cl</code>.</p>
+<p>The <a href="guide/setting-up/running-zcfd/index.html#the-status-file">status file</a> holds a <code>target</code> record for each target, keyed as the
+log lines are:</p>
+<pre><code class="language-yaml">target:
+  BC_3:
+    phase: met
+    alpha: 9.803
+    cl: 1.0783
+    met_cycle: 4300
+</code></pre>
+<p>The phase is <code>settle</code>, <code>trim</code> or <code>hold</code> while the run proceeds, and <code>met</code> or <code>not met</code> at the end. <code>cl</code> is the settled
+value, and <code>met_cycle</code> is the cycle at which the target was met; it is empty until then.</p>
+<h2 id="restarting">Restarting</h2>
+<p>A restarted run with a target starts the farfield at the angle recorded in the previous run&#x27;s status file, not at the
+angle of its <code>condition</code>. A run whose target was met goes straight to the hold; one still trimming carries on. The
+line after the opening line says so, for example <code>target BC_3: resuming at alpha 9.803° (met in the previous run)</code>. After a restart the flow
+settles once more before the angle moves.</p>
+<p>A restarted run without a target uses its <code>condition</code> as written. To keep a trimmed angle in a later run without a
+target, paste the end line&#x27;s <code>zutil.vector_from_angle</code> call into the condition&#x27;s <code>vector</code>.</p>
+<h2 id="what-can-be-trimmed">What can be trimmed</h2>
+<p>A target turns the angle of attack, <code>alpha</code>, for a lift or drag coefficient, on a steady compressible run. The
+farfield&#x27;s <code>condition</code> must give its velocity as a <code>vector</code>.</p>
+<p>On any other run, unsteady (<a href="guide/choosing/choosing-a-time-marching-scheme/index.html">dual or global time stepping</a>) or
+incompressible, the target is ignored: validation warns, naming the boundary condition, the log repeats the warning at
+the start, and the run proceeds at the condition&#x27;s own angle.</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/working-with/trimming-to-a-target/index.html#setting-up-a-trim">Setting up a trim</a><a href="guide/working-with/trimming-to-a-target/index.html#what-a-run-does">What a run does</a><a href="guide/working-with/trimming-to-a-target/index.html#tuning">Tuning</a><a href="guide/working-with/trimming-to-a-target/index.html#axes">Axes</a><a href="guide/working-with/trimming-to-a-target/index.html#what-the-run-reports">What the run reports</a><a href="guide/working-with/trimming-to-a-target/index.html#restarting">Restarting</a><a href="guide/working-with/trimming-to-a-target/index.html#what-can-be-trimmed">What can be trimmed</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

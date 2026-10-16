@@ -1,0 +1,9 @@
+var e=`
+# 2018.09.62
+
+- Fixed viscous forces calculation in high order solver which were a factor of 2.0 too large
+- Upgraded versions of CUDA, Intel MPI and MKL used. CUDA 9.2 is now required for GPU runs
+- Added validate_input script to allow checking of control dictionary before run time
+- Enforce input parameters that are either True or False to be booleans when validating the dictionary. i.e. 'true' is no longer valid
+- Changed colour of timer breakdown output to improve readability
+`;export{e as default};

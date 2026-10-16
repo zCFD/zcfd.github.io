@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Choosing an equation set · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="guide/choosing/choosing-an-equation-set.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/choosing-an-equation-set-s-idw2Qh.js">
+    <script type="module" crossorigin src="./assets/index-FgxSx1t3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPicbpDq.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="zCFD"><path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"></path><polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"></polygon><path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"></path></svg></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD ZCFD-2017-docs-polish">ZCFD-2017-docs-polish</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><div class="trow"><span class="tind conn mid"></span><a href="guide/concepts/what-zcfd-is/index.html" class="tlink"><span class="tlab dim">What is zCFD?</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/concepts/how-the-deck-works/index.html" class="tlink"><span class="tlab dim">How the deck works</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/concepts/converting-an-older-control-file/index.html" class="tlink"><span class="tlab dim">Converting an older control file</span></a></div><div class="tsec">Setting up…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/installation-and-licensing/index.html" class="tlink"><span class="tlab dim">Installation and licensing</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/preparing-a-mesh/index.html" class="tlink"><span class="tlab dim">Preparing a mesh</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/running-zcfd/index.html" class="tlink"><span class="tlab dim">Running zCFD</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="tlink"><span class="tlab dim">Python functions in the deck</span></a></div><div class="tsec">Choosing…</div><div class="trow sel"><span class="tind conn mid"></span><a href="guide/choosing/choosing-an-equation-set/index.html" class="tlink" aria-current="page"><span class="tlab dim">Choosing an equation set</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="tlink"><span class="tlab dim">Choosing a turbulence model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-wall-model/index.html" class="tlink"><span class="tlab dim">Choosing a wall model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="tlink"><span class="tlab dim">Choosing a time-marching scheme</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-spatial-scheme/index.html" class="tlink"><span class="tlab dim">Choosing a spatial scheme</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-limiter/index.html" class="tlink"><span class="tlab dim">Choosing a limiter</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-linear-solver/index.html" class="tlink"><span class="tlab dim">Choosing a linear solver</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="tlink"><span class="tlab dim">Choosing a fluid-zone model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-boundary-conditions/index.html" class="tlink"><span class="tlab dim">Choosing boundary conditions</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="tlink"><span class="tlab dim">Choosing initialisation and reference state</span></a></div><div class="tsec">Working with…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/fluid-structure-interaction/index.html" class="tlink"><span class="tlab dim">Fluid–structure interaction</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/monitoring-a-run/index.html" class="tlink"><span class="tlab dim">Monitoring a run</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/overset-meshes/index.html" class="tlink"><span class="tlab dim">Overset meshes</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/working-with/post-processing-and-visualisation/index.html" class="tlink"><span class="tlab dim">Post-processing and visualisation</span></a></div><div class="tsec">Troubleshooting</div><div class="trow"><span class="tind conn"></span><a href="guide/troubleshooting/troubleshooting/index.html" class="tlink"><span class="tlab dim">Troubleshooting</span></a></div><div class="tsec">Working with</div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/trimming-to-a-target/index.html" class="tlink"><span class="tlab dim">Trimming to a target</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/working-with/placing-and-moving-a-mesh/index.html" class="tlink"><span class="tlab dim">Placing and moving a mesh</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="guide"><div class="crumb"><span>Guide</span><span> / <!-- -->Choosing…</span><span> / <b>Choosing an equation set</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="choosing-an-equation-set">Choosing an equation set</h1>
+<p>Which equations should the solver solve?</p>
+<p>Choose the equation set from the physics. Each set adds terms to the one before it:</p>
+<ul>
+<li><code>euler</code> solves the inviscid flow equations. There is no viscosity, and so no boundary layer and no turbulence.</li>
+<li><code>viscous</code> solves the Navier–Stokes equations for laminar flow.</li>
+<li><code>rans</code> solves the Reynolds-averaged Navier–Stokes equations, with transport equations that model the effect of
+turbulence on the mean flow.</li>
+<li><code>les</code> solves the filtered Navier–Stokes equations. The energy-containing eddies are resolved on the mesh, and only
+the scales below the filter width are modelled.</li>
+</ul>
+<p>Use <code>euler</code> where viscosity plays no part in the result, <code>viscous</code> for laminar flow, <code>rans</code> for turbulent flow whose
+turbulence is modelled, and <code>les</code> where the energy-containing eddies must be resolved. To resolve eddies away from the
+wall while keeping RANS near it, use <code>rans</code> with a hybrid model; see
+<a href="guide/choosing/choosing-a-turbulence-model/index.html#hybrid">Choosing a turbulence model</a>.</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th><code>type</code></th><th>Turbulence</th><th>Mesh near the wall</th><th>Solver</th></tr></thead><tbody><tr><td><a href="guide/choosing/choosing-an-equation-set/index.html#euler"><code>&quot;euler&quot;</code></a></td><td>none; the flow is inviscid</td><td>no boundary layer to resolve</td><td>compressible only</td></tr><tr><td><a href="guide/choosing/choosing-an-equation-set/index.html#viscous"><code>&quot;viscous&quot;</code></a></td><td>none; the flow is laminar</td><td>resolves the boundary layer</td><td>compressible or incompressible</td></tr><tr><td><a href="guide/choosing/choosing-an-equation-set/index.html#rans"><code>&quot;rans&quot;</code></a></td><td>modelled by transport equations</td><td>set by the wall treatment</td><td>compressible or incompressible</td></tr><tr><td><a href="guide/choosing/choosing-an-equation-set/index.html#les"><code>&quot;les&quot;</code></a></td><td>resolved above the filter width</td><td>fine enough to carry resolved eddies</td><td>compressible or incompressible</td></tr></tbody></table></div>
+<h2 id="equation-sets">Equation sets</h2>
+<p>The <code>equations</code> block sits under <code>solver</code> and selects the equation set:</p>
+<pre><code class="language-python">parameters = {
+  &quot;config_version&quot;: 2,
+  &quot;solver&quot;: {
+    &quot;equations&quot;: {
+      &quot;type&quot;: &quot;rans&quot;,
+      &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+    },
+    # ... numerical_scheme, fluid_properties, reference_conditions, ...
+  },
+}
+</code></pre>
+<p><a href="reference/solver/equations/index.html#type"><code>type</code></a> is case-insensitive on input, so <code>&quot;RANS&quot;</code>, <code>&quot;rans&quot;</code> and <code>&quot;Rans&quot;</code> validate
+alike; it is stored in lower case.</p>
+<p>The choice between the compressible and the incompressible solver is a separate one, made by
+<code>{&quot;solver_settings&quot;: {&quot;type&quot;: ...}}</code> with <code>&quot;compressible&quot;</code> or <code>&quot;incompressible&quot;</code>. Both solvers share the equation types
+<code>&quot;viscous&quot;</code>, <code>&quot;rans&quot;</code> and <code>&quot;les&quot;</code>, and the incompressible solver accepts further keys alongside them (see
+<a href="guide/choosing/choosing-an-equation-set/index.html#incompressible-viscous">Incompressible equation sets</a>). The incompressible solver has no Euler equation set.</p>
+<h3 id="precondition">precondition</h3>
+<p>Low-speed Mach preconditioning modifies the pseudo-time system to restore good conditioning at low Mach number. It
+therefore has meaning only where a pseudo-time loop exists, in steady runs and under dual time stepping. Global time
+stepping has no pseudo-time loop to precondition, so <a href="reference/solver/equations/index.html#precondition"><code>precondition</code></a> is
+unavailable there. <code>False</code> is the default, and never conflicts with a time-marching choice.</p>
+<h2 id="euler">Euler</h2>
+<p>The compressible Euler equations describe inviscid flow. They suit flows in which momentum greatly outweighs
+viscosity, at very high speed for example. An Euler mesh need not resolve the boundary layer, and so generally has far
+fewer cells than the corresponding viscous mesh.</p>
+<p>Euler takes only the common <code>type</code> and <code>precondition</code> keys:</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;][&quot;equations&quot;] = {
+    &quot;type&quot;: &quot;euler&quot;,
+    &quot;precondition&quot;: True,
+}
+</code></pre>
+<h2 id="viscous">Viscous</h2>
+<p>The viscous equations describe flow that is viscous but laminar. The
+<a href="http://en.wikipedia.org/wiki/Reynolds_number">Reynolds number</a> of the flow determines whether it is turbulent.</p>
+<p>A viscous mesh must resolve the boundary layer, and so is generally larger than an Euler mesh. On the same mesh a
+viscous run is faster than a RANS run, since it solves fewer equations.</p>
+<p>Compressible viscous flow takes only the common <code>type</code> and <code>precondition</code> keys:</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;][&quot;equations&quot;] = {
+    &quot;type&quot;: &quot;viscous&quot;,
+    &quot;precondition&quot;: True,
+}
+</code></pre>
+<h2 id="rans">RANS</h2>
+<p>The Reynolds-averaged Navier–Stokes equations, for fully turbulent flow.</p>
+<p>Besides the common keys, <code>&quot;rans&quot;</code> requires the <a href="reference/solver/equations/index.html#turbulence"><code>turbulence</code></a> dictionary,
+which names the turbulence model and any hybrid RANS–LES model layered on it. The choice of model is set out in
+<a href="guide/choosing/choosing-a-turbulence-model/index.html">Choosing a turbulence model</a>.</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;][&quot;equations&quot;] = {
+    &quot;type&quot;: &quot;rans&quot;,
+    &quot;precondition&quot;: True,
+    &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+}
+</code></pre>
+<h2 id="les">LES</h2>
+<p>Large eddy simulation resolves the energy-containing turbulent scales directly, and models only the sub-grid scales
+below the mesh filter width. A non-hybrid LES run solves no additional transport equation for turbulence: the
+sub-grid-scale model is a kernel inside the viscous solver. The <code>&quot;les&quot;</code> equation set is therefore handled by the same
+solver path as <code>&quot;viscous&quot;</code>, with the sub-grid closure switched on.</p>
+<p>The <code>turbulence</code> dictionary of <code>&quot;les&quot;</code> is optional, and selects the sub-grid model; see
+<a href="guide/choosing/choosing-a-turbulence-model/index.html#les">LES sub-grid models</a>. Leaving it out gives implicit LES, with no sub-grid model.</p>
+<p>Hybrid RANS–LES methods carry a transport-equation RANS model beneath their LES branch, and are configured through
+the <a href="guide/choosing/choosing-an-equation-set/index.html#rans">RANS</a> equation set, never through <code>&quot;les&quot;</code>.</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;][&quot;equations&quot;] = {
+    &quot;type&quot;: &quot;les&quot;,
+    &quot;turbulence&quot;: {&quot;les&quot;: &quot;wale&quot;},
+}
+</code></pre>
+<h2 id="incompressible-viscous">Incompressible equation sets</h2>
+<p>With the incompressible solver, <code>{&quot;solver_settings&quot;: {&quot;type&quot;: &quot;incompressible&quot;}}</code>, the equation types <code>&quot;viscous&quot;</code>,
+<code>&quot;rans&quot;</code> and <code>&quot;les&quot;</code> accept further keys beside <code>type</code> and <code>precondition</code>: the non-orthogonal correction, gradient
+limiting and central blending, the energy equation, and the stratified-atmosphere settings, among them
+<a href="reference/solver/equations/index.html#base-state"><code>base_state</code></a> and
+<a href="reference/solver/equations/index.html#theta-perturbation"><code>theta_perturbation</code></a>.</p>
+<p>The pressure-velocity coupling scheme, its relaxation factors and the SIMPLE pressure settings belong to
+<code>convergence_control</code>; see
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#incompressible-convergence-control">Incompressible convergence control</a>.</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;] = {
+    &quot;solver_settings&quot;: {&quot;type&quot;: &quot;incompressible&quot;},
+    &quot;equations&quot;: {
+        &quot;type&quot;: &quot;viscous&quot;,
+    },
+    # ... numerical_scheme, fluid_properties, reference_conditions, ...
+}
+</code></pre>
+<h3 id="incompressible-rans">Incompressible RANS</h3>
+<p>The incompressible RANS equations combine these keys with the <code>turbulence</code> dictionary of <a href="guide/choosing/choosing-an-equation-set/index.html#rans">RANS</a>. The
+incompressible solver solves the <code>sst</code> and <code>sa-neg</code> turbulence models only.</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;] = {
+    &quot;solver_settings&quot;: {&quot;type&quot;: &quot;incompressible&quot;},
+    &quot;equations&quot;: {
+        &quot;type&quot;: &quot;rans&quot;,
+        &quot;precondition&quot;: True,
+        &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+    },
+    # ... numerical_scheme, fluid_properties, reference_conditions, ...
+}
+</code></pre>
+<h3 id="incompressible-les">Incompressible LES</h3>
+<p>The incompressible LES equations combine these keys with the LES <code>turbulence</code> dictionary of <a href="guide/choosing/choosing-an-equation-set/index.html#les">LES</a>:</p>
+<pre><code class="language-python">parameters[&quot;solver&quot;] = {
+    &quot;solver_settings&quot;: {&quot;type&quot;: &quot;incompressible&quot;},
+    &quot;equations&quot;: {
+        &quot;type&quot;: &quot;les&quot;,
+        &quot;turbulence&quot;: {&quot;les&quot;: &quot;wale&quot;},
+    },
+    # ... numerical_scheme, fluid_properties, reference_conditions, ...
+}
+</code></pre>
+<h2 id="reference-entries">Reference entries</h2>
+<ul>
+<li><a href="reference/solver/equations/index.html#type"><code>type</code></a> and <a href="reference/solver/equations/index.html#precondition"><code>precondition</code></a></li>
+<li><a href="reference/solver/equations/index.html#turbulence"><code>turbulence</code></a></li>
+<li><a href="reference/solver/equations/index.html#base-state"><code>base_state</code></a> and
+<a href="reference/solver/equations/index.html#theta-perturbation"><code>theta_perturbation</code></a></li>
+</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/choosing/choosing-an-equation-set/index.html#equation-sets">Equation sets</a><a href="guide/choosing/choosing-an-equation-set/index.html#euler">Euler</a><a href="guide/choosing/choosing-an-equation-set/index.html#viscous">Viscous</a><a href="guide/choosing/choosing-an-equation-set/index.html#rans">RANS</a><a href="guide/choosing/choosing-an-equation-set/index.html#les">LES</a><a href="guide/choosing/choosing-an-equation-set/index.html#incompressible-viscous">Incompressible equation sets</a><a href="guide/choosing/choosing-an-equation-set/index.html#reference-entries">Reference entries</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

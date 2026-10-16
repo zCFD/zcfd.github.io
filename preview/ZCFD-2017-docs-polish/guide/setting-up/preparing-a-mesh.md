@@ -1,0 +1,434 @@
+---
+title: Preparing a mesh
+section: guide
+group: Setting up…
+order: 20
+---
+
+# Preparing a mesh
+
+zCFD uses unstructured meshes written in an [HDF5](http://www.hdfgroup.org/HDF5/) file format. HDF5 provides a flexible, self-describing specification supporting parallel I/O that can be tuned per file system type, such as NFS, GPFS or Lustre. The layout of the file is described in [Mesh file](/reference/file-formats/mesh-file).
+
+## Converting a mesh
+
+The converter for other mesh formats is a utility called _convert_mesh_. This is included in the path set by activating the zCFD command line environment.
+
+To run the utility, use
+
+```bash
+(zCFD): convert_mesh <filename> <new_filename>.h5
+```
+
+The utility detects the format from the file extension. The `-f` flag names the format explicitly, as one of `fluent`, `fluentcff`, `su2`, `cgns`, `ugrid`, `foam`, `cba` or `plot3d`:
+
+```bash
+(zCFD): convert_mesh -f <format> <filename> <new_filename>.h5
+```
+
+Any arguments given after the two file names are passed to the UGRID, CBA and Plot3D converters, and ignored for the other formats.
+
+### Unstructured
+
+An unstructured mesh already stores its cells, faces and boundary zones, so it converts with no options beyond the file names.
+
+#### Fluent {#fluent-mesh-converter}
+
+The converter supports [ANSYS Fluent](http://www.ansys.com/Products/Simulation+Technology/Fluid+Dynamics/Fluid+Dynamics+Products/ANSYS+Fluent) files (`.msh`, `.cas`, `.msh.gz`, `.cas.gz`).
+
+```bash
+(zCFD): convert_mesh <filename>.msh <new_filename>.h5
+```
+
+This produces the zCFD HDF5 file and a zone helper file, `<new_filename>_zone.py`, which maps the zone names in the Fluent file to zone identifiers. See [Zone identifiers](#zone-identifiers).
+
+#### Fluent CFF {#fluent-cff-mesh-converter}
+
+The converter also supports Fluent CFF format files (`.msh.h5`, `.cas.h5`).
+
+```bash
+(zCFD): convert_mesh <filename>.msh.h5 <new_filename>.h5
+```
+
+This produces the zCFD HDF5 file and a zone helper file, `<new_filename>_zone.py`.
+
+#### SU2 {#su2-mesh-converter}
+
+[SU2](https://su2code.github.io/) is an open-source CFD solver. Conversion of 2D meshes is not supported, as they are not handled in zCFD.
+
+```bash
+(zCFD): convert_mesh <filename>.su2 <new_filename>.h5
+```
+
+This produces the zCFD HDF5 file and a zone file, `<new_filename>_zones.py`.
+
+#### CGNS {#cgns-mesh-converter}
+
+The converter reads a CGNS file in any of three layouts:
+
+- an unstructured zone of `HEXA_8`, `TETRA_4`, `PYRA_5`, `PENTA_6` or `MIXED` element sections, with `QUAD_4` and `TRI_3` boundary sections;
+- an unstructured zone stored face by face, with both an `NGON_n` and an `NFACE_n` section;
+- a structured base of one or more blocks, joined by their 1-to-1 connectivity.
+
+Only the first zone of an unstructured file is read. In a structured file, only boundary conditions given as a point range are read; any other is skipped with a warning.
+
+```bash
+(zCFD): convert_mesh <filename>.cgns <new_filename>.h5
+```
+
+This produces the zCFD HDF5 file and a zone helper file, `<new_filename>_zone.py`.
+
+#### UGRID {#ugrid-mesh-converter}
+
+UGRID is a NASA format for meshes. The file name must follow the UGRID naming convention. The suffix gives the format and the _endianness_ of the data (`ascii8`, `b8`, `lb8` or `r8`), which depend on the language, C or FORTRAN, used to write the file. The mapbc file is optional. Given as a third argument, it sets the boundary type code of each zone; without it, every boundary face is coded as a wall.
+
+```bash
+(zCFD): convert_mesh <filename>.[ascii8, b8, lb8, r8].ugrid <new_filename>.h5 <filename>.mapbc
+```
+
+This produces the zCFD HDF5 file.
+
+#### OpenFOAM {#openfoam-mesh-converter}
+
+The converter reads an OpenFOAM `polyMesh`, in ASCII or binary, and optionally compressed with `gzip`. Give it the case directory, which holds `constant/polyMesh`, or the `polyMesh` directory itself:
+
+```bash
+(zCFD): convert_mesh <case_directory> <new_filename>.h5
+```
+
+This produces the zCFD HDF5 file, and prints the zone identifier given to each boundary patch.
+
+### Structured
+
+A structured multiblock file stores each block as an array of grid points, indexed by _i_, _j_ and _k_. It holds no faces, and a Plot3D file holds no connectivity or boundary information either. The converter therefore builds the faces itself, merges the nodes that neighbouring blocks share, and pairs the faces where blocks meet. It must also be told which block faces form each zone, which is what the zone file and the options below are for.
+
+A structured CGNS file needs none of these options, since CGNS records its block connectivity and boundary patches; see [CGNS](#cgns-mesh-converter).
+
+#### CBA {#cba-mesh-converter}
+
+The converter supports structured multiblock meshes in the University of Bristol UOBSMB / _flowcode_ CBA format (`.blk`). A CBA file is plain text: a header line giving the block count, a symmetry flag and a format version, then each block in turn — a dimension line (`ni nj nk`), the block's grid points (with _i_ varying fastest, then _j_, then _k_), and six footer lines, one per face, always in the order `imin, imax, jmin, jmax, kmin, kmax`. Each footer line is `type neighbour_block orientation`: for an inter-block face (type `2`) the other two numbers give the 1-based partner block and the 1-based partner face (`1` = `imin` ... `6` = `kmax`); for any other type they are ignored. A 2D block (`nk` = 1) is extruded by one cell along _y_, by the `--span` distance.
+
+Every boundary face carries a type code. Without a zone file, each type maps to a default zone:
+
+| Type | Default zone name     | `bc`       | Zone identifier | Meaning                               |
+| ---- | --------------------- | ---------- | --------------- | ------------------------------------- |
+| `-2` | `symmetry`            | `symmetry` | `7`             | symmetry plane                        |
+| `-1` | `aero_wall`           | `wall`     | `4`             | aerodynamic (solid) wall              |
+| `0`  | `wall`                | `wall`     | `3`             | wall                                  |
+| `1`  | `farfield`            | `farfield` | `2`             | farfield                              |
+| `2`  | n/a                   | n/a        | n/a             | inter-block interface, not a boundary |
+| `3`  | `periodic_downstream` | `periodic` | `5`             | periodic (downstream side)            |
+| `4`  | `periodic_upstream`   | `periodic` | `6`             | periodic (upstream side)              |
+
+To convert, run through _convert_mesh_ using the `.blk` extension, or explicitly with `-f cba`:
+
+```bash
+(zCFD): convert_mesh <filename>.blk <new_filename>.h5
+```
+
+or run the converter directly:
+
+```bash
+(zCFD): cba_convert <filename>.blk <new_filename>.h5 [options]
+```
+
+Any options given after the two filenames on a _convert_mesh_ command line are passed straight through to `cba_convert`. Its options are:
+
+| Option               | Meaning                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------- |
+| `input`              | the CBA (`.blk`) mesh to read                                                            |
+| `output`             | the zCFD _.h5_ mesh to write                                                             |
+| `--zones FILE`       | a zone definition YAML file, overriding the default zone assignment above                |
+| `--write-zones FILE` | also write the resolved zone assignment to FILE as YAML, and continue converting         |
+| `--no-weld`          | keep each block's nodes separate instead of welding coincident nodes at block boundaries |
+| `--span VALUE`       | extrusion distance for a 2D mesh (default `1.0`)                                         |
+| `--quiet`            | suppress the summary report                                                              |
+
+This produces the zCFD HDF5 file. A zone file is optional for CBA meshes: see [Zone files](#structured-mesh-zone-files).
+
+#### Plot3D {#plot3d-mesh-converter}
+
+The converter also reads ASCII (formatted), whole-format Plot3D structured multiblock grids (`.p3d`, `.fmt`). The file is a plain sequence of numbers: an optional block-count line, then one dimension line per block (`ni nj nk`, or `ni nj` for a 2D block), then for each block in turn all of its _x_ coordinates, then all of its _y_ coordinates, then (for a 3D block) all of its _z_ coordinates — again with _i_ varying fastest, then _j_, then _k_. A single block with no leading count line is also accepted. An extra _IBLANK_ integer following each point's coordinates is tolerated and ignored, and FORTRAN-style repeat counts (for example `12*0.0` for twelve repetitions of `0.0`) are expanded. A 2D grid (no _k_ dimension) is extruded by one cell along _z_, by the `--span` distance.
+
+Binary (unformatted) Plot3D files, and the plane-by-plane streamed layout some codes write instead of the whole-block layout, are not supported; both are rejected rather than silently misread.
+
+Unlike a CBA file, a Plot3D grid carries no connectivity or boundary information: block-to-block interfaces are discovered from coincident nodes after welding, and every boundary face must be assigned to a zone by hand — see [Zone files](#structured-mesh-zone-files). A zone file is therefore mandatory.
+
+To convert, run through _convert_mesh_ using the `.p3d` or `.fmt` extension, or explicitly with `-f plot3d`:
+
+```bash
+(zCFD): convert_mesh <filename>.p3d <new_filename>.h5 --zones <zonefile>.yml
+```
+
+or run the converter directly:
+
+```bash
+(zCFD): plot3d_convert <filename>.p3d <new_filename>.h5 --zones <zonefile>.yml [options]
+```
+
+Any options given after the two filenames on a _convert_mesh_ command line are passed straight through to _plot3d_convert_. Its options are:
+
+| Option               | Meaning                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------- |
+| `input`              | the Plot3D (`.p3d`/`.fmt`) grid to read                                                  |
+| `output`             | the zCFD _.h5_ mesh to write                                                             |
+| `--zones FILE`       | the zone definition YAML file (required, unless only `--write-zones` is given)           |
+| `--write-zones FILE` | write a zone template covering every discovered boundary face to FILE                    |
+| `--no-weld`          | keep each block's nodes separate instead of welding coincident nodes at block boundaries |
+| `--span VALUE`       | extrusion distance for a 2D grid (default `1.0`)                                         |
+| `--quiet`            | suppress the summary report                                                              |
+
+This produces the zCFD HDF5 file.
+
+#### Zone files {#structured-mesh-zone-files}
+
+A zone file is optional for a CBA mesh. Without `--zones`, the default mapping in [CBA](#cba-mesh-converter) is used. A Plot3D grid carries no boundary information of its own, so its zone file is mandatory.
+
+A zone file is YAML, with a single top-level `zones` map keyed by an integer zone identifier; each identifier must be unique. Here is a complete zone file for a 4-block ONERA M6 wing grid. Block 1 is upstream of the wing, blocks 2 and 3 run along it, and block 4 is downstream of the tip.
+
+```yaml
+zones:
+  3:
+    name: wing
+    bc: wall
+    patches:
+      - { block: 2, face: jmin }
+      - { block: 3, face: jmin }
+  7:
+    name: symmetry
+    bc: symmetry
+    patches:
+      - { block: 1, face: kmin }
+      - { block: 2, face: kmin }
+      - { block: 3, face: kmin }
+      - { block: 4, face: kmin }
+  9:
+    name: farfield
+    bc: farfield
+    patches:
+      - { block: 1, face: imin }
+      - { block: 1, face: jmax }
+      - { block: 2, face: jmax }
+      - { block: 3, face: jmax }
+      - { block: 4, face: imax }
+      - { block: 4, face: jmax }
+```
+
+Each zone takes:
+
+- `name` — a free-text label, used only in the summary report. If omitted, it defaults to `zone_` followed by the identifier.
+- `bc` — required; one of `wall`, `inflow`, `outflow`, `symmetry`, `farfield`, `periodic`. It sets the boundary type code written for the zone's faces. The boundary condition the solver applies is the one whose `zones` lists the zone identifier.
+- `patches` — an optional list of explicit block faces belonging to this zone. `block` is the 1-based block number; `face` is one of `imin`, `imax`, `jmin`, `jmax`, `kmin`, `kmax`.
+- `cba_type` — CBA only, optional; a raw CBA footer type code (see [CBA](#cba-mesh-converter)). Every boundary patch still carrying that type code, and not already claimed by an explicit patch in this or any other zone, is added to this zone.
+
+A patch normally covers the whole block face. To assign only part of a face, add a 1-based, inclusive node-index range on one or both of the face's two in-plane axes:
+
+| Face           | In-plane axes |
+| -------------- | ------------- |
+| `imin`, `imax` | `j`, `k`      |
+| `jmin`, `jmax` | `i`, `k`      |
+| `kmin`, `kmax` | `i`, `j`      |
+
+```yaml
+zones:
+  3:
+    name: inlet_strip
+    bc: inflow
+    patches:
+      - { block: 1, face: imax, j: [1, 5], k: [1, 3] }
+```
+
+If a patch is listed explicitly, it always takes that zone, even where a `cba_type` catch-all on another zone would otherwise have matched it: explicit patches take precedence over `cba_type` membership.
+
+To find the boundary faces available on a mesh without working them out by hand, write a template and edit it:
+
+```bash
+(zCFD): cba_convert mesh.blk mesh.h5 --write-zones zones.yml
+(zCFD): plot3d_convert grid.p3d grid.h5 --write-zones zones.yml
+```
+
+For a CBA mesh this writes the _currently resolved_ zone assignment, which is the defaults above or the result of `--zones` if given. It still converts the mesh. For a Plot3D grid, if `--zones` is not also given, it instead writes a single template zone (identifier `3`, `bc: wall`) covering every discovered boundary face, split into as many patches as the block structure needs. It stops without writing an _.h5_ file. Either way, edit the `name`, `bc` and grouping of the written zones as needed, then rerun with `--zones zones.yml`.
+
+#### Conversion checks {#structured-mesh-conversion-checks}
+
+The converter runs the same checks on every structured mesh, regardless of source format:
+
+- **Node welding.** Coincident nodes at block boundaries are merged into a single global node, within a tolerance derived from the mesh itself (the smaller of one billionth of the mesh's bounding-box diagonal, and a thousandth of the shortest genuine edge in the mesh). `--no-weld` keeps every block's nodes separate; interfaces are still paired even when nodes are not welded.
+- **Interface pairing.** For a CBA mesh, every inter-block face declared in the file's footers is checked: the partner face must exist, must point back to the same face (reciprocity), and its nodes must actually coincide with the partner's. For a Plot3D grid, which declares no connectivity, interfaces are discovered instead, purely from which welded nodes turn out to be shared between two blocks.
+- **Handedness.** Every block's node ordering is classified as right- or left-handed from its signed volume, and face winding is adjusted per block so that outward normals and cell volumes come out correctly either way. Mixed handedness across blocks in the same mesh is not an error.
+- **Six faces per cell, one or two cells per face.** Every cell ends up bounded by exactly six faces, and every face by exactly one cell (a boundary face) or two (an interior or interface face) — never zero, and never more than two.
+- **Positive volumes.** Every cell's volume, computed from its bounding faces, must be strictly positive.
+- **Periodic pairing.** Boundary faces with `bc: periodic` are grouped by zone identifier and checked pairwise: each periodic zone must map onto exactly one other periodic zone under a pure rotation about the _x_, _y_ or _z_ axis, and that mapping must be reciprocal. The axis and angle found for each pair are reported.
+
+If any of these fail, conversion stops before a mesh is written, with a message naming the blocks and faces involved:
+
+| Failure                   | What it means                                                                                                                                                                                                                                                                                                  |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| unreciprocated interface  | CBA only. One face's footer names another face as its interface partner, but that face's own footer either is not an interface or names a different partner. Fix the footer on the side that is wrong.                                                                                                         |
+| non-coincident interface  | A declared CBA interface's nodes do not coincide with its partner's at all — the two blocks are offset from one another where they are meant to meet. Check the grid geometry at that face.                                                                                                                    |
+| partial-face abutment     | The same check as above, but only part of a declared CBA interface abuts its partner — a step or a sliver mismatch rather than a full offset. The faces reported are the ones left unpaired.                                                                                                                   |
+| undeclared coincidence    | Two block faces (CBA) are geometrically coincident, but neither declares the other as its interface partner. Either move the blocks apart, or add the missing interface footer.                                                                                                                                |
+| degenerate block face     | A block face has folded onto itself: the block is collapsed at that face, or wrapped with too few cells to keep the face distinct from itself, so some of its quads coincide with each other.                                                                                                                  |
+| uncovered boundary quads  | Some boundary quads were never placed in a zone. The message gives the 1-based node-index range on the face's two in-plane axes — copy it into a `patches` entry in the zone file to cover the gap. The same check, reported as quads assigned to _more than one_ zone, catches overlapping patches. |
+| duplicate zone identifier | Two zones in the zone file use the same identifier. Identifiers must be unique; give one of them a different identifier.                                                                                                                                                                                       |
+
+Node welding that merges genuinely distinct nodes, rather than the two sides of a declared self-interface, is also rejected — the message names the block and the two node indices involved.
+
+#### Conversion report {#structured-mesh-conversion-report}
+
+Unless `--quiet` is given, both converters print a summary once conversion succeeds:
+
+- the block count, and the CBA symmetry flag (always `0` for a Plot3D grid)
+- the cell count
+- the node count, raw and welded, and how many nodes were merged
+- the face count, split into interior, interface and boundary faces
+- every interface pair, with its face-quad count and whether it was found transposed and/or axis-reversed relative to its partner
+- the resolved zones — identifier, `name`, `bc` and the number of boundary faces each ended up with
+- how many blocks came out right-handed versus left-handed
+- the periodic pairs found (axis and angle in degrees), or `none`
+- the minimum cell volume
+- the weld tolerance used, and the shortest genuine edge it was derived from
+- the time taken in each phase of the conversion (welding, face-building, zone resolution, assembly, checks)
+
+This is the quickest way to confirm a mesh converted the way you expect — in particular, that the interface and zone face counts match what you know about the mesh, and that the minimum cell volume is sensible.
+
+## Zone identifiers
+
+Every boundary face of a converted mesh belongs to a zone with an integer zone identifier, and a boundary condition lists the identifiers of the zones it applies to in [`zones`](/reference/model/boundary-conditions). Fluid zones select cells by identifier in the same way. The source mesh names its zones, so the converters record which name became which identifier:
+
+| Converter                | File written beside the mesh | Contents                                                                 |
+| ------------------------ | ---------------------------- | ------------------------------------------------------------------------ |
+| Fluent, Fluent CFF, CGNS | `<new_filename>_zone.py`     | the zone helper described below                                          |
+| SU2                      | `<new_filename>_zones.py`    | a single dict, `zones`, from zone name to identifier                     |
+| UGRID                    | none                         | the identifiers are the boundary face tags of the UGRID file             |
+| OpenFOAM                 | none                         | the patches are numbered from `1`, in the order of the `boundary` file   |
+| CBA, Plot3D              | none                         | the identifiers are the keys of the zone file, or the CBA defaults above |
+
+The zone helper defines:
+
+| Name              | Contents                                                   |
+| ----------------- | ---------------------------------------------------------- |
+| `zone_name_to_id` | a dict from each boundary zone name to its zone identifier |
+| `to_id(names)`    | the zone identifiers of a list of boundary zone names      |
+| `fluid_zone`      | a dict from each fluid zone name to its zone identifier    |
+
+The Fluent and Fluent CFF helpers also hold one list of zone names for each Fluent boundary type: `wall`, `symmetry`, `farfield`, `velocity_inlet`, `pressure_inlet`, `pressure_outlet` and `interior`. The CGNS helper adds `from_id(id)`, which returns the name of a zone identifier.
+
+The directory of the control file is on the Python import path while the file is read, so a helper beside it can be imported by name. This keeps the deck in terms of the names given in the mesh generator:
+
+```python
+from wing_zone import to_id
+
+{
+    "boundary_conditions": {
+        "BC_1": {"type": "wall", "zones": to_id(["wing_upper", "wing_lower"])},
+        "BC_2": {"type": "symmetry", "zones": to_id(["symmetry"])},
+    },
+}
+```
+
+A helper whose name is not a valid Python module name, such as one beginning with a digit, is loaded with `zutil.get_zone_info` instead. It takes the file name, with or without `.py`, relative to the control file, and returns the helper as a module:
+
+```python
+import zutil
+
+zone = zutil.get_zone_info("2d_aerofoil_zone")
+
+{"boundary_conditions": {"BC_1": {"type": "wall", "zones": zone.to_id(["aerofoil"])}}}
+```
+
+### How a number in `zones` is matched
+
+Each boundary zone of the mesh takes the boundary condition whose `zones` contains its zone number. A zone that no boundary condition names by number falls back to its boundary type code, listed in [the zCFD mesh file](/reference/file-formats/mesh-file#boundary-type-codes): it takes the boundary condition whose `zones` contains that code. A zone that matches neither way stops the run, with a message naming the zone and its code:
+
+```text
+Unable to determine boundary condition for zone 12 (ref: 3)
+```
+
+::: {.warning}
+The fallback applies to every zone left unnamed. In a mesh with a zone numbered `3` and several unnamed wall zones, `"zones": [3]` also applies to every wall zone, since `3` is the code for a wall. List every zone by number to rule this out.
+:::
+
+## Initial placement
+
+The model's [`transforms`](/reference/model/transforms) places the whole mesh once, when it is read, before the solver starts.
+
+It takes two placement keys, which may be given together:
+
+- [`scale`](/reference/model/transforms#scale) multiplies the _x_, _y_ and _z_ coordinates of every node by the three factors given.
+- [`transform`](/reference/model/transforms#transform) is a 4 × 4 affine matrix applied to every node, or a function that returns each node's placed position.
+
+Where both are given, `scale` is applied first and `transform` second. The matrix therefore acts in metres: where `scale` converts millimetres to metres, a translation in the matrix is given in metres. The order, and the `motion` that follows it, are described in [Placing and moving a mesh](../working-with/placing-and-moving-a-mesh.md).
+
+A plain unit conversion needs only `scale`:
+
+```python
+# Scale from mm to metres
+parameters["model"]["wing"]["transforms"] = {"scale": [0.001, 0.001, 0.001]}
+```
+
+```python
+# Scale from inches to metres
+parameters["model"]["wing"]["transforms"] = {"scale": [0.0254, 0.0254, 0.0254]}
+```
+
+A plain anisotropic mesh stretch also needs only `scale`:
+
+```python
+{
+    "model": {
+        "canopy_dacosta": {
+            "transforms": {"scale": [50.0, 1.0, 1.0]},
+            "mesh": "canopy_dacosta.h5",
+            ...
+        }
+    }
+}
+```
+
+::: {.note}
+`scale` applies to the mesh only — not interpolated surface outputs etc.
+:::
+
+Build a `transform` matrix with the `zutil.transform` helpers. Each returns a 4 × 4 numpy array. Given an existing matrix as its optional last argument, `A2B`, a helper applies its own transform after that matrix, so a chain of calls applies the transforms in the order written:
+
+| Helper                             | Transform                                                                                  |
+| ---------------------------------- | ------------------------------------------------------------------------------------------ |
+| `rotate(axis, angle_deg, A2B)`     | a rotation by `angle_deg` degrees about `axis`, through the origin, by the right-hand rule |
+| `translate(point_b, point_c, A2B)` | a translation by `point_c` minus `point_b`                                                 |
+| `scale(scale_factors, A2B)`        | a scaling of _x_, _y_ and _z_ by the three factors                                         |
+
+```python
+import zutil.transform
+
+# Two 90-degree rotations about x, then 10 degrees about y, composed in order
+mesh_transform = zutil.transform.rotate([1, 0, 0], 90.0)
+mesh_transform = zutil.transform.rotate([1, 0, 0], 90.0, mesh_transform)
+mesh_transform = zutil.transform.rotate([0, 1, 0], 10.0, mesh_transform)
+
+{"model": {"naca0012": {"transforms": {"transform": mesh_transform}}}}
+```
+
+The matrix is an
+[affine transform](https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html)
+([Wikipedia](https://en.wikipedia.org/wiki/Affine_transformation)): the upper left 3 × 3 block describes a rotation,
+reflection, scaling or shear, or any combination of them, and the fourth column a translation. Here a rotation, a
+scaling and a translation are applied in turn:
+
+```python
+import zutil.transform
+
+A2B = zutil.transform.rotate([0.0, 1.0, 0.0], 10.0)
+B2C = zutil.transform.scale([0.1, 0.1, 0.1], A2B)
+C2D = zutil.transform.translate([0.0, 0.0, 0.0], [-1.0, 0.0, 0.0], B2C)
+
+parameters["model"]["wing"]["transforms"] = {"transform": C2D}
+```
+
+Rotations follow the conventions of
+[pytransform3d](https://dfki-ric.github.io/pytransform3d/user_guide/rotations.html) and are active: the mesh is
+rotated, not the axes. A matrix built directly with [pytransform3d](https://dfki-ric.github.io/pytransform3d) can be
+given as `transform` in the same way.
+
+`scale` and `transform` place the mesh once, when it loads. A mesh that moves during the run, or is solved in a moving
+frame, is given a `motion` in the same `transforms`; see
+[Placing and moving a mesh](../working-with/placing-and-moving-a-mesh.md).
