@@ -7,8 +7,8 @@
     <title>5 · Overset meshes · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/5-overset-meshes.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/5-overset-meshes-CF3ZtFW6.js">
-    <script type="module" crossorigin src="./assets/index-D_wUced4.js"></script>
+    <link rel="modulepreload" href="./assets/5-overset-meshes-BiYe5YqL.js">
+    <script type="module" crossorigin src="./assets/index-DDQubNd-.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -333,36 +333,61 @@ view the whole domain as one, combine them in ParaView:</p><ul>
 <li>Load the four files <code>overset_cylinders_OUTPUT/background/background.vtkhdf</code>,
 <code>.../refinement_region/refinement_region.vtkhdf</code>, <code>.../cylinder_1/cylinder_1.vtkhdf</code> and
 <code>.../cylinder_2/cylinder_2.vtkhdf</code>.</li>
-<li>Select all four in the pipeline browser and apply <em>Filters &gt; Append Datasets</em>. The new <em>AppendDatasets1</em> acts on
-all four at once.</li>
-<li>Apply <em>Filters &gt; Threshold</em> to <em>AppendDatasets1</em> on the <code>overset</code> variable, with the lower threshold raised from 0
+</ul><aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>To make this easier, <code>generate_paraview_helpers</code> writes ParaView scripts that load every model&#x27;s output for you.
+Run it, then run the volume script once with <code>pvpython</code> to save its state:</p><pre><code class="language-bash">(zCFD)&gt; generate_paraview_helpers overset_cylinders.py
+(zCFD)&gt; pvpython paraview_view_volumes.py
+</code></pre><p>Open <code>paraview_view_volumes.pvsm</code> with <em>File &gt; Load State…</em> to load all four volumes, each in its own colour. The
+overset cells are still there; the steps below remove them. See
+<a href="guide/working-with/post-processing-and-visualisation/index.html#opening-a-run-in-paraview">Opening a run in ParaView</a>.</p></div></aside></div>
+<ul>
+<li>Select all four in the pipeline browser and apply <em>Filters &gt; Group Datasets</em>. The new <em>GroupDatasets1</em> holds all
+four.</li>
+<li>Apply <em>Filters &gt; Merge Blocks</em> to <em>GroupDatasets1</em>. ParaView reads each .vtkhdf file as one block per partition,
+which <em>Append Datasets</em> cannot take; <em>MergeBlocks1</em> is a single dataset holding the cells of all four meshes.</li>
+<li>Apply <em>Filters &gt; Threshold</em> to <em>MergeBlocks1</em> on the <code>overset</code> variable, with the lower threshold raised from 0
 to 1. <em>Threshold1</em> keeps only the active cells.</li>
 <li>Apply <em>Filters &gt; Cell Data to Point Data</em> to <em>Threshold1</em>, which makes later interpolation more accurate.</li>
 <li>Apply <em>Filters &gt; Slice</em> with its normal along z. The slice holds data from all four meshes.</li>
 <li>Colour <em>Slice1</em> by <code>V</code> <em>Magnitude</em>, with <em>Surface With Edges</em> in the representation toolbar.</li>
-</ul><p>Streamlines and other filters work the same way. Where meshes move during an unsteady run, ParaView updates their
-positions.</p><p>The cylinder meshes have holes where the cylinders are, so the refinement region shows through behind them. To hide
+</ul>
+<p>Streamlines and other filters work the same way. Where meshes move during an unsteady run, ParaView updates their
+positions.</p>
+<p>The cylinder meshes have holes where the cylinders are, so the refinement region shows through behind them. To hide
 it, add a cylinder of unit diameter with <em>Sources &gt; Cylinder</em> at [0, 0, 0], rotate it 90° about x and translate it
-by −0.8 in y; repeat with +0.8 for the other cylinder. The view then looks like this:</p><figure class="figure"><img src="images/tutorial-5-postprocessing-paraview-raw.png" alt="Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder." loading="lazy"/><figcaption>Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder.</figcaption></figure><p>To bring the cylinder meshes to the front instead, view each mesh separately and give each cylinder mesh a small
+by −0.8 in y; repeat with +0.8 for the other cylinder. The view then looks like this:</p>
+<figure class="figure"><img src="images/tutorial-5-postprocessing-paraview-raw.png" alt="Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder." loading="lazy"/><figcaption>Velocity magnitude on a slice through the two cylinders. The background solution shows through the holes the cylinder meshes cut, so blocky cells surround each cylinder.</figcaption></figure>
+<p>To bring the cylinder meshes to the front instead, view each mesh separately and give each cylinder mesh a small
 offset towards the viewer, normal to the slice (0.0, 0.001, 0.0015, 0.002). That is closer to what the solver
-sees, since the covered cells of the meshes beneath are not solved.</p><figure class="figure"><img src="images/tutorial-5-overset-offset.png" alt="The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh." loading="lazy"/><figcaption>The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh.</figcaption></figure><h2 id="example-2-train-in-a-tunnel">Example 2. Train in a tunnel</h2><figure class="figure"><img src="images/tutorial-5-tunnel-mesh.png" alt="The train (white) inside the tunnel mesh: the open-air region round the portal (orange, drawn see-through) and the tunnel bore (blue). The mesh round the train is overset on the tunnel mesh, so moving it through the tunnel simulates the train&#x27;s motion without making a new mesh at each physical time step." loading="lazy"/><figcaption>The train (white) inside the tunnel mesh: the open-air region round the portal (orange, drawn see-through) and the tunnel bore (blue). The mesh round the train is overset on the tunnel mesh, so moving it through the tunnel simulates the train&#x27;s motion without making a new mesh at each physical time step.</figcaption></figure><p>A train entering a tunnel pushes a pressure wave ahead of it, which leaves the far end as a micro pressure wave: a
+sees, since the covered cells of the meshes beneath are not solved.</p>
+<figure class="figure"><img src="images/tutorial-5-overset-offset.png" alt="The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh." loading="lazy"/><figcaption>The same slice with each cylinder mesh offset slightly towards the viewer, so the overset solutions sit in front of the background mesh.</figcaption></figure>
+<h2 id="example-2-train-in-a-tunnel">Example 2. Train in a tunnel</h2>
+<figure class="figure"><img src="images/tutorial-5-tunnel-mesh.png" alt="The train (white) inside the tunnel mesh: the open-air region round the portal (orange, drawn see-through) and the tunnel bore (blue). The mesh round the train is overset on the tunnel mesh, so moving it through the tunnel simulates the train&#x27;s motion without making a new mesh at each physical time step." loading="lazy"/><figcaption>The train (white) inside the tunnel mesh: the open-air region round the portal (orange, drawn see-through) and the tunnel bore (blue). The mesh round the train is overset on the tunnel mesh, so moving it through the tunnel simulates the train&#x27;s motion without making a new mesh at each physical time step.</figcaption></figure>
+<p>A train entering a tunnel pushes a pressure wave ahead of it, which leaves the far end as a micro pressure wave: a
 boom. This example predicts the wave, with the set-up of Section 7.6 of EN 14067-5, <em>Railway applications —
 Aerodynamics — Part 5: Requirements and test procedures for aerodynamics in tunnels</em> <a href="tutorials/5-overset-meshes/index.html#citations">[1]</a>. For the
 reference train entering the reference tunnel at 250 km/h, the maximum entry pressure gradient dp/dt should lie
-between 8800 Pa/s and 9700 Pa/s.</p><h2 id="step-1-download-the-files-1">Step 1. Download the files</h2><p>The bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/traintunnel.tgz">here</a>.</p><pre><code class="language-bash">cd ~
+between 8800 Pa/s and 9700 Pa/s.</p>
+<h2 id="step-1-download-the-files-1">Step 1. Download the files</h2>
+<p>The bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/traintunnel.tgz">here</a>.</p>
+<pre><code class="language-bash">cd ~
 wget https://zcfd.zenotech.com/v2026.08.14860/traintunnel.tgz
 tar xzf traintunnel.tgz
 cd traintunnel
-</code></pre><p>It contains the control file <code>traintunnel.py</code> and two meshes: <code>tunnel.h5</code>, 7.07 million cells, and <code>train.h5</code>,
-1.06 million.</p><h2 id="step-2-walk-through-the-input-1">Step 2. Walk through the input</h2><p>The control file, <code>traintunnel.py</code>, is a short Python script. All it does is build one Python dictionary, called
+</code></pre>
+<p>It contains the control file <code>traintunnel.py</code> and two meshes: <code>tunnel.h5</code>, 7.07 million cells, and <code>train.h5</code>,
+1.06 million.</p>
+<h2 id="step-2-walk-through-the-input-1">Step 2. Walk through the input</h2>
+<p>The control file, <code>traintunnel.py</code>, is a short Python script. All it does is build one Python dictionary, called
 <code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
 the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
 name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
 <code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
 each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
 page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
-screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><p>Here <code>model</code> has two entries, the tunnel and the train. Where a block works as in the cylinders above, it
-is covered briefly.</p><pre><code class="language-python">parameters = {
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p>
+<p>Here <code>model</code> has two entries, the tunnel and the train. Where a block works as in the cylinders above, it
+is covered briefly.</p>
+<pre><code class="language-python">parameters = {
     &quot;config version&quot;: 2,
     &quot;solver&quot;: {
         &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
@@ -459,53 +484,95 @@ is covered briefly.</p><pre><code class="language-python">parameters = {
         },
     },
 }
-</code></pre><h3 id="config-version-1"><code>config version</code></h3><p><code>&quot;config version&quot;: 2</code>, the layout of the control file.</p><h3 id="solver-1"><code>solver</code></h3><p><code>solver</code> holds the settings shared by both meshes.</p><h4 id="solver-settings-1"><code>solver settings</code></h4><ul>
+</code></pre>
+<h3 id="config-version-1"><code>config version</code></h3>
+<p><code>&quot;config version&quot;: 2</code>, the layout of the control file.</p>
+<h3 id="solver-1"><code>solver</code></h3>
+<p><code>solver</code> holds the settings shared by both meshes.</p>
+<h4 id="solver-settings-1"><code>solver settings</code></h4>
+<ul>
 <li><code>type</code>: <code>compressible</code>, the density-based solver.</li>
-</ul><h4 id="initialisation-1"><code>initialisation</code></h4><ul>
+</ul>
+<h4 id="initialisation-1"><code>initialisation</code></h4>
+<ul>
 <li><code>initial conditions</code>: <code>IC_1</code> in every cell: still air everywhere, with the train at rest.</li>
-</ul><h4 id="equations-1"><code>equations</code></h4><ul>
+</ul>
+<h4 id="equations-1"><code>equations</code></h4>
+<ul>
 <li><code>type</code>: <code>euler</code>, the inviscid Euler equations. The pressure wave is a compressible, inviscid effect, so viscosity
 is left out, which keeps a case of this size affordable.</li>
-</ul><h4 id="reference-conditions-1"><code>reference conditions</code></h4><h5 id="ic_1-1"><code>IC_1</code></h5><ul>
+</ul>
+<h4 id="reference-conditions-1"><code>reference conditions</code></h4>
+<h5 id="ic_1-1"><code>IC_1</code></h5>
+<ul>
 <li><code>temperature</code> 292.7777 K (19.6 °C) and <code>pressure</code> 101325 Pa.</li>
 <li><code>v</code>: <code>vector</code> [1, 0, 0] and <code>mach</code> 1e-10: still air. The train moves; the air does not. The Mach number is not set
 to exactly zero, because the solver scales by it.</li>
 <li><code>reference length</code>: 1.0 m.</li>
-</ul><h4 id="time-settings-1"><code>time settings</code></h4><ul>
+</ul>
+<h4 id="time-settings-1"><code>time settings</code></h4>
+<ul>
 <li><code>type</code> <code>unsteady</code>, <code>kind</code> <code>dual time stepping</code>: the train moves, so the run follows the flow in time. Each
 physical time step is solved like a small steady problem, by the inner iterations set in <code>convergence control</code>.</li>
 <li><code>total time</code>: 3.6 s, long enough for the train to accelerate and enter the tunnel.</li>
 <li><code>time step</code>: 0.001 s, 3600 steps.</li>
 <li><code>start</code>: 0, no steady cycles first.</li>
 <li><code>order</code>: 1, first order in time.</li>
-</ul><h4 id="convergence-control-1"><code>convergence control</code></h4><ul>
+</ul>
+<h4 id="convergence-control-1"><code>convergence control</code></h4>
+<ul>
 <li><code>scheme</code>: <code>implicit euler</code>. Its <code>stage</code> of 1 has no effect.</li>
 <li><code>cfl</code>: 30, without a ramp.</li>
 <li><code>cycles</code>: 5 inner cycles per time step.</li>
-</ul><h4 id="numerical-scheme-1"><code>numerical scheme</code></h4><ul>
+</ul>
+<h4 id="numerical-scheme-1"><code>numerical scheme</code></h4>
+<ul>
 <li><code>order</code>: <code>second</code>, with the default Roe flux and van Albada limiter.</li>
-</ul><h4 id="fluid-properties-1"><code>fluid properties</code></h4><ul>
+</ul>
+<h4 id="fluid-properties-1"><code>fluid properties</code></h4>
+<ul>
 <li><code>material</code>: <code>ideal gas</code>, with <code>gamma</code> 1.4 and <code>gas constant</code> 287.0 J/kg/K.</li>
 <li><code>sutherlands const</code> and <code>prandtl no</code> play no part in an Euler run, which has no viscosity or heat conduction.</li>
-</ul><h4 id="output-settings-1"><code>output settings</code></h4><h5 id="report-1"><code>report</code></h5><ul>
+</ul>
+<h4 id="output-settings-1"><code>output settings</code></h4>
+<h5 id="report-1"><code>report</code></h5>
+<ul>
 <li><code>frequency</code>: a row every 10 cycles.</li>
 <li><code>monitor</code>: <code>MR_1</code>, <code>name</code>d <code>probe</code>, records the pressure <code>p</code> at the <code>point</code> [-140, 1.5, 0], inside the tunnel. It
 falls in the tunnel mesh, so its column <code>probe_p</code> is filled in
 <code>traintunnel_OUTPUT/background/background_report.csv</code>. Its history gives the entry pressure gradient in Step 5.</li>
-</ul><h5 id="solution-1"><code>solution</code></h5><ul>
+</ul>
+<h5 id="solution-1"><code>solution</code></h5>
+<ul>
 <li><code>format</code>: <code>vtk</code>, VTK HDF files for ParaView.</li>
 <li><code>surface variables</code>: <code>overset</code>, <code>V</code>, <code>p</code>, <code>T</code> and <code>rho</code>.</li>
 <li><code>volume variables</code>: the same, with the Mach number <code>m</code> and <code>sponge</code>, the damping applied by the sponge layer
 below.</li>
-</ul><h3 id="model-1"><code>model</code></h3><h4 id="background-1"><code>background</code></h4><p>The tunnel and the air round it. Its name gives the output folder, <code>traintunnel_OUTPUT/background/</code>.</p><h5 id="mesh-1"><code>mesh</code></h5><p><code>tunnel.h5</code>, 7.07 million cells.</p><h5 id="boundary-conditions-2"><code>boundary conditions</code></h5><h6 id="bc_1-1"><code>BC_1</code></h6><ul>
+</ul>
+<h3 id="model-1"><code>model</code></h3>
+<h4 id="background-1"><code>background</code></h4>
+<p>The tunnel and the air round it. Its name gives the output folder, <code>traintunnel_OUTPUT/background/</code>.</p>
+<h5 id="mesh-1"><code>mesh</code></h5>
+<p><code>tunnel.h5</code>, 7.07 million cells.</p>
+<h5 id="boundary-conditions-2"><code>boundary conditions</code></h5>
+<h6 id="bc_1-1"><code>BC_1</code></h6>
+<ul>
 <li><code>zones</code> [11, 13], <code>type</code> <code>symmetry</code>.</li>
-</ul><h6 id="bc_2-2"><code>BC_2</code></h6><ul>
+</ul>
+<h6 id="bc_2-2"><code>BC_2</code></h6>
+<ul>
 <li><code>zones</code>: [12], the outer boundary.</li>
 <li><code>type</code>: <code>farfield</code>, with <code>kind</code> <code>riemann</code> and <code>condition</code> <code>IC_1</code>.</li>
 <li><code>sponge layer damping</code>: within <code>distance</code> 20 m of the farfield, the solution is damped towards its <code>condition</code>,
 <code>IC_1</code>, at a rate rising to the <code>damping factor</code>, 2.037495, at the boundary. The sponge absorbs pressure waves
 before they reach the farfield, where they would reflect back into the domain.</li>
-</ul><h4 id="train"><code>train</code></h4><p>The train, with its output in <code>traintunnel_OUTPUT/train/</code>.</p><h5 id="mesh-2"><code>mesh</code></h5><p><code>train.h5</code>, 1.06 million cells.</p><h5 id="transforms-1"><code>transforms</code></h5><ul>
+</ul>
+<h4 id="train"><code>train</code></h4>
+<p>The train, with its output in <code>traintunnel_OUTPUT/train/</code>.</p>
+<h5 id="mesh-2"><code>mesh</code></h5>
+<p><code>train.h5</code>, 1.06 million cells.</p>
+<h5 id="transforms-1"><code>transforms</code></h5>
+<ul>
 <li><code>transform</code>: a 4 × 4 matrix whose last column places the train 110 m along x before it starts to move.</li>
 <li><code>motion</code>: how the train moves during the run.<!-- -->
 <ul>
@@ -517,22 +584,42 @@ the position the motion gives at the end of the step, and its overset mappings a
 the transients of an impulsive start.</li>
 </ul>
 </li>
-</ul><p>A moving mesh is allowed only in an unsteady compressible run, on a mesh that also has an overset or sliding
-interface. <a href="guide/working-with/placing-and-moving-a-mesh/index.html">Placing and moving a mesh</a> describes <code>transforms</code>.</p><h5 id="boundary-conditions-3"><code>boundary conditions</code></h5><h6 id="bc_1-2"><code>BC_1</code></h6><ul>
+</ul>
+<p>A moving mesh is allowed only in an unsteady compressible run, on a mesh that also has an overset or sliding
+interface. <a href="guide/working-with/placing-and-moving-a-mesh/index.html">Placing and moving a mesh</a> describes <code>transforms</code>.</p>
+<h5 id="boundary-conditions-3"><code>boundary conditions</code></h5>
+<h6 id="bc_1-2"><code>BC_1</code></h6>
+<ul>
 <li><code>zones</code> [10], <code>type</code> <code>symmetry</code>.</li>
-</ul><h6 id="bc_2-3"><code>BC_2</code></h6><ul>
+</ul>
+<h6 id="bc_2-3"><code>BC_2</code></h6>
+<ul>
 <li><code>zones</code> [9], the outer boundary of the train mesh, <code>type</code> <code>interface</code>, <code>kind</code> <code>overset</code>. It names no
 <code>connection</code>, so it is mapped against every model before it: here only the tunnel.</li>
-</ul><h6 id="bc_3"><code>BC_3</code></h6><ul>
+</ul>
+<h6 id="bc_3"><code>BC_3</code></h6>
+<ul>
 <li><code>zones</code>: [8], the train&#x27;s surface.</li>
 <li><code>type</code> <code>wall</code> with <code>kind</code> <code>slip</code>: in the Euler equations the flow slides along a wall rather than stopping at it.</li>
-</ul><h2 id="step-3-run-1">Step 3. Run</h2><p>The case needs about 48 GB of GPU memory. Run it in the activated environment:</p><pre><code class="language-bash">validate_input traintunnel.py
+</ul>
+<h2 id="step-3-run-1">Step 3. Run</h2>
+<p>The case needs about 48 GB of GPU memory. Run it in the activated environment:</p>
+<pre><code class="language-bash">validate_input traintunnel.py
 run_zcfd -c traintunnel.py
-</code></pre><h2 id="step-4-monitor-1">Step 4. Monitor</h2><pre><code class="language-bash">zmon traintunnel.py
-</code></pre><p>zMon shows each model&#x27;s residuals, and the <code>probe_p</code> monitor in the reports panel of the background model: the
-pressure inside the tunnel rising as the train enters.</p><h2 id="step-5-post-process-1">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
-</code></pre><h3 id="python-1">Python</h3><p>This script plots the entry pressure gradient: how fast the pressure inside the tunnel rises, the time derivative
-of <code>probe_p</code>. Save it as <code>plot_entry_pressure_gradient.py</code> in the case directory:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+</code></pre>
+<h2 id="step-4-monitor-1">Step 4. Monitor</h2>
+<pre><code class="language-bash">zmon traintunnel.py
+</code></pre>
+<p>zMon shows each model&#x27;s residuals, and the <code>probe_p</code> monitor in the reports panel of the background model: the
+pressure inside the tunnel rising as the train enters.</p>
+<h2 id="step-5-post-process-1">Step 5. Post-process</h2>
+<p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p>
+<pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre>
+<h3 id="python-1">Python</h3>
+<p>This script plots the entry pressure gradient: how fast the pressure inside the tunnel rises, the time derivative
+of <code>probe_p</code>. Save it as <code>plot_entry_pressure_gradient.py</code> in the case directory:</p>
+<pre><code class="language-python">import matplotlib.pyplot as plt
 import numpy as np
 
 from zutil.fileutils import get_zcfd_result
@@ -556,9 +643,14 @@ ax.axhline(8800, label=&quot;min valid dP/dT&quot;, c=&quot;grey&quot;)
 ax.axhline(9700, label=&quot;max valid dP/dT&quot;, c=&quot;grey&quot;)
 ax.legend()
 fig.savefig(&quot;EntryPressureGradient.png&quot;)
-</code></pre><p>Run it:</p><pre><code class="language-bash">python plot_entry_pressure_gradient.py
-</code></pre><p>It plots the entry pressure gradient against time. The maximum is 9660 Pa/s, within the 8800 Pa/s to 9700 Pa/s
-the standard specifies.</p><figure class="figure"><img src="images/tutorial-5-entry-pressure-gradient.png" alt="Entry Pressure Gradient." loading="lazy"/><figcaption>Entry Pressure Gradient.</figcaption></figure></div>
+</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash">python plot_entry_pressure_gradient.py
+</code></pre>
+<p>It plots the entry pressure gradient against time. The maximum is 9660 Pa/s, within the 8800 Pa/s to 9700 Pa/s
+the standard specifies.</p>
+<figure class="figure"><img src="images/tutorial-5-entry-pressure-gradient.png" alt="Entry Pressure Gradient." loading="lazy"/><figcaption>Entry Pressure Gradient.</figcaption></figure>
+<p>:::</p>
 <h2 id="citations">Citations</h2>
 <ol>
 <li>EN 14067-5<!-- -->:2006<!-- --> - Railway applications - Aerodynamics - Part 5: Requirements and test procedures for

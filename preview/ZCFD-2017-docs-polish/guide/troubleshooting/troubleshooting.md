@@ -325,13 +325,13 @@ description of the error. A failed checkout prints `Error checking out license` 
 product, version and count requested, and the same description. Look the status value up in the
 [licence error codes](../setting-up/installation-and-licensing.md#licence-error-codes).
 
-| Cause                                              | Where to look                                                                                                                                                |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Cause                                              | Where to look                                                                                                                                                                        |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | No licence file in any of the locations searched   | [Licence](../setting-up/installation-and-licensing.md#licence): a `.lic` file in the directory the solver is started from, the `lic` directory of the installation, or `RLM_LICENSE` |
-| A licence that has expired, or has not yet started | Status value -3 or -37                                                                                                                                       |
-| More licences requested than are free              | Status value -8 or -22: reduce the number of ranks, or stop other running processes                                                                          |
-| No connection to the licence server                | Status value -17, -103 to -107 or -111 to -113: check the server, the firewall and `RLM_LICENSE`                                                             |
-| A connection lost during the run                   | The heartbeat messages: see below                                                                                                                          |
+| A licence that has expired, or has not yet started | Status value -3 or -37                                                                                                                                                               |
+| More licences requested than are free              | Status value -8 or -22: reduce the number of ranks, or stop other running processes                                                                                                  |
+| No connection to the licence server                | Status value -17, -103 to -107 or -111 to -113: check the server, the firewall and `RLM_LICENSE`                                                                                     |
+| A connection lost during the run                   | The heartbeat messages: see below                                                                                                                                                    |
 
 Once a run has started, a lost connection to the licence server does not stop it at once. The solver logs the retry
 warning and continues for up to 10 minutes. If the connection is not restored within that time, the run stops with

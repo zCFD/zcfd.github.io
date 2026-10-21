@@ -162,6 +162,28 @@ the interior, since a pure rotation changes no volume and no area. A translating
 A moving mesh whose motion has a zero `omega` or a zero `velocity` still runs, with a warning from validation: the mesh never
 moves, but its interfaces are re-coupled every step, which slows the run.
 
+## Viewing an overset run
+
+Each model writes its own solution under `<case>_OUTPUT/<model>/`, holding every cell of its mesh, including the
+cells another mesh covers. Add `overset` to the [`volume variables`](/reference/solver/output-settings/solution#volume-variables)
+to tell them apart: the [`overset`](/reference/output-variables#overset) variable is 1 in an active cell and 0 in a
+cell covered by another mesh.
+
+To view the domain as one solution in ParaView:
+
+1. Load the volume solution of each model, `<case>_OUTPUT/<model>/<model>.vtkhdf`.
+2. Select every model's volume and apply _Filters > Group Datasets_, then _Filters > Merge Blocks_. ParaView reads
+   each .vtkhdf file as one block per partition, which _Append Datasets_ cannot take.
+3. Apply _Filters > Threshold_ on `overset`, with the lower threshold raised from 0 to 1, to keep only the active
+   cells.
+
+To make the first step easier, `generate_paraview_helpers` writes ParaView scripts for the run. Run
+`paraview_view_volumes.py` once with `pvpython` to save `paraview_view_volumes.pvsm`, which loads every model's
+volume with _File > Load State…_; see
+[Opening a run in ParaView](post-processing-and-visualisation.md#opening-a-run-in-paraview).
+
+[Tutorial 5](../../tutorials/5-overset-meshes.md) works through these steps on two cylinders.
+
 ## How overset works in the solver
 
 Each mesh in an overset case keeps its own solver, its own partitioning and its own boundary conditions. Nothing is

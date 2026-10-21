@@ -7,8 +7,8 @@
     <title>Post-processing and visualisation · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="guide/working-with/post-processing-and-visualisation.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/post-processing-and-visualisation-BamiX6ti.js">
-    <script type="module" crossorigin src="./assets/index-D_wUced4.js"></script>
+    <link rel="modulepreload" href="./assets/post-processing-and-visualisation-C_m4J3BN.js">
+    <script type="module" crossorigin src="./assets/index-DDQubNd-.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -305,11 +305,10 @@ specified.</p>
 },
 </code></pre>
 <h2 id="cycle-time-column">Cycle time column</h2>
-<p>Every row carries an <strong>&#x27;AvgCycleTime&#x27;</strong> column: the mean wall-clock time, in seconds, of a solver cycle over the cycles
-since the previous report row. It is the same measurement the console report block summarises, recorded per row so the
-cost of a run can be read from its history - which cycles slowed down, and what the solver was doing at the time.</p>
-<p>The interval is the reporting interval, so with <strong>&#x27;frequency&#x27;</strong> set to 1 the column is that cycle&#x27;s wall time,
-and with a larger frequency it is the average over those cycles. The cycle timed is the solve - mesh mapping, the
+<p>Every row carries an <strong>&#x27;AvgCycleTime&#x27;</strong> column: the mean wall-clock time, in seconds, of a solver cycle over every
+cycle of the run so far. It is the same measurement the console report block and the end-of-run summary give, recorded
+per row so the cost of a run can be read from its history. The last row is the run&#x27;s mean cycle time.</p>
+<p>The cycle timed is the solve - mesh mapping, the
 solver advance and source term updates - and excludes writing the report and the solution files, which happen after
 the cycle is timed.</p>
 <aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>Wall-clock time is not a like-for-like column between runs: it depends on the machine, the partition count and

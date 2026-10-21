@@ -7,8 +7,8 @@
     <title>Overset meshes · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="guide/working-with/overset-meshes.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/overset-meshes-C-jM-IkO.js">
-    <script type="module" crossorigin src="./assets/index-D_wUced4.js"></script>
+    <link rel="modulepreload" href="./assets/overset-meshes-CUtKcVvP.js">
+    <script type="module" crossorigin src="./assets/index-DDQubNd-.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -134,6 +134,24 @@ rotates the mesh nodes every step instead, and solves the mesh in the inertial f
 the interior, since a pure rotation changes no volume and no area. A translating mesh always moves its nodes.</p>
 <p>A moving mesh whose motion has a zero <code>omega</code> or a zero <code>velocity</code> still runs, with a warning from validation: the mesh never
 moves, but its interfaces are re-coupled every step, which slows the run.</p>
+<h2 id="viewing-an-overset-run">Viewing an overset run</h2>
+<p>Each model writes its own solution under <code>&lt;case&gt;_OUTPUT/&lt;model&gt;/</code>, holding every cell of its mesh, including the
+cells another mesh covers. Add <code>overset</code> to the <a href="reference/solver/output-settings/solution/index.html#volume-variables"><code>volume variables</code></a>
+to tell them apart: the <a href="reference/output-variables/index.html#overset"><code>overset</code></a> variable is 1 in an active cell and 0 in a
+cell covered by another mesh.</p>
+<p>To view the domain as one solution in ParaView:</p>
+<ol>
+<li>Load the volume solution of each model, <code>&lt;case&gt;_OUTPUT/&lt;model&gt;/&lt;model&gt;.vtkhdf</code>.</li>
+<li>Select every model&#x27;s volume and apply <em>Filters &gt; Group Datasets</em>, then <em>Filters &gt; Merge Blocks</em>. ParaView reads
+each .vtkhdf file as one block per partition, which <em>Append Datasets</em> cannot take.</li>
+<li>Apply <em>Filters &gt; Threshold</em> on <code>overset</code>, with the lower threshold raised from 0 to 1, to keep only the active
+cells.</li>
+</ol>
+<p>To make the first step easier, <code>generate_paraview_helpers</code> writes ParaView scripts for the run. Run
+<code>paraview_view_volumes.py</code> once with <code>pvpython</code> to save <code>paraview_view_volumes.pvsm</code>, which loads every model&#x27;s
+volume with <em>File &gt; Load State…</em>; see
+<a href="guide/working-with/post-processing-and-visualisation/index.html#opening-a-run-in-paraview">Opening a run in ParaView</a>.</p>
+<p><a href="tutorials/5-overset-meshes/index.html">Tutorial 5</a> works through these steps on two cylinders.</p>
 <h2 id="how-overset-works-in-the-solver">How overset works in the solver</h2>
 <p>Each mesh in an overset case keeps its own solver, its own partitioning and its own boundary conditions. Nothing is
 merged into a single mesh. The coupling is a set of directed mesh pairs, and everything below happens per pair.</p>
@@ -229,6 +247,6 @@ values, so a coarse donor cannot represent a gradient the fine receiver resolves
 without it.</li>
 <li>A body inside a hole is not seen by the mesh whose cells are blanked, so a wall must always live in the mesh that
 resolves it.</li>
-</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/working-with/overset-meshes/index.html#setting-up-an-overset-case">Setting up an overset case</a><a href="guide/working-with/overset-meshes/index.html#overset-interface">Overset interface</a><a href="guide/working-with/overset-meshes/index.html#moving-a-whole-mesh">Moving a whole mesh</a><a href="guide/working-with/overset-meshes/index.html#how-overset-works-in-the-solver">How overset works in the solver</a></nav></div></div><!--/$--></main></div></div></div>
+</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="guide/working-with/overset-meshes/index.html#setting-up-an-overset-case">Setting up an overset case</a><a href="guide/working-with/overset-meshes/index.html#overset-interface">Overset interface</a><a href="guide/working-with/overset-meshes/index.html#moving-a-whole-mesh">Moving a whole mesh</a><a href="guide/working-with/overset-meshes/index.html#viewing-an-overset-run">Viewing an overset run</a><a href="guide/working-with/overset-meshes/index.html#how-overset-works-in-the-solver">How overset works in the solver</a></nav></div></div><!--/$--></main></div></div></div>
   </body>
 </html>

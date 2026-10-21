@@ -7,8 +7,8 @@
     <title>Monitoring a run · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="guide/working-with/monitoring-a-run.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/monitoring-a-run-ByvhoWCi.js">
-    <script type="module" crossorigin src="./assets/index-D_wUced4.js"></script>
+    <link rel="modulepreload" href="./assets/monitoring-a-run-BNs_gKWT.js">
+    <script type="module" crossorigin src="./assets/index-DDQubNd-.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -110,7 +110,7 @@ columns only, so it is populated only for forces blocks that set a
 with the solver&#x27;s colours preserved. It refreshes every two seconds. In an overset run every sub-tab shows the same
 log, because the run writes one.</p>
 <p>The <em>Cycle Time</em> card shows the latest <code>AvgCycleTime</code> value from the report, the mean wall-clock time of a solver
-cycle over the last reporting interval, with its history beneath it. Its meaning, and why it is not comparable between
+cycle over the run so far, with its history beneath it. Its meaning, and why it is not comparable between
 runs, is covered in <a href="guide/working-with/post-processing-and-visualisation/index.html#cycle-time-column">Cycle time column</a>.</p>
 <h2 id="stopping-a-run">Stopping a run</h2>
 <p>The <em>Stop</em> button on the toolbar asks the solver to stop cleanly. After confirmation, zMon writes an empty file named

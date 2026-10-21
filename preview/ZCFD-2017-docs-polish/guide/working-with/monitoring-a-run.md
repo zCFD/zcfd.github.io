@@ -140,7 +140,7 @@ with the solver's colours preserved. It refreshes every two seconds. In an overs
 log, because the run writes one.
 
 The _Cycle Time_ card shows the latest `AvgCycleTime` value from the report, the mean wall-clock time of a solver
-cycle over the last reporting interval, with its history beneath it. Its meaning, and why it is not comparable between
+cycle over the run so far, with its history beneath it. Its meaning, and why it is not comparable between
 runs, is covered in [Cycle time column](../working-with/post-processing-and-visualisation.md#cycle-time-column).
 
 ## Stopping a run

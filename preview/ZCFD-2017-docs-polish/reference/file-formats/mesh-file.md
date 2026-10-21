@@ -13,15 +13,15 @@ A zCFD mesh is an HDF5 file holding one group, `mesh`. The group carries two att
 
 ## Datasets
 
-| Dataset      | Shape                   | Contents                                                                                      |
-| ------------ | ----------------------- | --------------------------------------------------------------------------------------------- |
-| `nodeVertex` | nodes × 3, float        | the coordinates of each node, in mesh units                                                   |
-| `faceType`   | faces × 1, integer      | the number of nodes of each face                                                              |
-| `faceNodes`  | (sum of `faceType`) × 1 | the node indices of each face in turn, in face order                                          |
-| `faceCell`   | faces × 2, integer      | the left and right cell of each face                                                          |
-| `faceBC`     | faces × 1, integer      | the boundary type code of each face, `0` for an interior face                                 |
-| `faceInfo`   | faces × 2, integer      | the zone identifier of each face in the first column; the converters write `0` in the second  |
-| `cellZone`   | cells × 1, integer      | optional; the cell zone number of each cell, which a fluid zone's `cell zones` selects        |
+| Dataset      | Shape                   | Contents                                                                                     |
+| ------------ | ----------------------- | -------------------------------------------------------------------------------------------- |
+| `nodeVertex` | nodes × 3, float        | the coordinates of each node, in mesh units                                                  |
+| `faceType`   | faces × 1, integer      | the number of nodes of each face                                                             |
+| `faceNodes`  | (sum of `faceType`) × 1 | the node indices of each face in turn, in face order                                         |
+| `faceCell`   | faces × 2, integer      | the left and right cell of each face                                                         |
+| `faceBC`     | faces × 1, integer      | the boundary type code of each face, `0` for an interior face                                |
+| `faceInfo`   | faces × 2, integer      | the zone identifier of each face in the first column; the converters write `0` in the second |
+| `cellZone`   | cells × 1, integer      | optional; the cell zone number of each cell, which a fluid zone's `cell zones` selects       |
 
 ## Cells and faces
 

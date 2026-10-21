@@ -100,7 +100,7 @@ solver that turns the two face states into a flux.
 
 | \`inviscid_flux_scheme\` | Scheme                                                                                     |
 | ---------------------- | ------------------------------------------------------------------------------------------ |
-| \`roe\` (the default)    | Roe's linearised solver; each wave has its own dissipation                                |
+| \`roe\` (the default)    | Roe's linearised solver; each wave has its own dissipation                                 |
 | \`hllc\`                 | the HLLC solver, which resolves the contact and shear waves                                |
 | \`rusanov\`              | local Lax\u2013Friedrichs: one dissipation scaled by the fastest wave speed; the most diffusive |
 | \`roe low-diss\`         | \`roe\` with its dissipation scaled down by a sensor                                         |

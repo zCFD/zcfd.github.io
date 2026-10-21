@@ -31,15 +31,15 @@ The limiters fall into two families. A one-dimensional limiter works face by fac
 face with a backward difference taken from the cell gradient. A cell-based limiter bounds every face value of a cell by
 the range of values over all of its neighbours. This is the stricter guarantee.
 
-| `limiter`                  | Family          | Behaviour                                                                                 |
-| -------------------------- | --------------- | ----------------------------------------------------------------------------------------- |
-| `van albada` (the default) | one-dimensional | smooth; the most diffusive of the three in the shock-tube comparison below                             |
-| `van leer`                 | one-dimensional | smooth; slightly more compressive than van Albada                                         |
-| `symmetric ratio`          | one-dimensional | no limiting over a wide range of difference ratios; the least dissipative of the three  |
-| `none`                     | —               | no limiting: second order everywhere, with overshoots at discontinuities                  |
-| `barth jespersen`          | cell-based      | bounded by the neighbours; limits wherever the bound is active, and can stall the residual    |
-| `michalak gooch`           | cell-based      | bounded by the neighbours; smooth; switches off in smooth flow                           |
-| `venkatakrishnan`          | cell-based      | bounded by the neighbours; switches off in smooth flow; its shape has one kink |
+| `limiter`                  | Family          | Behaviour                                                                                  |
+| -------------------------- | --------------- | ------------------------------------------------------------------------------------------ |
+| `van albada` (the default) | one-dimensional | smooth; the most diffusive of the three in the shock-tube comparison below                 |
+| `van leer`                 | one-dimensional | smooth; slightly more compressive than van Albada                                          |
+| `symmetric ratio`          | one-dimensional | no limiting over a wide range of difference ratios; the least dissipative of the three     |
+| `none`                     | —               | no limiting: second order everywhere, with overshoots at discontinuities                   |
+| `barth jespersen`          | cell-based      | bounded by the neighbours; limits wherever the bound is active, and can stall the residual |
+| `michalak gooch`           | cell-based      | bounded by the neighbours; smooth; switches off in smooth flow                             |
+| `venkatakrishnan`          | cell-based      | bounded by the neighbours; switches off in smooth flow; its shape has one kink             |
 
 ## Which to use {#which-to-use}
 

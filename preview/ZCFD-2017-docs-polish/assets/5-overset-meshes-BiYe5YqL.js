@@ -511,9 +511,26 @@ view the whole domain as one, combine them in ParaView:
 - Load the four files \`overset_cylinders_OUTPUT/background/background.vtkhdf\`,
   \`.../refinement_region/refinement_region.vtkhdf\`, \`.../cylinder_1/cylinder_1.vtkhdf\` and
   \`.../cylinder_2/cylinder_2.vtkhdf\`.
-- Select all four in the pipeline browser and apply _Filters > Append Datasets_. The new _AppendDatasets1_ acts on
-  all four at once.
-- Apply _Filters > Threshold_ to _AppendDatasets1_ on the \`overset\` variable, with the lower threshold raised from 0
+
+::: {.note}
+To make this easier, \`generate_paraview_helpers\` writes ParaView scripts that load every model's output for you.
+Run it, then run the volume script once with \`pvpython\` to save its state:
+
+\`\`\`bash
+(zCFD)> generate_paraview_helpers overset_cylinders.py
+(zCFD)> pvpython paraview_view_volumes.py
+\`\`\`
+
+Open \`paraview_view_volumes.pvsm\` with _File > Load State\u2026_ to load all four volumes, each in its own colour. The
+overset cells are still there; the steps below remove them. See
+[Opening a run in ParaView](../guide/working-with/post-processing-and-visualisation.md#opening-a-run-in-paraview).
+:::
+
+- Select all four in the pipeline browser and apply _Filters > Group Datasets_. The new _GroupDatasets1_ holds all
+  four.
+- Apply _Filters > Merge Blocks_ to _GroupDatasets1_. ParaView reads each .vtkhdf file as one block per partition,
+  which _Append Datasets_ cannot take; _MergeBlocks1_ is a single dataset holding the cells of all four meshes.
+- Apply _Filters > Threshold_ to _MergeBlocks1_ on the \`overset\` variable, with the lower threshold raised from 0
   to 1. _Threshold1_ keeps only the active cells.
 - Apply _Filters > Cell Data to Point Data_ to _Threshold1_, which makes later interpolation more accurate.
 - Apply _Filters > Slice_ with its normal along z. The slice holds data from all four meshes.

@@ -442,12 +442,11 @@ specified.
 
 ## Cycle time column
 
-Every row carries an **'AvgCycleTime'** column: the mean wall-clock time, in seconds, of a solver cycle over the cycles
-since the previous report row. It is the same measurement the console report block summarises, recorded per row so the
-cost of a run can be read from its history - which cycles slowed down, and what the solver was doing at the time.
+Every row carries an **'AvgCycleTime'** column: the mean wall-clock time, in seconds, of a solver cycle over every
+cycle of the run so far. It is the same measurement the console report block and the end-of-run summary give, recorded
+per row so the cost of a run can be read from its history. The last row is the run's mean cycle time.
 
-The interval is the reporting interval, so with **'frequency'** set to 1 the column is that cycle's wall time,
-and with a larger frequency it is the average over those cycles. The cycle timed is the solve - mesh mapping, the
+The cycle timed is the solve - mesh mapping, the
 solver advance and source term updates - and excludes writing the report and the solution files, which happen after
 the cycle is timed.
 
