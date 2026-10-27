@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>8 · Polars and trimming to a target · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/8-polars-and-trimming.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/8-polars-and-trimming-B0moOspD.js">
+    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><span role="img" aria-label="zCFD"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg"> <path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"/> <polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"/> <path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"/> </svg></span></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD develop">develop</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow sel"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink" aria-current="page"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>8 · Polars and trimming to a target</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="polars-and-trimming-to-a-target">Polars and trimming to a target</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>Two questions come up on almost every aerofoil or wing. How do the lift (the force at right angles to the oncoming
+air) and the drag (the force along it) change with the angle of attack, the angle between the aerofoil&#x27;s chord line
+and the oncoming air? And what angle gives the lift you need? This tutorial answers both on the NACA 0012 aerofoil
+from <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>.</p>
+<p>First you run the aerofoil at three angles and plot its polar: the lift against the angle, and the lift against the
+drag. Then you let zCFD trim the aerofoil: it turns the oncoming flow, a step at a time, until the lift reaches a value
+you ask for. Lift and drag are given as coefficients, CL and CD, the force divided by the dynamic pressure of the
+oncoming air and a reference area, so that they do not depend on the size or speed of the test.</p>
+<h2 id="what-you-need">What you need?</h2>
+<p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial uses the same mesh, and relies on it for
+running zCFD, reading the log and monitoring a run in zMon. On an NVIDIA RTX 3060 each polar run takes about four
+minutes, and the trim about five.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/tutorial_8_aerofoil_polar_and_trim.tgz">here</a>.
+It contains the mesh (<code>naca0012.h5</code>) and four control files: <code>naca0012.py</code> at zero angle of attack,
+<code>naca0012_alpha5.py</code> and <code>naca0012_alpha10.py</code> for the polar, and <code>naca0012_target_cl.py</code> for the trim.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_8_aerofoil_polar_and_trim.tgz
+tar xzf tutorial_8_aerofoil_polar_and_trim.tgz
+cd tutorial_8_aerofoil_polar_and_trim
+</code></pre><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>naca0012.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and the
+mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the name of
+a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference page,
+which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide screen the
+whole control file sits on the right, with the part being described highlighted as you scroll.</p><p><code>naca0012.py</code> is the base control file: the other three load it and change only a few keys, so they are described
+after it, by the keys they change. The base file is the one from
+<a href="tutorials/1-simple-aerofoil/index.html#step-2-walk-through-the-input">Simple aerofoil</a> with two parts changed for an aerofoil that
+makes lift: <code>numerical scheme</code> and <code>convergence control</code>.</p><pre><code class="language-python">parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;rans&quot;,
+            &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+            &quot;precondition&quot;: True,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 300,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [1.0, 0.0, 0.0], &quot;mach&quot;: 0.15},
+                &quot;viscosity&quot;: 1.02145e-05,
+                &quot;turbulence intensity&quot;: 5.2e-2,
+                &quot;eddy viscosity ratio&quot;: 1.0,
+            },
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: False},
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;second&quot;,
+            &quot;limiter&quot;: &quot;van albada&quot;,
+            &quot;inviscid flux scheme&quot;: &quot;roe&quot;,
+        },
+        &quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;},
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 100,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.1, &quot;initial&quot;: 0.05}],
+            },
+            &quot;cycles&quot;: 2000,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 10,
+                &quot;forces&quot;: {
+                    &quot;FR_1&quot;: {&quot;name&quot;: &quot;wall&quot;, &quot;zones&quot;: [4]},
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;surface variables&quot;: [
+                    &quot;V&quot;,
+                    &quot;p&quot;,
+                    &quot;mach&quot;,
+                    &quot;cp&quot;,
+                    &quot;cf&quot;,
+                    &quot;pressureforce&quot;,
+                    &quot;frictionforce&quot;,
+                ],
+                &quot;volume variables&quot;: [
+                    &quot;V&quot;,
+                    &quot;p&quot;,
+                    &quot;T&quot;,
+                    &quot;rho&quot;,
+                    &quot;mach&quot;,
+                    &quot;cp&quot;,
+                    &quot;eddy&quot;,
+                ],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;naca0012&quot;: {
+            &quot;mesh&quot;: &quot;naca0012.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {
+                    &quot;zones&quot;: [1],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [4],
+                    &quot;type&quot;: &quot;wall&quot;,
+                    &quot;kind&quot;: &quot;no slip&quot;,
+                },
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: [2, 3],
+                    &quot;type&quot;: &quot;symmetry&quot;,
+                },
+            },
+        },
+    },
+}
+</code></pre><h3 id="config-version"><code>config version</code></h3><p>Says which layout of control file this is, so zCFD knows how to read the rest.</p><ul>
+<li><code>config version</code>: <code>2</code>, the current layout, with <code>solver</code> and <code>model</code> at the top level.</li>
+</ul><h3 id="solver"><code>solver</code></h3><p>The settings shared by the whole simulation: which solver runs, what it solves, the fluid, the flow state, and how
+the run marches and what it writes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Chooses the solver.</p><ul>
+<li><code>type</code>: <code>&quot;compressible&quot;</code>: the solver that lets the air&#x27;s density change, as in Simple aerofoil.</li>
+</ul><p>See <a href="reference/solver/solver-settings/index.html"><code>solver settings</code></a>.</p><h4 id="equations"><code>equations</code></h4><p>Sets the equations being solved.</p><ul>
+<li><code>type</code>: <code>&quot;rans&quot;</code>, the Reynolds-averaged Navier–Stokes equations. These solve for the average flow and represent
+the effect of turbulence, the small chaotic eddies, with a turbulence model.</li>
+<li><code>turbulence</code>: <code>{&quot;model&quot;: &quot;sst&quot;}</code>, Menter&#x27;s SST model, a widely used general-purpose turbulence model.</li>
+<li><code>precondition</code>: <code>True</code>: low-speed preconditioning, which helps the compressible solver converge for slow flows. It
+is recommended below about Mach 0.3, 0.3 times the speed of sound; this flow is at Mach 0.15.</li>
+</ul><p>See <a href="reference/solver/equations/index.html"><code>equations</code></a> and
+<a href="guide/choosing/choosing-a-turbulence-model/index.html">Choosing a turbulence model</a>.</p><h4 id="fluid-properties"><code>fluid properties</code></h4><p>Describes the gas.</p><ul>
+<li><code>material</code>: <code>&quot;air&quot;</code>, as an ideal gas.</li>
+<li><code>gamma</code> and <code>gas constant</code>: <code>1.4</code> and <code>287.0</code> J/kg/K, the standard values for air.</li>
+<li><code>sutherlands const</code>: <code>110.4</code> K, for Sutherland&#x27;s law, which sets how the viscosity changes with temperature.</li>
+<li><code>prandtl no</code> and <code>turbulent prandtl no</code>: <code>0.72</code> and <code>0.9</code>, which relate how fast heat spreads to how fast momentum
+does, in smooth and turbulent flow.</li>
+</ul><p>See <a href="reference/solver/fluid-properties/index.html"><code>fluid properties</code></a>.</p><h4 id="reference-conditions"><code>reference conditions</code></h4><p>Defines named flow states, each a set of values such as temperature, pressure and velocity. Other parts of the
+file refer to them by name: to fill the domain at the start, to set conditions at boundaries, and to scale the
+equations.</p><h5 id="ic_1"><code>IC_1</code></h5><p>The freestream: the undisturbed air far from the aerofoil.</p><ul>
+<li><code>temperature</code> and <code>pressure</code>: <code>300</code> K and <code>101325.0</code> Pa.</li>
+<li><code>v</code>: <code>{&quot;vector&quot;: [1.0, 0.0, 0.0], &quot;mach&quot;: 0.15}</code>: Mach 0.15 along x, along the chord, so the aerofoil is at zero
+angle of attack. The polar control files turn this vector.</li>
+<li><code>viscosity</code>: <code>1.02145e-05</code> kg/m/s, which gives a Reynolds number, the ratio of the air&#x27;s inertia to its viscosity,
+of 6 million on the 1 m chord.</li>
+<li><code>turbulence intensity</code> and <code>eddy viscosity ratio</code>: <code>5.2e-2</code> and <code>1.0</code>, the turbulence in the incoming flow.</li>
+</ul><p>See <a href="reference/solver/reference-conditions/index.html"><code>reference conditions</code></a>.</p><h4 id="initialisation"><code>initialisation</code></h4><p>Chooses which state starts the run.</p><ul>
+<li><code>initial conditions</code>: <code>&quot;IC_1&quot;</code>: the whole domain starts at the freestream.</li>
+<li><code>restart</code>: <code>False</code>: start afresh rather than from a previous solution.</li>
+</ul><p>See <a href="reference/solver/initialisation/index.html"><code>initialisation</code></a>.</p><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p>Sets how the equations are discretised in space: how the smooth flow is represented by one value in each cell of
+the mesh. This is the first of the two parts that differ from <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>.</p><ul>
+<li><code>order</code>: <code>&quot;second&quot;</code>: the solver estimates how every variable, the turbulence variables included, varies across
+each cell, which is more accurate than treating it as constant. Simple aerofoil&#x27;s <code>&quot;euler_second&quot;</code> does this for
+the flow but treats the turbulence variables as constant in each cell.</li>
+<li><code>limiter</code>: <code>&quot;van albada&quot;</code>: where the flow changes sharply, as it does accelerating round the leading edge, that
+estimate can overshoot; the limiter damps it. It is also the default, so Simple aerofoil uses it too; here it is
+written out.</li>
+<li><code>inviscid flux scheme</code>: <code>&quot;roe&quot;</code>: Roe&#x27;s method for working out how much mass, momentum and energy flows between
+neighbouring cells.</li>
+</ul><p>See <a href="reference/solver/numerical-scheme/index.html"><code>numerical scheme</code></a> and
+<a href="guide/choosing/choosing-a-limiter/index.html">Choosing a limiter</a>.</p><h4 id="time-settings"><code>time settings</code></h4><p>Says what kind of run this is.</p><ul>
+<li><code>type</code>: <code>&quot;steady&quot;</code>: at these angles the flow stays attached to the aerofoil and does not change with time, so the
+run looks for that final state directly.</li>
+</ul><p>See <a href="reference/solver/time-settings/index.html"><code>time settings</code></a>.</p><h4 id="convergence-control"><code>convergence control</code></h4><p>Sets how the solver reaches the steady solution. It starts from a guess and improves it once per cycle, or
+iteration, until the flow stops changing; the run has then converged. This is the second part that differs from
+Simple aerofoil.</p><h5 id="scheme"><code>scheme</code></h5><ul>
+<li><code>name</code>: <code>&quot;implicit euler&quot;</code>: each step solves a linear system, which allows large steps.</li>
+</ul><h5 id="cfl"><code>cfl</code></h5><ul>
+<li><code>cfl</code>: <code>100</code>, the CFL number the run ramps up to, twice Simple aerofoil&#x27;s. The CFL number sets how big a step each
+cycle takes towards the answer: too large and the run becomes unstable, too small and it needs many cycles.</li>
+<li><code>cfl ramp</code>: <code>[{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.1, &quot;initial&quot;: 0.05}]</code>: start at 0.05, lower than Simple
+aerofoil&#x27;s 1, and multiply by 1.1 each cycle, so the first cycles, far from the answer, take very small steps.</li>
+</ul><h5 id="cycles"><code>cycles</code></h5><ul>
+<li><code>cycles</code>: <code>2000</code>, enough for each angle in this tutorial to settle: the 10° lift changes by less than 0.0004
+over the last 500 cycles.</li>
+</ul><p>See <a href="reference/solver/convergence-control/index.html"><code>convergence control</code></a> and
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#cfl-control">CFL control</a>.</p><h4 id="output-settings"><code>output settings</code></h4><p>Sets what zCFD writes, and how often. See <a href="reference/solver/output-settings/index.html"><code>output settings</code></a>.</p><h5 id="report"><code>report</code></h5><p>The report is a table with one row per report cycle, written to <code>&lt;control file&gt;_OUTPUT/naca0012/naca0012_report.csv</code>
+and plotted by zMon.</p><ul>
+<li>
+<p><code>frequency</code>: <code>10</code>: a row every 10 cycles.</p>
+</li>
+<li>
+<p><code>forces</code>: one block, <code>FR_1</code>, which sums the forces on a set of zones:</p>
+<ul>
+<li><code>name</code>: <code>&quot;wall&quot;</code>, which prefixes its report columns: <code>wall_Fx</code>, <code>wall_Fy</code> and <code>wall_Fz</code> for the force, in the
+axes of the mesh, with their pressure and friction parts.</li>
+<li><code>zones</code>: <code>[4]</code>, the aerofoil surface.</li>
+</ul>
+<p>Forces are reported as coefficients, against <code>IC_1</code> and a reference area of 1.</p>
+</li>
+</ul><h5 id="solution"><code>solution</code></h5><p>The flow solution, written once at the end of the run for visualisation.</p><ul>
+<li><code>surface variables</code>: velocity, pressure, Mach number, <code>cp</code>, skin friction <code>cf</code>, and the pressure and friction
+forces on each face.</li>
+<li><code>volume variables</code>: velocity, pressure, temperature, density, Mach number, <code>cp</code> and the eddy viscosity <code>eddy</code>.</li>
+</ul><h3 id="model"><code>model</code></h3><p>One entry per mesh, each with its own boundary conditions. See <a href="reference/model/index.html"><code>model</code></a>.</p><h4 id="naca0012"><code>naca0012</code></h4><p>The name of the only model. It names the folder under each run&#x27;s output, <code>&lt;control file&gt;_OUTPUT/naca0012/</code>, and
+the files in it.</p><h5 id="mesh"><code>mesh</code></h5><ul>
+<li><code>mesh</code>: <code>&quot;naca0012.h5&quot;</code>: the aerofoil, with its span along y and one cell across it.</li>
+</ul><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p>Assigns a condition to each zone of boundary faces. See
+<a href="reference/model/boundary-conditions/index.html"><code>boundary conditions</code></a> and
+<a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing boundary conditions</a>.</p><h6 id="bc_1"><code>BC_1</code></h6><p>The outer boundary.</p><ul>
+<li><code>zones</code>: <code>[1]</code>.</li>
+<li><code>type</code> and <code>kind</code>: <code>&quot;farfield&quot;</code>, <code>&quot;riemann&quot;</code>: the outer edge of the domain, far from the aerofoil. Air passes in
+and out, and pressure waves leave without bouncing back in.</li>
+<li><code>condition</code>: <code>&quot;IC_1&quot;</code>, the freestream.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><p>The aerofoil.</p><ul>
+<li><code>zones</code>: <code>[4]</code>.</li>
+<li><code>type</code> and <code>kind</code>: <code>&quot;wall&quot;</code>, <code>&quot;no slip&quot;</code>: the flow velocity is zero at the surface.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><p>The two faces normal to y.</p><ul>
+<li><code>zones</code>: <code>[2, 3]</code>.</li>
+<li><code>type</code>: <code>&quot;symmetry&quot;</code>: mirror planes. The aerofoil behaves as if it were infinitely long, so the flow is
+two-dimensional and the mesh needs only one cell across it.</li>
+</ul><h3 id="naca0012_alpha5py-and-naca0012_alpha10py"><code>naca0012_alpha5.py</code> and <code>naca0012_alpha10.py</code></h3><p>The polar control files load <code>naca0012.py</code> with <code>get_parameters_from_file</code> and change one key.</p><p><code>naca0012_alpha5.py</code>:</p><pre><code class="language-python">import zutil
+from zutil.fileutils import get_parameters_from_file
+
+parameters = get_parameters_from_file(&quot;naca0012.py&quot;)
+
+parameters[&quot;solver&quot;][&quot;reference conditions&quot;][&quot;IC_1&quot;][&quot;v&quot;][&quot;vector&quot;] = (
+    zutil.vector_from_angle(5.0, 0.0)
+)
+</code></pre><p><code>naca0012_alpha10.py</code>:</p><pre><code class="language-python">import zutil
+from zutil.fileutils import get_parameters_from_file
+
+parameters = get_parameters_from_file(&quot;naca0012.py&quot;)
+
+parameters[&quot;solver&quot;][&quot;reference conditions&quot;][&quot;IC_1&quot;][&quot;v&quot;][&quot;vector&quot;] = (
+    zutil.vector_from_angle(10.0, 0.0)
+)
+</code></pre><h4 id="solver--reference-conditions--ic_1--v--vector"><code>solver › reference conditions › IC_1 › v › vector</code></h4><ul>
+<li><code>zutil.vector_from_angle(alpha, beta)</code> returns the direction of the oncoming flow, as a vector of length 1, for an
+angle of attack <code>alpha</code> and a sideslip angle <code>beta</code> (sideways), both in degrees. It turns the flow from +x towards +z, so the aerofoil, whose chord lies along x, meets the flow at 5° or
+10°. The Mach number is unchanged, and the mesh stays where it is.</li>
+</ul><h3 id="naca0012_target_clpy"><code>naca0012_target_cl.py</code></h3><p>The trim control file loads <code>naca0012.py</code> and gives its farfield a target.</p><pre><code class="language-python">from zutil.fileutils import get_parameters_from_file
+
+parameters = get_parameters_from_file(&quot;naca0012.py&quot;)
+
+parameters[&quot;model&quot;][&quot;naca0012&quot;][&quot;boundary conditions&quot;][&quot;BC_1&quot;][&quot;target&quot;] = {
+    &quot;alpha&quot;: {&quot;cl&quot;: 1.0778, &quot;hold&quot;: 500}
+}
+parameters[&quot;solver&quot;][&quot;convergence control&quot;][&quot;cycles&quot;] = 5000
+</code></pre><h4 id="model--naca0012--boundary-conditions--bc_1--target"><code>model › naca0012 › boundary conditions › BC_1 › target</code></h4><p>A farfield with a <code>target</code> trims the aerofoil: it turns the direction of the oncoming flow, and so the angle of
+attack, until the lift coefficient reaches the value you ask for.</p><ul>
+<li><code>alpha</code>: the setting the farfield turns, the angle of attack, and what it aims for:<!-- -->
+<ul>
+<li><code>cl</code>: <code>1.0778</code>, the lift coefficient wanted. It is CFL3D&#x27;s value at 10°, so the trimmed angle should come out
+close to 10°.</li>
+<li><code>hold</code>: <code>500</code>: once the settled lift is within 0.001 of the target, the farfield freezes its angle and the run
+goes on for 500 more cycles, then stops.</li>
+</ul>
+</li>
+</ul><p>The run starts at the farfield&#x27;s own angle, 0°, waits for the lift to settle, steps the angle towards the target,
+and repeats. See <a href="guide/working-with/trimming-to-a-target/index.html">Trimming to a target</a>, which describes the other
+options, such as trimming for drag instead of lift.</p><h4 id="solver--convergence-control--cycles"><code>solver › convergence control › cycles</code></h4><ul>
+<li><code>cycles</code>: <code>5000</code>: the budget for the whole run, the trim steps and the hold together.</li>
+</ul><h2 id="step-3-run">Step 3. Run</h2><ol>
+<li>Activate your environment:</li>
+</ol><pre><code class="language-bash">source ./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><ol start="2">
+<li>Check the control files for errors:</li>
+</ol><pre><code class="language-bash">cd ~/tutorial_8_aerofoil_polar_and_trim/
+validate_input naca0012.py
+</code></pre><ol start="3">
+<li>Run the three polar control files and the trim, one after the other:</li>
+</ol><pre><code class="language-bash">run_zcfd -c naca0012.py
+run_zcfd -c naca0012_alpha5.py
+run_zcfd -c naca0012_alpha10.py
+run_zcfd -c naca0012_target_cl.py
+</code></pre><p>Each log reads like the one in <a href="tutorials/1-simple-aerofoil/index.html#step-3-run">Simple aerofoil</a>. The trim run also writes a
+line each time it steps the angle, and a last line with the angle it found:</p><pre><code class="language-bash">grep &quot;target BC_1&quot; naca0012_target_cl.log
+</code></pre><p>In a run of this tutorial it printed:</p><pre><code class="language-text">target BC_1: trimming alpha (x–z plane, forward +x, up +z) for cl 1.0778, then hold 500 cycles
+target BC_1: cycle  300  alpha  0.000° →  4.000°   cl -0.0000   target 1.0778
+target BC_1: cycle  700  alpha  4.000° →  8.000°   cl 0.4332 (heading for 0.4360)   target 1.0778
+target BC_1: cycle 1200  alpha  8.000° →  9.671°   cl 0.8208 (heading for 0.8916)   target 1.0778
+target BC_1: cycle 1600  alpha  9.671° →  9.927°   cl 1.0304 (heading for 1.0498)   target 1.0778
+target BC_1: cycle 2000  alpha  9.927° →  9.974°   cl 1.0710 (heading for 1.0733)   target 1.0778
+target BC_1: cycle 2300  cl 1.0776 met at alpha 9.974° — holding 500 cycles
+target BC_1: alpha trimmed to 9.974° for cl 1.0778 (cl 1.0781 at end, cycle 2800); as the condition&#x27;s vector: zutil.vector_from_angle(9.974, 0.000)
+</code></pre><p>Each step waits for the lift to settle, then moves the angle towards the target, with large steps at first and
+smaller ones as it closes in. Once the settled lift is within 0.001 of the target, the angle is frozen for the
+500-cycle hold, and the run stops well inside its 5000-cycle budget. The last line gives the inflow vector to use
+for a plain run at the trimmed angle.</p><h3 id="output-files">Output files</h3><p>Each run writes its own output, named after its control file:</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td><code>&lt;control file&gt;.log</code></td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>&lt;control file&gt;_status.yaml</code></td><td>A record of how the run was started; the trim run adds its result.</td></tr><tr><td><code>&lt;control file&gt;_OUTPUT/naca0012/naca0012_report.csv</code></td><td>The residuals and forces every 10 cycles.</td></tr><tr><td><code>&lt;control file&gt;_OUTPUT/naca0012/naca0012.vtkhdf</code></td><td>The volume output, for visualisation.</td></tr><tr><td><code>&lt;control file&gt;_OUTPUT/naca0012/naca0012_wall.vtkhdf</code></td><td>The surface output on the aerofoil.</td></tr></tbody></table></div><p>For example, the 10° run writes <code>naca0012_alpha10_OUTPUT/naca0012/naca0012_report.csv</code>.</p><h2 id="step-4-monitor">Step 4. Monitor</h2><p>Open each run in zMon, while it runs or after it has finished, to check it has converged:</p><pre><code class="language-bash">zmon naca0012_alpha10.py
+</code></pre><p><a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a> describes each panel. Check each run before you trust
+its forces: the residuals, which measure how far the solution is from satisfying the equations, should have stopped
+falling, and the lift should be flat over the last few hundred cycles.</p><p>The trim run&#x27;s report gains two columns, <code>BC_1_alpha</code> and <code>BC_1_cl</code>, which zMon plots alongside the forces: the angle
+steps up, the lift follows, and both go flat for the hold.</p><h2 id="step-5-post-process">Step 5. Post-process</h2><h3 id="python">Python</h3><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><p>The force report is in the axes of the mesh: x along the chord and z normal to it. Once the flow is turned, lift and
+drag are the components normal to and along the freestream, so the x and z forces must be rotated through the angle
+of attack <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span>:</p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>C</mi><mi>L</mi></msub><mo>=</mo><msub><mi>C</mi><mi>z</mi></msub><mi>cos</mi><mo>⁡</mo><mi>α</mi><mo>−</mo><msub><mi>C</mi><mi>x</mi></msub><mi>sin</mi><mo>⁡</mo><mi>α</mi><mo separator="true">,</mo><mspace width="2em"></mspace><msub><mi>C</mi><mi>D</mi></msub><mo>=</mo><msub><mi>C</mi><mi>x</mi></msub><mi>cos</mi><mo>⁡</mo><mi>α</mi><mo>+</mo><msub><mi>C</mi><mi>z</mi></msub><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">C_L = C_z \cos\alpha - C_x \sin\alpha, \qquad C_D = C_x \cos\alpha + C_z \sin\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em"></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em">D</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0037em">α</span></span></span></span></span><p>This script reads the last report row of each polar run, rotates the forces, prints the polar and plots it. Save it
+as <code>plot_polar.py</code> beside the control files:</p><pre><code class="language-python">import math
+
+import matplotlib.pyplot as plt
+
+from zutil.fileutils import get_zcfd_result
+
+runs = {&quot;naca0012.py&quot;: 0.0, &quot;naca0012_alpha5.py&quot;: 5.0, &quot;naca0012_alpha10.py&quot;: 10.0}
+
+lift, drag = [], []
+for control_file, alpha in runs.items():
+    result = get_zcfd_result(control_file)
+    final = result.report.data.iloc[-1]
+    prefix = result.force_prefix()
+    cx, cz = final[f&quot;{prefix}_Fx&quot;], final[f&quot;{prefix}_Fz&quot;]
+    a = math.radians(alpha)
+    lift.append(cz * math.cos(a) - cx * math.sin(a))
+    drag.append(cx * math.cos(a) + cz * math.sin(a))
+    print(f&quot;alpha {alpha:4.1f}  cl {lift[-1]:.4f}  cd {drag[-1]:.5f}&quot;)
+
+fig, (ax_lift, ax_polar) = plt.subplots(1, 2, figsize=(10, 4))
+ax_lift.plot(list(runs.values()), lift, &quot;o-&quot;)
+ax_lift.set_xlabel(&quot;Angle of attack (degrees)&quot;)
+ax_lift.set_ylabel(&quot;$C_L$&quot;)
+ax_polar.plot(drag, lift, &quot;o-&quot;)
+ax_polar.set_xlabel(&quot;$C_D$&quot;)
+ax_polar.set_ylabel(&quot;$C_L$&quot;)
+fig.savefig(&quot;polar.png&quot;, dpi=200)
+</code></pre><p>and run it:</p><pre><code class="language-bash">python plot_polar.py
+</code></pre><p>It prints the lift and drag coefficient at each angle and writes <code>polar.png</code>:</p><figure class="figure"><img src="images/tutorial-8-polar.png" alt="Lift against angle of attack, and the drag polar, at 0°, 5° and 10°" loading="lazy"/><figcaption>Lift against angle of attack, and the drag polar, at 0°, 5° and 10°</figcaption></figure><p>NASA&#x27;s CFL3D code gives a lift coefficient of 1.0778 at 10°, and drag coefficients of 0.00828 at 0° and 0.01245 at
+10°, on a finer grid of the same aerofoil. At 5°, Ladson&#x27;s wind-tunnel measurements give a lift coefficient of about
+0.54. On this grid zCFD&#x27;s lift lies within a few hundredths of these values, and its drag within a thousandth of
+CFL3D&#x27;s.</p><p>Closer to stall, the angle at which the flow separates from the upper surface and the lift stops rising, the flow
+is much harder to converge. Ladson&#x27;s measured lift peaks near 17°, and at 15° a steady run on
+this grid needs many times more cycles than at 10° before its forces stop changing. Above about 10°, always check in
+zMon that the lift has stopped drifting before you add a point to the polar.</p><p>The trimmed angle comes out close to 10°, consistent with the polar. The status file
+<code>naca0012_target_cl_status.yaml</code> records whether the target was met and at which angle.</p><h3 id="paraview">ParaView</h3><aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The .vtkhdf output format requires <a href="https://www.paraview.org/download/">ParaView 6.1.1</a> or later.</p></div></aside></div>
+<p>Each run&#x27;s output opens in ParaView as in <a href="tutorials/1-simple-aerofoil/index.html#paraview">Simple aerofoil</a>. Colour the volume
+output of the 10° run by <code>cp</code> to see the suction peak move forward onto the upper surface, and the stagnation point
+move round under the leading edge, as the angle rises.</p>
+<p>:::</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/8-polars-and-trimming/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/8-polars-and-trimming/index.html#what-you-need">What you need?</a><a href="tutorials/8-polars-and-trimming/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/8-polars-and-trimming/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/8-polars-and-trimming/index.html#step-3-run">Step 3. Run</a><a href="tutorials/8-polars-and-trimming/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/8-polars-and-trimming/index.html#step-5-post-process">Step 5. Post-process</a></nav><div class="rail"></div></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

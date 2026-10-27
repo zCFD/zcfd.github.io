@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../../">
+    <title>Mesh file · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="reference/file-formats/mesh-file.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/mesh-file-B72kPZvs.js">
+    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><span role="img" aria-label="zCFD"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg"> <path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"/> <polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"/> <path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"/> </svg></span></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html" class="on">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD develop">develop</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Reference"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Reference</div><nav class="tree-body"><a href="reference/input-deck/index.html" class="tsec">Input deck</a><div class="trow mono-row"><span class="tind conn mid"></span><button type="button" class="tchev" aria-expanded="false" aria-label="Open solver">›</button><a href="reference/solver/index.html" class="tlink"><span class="tlab">solver</span></a></div><div class="trow mono-row"><span class="tind conn"></span><button type="button" class="tchev" aria-expanded="false" aria-label="Open model">›</button><a href="reference/model/index.html" class="tlink"><span class="tlab">model</span></a></div><a href="reference/output-variables/index.html" class="tsec">Output variables</a><div class="tsec">Command line</div><div class="trow"><span class="tind conn mid"></span><a href="reference/command-line/invocation-and-flags/index.html" class="tlink"><span class="tlab dim">Command line invocation and flags</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="reference/command-line/environment-variables/index.html" class="tlink"><span class="tlab dim">Environment variables</span></a></div><div class="trow"><span class="tind conn"></span><a href="reference/command-line/parallel-invocation/index.html" class="tlink"><span class="tlab dim">Parallel invocation</span></a></div><div class="tsec">File formats</div><div class="trow sel"><span class="tind conn"></span><a href="reference/file-formats/mesh-file/index.html" class="tlink" aria-current="page"><span class="tlab dim">Mesh file</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="reference"><div class="crumb"><span>Reference</span><span> / <!-- -->File formats</span><span> / <b>Mesh file</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="mesh-file">Mesh file</h1>
+<p>A zCFD mesh is an HDF5 file holding one group, <code>mesh</code>. The group carries two attributes, <code>numCells</code> and <code>numFaces</code>, and the datasets below. Every index counts from zero. <a href="guide/setting-up/preparing-a-mesh/index.html">Preparing a mesh</a> describes how to convert a mesh into this format.</p>
+<figure class="figure"><span class="zc-figure zc-inline" role="img" aria-label="The group mesh in an HDF5 file, with its two attributes and seven datasets; faceType gives the number of nodes of each face, and so splits faceNodes into one run of node indices per face" title="Layout of a zCFD mesh file"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 330" version="1.1" font-family="Lato, Manrope, sans-serif" font-size="13" class="zc-figure-svg" focusable="false" aria-hidden="true">
+ <g id="mesh-file-layout-file">
+  <rect class="zc-stroke-ink" x="10" y="10" width="330" height="310" rx="6" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="22" y="30" style="fill: #262624">HDF5 file</text>
+  <rect class="zc-stroke-ink" x="24" y="42" width="302" height="266" rx="4" style="fill: none; stroke: #262624; stroke-width: 1"/>
+  <text class="zc-fill-ink" x="36" y="62" style="fill: #262624">group mesh</text>
+  <text class="zc-fill-ink" x="36" y="82" font-size="12" style="fill: #262624">attributes numCells, numFaces</text>
+ </g>
+ <g id="mesh-file-layout-datasets">
+  <rect class="zc-stroke-grid" x="36" y="94" width="278" height="22" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+  <text class="zc-fill-ink" x="46" y="110" style="fill: #262624">nodeVertex</text>
+  <text class="zc-fill-ink" x="304" y="110" text-anchor="end" style="fill: #262624">nodes × 3</text>
+  <rect class="zc-stroke-series-1" x="36" y="122" width="278" height="22" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="46" y="138" style="fill: #262624">faceType</text>
+  <text class="zc-fill-ink" x="304" y="138" text-anchor="end" style="fill: #262624">faces × 1</text>
+  <rect class="zc-stroke-series-1" x="36" y="150" width="278" height="22" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="46" y="166" style="fill: #262624">faceNodes</text>
+  <text class="zc-fill-ink" x="304" y="166" text-anchor="end" style="fill: #262624">(sum of faceType) × 1</text>
+  <rect class="zc-stroke-grid" x="36" y="178" width="278" height="22" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+  <text class="zc-fill-ink" x="46" y="194" style="fill: #262624">faceCell</text>
+  <text class="zc-fill-ink" x="304" y="194" text-anchor="end" style="fill: #262624">faces × 2</text>
+  <rect class="zc-stroke-grid" x="36" y="206" width="278" height="22" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+  <text class="zc-fill-ink" x="46" y="222" style="fill: #262624">faceBC</text>
+  <text class="zc-fill-ink" x="304" y="222" text-anchor="end" style="fill: #262624">faces × 1</text>
+  <rect class="zc-stroke-grid" x="36" y="234" width="278" height="22" style="fill: none; stroke: #d9d9d6; stroke-width: 1"/>
+  <text class="zc-fill-ink" x="46" y="250" style="fill: #262624">faceInfo</text>
+  <text class="zc-fill-ink" x="304" y="250" text-anchor="end" style="fill: #262624">faces × 2</text>
+  <rect class="zc-stroke-reference" x="36" y="262" width="278" height="22" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+  <text class="zc-fill-ink" x="46" y="278" style="fill: #262624">cellZone</text>
+  <text class="zc-fill-ink" x="304" y="278" text-anchor="end" style="fill: #262624">cells × 1, optional</text>
+ </g>
+ <g id="mesh-file-layout-runs">
+  <text class="zc-fill-ink" x="360" y="30" style="fill: #262624">faceType gives the length of each</text>
+  <text class="zc-fill-ink" x="360" y="47" style="fill: #262624">face's run of nodes in faceNodes</text>
+  <text class="zc-fill-ink" x="360" y="82" font-size="12" style="fill: #262624">faceType</text>
+  <rect class="zc-stroke-series-1" x="360" y="90" width="40" height="24" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="380" y="107" text-anchor="middle" style="fill: #262624">4</text>
+  <rect class="zc-stroke-series-2" x="400" y="90" width="40" height="24" style="fill: none; stroke: #eb6834; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="420" y="107" text-anchor="middle" style="fill: #262624">3</text>
+  <rect class="zc-stroke-ink" x="440" y="90" width="40" height="24" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="460" y="107" text-anchor="middle" style="fill: #262624">4</text>
+  <text class="zc-fill-ink" x="490" y="107" style="fill: #262624">…</text>
+  <text class="zc-fill-ink" x="380" y="130" font-size="11" text-anchor="middle" style="fill: #262624">face 0</text>
+  <text class="zc-fill-ink" x="420" y="130" font-size="11" text-anchor="middle" style="fill: #262624">face 1</text>
+  <text class="zc-fill-ink" x="460" y="130" font-size="11" text-anchor="middle" style="fill: #262624">face 2</text>
+  <text class="zc-fill-ink" x="360" y="170" font-size="12" style="fill: #262624">faceNodes</text>
+  <rect class="zc-stroke-series-1" x="360" y="178" width="20" height="24" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <rect class="zc-stroke-series-1" x="380" y="178" width="20" height="24" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <rect class="zc-stroke-series-1" x="400" y="178" width="20" height="24" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <rect class="zc-stroke-series-1" x="420" y="178" width="20" height="24" style="fill: none; stroke: #2a78d6; stroke-width: 1.2"/>
+  <rect class="zc-stroke-series-2" x="440" y="178" width="20" height="24" style="fill: none; stroke: #eb6834; stroke-width: 1.2"/>
+  <rect class="zc-stroke-series-2" x="460" y="178" width="20" height="24" style="fill: none; stroke: #eb6834; stroke-width: 1.2"/>
+  <rect class="zc-stroke-series-2" x="480" y="178" width="20" height="24" style="fill: none; stroke: #eb6834; stroke-width: 1.2"/>
+  <rect class="zc-stroke-ink" x="500" y="178" width="20" height="24" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+  <rect class="zc-stroke-ink" x="520" y="178" width="20" height="24" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+  <rect class="zc-stroke-ink" x="540" y="178" width="20" height="24" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+  <rect class="zc-stroke-ink" x="560" y="178" width="20" height="24" style="fill: none; stroke: #262624; stroke-width: 1.2"/>
+  <text class="zc-fill-ink" x="370" y="195" font-size="12" text-anchor="middle" style="fill: #262624">0</text>
+  <text class="zc-fill-ink" x="390" y="195" font-size="12" text-anchor="middle" style="fill: #262624">1</text>
+  <text class="zc-fill-ink" x="410" y="195" font-size="12" text-anchor="middle" style="fill: #262624">5</text>
+  <text class="zc-fill-ink" x="430" y="195" font-size="12" text-anchor="middle" style="fill: #262624">4</text>
+  <text class="zc-fill-ink" x="450" y="195" font-size="12" text-anchor="middle" style="fill: #262624">1</text>
+  <text class="zc-fill-ink" x="470" y="195" font-size="12" text-anchor="middle" style="fill: #262624">2</text>
+  <text class="zc-fill-ink" x="490" y="195" font-size="12" text-anchor="middle" style="fill: #262624">5</text>
+  <text class="zc-fill-ink" x="510" y="195" font-size="12" text-anchor="middle" style="fill: #262624">2</text>
+  <text class="zc-fill-ink" x="530" y="195" font-size="12" text-anchor="middle" style="fill: #262624">3</text>
+  <text class="zc-fill-ink" x="550" y="195" font-size="12" text-anchor="middle" style="fill: #262624">7</text>
+  <text class="zc-fill-ink" x="570" y="195" font-size="12" text-anchor="middle" style="fill: #262624">6</text>
+  <path class="zc-stroke-series-1" d="M 362 210 L 362 216 L 438 216 L 438 210" style="fill: none; stroke: #2a78d6; stroke-width: 1"/>
+  <path class="zc-stroke-series-2" d="M 442 210 L 442 216 L 498 216 L 498 210" style="fill: none; stroke: #eb6834; stroke-width: 1"/>
+  <path class="zc-stroke-ink" d="M 502 210 L 502 216 L 578 216 L 578 210" style="fill: none; stroke: #262624; stroke-width: 1"/>
+  <text class="zc-fill-ink" x="400" y="232" font-size="11" text-anchor="middle" style="fill: #262624">face 0</text>
+  <text class="zc-fill-ink" x="470" y="232" font-size="11" text-anchor="middle" style="fill: #262624">face 1</text>
+  <text class="zc-fill-ink" x="540" y="232" font-size="11" text-anchor="middle" style="fill: #262624">face 2</text>
+  <text class="zc-fill-ink" x="360" y="270" font-size="12" style="fill: #262624">each entry is a row of nodeVertex,</text>
+  <text class="zc-fill-ink" x="360" y="286" font-size="12" style="fill: #262624">counted from zero</text>
+ </g>
+</svg>
+</span><figcaption>The group mesh in an HDF5 file, with its two attributes and seven datasets; faceType gives the number of nodes of each face, and so splits faceNodes into one run of node indices per face</figcaption></figure>
+<h2 id="datasets">Datasets</h2>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Dataset</th><th>Shape</th><th>Contents</th></tr></thead><tbody><tr><td><code>nodeVertex</code></td><td>nodes × 3, float</td><td>the coordinates of each node, in mesh units</td></tr><tr><td><code>faceType</code></td><td>faces × 1, integer</td><td>the number of nodes of each face</td></tr><tr><td><code>faceNodes</code></td><td>(sum of <code>faceType</code>) × 1</td><td>the node indices of each face in turn, in face order</td></tr><tr><td><code>faceCell</code></td><td>faces × 2, integer</td><td>the left and right cell of each face</td></tr><tr><td><code>faceBC</code></td><td>faces × 1, integer</td><td>the boundary type code of each face, <code>0</code> for an interior face</td></tr><tr><td><code>faceInfo</code></td><td>faces × 2, integer</td><td>the zone identifier of each face in the first column; the converters write <code>0</code> in the second</td></tr><tr><td><code>cellZone</code></td><td>cells × 1, integer</td><td>optional; the cell zone number of each cell, which a fluid zone&#x27;s <code>cell zones</code> selects</td></tr></tbody></table></div>
+<h2 id="cells-and-faces">Cells and faces</h2>
+<p>The left cell of every face is a real cell, numbered below <code>numCells</code>. The right cell of an interior face is also a real cell. The right cell of a boundary face is a halo cell: halo cells are numbered from <code>numCells</code> upwards, one for each boundary face.</p>
+<p>The node order of a face defines its normal by the right-hand rule. That normal must point out of the left cell and into the right cell, so on a boundary face it points out of the domain. A face wound the other way gives its cells wrong volumes.</p>
+<figure class="figure"><span class="zc-figure zc-inline" role="img" aria-label="An interior face between cells 0 and 1, with its normal pointing from cell 0 into cell 1, and a boundary face between cell 1 and a halo cell numbered from numCells, with its normal pointing out of the domain" title="Left and right cells of a face"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 25 600 200" version="1.1" font-family="Lato, Manrope, sans-serif" font-size="13" class="zc-figure-svg" focusable="false" aria-hidden="true">
+ <g id="mesh-file-faces-cells">
+  <path class="zc-stroke-ink" d="M 160 60 L 60 60 L 60 160 L 160 160" style="fill: none; stroke: #262624; stroke-width: 1"/>
+  <path class="zc-stroke-ink" d="M 160 60 L 260 60 M 160 160 L 260 160" style="fill: none; stroke: #262624; stroke-width: 1"/>
+  <path class="zc-stroke-reference" d="M 260 60 L 360 60 L 360 160 L 260 160" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+  <path class="zc-stroke-series-1" d="M 160 60 L 160 160" style="fill: none; stroke: #2a78d6; stroke-width: 3"/>
+  <path class="zc-stroke-series-2" d="M 260 60 L 260 160" style="fill: none; stroke: #eb6834; stroke-width: 3"/>
+  <text class="zc-fill-ink" x="110" y="128" text-anchor="middle" style="fill: #262624">cell 0</text>
+  <text class="zc-fill-ink" x="210" y="128" text-anchor="middle" style="fill: #262624">cell 1</text>
+  <text class="zc-fill-ink" x="310" y="120" text-anchor="middle" style="fill: #262624">halo cell</text>
+  <text class="zc-fill-ink" x="310" y="138" font-size="12" text-anchor="middle" style="fill: #262624">≥ numCells</text>
+  <text class="zc-fill-ink" x="160" y="48" text-anchor="middle" style="fill: #262624">face f</text>
+  <text class="zc-fill-ink" x="260" y="48" text-anchor="middle" style="fill: #262624">face b</text>
+  <text class="zc-fill-ink" x="160" y="186" font-size="12" text-anchor="middle" style="fill: #262624">domain</text>
+  <text class="zc-fill-ink" x="310" y="186" font-size="12" text-anchor="middle" style="fill: #262624">outside</text>
+ </g>
+ <g id="mesh-file-faces-normals">
+  <path class="zc-stroke-series-1" d="M 160 85 L 196 85 M 189 80 L 196 85 L 189 90" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+  <path class="zc-stroke-series-2" d="M 260 85 L 296 85 M 289 80 L 296 85 L 289 90" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+  <text class="zc-fill-ink" x="200" y="80" font-size="12" style="fill: #262624">n</text>
+  <text class="zc-fill-ink" x="300" y="80" font-size="12" style="fill: #262624">n</text>
+ </g>
+ <g id="mesh-file-faces-rows">
+  <path class="zc-stroke-series-1" d="M 395 66 L 415 66" style="fill: none; stroke: #2a78d6; stroke-width: 3"/>
+  <text class="zc-fill-ink" x="422" y="70" style="fill: #262624">face f, interior</text>
+  <text class="zc-fill-ink" x="395" y="92" font-size="12" style="fill: #262624">faceCell</text>
+  <text class="zc-fill-ink" x="460" y="92" font-size="12" style="fill: #262624">0, 1</text>
+  <text class="zc-fill-ink" x="395" y="110" font-size="12" style="fill: #262624">faceBC</text>
+  <text class="zc-fill-ink" x="460" y="110" font-size="12" style="fill: #262624">0</text>
+  <path class="zc-stroke-series-2" d="M 395 146 L 415 146" style="fill: none; stroke: #eb6834; stroke-width: 3"/>
+  <text class="zc-fill-ink" x="422" y="150" style="fill: #262624">face b, boundary</text>
+  <text class="zc-fill-ink" x="395" y="172" font-size="12" style="fill: #262624">faceCell</text>
+  <text class="zc-fill-ink" x="460" y="172" font-size="12" style="fill: #262624">1, halo cell</text>
+  <text class="zc-fill-ink" x="395" y="190" font-size="12" style="fill: #262624">faceBC</text>
+  <text class="zc-fill-ink" x="460" y="190" font-size="12" style="fill: #262624">boundary type code</text>
+  <text class="zc-fill-ink" x="395" y="208" font-size="12" style="fill: #262624">faceInfo</text>
+  <text class="zc-fill-ink" x="460" y="208" font-size="12" style="fill: #262624">zone identifier, 0</text>
+ </g>
+</svg>
+</span><figcaption>An interior face between cells 0 and 1, with its normal pointing from cell 0 into cell 1, and a boundary face between cell 1 and a halo cell numbered from numCells, with its normal pointing out of the domain</figcaption></figure>
+<p>A boundary condition in the control file names the zones it applies to by the zone identifiers in <code>faceInfo</code>.</p>
+<h2 id="boundary-type-codes">Boundary type codes</h2>
+<p><code>faceBC</code> holds <code>0</code> for an interior face and, for a boundary face, the code of its boundary type:</p>
+<div class="ntable-scroll"><table class="gtable"><thead><tr><th>Code</th><th>Boundary type</th></tr></thead><tbody><tr><td><code>0</code></td><td>interior face</td></tr><tr><td><code>3</code></td><td>wall</td></tr><tr><td><code>4</code></td><td>inflow</td></tr><tr><td><code>5</code></td><td>outflow</td></tr><tr><td><code>7</code></td><td>symmetry</td></tr><tr><td><code>9</code></td><td>farfield</td></tr><tr><td><code>18</code></td><td>periodic</td></tr><tr><td><code>20</code></td><td>overset</td></tr><tr><td><code>22</code></td><td>sliding</td></tr></tbody></table></div>
+<p>The <code>type</code> of the boundary condition that names a zone decides how the solver treats that zone; the code in the mesh does not.</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="reference/file-formats/mesh-file/index.html#datasets">Datasets</a><a href="reference/file-formats/mesh-file/index.html#cells-and-faces">Cells and faces</a><a href="reference/file-formats/mesh-file/index.html#boundary-type-codes">Boundary type codes</a></nav></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

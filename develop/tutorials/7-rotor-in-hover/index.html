@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>7 · Rotor in hover · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/7-rotor-in-hover.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/7-rotor-in-hover-DrT_EvOg.js">
+    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><span role="img" aria-label="zCFD"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg"> <path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"/> <polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"/> <path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"/> </svg></span></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD develop">develop</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow sel"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink" aria-current="page"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>7 · Rotor in hover</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="rotor-in-hover">Rotor in hover</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>This tutorial simulates a helicopter-style rotor hovering in still air, and compares the pressure on its blades
+with wind-tunnel measurements. Along the way it shows three things you will need for your own cases: converting a
+mesh made by another program, referring to boundaries by name, and two ways of cutting the cost of a rotor run. The
+first is a rotating frame, which lets a spinning rotor be solved as a flow that does not change with time. The second
+is a periodic boundary, which lets you model only one of the identical blades.</p>
+<p>The rotor is the one Caradonna and Tung tested at NASA in 1981<sup><a href="tutorials/7-rotor-in-hover/index.html#user-content-fn-1" id="user-content-fnref-1" data-footnote-ref="true" aria-describedby="footnote-label">1</a></sup>. It has two straight blades, each the same
+NACA 0012 aerofoil shape from root to tip, six times as long as they are wide, set at a collective pitch of 8°: every
+blade meets the air at the same 8° angle. The tips move at 0.877 times the speed of sound (Mach 0.877), fast enough
+for a shock wave, a sudden jump in pressure, to form near the tip. The experiment measured the pressure on the blade
+surface at five distances from the shaft, and those measurements are the reference here.</p>
+<h2 id="what-you-need">What you need?</h2>
+<p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for running zCFD, reading
+the log and monitoring a run in zMon. The mesh has 447,468 cells, and the run takes about nine and a half minutes on an NVIDIA
+RTX 3060. The Python step in Step 5 also uses ParaView&#x27;s Python modules, which come with zCFD.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/tutorial_7_rotor_in_hover.tgz">here</a>.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_7_rotor_in_hover.tgz
+tar xzf tutorial_7_rotor_in_hover.tgz
+cd tutorial_7_rotor_in_hover
+</code></pre><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody><tr><td><code>caradonna_tung.msh.h5</code></td><td>the mesh as Fluent wrote it</td></tr><tr><td><code>caradonna_tung.h5</code></td><td>the same mesh, converted for zCFD</td></tr><tr><td><code>caradonna_tung_zone.py</code></td><td>the zone helper written by the conversion</td></tr><tr><td><code>caradonna_tung.py</code></td><td>the control file</td></tr><tr><td><code>data/cp-0p50.txt</code> …</td><td>the measured surface pressure at r/R = 0.50, 0.68, 0.80, 0.89 and 0.96</td></tr></tbody></table></div><h3 id="converting-the-mesh">Converting the mesh</h3><p>zCFD reads its own mesh format. A mesh from another program is converted once, before the first run:</p><pre><code class="language-bash">convert_mesh caradonna_tung.msh.h5 caradonna_tung.h5
+</code></pre><p>The converter recognises the Fluent CFF format from the file name, and writes two files: the zCFD mesh,
+<code>caradonna_tung.h5</code>, and a zone helper, <code>caradonna_tung_zone.py</code>. The bundle already holds both, so this step can be
+skipped; running it replaces them with identical copies. <a href="guide/setting-up/preparing-a-mesh/index.html">Preparing a mesh</a>
+lists the converters for the other formats.</p><p>A mesh&#x27;s boundary faces are grouped into zones, each with a number. The zone helper maps the names the boundaries
+were given in the mesh generator to those numbers:</p><pre><code class="language-python">zone_name_to_id={
+    &quot;farfield&quot;: 48,
+    &quot;periodic2&quot;: 50,
+    &quot;core&quot;: 51,
+    &quot;lower_surface&quot;: 52,
+    &quot;upper_surface&quot;: 53,
+    &quot;tip&quot;: 54,
+    &quot;periodic1&quot;: 732,
+    &quot;interior--enclosure-enclosure&quot;: 1909,
+}
+</code></pre><p>Its <code>to_id</code> function turns a list of names into a list of numbers. The control file imports it, so every boundary
+condition below names its boundaries as the mesh generator did. See
+<a href="guide/setting-up/preparing-a-mesh/index.html#zone-identifiers">Zone identifiers</a>.</p><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>caradonna_tung.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and the
+mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the name
+of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference page,
+which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide screen the
+whole control file sits on the right, with the part being described highlighted as you scroll.</p><p>Two parts are new since <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>: the rotating frame, under the model&#x27;s <code>transforms</code>,
+and the pair of periodic boundaries among its boundary conditions. The file also starts with two Python import lines,
+which get their own heading.</p><pre><code class="language-python">import math
+
+from caradonna_tung_zone import to_id
+
+parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {
+            &quot;type&quot;: &quot;compressible&quot;,
+            &quot;partitioner&quot;: &quot;metis&quot;,
+        },
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;rans&quot;,
+            &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+            &quot;precondition&quot;: False,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 289.75,
+                &quot;pressure&quot;: 103037.0,
+                &quot;v&quot;: {&quot;vector&quot;: [0.0, 0.0, -1.0], &quot;mach&quot;: 0.877},
+                &quot;reynolds no&quot;: 3.93e6,
+                &quot;reference length&quot;: 1.0,
+                &quot;turbulence intensity&quot;: 0.01,
+                &quot;eddy viscosity ratio&quot;: 0.1,
+            },
+            &quot;IC_2&quot;: {
+                &quot;temperature&quot;: 289.75,
+                &quot;pressure&quot;: 103037.0,
+                &quot;v&quot;: {&quot;vector&quot;: [0.0, 0.0, -1.0], &quot;mach&quot;: 0.00001},
+                &quot;reynolds no&quot;: 3.93e6 * 0.00001 / 0.87,
+                &quot;reference length&quot;: 1.0,
+                &quot;turbulence intensity&quot;: 0.01,
+                &quot;eddy viscosity ratio&quot;: 0.1,
+            },
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_2&quot;, &quot;reference&quot;: &quot;IC_1&quot;},
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;second&quot;,
+            &quot;limiter&quot;: &quot;van albada&quot;,
+        },
+        &quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;},
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;lu-sgs&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 20.0,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.05, &quot;initial&quot;: 0.1}],
+            },
+            &quot;cycles&quot;: 1500,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 10,
+                &quot;forces&quot;: {
+                    &quot;FR_1&quot;: {
+                        &quot;name&quot;: &quot;blade&quot;,
+                        &quot;zones&quot;: to_id([&quot;lower_surface&quot;, &quot;upper_surface&quot;, &quot;tip&quot;]),
+                    },
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;format&quot;: &quot;vtk&quot;,
+                &quot;surface variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;mach&quot;, &quot;yplus&quot;],
+                &quot;volume variables&quot;: [&quot;V&quot;, &quot;p&quot;, &quot;T&quot;, &quot;rho&quot;, &quot;mach&quot;, &quot;cell_velocity&quot;],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;rotor&quot;: {
+            &quot;mesh&quot;: &quot;caradonna_tung.h5&quot;,
+            &quot;transforms&quot;: {
+                &quot;motion&quot;: {
+                    &quot;type&quot;: &quot;rotating&quot;,
+                    &quot;omega&quot;: 49.873,
+                    &quot;axis&quot;: [0.0, 0.0, 1.0],
+                    &quot;origin&quot;: [0.0, 0.0, 0.0],
+                    &quot;moving mesh&quot;: False,
+                }
+            },
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {
+                    &quot;zones&quot;: to_id([&quot;lower_surface&quot;, &quot;upper_surface&quot;, &quot;tip&quot;]),
+                    &quot;type&quot;: &quot;wall&quot;,
+                    &quot;kind&quot;: &quot;wall function&quot;,
+                },
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: to_id([&quot;farfield&quot;]),
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                    &quot;condition&quot;: &quot;IC_2&quot;,
+                },
+                &quot;BC_3&quot;: {&quot;zones&quot;: to_id([&quot;core&quot;]), &quot;type&quot;: &quot;symmetry&quot;},
+                &quot;BC_4&quot;: {
+                    &quot;zones&quot;: to_id([&quot;periodic2&quot;]),
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;periodic&quot;,
+                    &quot;connection&quot;: {&quot;boundary&quot;: &quot;BC_5&quot;},
+                    &quot;transform&quot;: {
+                        &quot;type&quot;: &quot;rotated&quot;,
+                        &quot;theta&quot;: math.radians(180.0),
+                        &quot;axis&quot;: [0.0, 0.0, 1.0],
+                        &quot;origin&quot;: [0.0, 0.0, 0.0],
+                    },
+                },
+                &quot;BC_5&quot;: {
+                    &quot;zones&quot;: to_id([&quot;periodic1&quot;]),
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;periodic&quot;,
+                    &quot;connection&quot;: {&quot;boundary&quot;: &quot;BC_4&quot;},
+                    &quot;transform&quot;: {
+                        &quot;type&quot;: &quot;rotated&quot;,
+                        &quot;theta&quot;: math.radians(-180.0),
+                        &quot;axis&quot;: [0.0, 0.0, 1.0],
+                        &quot;origin&quot;: [0.0, 0.0, 0.0],
+                    },
+                },
+            },
+        }
+    },
+}
+</code></pre><h3 id="from-caradonna_tung_zone-import-to_id"><code>from caradonna_tung_zone import to_id</code></h3><p>The control file is Python, so it can import helpers before it defines <code>parameters</code>.</p><ul>
+<li><code>import math</code> supplies <code>math.radians</code>, which turns the periodic angles below from degrees to radians.</li>
+<li><code>from caradonna_tung_zone import to_id</code> imports the zone helper written by the mesh conversion in
+<a href="tutorials/7-rotor-in-hover/index.html#converting-the-mesh">Step 1</a>. <code>to_id([&quot;farfield&quot;])</code> returns the zone numbers of the boundaries the mesh
+generator named <code>farfield</code>, so the boundary conditions name their boundaries rather than number them.</li>
+</ul><p>See <a href="guide/setting-up/preparing-a-mesh/index.html#zone-identifiers">Zone identifiers</a>.</p><h3 id="config-version"><code>config version</code></h3><p>Says which layout of control file this is, so zCFD knows how to read the rest.</p><ul>
+<li><code>config version</code>: <code>2</code>, the current layout, with <code>solver</code> and <code>model</code> at the top level.</li>
+</ul><h3 id="solver"><code>solver</code></h3><p>The settings shared by the whole simulation: which solver runs, what it solves, the fluid, the flow states, and how
+the run marches and what it writes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Chooses the solver and how the mesh is shared out.</p><ul>
+<li><code>type</code>: <code>&quot;compressible&quot;</code>: the solver that lets the air&#x27;s density change. The tip moves at Mach 0.877, fast enough
+to squeeze the air noticeably.</li>
+<li><code>partitioner</code>: <code>&quot;metis&quot;</code>: when the run is spread over more than one processor or GPU, the METIS tool decides which
+cells each one handles.</li>
+</ul><p>See <a href="reference/solver/solver-settings/index.html"><code>solver settings</code></a>.</p><h4 id="equations"><code>equations</code></h4><p>Sets the equations being solved.</p><ul>
+<li><code>type</code>: <code>&quot;rans&quot;</code>, the Reynolds-averaged Navier–Stokes equations. These solve for the average flow and represent
+the effect of turbulence, the small chaotic eddies, with a turbulence model rather than resolving every eddy.</li>
+<li><code>turbulence</code>: <code>{&quot;model&quot;: &quot;sst&quot;}</code>, Menter&#x27;s SST model, a widely used general-purpose turbulence model.</li>
+<li><code>precondition</code>: <code>False</code>: low-speed preconditioning, a technique that helps the compressible solver with slow flows,
+is off. The flow the blades see is fast, up to Mach 0.877 at the tip.</li>
+</ul><p>See <a href="reference/solver/equations/index.html"><code>equations</code></a> and
+<a href="guide/choosing/choosing-a-turbulence-model/index.html">Choosing a turbulence model</a>.</p><h4 id="fluid-properties"><code>fluid properties</code></h4><p>Describes the gas.</p><ul>
+<li><code>material</code>: <code>&quot;air&quot;</code>, as an ideal gas.</li>
+<li><code>gamma</code> and <code>gas constant</code>: <code>1.4</code> and <code>287.0</code> J/kg/K, the standard values for air.</li>
+<li><code>sutherlands const</code>: <code>110.4</code> K, for Sutherland&#x27;s law, which sets how the viscosity changes with temperature.</li>
+<li><code>prandtl no</code> and <code>turbulent prandtl no</code>: <code>0.72</code> and <code>0.9</code>, which relate how fast heat spreads to how fast momentum
+does, in smooth and turbulent flow.</li>
+</ul><p>See <a href="reference/solver/fluid-properties/index.html"><code>fluid properties</code></a>.</p><h4 id="reference-conditions"><code>reference conditions</code></h4><p>Defines named flow states, each a set of values such as temperature, pressure and velocity. Other parts of the
+file refer to them by name: to fill the domain at the start, to set conditions at boundaries, and to scale the
+equations.</p><h5 id="ic_1"><code>IC_1</code></h5><p>The conditions at the blade tip, used as the reference.</p><ul>
+<li><code>temperature</code> and <code>pressure</code>: <code>289.75</code> K and <code>103037.0</code> Pa, the test conditions.</li>
+<li><code>v</code>: <code>{&quot;vector&quot;: [0.0, 0.0, -1.0], &quot;mach&quot;: 0.877}</code>: the tip Mach number, 299 m/s.</li>
+<li><code>reynolds no</code>: <code>3.93e6</code>, the Reynolds number at the tip: the ratio of the air&#x27;s inertia to its viscosity, based on
+the blade&#x27;s width (its chord). The solver sets the viscosity to give this value.</li>
+<li><code>reference length</code>: <code>1.0</code> m, the blade chord.</li>
+<li><code>turbulence intensity</code> and <code>eddy viscosity ratio</code>: <code>0.01</code> and <code>0.1</code>, the turbulence in the incoming air: very
+little here.</li>
+</ul><h5 id="ic_2"><code>IC_2</code></h5><p>The still air the rotor turns in.</p><ul>
+<li><code>temperature</code> and <code>pressure</code>: as <code>IC_1</code>.</li>
+<li><code>v</code>: <code>{&quot;vector&quot;: [0.0, 0.0, -1.0], &quot;mach&quot;: 0.00001}</code>: a speed so small that the air is, in effect, still.</li>
+<li><code>reynolds no</code>: <code>3.93e6 * 0.00001 / 0.87</code>: <code>IC_1</code>&#x27;s Reynolds number scaled down with the speed, so that both
+states have very nearly the same viscosity.</li>
+<li><code>reference length</code>, <code>turbulence intensity</code> and <code>eddy viscosity ratio</code>: as <code>IC_1</code>.</li>
+</ul><p>See <a href="reference/solver/reference-conditions/index.html"><code>reference conditions</code></a>.</p><h4 id="initialisation"><code>initialisation</code></h4><p>Chooses which states start the run and scale it.</p><ul>
+<li><code>initial conditions</code>: <code>&quot;IC_2&quot;</code>: the air starts still.</li>
+<li><code>reference</code>: <code>&quot;IC_1&quot;</code>: internally the solver works with values divided by a reference velocity. Still air would
+give it almost none to divide by, so the tip conditions provide one that matches the flow the blades see.</li>
+</ul><p>See <a href="reference/solver/initialisation/index.html"><code>initialisation</code></a> and
+<a href="guide/choosing/choosing-initialisation-and-reference-state/index.html#reference-state">Reference state</a>.</p><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p>Sets how the equations are discretised in space: how the smooth flow is represented by one value in each cell of
+the mesh.</p><ul>
+<li><code>order</code>: <code>&quot;second&quot;</code>: the solver estimates how each variable, the turbulence variables included, varies across each
+cell, which is more accurate than treating it as constant.</li>
+<li><code>limiter</code>: <code>&quot;van albada&quot;</code>: near a sharp change such as the shock on the outer blade, that estimate can overshoot
+and produce unphysical wiggles; the limiter damps them.</li>
+</ul><p>See <a href="reference/solver/numerical-scheme/index.html"><code>numerical scheme</code></a> and
+<a href="guide/choosing/choosing-a-limiter/index.html">Choosing a limiter</a>.</p><h4 id="time-settings"><code>time settings</code></h4><p>Says what kind of run this is.</p><ul>
+<li><code>type</code>: <code>&quot;steady&quot;</code>: the run looks for a flow that does not change with time. In hover that is true for an
+observer turning with the blades, which <a href="tutorials/7-rotor-in-hover/index.html#transforms"><code>transforms</code></a> sets up.</li>
+</ul><p>See <a href="reference/solver/time-settings/index.html"><code>time settings</code></a>.</p><h4 id="convergence-control"><code>convergence control</code></h4><p>Sets how the solver reaches the steady solution. It starts from a guess and improves it once per cycle, or
+iteration, until the flow stops changing; the run has then converged.</p><h5 id="scheme"><code>scheme</code></h5><ul>
+<li><code>name</code>: <code>&quot;lu-sgs&quot;</code>: each cycle updates the solution with a cheap sweep through the mesh (lower–upper symmetric
+Gauss–Seidel). A cycle costs less than with the <code>&quot;implicit euler&quot;</code> scheme of
+<a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a>, but it needs a smaller CFL number, so more cycles.</li>
+</ul><h5 id="cfl"><code>cfl</code></h5><ul>
+<li><code>cfl</code>: <code>20.0</code>, the CFL number the run ramps up to. The CFL number sets how big a step each cycle takes towards the
+answer: too large and the run becomes unstable, too small and it needs many cycles.</li>
+<li><code>cfl ramp</code>: <code>[{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.05, &quot;initial&quot;: 0.1}]</code>: start at 0.1 and multiply by 1.05 each
+cycle, so the early cycles, far from the answer, take small steps.</li>
+</ul><h5 id="cycles"><code>cycles</code></h5><ul>
+<li><code>cycles</code>: <code>1500</code>: the run stops after 1500 cycles. <a href="tutorials/7-rotor-in-hover/index.html#step-4-monitor">Step 4</a> shows the thrust, the upward force
+on the rotor, has settled by then.</li>
+</ul><p>See <a href="reference/solver/convergence-control/index.html"><code>convergence control</code></a> and
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#cfl-control">CFL control</a>.</p><h4 id="output-settings"><code>output settings</code></h4><p>Sets what zCFD writes, and how often. See <a href="reference/solver/output-settings/index.html"><code>output settings</code></a>.</p><h5 id="report"><code>report</code></h5><p>The report is a table with one row per report cycle, written to <code>caradonna_tung_OUTPUT/rotor/rotor_report.csv</code> and
+plotted by zMon.</p><ul>
+<li>
+<p><code>frequency</code>: <code>10</code>: a row every 10 cycles, holding the residuals and the forces.</p>
+</li>
+<li>
+<p><code>forces</code>: one block, <code>FR_1</code>, which sums the forces on a set of zones:</p>
+<ul>
+<li><code>name</code>: <code>&quot;blade&quot;</code>, which prefixes its report columns: <code>blade_Fx</code>, <code>blade_Fy</code> and <code>blade_Fz</code> for the force,
+<code>blade_Mx</code> to <code>blade_Mz</code> for the moment, and their pressure (<code>Fp</code>, <code>Mp</code>) and friction (<code>Ff</code>, <code>Mf</code>) parts.</li>
+<li><code>zones</code>: the lower surface, upper surface and tip of the blade, by name through <code>to_id</code>.</li>
+</ul>
+<p>On a rotating model the block also reports the thrust (the force along the shaft), the torque (the turning
+resistance about it) and the power: <code>blade_rotor_Thrust</code>, <code>blade_rotor_Tq</code> and <code>blade_rotor_Tqp</code>, named after the
+block and the model.</p>
+</li>
+</ul><h5 id="solution"><code>solution</code></h5><p>The flow solution, written for visualisation and post-processing.</p><ul>
+<li><code>format</code>: <code>&quot;vtk&quot;</code>: VTK HDF files, <code>.vtkhdf</code>, which ParaView opens.</li>
+<li><code>surface variables</code>: velocity <code>V</code>, pressure <code>p</code>, temperature <code>T</code>, density <code>rho</code>, Mach number <code>mach</code> and <code>yplus</code>,
+which measures how close the first cell is to the wall. The pressure coefficient <code>cp</code> is left out. It compares the
+local pressure with the pressure of the oncoming flow, and in hover there is no oncoming flow, so
+<a href="tutorials/7-rotor-in-hover/index.html#python">Step 5</a> works out the experiment&#x27;s version from <code>p</code> instead.</li>
+<li><code>volume variables</code>: the same flow variables, and <code>cell_velocity</code>, the velocity of the turning frame at each cell.</li>
+</ul><p>No <code>frequency</code> is given, so the solution is written once, at the end of the run.
+<a href="guide/working-with/post-processing-and-visualisation/index.html#output-variables">Output variables</a> lists the others.</p><h3 id="model"><code>model</code></h3><p>One entry per mesh, each with its own placement, motion and boundary conditions. See <a href="reference/model/index.html"><code>model</code></a>.</p><h4 id="rotor"><code>rotor</code></h4><p>The name of the only model. It names the output folder, <code>caradonna_tung_OUTPUT/rotor/</code>, and the files in it, and
+appears in the thrust column.</p><h5 id="mesh"><code>mesh</code></h5><ul>
+<li><code>mesh</code>: <code>&quot;caradonna_tung.h5&quot;</code>, the mesh converted in <a href="tutorials/7-rotor-in-hover/index.html#converting-the-mesh">Step 1</a>. It holds one blade in a
+half-cylinder.</li>
+</ul><h5 id="transforms"><code>transforms</code></h5><p>Places and moves the mesh. Here it holds only a <code>motion</code>, which sets up a rotating frame.</p><p>In hover the air far from the rotor is still, and each blade always sees the same flow. To an observer standing
+still the flow keeps changing as the blades sweep past, but to an observer turning with the blades it does not change
+at all. Solving the flow as that turning observer sees it, in a rotating frame, turns the rotor into a steady problem,
+which is far cheaper than following the blades round in time.</p><ul>
+<li><code>motion</code>:<!-- -->
+<ul>
+<li><code>type</code>: <code>&quot;rotating&quot;</code>.</li>
+<li><code>omega</code>: <code>49.873</code> rad/s, the rotor speed: 476 revolutions a minute, which at a radius of 6 m gives the tip
+Mach number of <code>IC_1</code>.</li>
+<li><code>axis</code>: <code>[0.0, 0.0, 1.0]</code>, the rotor shaft, along z.</li>
+<li><code>origin</code>: <code>[0.0, 0.0, 0.0]</code>, a point on the shaft.</li>
+<li><code>moving mesh</code>: <code>False</code>: the mesh stays where it is. Instead, the solver adds to every cell the extra forces a
+turning observer feels, the centrifugal and Coriolis forces.</li>
+</ul>
+</li>
+</ul><p>The frame is valid while the flow is steady in it. A rotor in forward flight, or one interacting with a body that
+does not turn with it, sees a flow that changes as it goes round, and needs a moving mesh in a time-accurate run.
+See <a href="reference/model/transforms/index.html"><code>transforms</code></a> and
+<a href="guide/working-with/placing-and-moving-a-mesh/index.html">Placing and moving a mesh</a>.</p><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p>Assigns a condition to each zone of boundary faces. See
+<a href="reference/model/boundary-conditions/index.html"><code>boundary conditions</code></a> and
+<a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing boundary conditions</a>.</p><h6 id="bc_1"><code>BC_1</code></h6><p>The blade.</p><ul>
+<li><code>zones</code>: the lower surface, upper surface and tip.</li>
+<li><code>type</code> and <code>kind</code>: <code>&quot;wall&quot;</code>, <code>&quot;wall function&quot;</code>: the air sticks to the blade, and the thin layer next to the
+surface, where the speed drops to zero, is represented by a formula, a wall function, rather than resolved with
+very fine cells. See
+<a href="guide/choosing/choosing-a-wall-model/index.html">Choosing a wall model</a>.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><p>The outer boundary.</p><ul>
+<li><code>zones</code>: <code>farfield</code>.</li>
+<li><code>type</code> and <code>kind</code>: <code>&quot;farfield&quot;</code>, <code>&quot;riemann&quot;</code>: the outer edge of the domain, far from the rotor. Air can pass in
+and out, and pressure waves leave without bouncing back in.</li>
+<li><code>condition</code>: <code>&quot;IC_2&quot;</code>, the still air.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><p>The hub.</p><ul>
+<li><code>zones</code>: <code>core</code>.</li>
+<li><code>type</code>: <code>&quot;symmetry&quot;</code>: no flow passes through it.</li>
+</ul><h6 id="bc_4"><code>BC_4</code></h6><p>One flat face of the half-cylinder.</p><p>The two blades are identical and half a turn apart, so the flow round one blade is a copy of the flow round the
+other, turned through 180°. The mesh therefore holds only half the rotor, one blade in a half-cylinder, and two
+periodic boundaries join its two flat faces: flow leaving through one comes back in through the other, turned through
+180°. Modelling one blade halves the cost of the run.</p><ul>
+<li><code>zones</code>: <code>periodic2</code>.</li>
+<li><code>type</code> and <code>kind</code>: <code>&quot;interface&quot;</code>, <code>&quot;periodic&quot;</code>.</li>
+<li><code>connection</code>: <code>{&quot;boundary&quot;: &quot;BC_5&quot;}</code>, its partner.</li>
+<li><code>transform</code>: the rotation that maps this face onto its partner: <code>type</code> <code>&quot;rotated&quot;</code>, <code>theta</code> 180° in radians,
+about <code>axis</code> z through <code>origin</code>.</li>
+</ul><p>See <a href="guide/choosing/choosing-boundary-conditions/index.html#periodic">Periodic</a>.</p><h6 id="bc_5"><code>BC_5</code></h6><p>The other flat face.</p><ul>
+<li><code>zones</code>: <code>periodic1</code>.</li>
+<li><code>type</code> and <code>kind</code>: <code>&quot;interface&quot;</code>, <code>&quot;periodic&quot;</code>.</li>
+<li><code>connection</code>: <code>{&quot;boundary&quot;: &quot;BC_4&quot;}</code>.</li>
+<li><code>transform</code>: the same rotation the other way, <code>theta</code> −180°: each side carries the rotation that maps it onto its
+partner, so the two angles are opposite.</li>
+</ul><h2 id="step-3-run">Step 3. Run</h2><ol>
+<li>Activate your environment:</li>
+</ol><pre><code class="language-bash">source ./&lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><ol start="2">
+<li>Check the control file for errors:</li>
+</ol><pre><code class="language-bash">cd ~/tutorial_7_rotor_in_hover/
+validate_input caradonna_tung.py
+</code></pre><ol start="3">
+<li>Run zCFD in the case directory:</li>
+</ol><pre><code class="language-bash">run_zcfd -c caradonna_tung.py
+</code></pre><p>These are extracts from the log of a run of this tutorial, with <code>...</code> marking lines left out:</p><pre><code class="language-text">Parameters validated successfully
+...
+ Reading file caradonna_tung.h5
+ Global Mesh Stats: Cells: 447468 Faces: 2529579
+...
+ Setup periodic boundaries
+...
+ Dimensional Conditions
+ ----------------------
+  Pressure:     103037 Pa
+  Temperature:  289.75 K
+  Density:      1.23905 kg/m^3
+  Viscosity:    9.43434e-05 Ns/m^2 @ 289.75 K
+  Speed:        299.238 m/s
+...
+  Mach:         0.877
+  Reynolds No:  3.93e+06 @ 289.75 K
+...
+LU-SGS: rotating-frame Coriolis diagonal enabled (omega = 0.172947, cells = 447468)
+...
+Starting solve loop
+...
+Cycle     10 | Step    0 t=0s | CFL   0.155 | MG 1 |   375.3 ms | Total     3.779s
++------------------------------------------------------------------------------------------+
+| Report: Cycle 10  Wall time: 3.779s                                                      |
+...
+| Residuals:                                                                               |
+|   rho       1.1218E+02  rhoV[0]   2.6131E+01  rhoV[1]   9.9169E-01  rhoV[2]   2.1170E+01 |
+|   rhoE      4.1126E+02  rhok      5.6513E-01  rhoOmega  7.7031E+06                       |
++------------------------------------------------------------------------------------------+
+...
+ Solve Complete: 1500 cycles in 9m 24.5s (avg 376.4 ms/cycle)
+...
+zCFD finished: all requested cycles are complete (1500 in total).
+</code></pre><ul>
+<li>The mesh is read and its periodic faces paired.</li>
+<li>The dimensional conditions are those of the reference state, the blade tip: 299 m/s, Mach 0.877.</li>
+<li>The LU-SGS line confirms the rotating frame is active; its <code>omega</code> is the control file&#x27;s 49.873 rad/s in the solver&#x27;s
+non-dimensional units.</li>
+<li>The CFL number is still ramping up at cycle 10, from 0.1 towards 20.</li>
+<li>The run takes about nine and a half minutes on an NVIDIA RTX 3060.</li>
+</ul><h3 id="output-files">Output files</h3><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody><tr><td><code>caradonna_tung.log</code></td><td>the solver log</td></tr><tr><td><code>caradonna_tung_status.yaml</code></td><td>the run status</td></tr><tr><td><code>caradonna_tung_OUTPUT/rotor/rotor_report.csv</code></td><td>residuals and forces every 10 cycles</td></tr><tr><td><code>caradonna_tung_OUTPUT/rotor/rotor.vtkhdf</code></td><td>the volume solution</td></tr><tr><td><code>caradonna_tung_OUTPUT/rotor/rotor_wall.vtkhdf</code></td><td>the blade surface solution</td></tr></tbody></table></div><h2 id="step-4-monitor">Step 4. Monitor</h2><p>Open the run in zMon to watch the residuals and forces, while it runs or after it has finished:</p><pre><code class="language-bash">zmon caradonna_tung.py
+</code></pre><p><a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a> describes each panel. The plots below are the residual
+and thrust panels as zMon draws them.</p><h3 id="residuals">Residuals</h3><figure class="figure"><img src="images/tutorial-7-plot-residuals.png" alt="Residuals of the rotor run against cycle" loading="lazy"/><figcaption>Residuals of the rotor run against cycle</figcaption></figure><p>A residual measures how far the current solution is from satisfying one of the equations; as the run converges,
+the residuals fall. The mean-flow residuals fall by between three and five and a half orders of magnitude (factors of
+a thousand to a few hundred thousand) over the 1500 cycles, and the turbulence residual <code>rhok</code> by about four and a
+half. The <code>rhoOmega</code> residual jumps about throughout and is no guide to convergence here; the thrust is.</p><h3 id="thrust">Thrust</h3><p>The force block is named <code>blade</code> and the model <code>rotor</code>, so the thrust is in the column <code>blade_rotor_Thrust</code>.</p><figure class="figure"><img src="images/tutorial-7-plot-thrust.png" alt="Thrust on the blade against cycle" loading="lazy"/><figcaption>Thrust on the blade against cycle</figcaption></figure><p>The thrust overshoots as the flow starts up, then settles. It is within 1% of its final value by cycle 1300, and
+changes by less than 1% over the last 200 cycles.</p><h2 id="step-5-post-process">Step 5. Post-process</h2><h3 id="python">Python</h3><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><p>The pressure coefficient, Cp, compares the pressure at a point on the blade with a reference pressure, divided by the
+dynamic pressure, ½ × density × speed², which measures how hard the air is pushing. The experiment refers each
+station at radius r to the speed of the blade section there, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">\Omega r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord">Ω</span><span class="mord mathnormal" style="margin-right:0.0278em">r</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi></mrow><annotation encoding="application/x-tex">\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord">Ω</span></span></span></span> is the rotor speed. This script cuts the
+blade surface at r/R = 0.80, works out Cp round the section that way, and plots it against the measured values. It
+uses ParaView&#x27;s Python modules to make the cut. Save it as <code>plot_blade_cp.py</code> beside the control file:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+import paraview.simple as pvs
+
+from zutil.post import clean_vtk
+from zutil.post.post import slice_metric
+
+# Values from the control file
+tip_radius = 6.0  # m
+omega = 49.873  # rad/s
+p_ref = 103037.0  # Pa
+rho_ref = p_ref / (287.0 * 289.75)  # kg/m^3, the still air
+
+# The experiment refers Cp to the blade section&#x27;s own dynamic pressure
+radius = 0.80 * tip_radius
+q_local = 0.5 * rho_ref * (omega * radius) ** 2
+
+# Cut the blade surface at r/R = 0.80 and read the pressure round the section
+wall = clean_vtk(pvs.VTKHDFReader(FileName=&quot;caradonna_tung_OUTPUT/rotor/rotor_wall.vtkhdf&quot;))
+profile = slice_metric(wall, [0.0, 1.0, 0.0], [0.0, radius, 0.0], &quot;p&quot;)
+
+# The measured file stores -Cp against x/c
+measured = np.loadtxt(&quot;data/cp-0p80.txt&quot;, skiprows=1)
+
+fig, ax = plt.subplots(figsize=(8, 4.5))
+for block in profile.values():
+    cp = (np.asarray(block[&quot;p&quot;]) - p_ref) / q_local
+    ax.plot(block[&quot;chord&quot;], cp, &quot;.&quot;, label=&quot;zCFD&quot;)
+ax.plot(measured[:, 0], -measured[:, 1], &quot;o&quot;, mfc=&quot;none&quot;, label=&quot;Experiment&quot;)
+ax.invert_yaxis()
+ax.set_xlabel(&quot;x/c&quot;)
+ax.set_ylabel(&quot;Cp&quot;)
+ax.legend()
+fig.savefig(&quot;blade_cp.png&quot;, dpi=200, bbox_inches=&quot;tight&quot;)
+</code></pre><p>and run it:</p><pre><code class="language-bash">python plot_blade_cp.py
+</code></pre><p>It writes <code>blade_cp.png</code>:</p><figure class="figure"><img src="images/tutorial-7-plot-cp-0p80.png" alt="Pressure coefficient at r/R = 0.80 from zCFD against the experiment" loading="lazy"/><figcaption>Pressure coefficient at r/R = 0.80 from zCFD against the experiment</figcaption></figure><p>Cp is plotted with negative values upwards, as is usual for aerofoils, so the low-pressure upper surface is the top
+curve. zCFD follows the experiment closely on the lower surface and in the suction peak near the leading edge.</p><p>Adding up the pressure all round each section gives the normal-force coefficient, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">C_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>: the force pushing the section
+up, relative to its dynamic pressure. The table compares <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">C_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> from zCFD with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">C_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span> worked out the same way from the
+measured pressures:</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>r/R</th><th>zCFD</th><th>Experiment</th></tr></thead><tbody><tr><td>0.50</td><td>0.21</td><td>0.20</td></tr><tr><td>0.68</td><td>0.27</td><td>0.28</td></tr><tr><td>0.80</td><td>0.33</td><td>0.30</td></tr><tr><td>0.89</td><td>0.31</td><td>0.32</td></tr><tr><td>0.96</td><td>0.23</td><td>0.28</td></tr></tbody></table></div><p>The loading is predicted to within 0.03 at the inner stations. The station nearest the tip, r/R = 0.96, is furthest
+from the experiment. Each blade trails a swirling tip vortex, and the vortex of the blade ahead passes close to this
+station. This mesh captures that vortex for only about a quarter turn behind the blade before its cells grow too
+coarse, so the tutorial makes no claim for the wake.</p><h3 id="paraview">ParaView</h3><aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The .vtkhdf output format requires <a href="https://www.paraview.org/download/">ParaView 6.1.1</a> or later.</p></div></aside></div>
+<p>Open <code>caradonna_tung_OUTPUT/rotor/rotor_wall.vtkhdf</code> in ParaView to see the blade. To colour it by the
+pressure coefficient of the experiment, apply a <strong>Calculator</strong> with the expression</p>
+<pre><code>(p-103037)/(0.5*1.2390*49.873^2*(coordsX^2+coordsY^2))
+</code></pre>
+<p>where 1.2390 kg/m³ is the density of the still air. To see both blades, apply a <strong>Transform</strong> that rotates the
+surface by 180° about z, and show it alongside the original. The volume solution,
+<code>caradonna_tung_OUTPUT/rotor/rotor.vtkhdf</code>, holds the velocity, from which a slice through the rotor axis shows the
+air driven down through the disc.</p>
+<figure class="figure"><img src="images/tutorial-7-rotor-in-hover.png" alt="The Caradonna–Tung rotor in hover, coloured by local-section Cp, with the air driven down below it" loading="lazy"/><figcaption>The Caradonna–Tung rotor in hover, coloured by local-section Cp, with the air driven down below it</figcaption></figure>
+<p>:::</p>
+<h2 id="citations">Citations</h2>
+<section data-footnotes="true" class="footnotes"><h2 class="sr-only" id="footnotes">Footnotes</h2>
+<ol>
+<li id="user-content-fn-1">
+<p>Caradonna, F. X. and Tung, C., <em>Experimental and Analytical Studies of a Model Helicopter Rotor in Hover</em>,
+NASA TM-81232, 1981. <a href="tutorials/7-rotor-in-hover/index.html#user-content-fnref-1" data-footnote-backref="" aria-label="Back to reference 1" class="data-footnote-backref">↩</a></p>
+</li>
+</ol>
+</section></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/7-rotor-in-hover/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/7-rotor-in-hover/index.html#what-you-need">What you need?</a><a href="tutorials/7-rotor-in-hover/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/7-rotor-in-hover/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/7-rotor-in-hover/index.html#step-3-run">Step 3. Run</a><a href="tutorials/7-rotor-in-hover/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/7-rotor-in-hover/index.html#step-5-post-process">Step 5. Post-process</a><a href="tutorials/7-rotor-in-hover/index.html#citations">Citations</a></nav><div class="rail"></div></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

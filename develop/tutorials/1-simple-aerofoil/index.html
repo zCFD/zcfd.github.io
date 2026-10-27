@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="../../">
+    <title>1 · Simple aerofoil · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="tutorials/1-simple-aerofoil.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/1-simple-aerofoil-CXEgS29V.js">
+    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><span role="img" aria-label="zCFD"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg"> <path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"/> <polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"/> <path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"/> </svg></span></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html" class="on">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD develop">develop</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Tutorials"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Tutorials</div><nav class="tree-body"><div class="tsec">Tutorials</div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/index.html" class="tlink"><span class="tlab dim">Tutorials</span></a></div><div class="trow sel"><span class="tind conn mid"></span><a href="tutorials/1-simple-aerofoil/index.html" class="tlink" aria-current="page"><span class="tlab dim">1 · Simple aerofoil</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/2-steady-state-rans/index.html" class="tlink"><span class="tlab dim">2 · Steady-state RANS</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/3-time-accurate-solution/index.html" class="tlink"><span class="tlab dim">3 · Time-accurate solution</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/4-aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">4 · Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/5-overset-meshes/index.html" class="tlink"><span class="tlab dim">5 · Overset meshes</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/6-incompressible-flow/index.html" class="tlink"><span class="tlab dim">6 · Incompressible flow</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="tutorials/7-rotor-in-hover/index.html" class="tlink"><span class="tlab dim">7 · Rotor in hover</span></a></div><div class="trow"><span class="tind conn"></span><a href="tutorials/8-polars-and-trimming/index.html" class="tlink"><span class="tlab dim">8 · Polars and trimming to a target</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section="tutorials"><div class="crumb"><span>Tutorials</span><span> / <b>1 · Simple aerofoil</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="simple-aerofoil">Simple aerofoil</h1>
+<h2 id="what-is-in-this-tutorial">What is in this tutorial?</h2>
+<p>This tutorial runs your first zCFD simulation: air flowing past an aerofoil, the cross-section of a wing. The
+aerofoil is the NACA 0012, a symmetrical shape that has been measured in wind tunnels and simulated so often that it
+is the standard first test for a flow solver, so there are good results to compare with.</p>
+<p>You download a ready-made mesh and control file. The mesh divides the space around the aerofoil into small cells, and
+zCFD works out the flow in every cell; the control file tells zCFD what to simulate. You then run zCFD, watch the
+run settle to an answer, and look at the results in Python and ParaView. The run takes under two minutes on an
+NVIDIA RTX 3060.</p>
+<h2 id="what-you-need">What you need?</h2>
+<p>To run the tutorial you will need an installation of zCFD and a valid licence (the free licence is sufficient for
+this tutorial). For instructions on installing zCFD please see <a href="guide/setting-up/installation-and-licensing/index.html">installation and licensing</a>.</p>
+<p>The tutorial assumes that you are running all commands using a bash shell on Linux.</p>
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/tutorial_1_aerofoil.tgz">here</a>. It
+contains a mesh file (<code>naca0012.h5</code>) and a zCFD control file (<code>naca0012.py</code>).</p><p>This tutorial assumes you unpack the bundle in your home directory, which creates a directory called <code>tutorial_1_aerofoil</code>.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_1_aerofoil.tgz
+tar xzf tutorial_1_aerofoil.tgz
+cd tutorial_1_aerofoil
+</code></pre><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>naca0012.py</code>, is a short Python script. All it does is build one Python dictionary, called
+<code>parameters</code>, that tells zCFD everything about the run: the physics, the numerical method, what to write out, and
+the mesh with its boundaries. This step walks through that dictionary from top to bottom. Each heading below is the
+name of a key, written exactly as it appears in the file, and the headings nest the same way the dictionary does:
+<code>numerical scheme</code>, for example, sits inside <code>solver</code>. Under each heading you&#x27;ll find what that part controls, what
+each setting means, and why it has the value it has here. Each section ends with a link to that part&#x27;s reference
+page, which lists every setting it accepts and its default; you don&#x27;t need it to follow the tutorial. On a wide
+screen the whole control file sits on the right, with the part being described highlighted as you scroll.</p><pre><code class="language-python">parameters = {
+    &quot;config version&quot;: 2,
+    &quot;solver&quot;: {
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
+        &quot;equations&quot;: {
+            &quot;type&quot;: &quot;rans&quot;,
+            &quot;turbulence&quot;: {&quot;model&quot;: &quot;sst&quot;},
+            &quot;precondition&quot;: True,
+        },
+        &quot;fluid properties&quot;: {
+            &quot;material&quot;: &quot;air&quot;,
+            &quot;gamma&quot;: 1.4,
+            &quot;gas constant&quot;: 287.0,
+            &quot;sutherlands const&quot;: 110.4,
+            &quot;prandtl no&quot;: 0.72,
+            &quot;turbulent prandtl no&quot;: 0.9,
+        },
+        &quot;reference conditions&quot;: {
+            &quot;IC_1&quot;: {
+                &quot;temperature&quot;: 300,
+                &quot;pressure&quot;: 101325.0,
+                &quot;v&quot;: {&quot;vector&quot;: [1.0, 0.0, 0.0], &quot;mach&quot;: 0.15},
+                &quot;viscosity&quot;: 1.02145e-05,
+                &quot;turbulence intensity&quot;: 5.2e-2,
+                &quot;eddy viscosity ratio&quot;: 1.0,
+            },
+        },
+        &quot;initialisation&quot;: {&quot;initial conditions&quot;: &quot;IC_1&quot;, &quot;restart&quot;: False},
+        &quot;numerical scheme&quot;: {
+            &quot;order&quot;: &quot;euler_second&quot;,
+            &quot;inviscid flux scheme&quot;: &quot;roe&quot;,
+        },
+        &quot;time settings&quot;: {&quot;type&quot;: &quot;steady&quot;},
+        &quot;convergence control&quot;: {
+            &quot;scheme&quot;: {&quot;name&quot;: &quot;implicit euler&quot;},
+            &quot;cfl&quot;: {
+                &quot;cfl&quot;: 50,
+                &quot;cfl ramp&quot;: [{&quot;type&quot;: &quot;exponential&quot;, &quot;factor&quot;: 1.1, &quot;initial&quot;: 1.0}],
+            },
+            &quot;cycles&quot;: 1500,
+        },
+        &quot;output settings&quot;: {
+            &quot;report&quot;: {
+                &quot;frequency&quot;: 10,
+                &quot;forces&quot;: {
+                    &quot;FR_1&quot;: {&quot;name&quot;: &quot;wall&quot;, &quot;zones&quot;: [4]},
+                },
+            },
+            &quot;solution&quot;: {
+                &quot;surface variables&quot;: [
+                    &quot;V&quot;,
+                    &quot;p&quot;,
+                    &quot;mach&quot;,
+                    &quot;cp&quot;,
+                    &quot;cf&quot;,
+                    &quot;pressureforce&quot;,
+                    &quot;frictionforce&quot;,
+                ],
+                &quot;volume variables&quot;: [
+                    &quot;V&quot;,
+                    &quot;p&quot;,
+                    &quot;T&quot;,
+                    &quot;rho&quot;,
+                    &quot;mach&quot;,
+                    &quot;cp&quot;,
+                    &quot;eddy&quot;,
+                ],
+            },
+        },
+    },
+    &quot;model&quot;: {
+        &quot;naca0012&quot;: {
+            &quot;mesh&quot;: &quot;naca0012.h5&quot;,
+            &quot;boundary conditions&quot;: {
+                &quot;BC_1&quot;: {
+                    &quot;zones&quot;: [1],
+                    &quot;type&quot;: &quot;farfield&quot;,
+                    &quot;condition&quot;: &quot;IC_1&quot;,
+                    &quot;kind&quot;: &quot;riemann&quot;,
+                },
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [4],
+                    &quot;type&quot;: &quot;wall&quot;,
+                    &quot;kind&quot;: &quot;no slip&quot;,
+                },
+                &quot;BC_3&quot;: {
+                    &quot;zones&quot;: [2, 3],
+                    &quot;type&quot;: &quot;symmetry&quot;,
+                },
+            },
+        },
+    },
+}
+</code></pre><p><code>config version</code> comes first: it is always <code>2</code>, and tells zCFD which form of control file to expect.</p><h3 id="solver"><code>solver</code></h3><p><code>solver</code> holds every setting shared by the whole simulation: the physics, the numerics, how the run marches to
+convergence, and what it writes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p><code>solver settings</code> chooses which solver runs the simulation.</p><ul>
+<li><code>type</code>: <code>&quot;compressible&quot;</code> selects the density-based solver, which suits air at any speed. The alternative,
+<code>&quot;incompressible&quot;</code>, suits liquids and very slow flows.</li>
+</ul><p>See <a href="reference/solver/solver-settings/index.html"><code>solver settings</code></a>.</p><h4 id="equations"><code>equations</code></h4><p><code>equations</code> sets which equations are solved, and so what physics the simulation includes.</p><ul>
+<li><code>type</code>: <code>&quot;rans&quot;</code> solves the Reynolds-averaged Navier–Stokes (RANS) equations. The Navier–Stokes equations
+describe how a viscous fluid moves. Most real flows near a surface are turbulent: full of small, fast, chaotic
+eddies, far too fine to capture on a mesh like this one. RANS solves for the average flow instead, and adds a
+turbulence model to represent the effect of the eddies on it.
+How turbulent a flow is depends on its Reynolds number, which compares the fluid&#x27;s momentum with its viscosity.
+Here it is 6 million, and at that value the thin layer of air next to the aerofoil, the boundary layer, is
+turbulent, so RANS is the natural choice.</li>
+<li><code>turbulence</code>: picks the turbulence model. <code>&quot;model&quot;: &quot;sst&quot;</code> is Menter&#x27;s SST model, a robust general-purpose
+choice for flow that stays attached to an aerofoil.</li>
+<li><code>precondition</code>: <code>True</code> switches on low-Mach-number preconditioning. The Mach number is the flow speed divided by
+the speed of sound; here it is 0.15. At such low Mach numbers sound waves travel far faster than the flow, which
+makes the equations zCFD solves slow to converge and less accurate. Preconditioning rescales them to remove the
+problem, and is recommended below about Mach 0.3.</li>
+</ul><p>See <a href="reference/solver/equations/index.html"><code>equations</code></a> and
+<a href="guide/choosing/choosing-a-turbulence-model/index.html">Choosing a turbulence model</a>.</p><h4 id="fluid-properties"><code>fluid properties</code></h4><p><code>fluid properties</code> describes the fluid: here, air treated as an ideal gas.</p><ul>
+<li><code>material</code>: <code>&quot;air&quot;</code> names the fluid.</li>
+<li><code>gamma</code>: 1.4, the ratio of specific heats of air.</li>
+<li><code>gas constant</code>: 287.0 J/kg/K, the specific gas constant of air.</li>
+<li><code>sutherlands const</code>: 110.4 K, the constant in Sutherland&#x27;s law, which sets how the viscosity varies with
+temperature.</li>
+<li><code>prandtl no</code>: 0.72, the laminar Prandtl number, which relates heat conduction to viscosity.</li>
+<li><code>turbulent prandtl no</code>: 0.9, the same ratio for the turbulent transport the SST model adds.</li>
+</ul><p>These are the standard values for air. See <a href="reference/solver/fluid-properties/index.html"><code>fluid properties</code></a>.</p><h4 id="reference-conditions"><code>reference conditions</code></h4><p><code>reference conditions</code> defines named flow states. Boundary conditions, the initial flow and the force
+coefficients all refer to these states by name.</p><h5 id="ic_1"><code>IC_1</code></h5><p><code>IC_1</code> is the freestream: the undisturbed flow far from the aerofoil.</p><ul>
+<li><code>temperature</code>: 300 K.</li>
+<li><code>pressure</code>: 101325 Pa, standard atmospheric pressure.</li>
+<li><code>v</code>: the freestream velocity. <code>vector</code> gives its direction, along the mesh&#x27;s x axis, and <code>mach</code> its size,
+Mach 0.15: about 52 m/s at this temperature.</li>
+<li><code>viscosity</code>: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.02145</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup><mtext> </mtext><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">g</mi><mtext> </mtext><msup><mi mathvariant="normal">m</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext> </mtext><msup><mi mathvariant="normal">s</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">1.02145 \times 10^{-5}\ \mathrm{kg\ m^{-1}\ s^{-1}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em"></span><span class="mord">1.02145</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">5</span></span></span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord"><span class="mord mathrm" style="margin-right:0.0139em">kg</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathrm mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathrm mtight">1</span></span></span></span></span></span></span></span></span></span></span></span></span>. With the aerofoil&#x27;s 1 m chord, this
+gives a Reynolds number of 6 million, matching the experiments this case is usually compared with.</li>
+<li><code>turbulence intensity</code>: 0.052, the size of the velocity fluctuations in the incoming flow as a fraction of its
+speed.</li>
+<li><code>eddy viscosity ratio</code>: 1.0, the turbulent viscosity of the incoming flow relative to its laminar viscosity.</li>
+</ul><p>The last two set the turbulence entering the domain; these values suit a flow with little freestream turbulence.
+See <a href="reference/solver/reference-conditions/index.html"><code>reference conditions</code></a> and
+<a href="guide/choosing/choosing-initialisation-and-reference-state/index.html">Choosing initialisation and reference state</a>.</p><h4 id="initialisation"><code>initialisation</code></h4><p><code>initialisation</code> sets the flow the run starts from.</p><ul>
+<li><code>initial conditions</code>: <code>&quot;IC_1&quot;</code> fills the whole domain with the freestream at the first cycle. The same state is
+also the reference for the reported force coefficients.</li>
+<li><code>restart</code>: <code>False</code> starts from that initial flow. <code>True</code> would continue from the solution an earlier run saved,
+as <a href="tutorials/2-steady-state-rans/index.html">Steady-state RANS</a> shows.</li>
+</ul><p>See <a href="reference/solver/initialisation/index.html"><code>initialisation</code></a>.</p><h4 id="numerical-scheme"><code>numerical scheme</code></h4><p><code>numerical scheme</code> sets how the equations are discretised in space: how the flow in each cell is turned into the
+flux between neighbouring cells.</p><ul>
+<li><code>order</code>: <code>&quot;euler_second&quot;</code> treats the flow variables to second order and the turbulence variables to first order.
+First order assumes the flow is constant inside each cell; second order lets it vary linearly across the cell,
+which is more accurate on the same mesh. A limiter, van Albada by default, stops the second-order values
+overshooting near sharp changes.</li>
+<li><code>inviscid flux scheme</code>: <code>&quot;roe&quot;</code> uses Roe&#x27;s scheme, a standard method for working out how much mass, momentum and
+energy flows between neighbouring cells.</li>
+</ul><p>See <a href="reference/solver/numerical-scheme/index.html"><code>numerical scheme</code></a> and
+<a href="guide/choosing/choosing-a-spatial-scheme/index.html">Choosing a spatial scheme</a>.</p><h4 id="time-settings"><code>time settings</code></h4><p><code>time settings</code> says what kind of run this is in physical time.</p><ul>
+<li><code>type</code>: <code>&quot;steady&quot;</code> asks for a steady solution: one that does not change with time. Real flows are rarely truly
+steady, but an attached flow round a streamlined aerofoil is close enough, and a steady run is far cheaper than a
+time-accurate one.</li>
+</ul><p>See <a href="reference/solver/time-settings/index.html"><code>time settings</code></a> and
+<a href="guide/choosing/choosing-a-time-marching-scheme/index.html#time-settings-and-convergence-control">Choosing a time-marching scheme</a>.</p><h4 id="convergence-control"><code>convergence control</code></h4><p><code>convergence control</code> sets how the solver reaches that steady solution. It starts from the initial flow and
+improves it a little on each pass, called a cycle. When further cycles stop changing the results you care about,
+the run has converged.</p><h5 id="scheme"><code>scheme</code></h5><ul>
+<li><code>name</code>: <code>&quot;implicit euler&quot;</code> takes each step by solving a linear system, which allows large steps and so few
+cycles.</li>
+</ul><h5 id="cfl"><code>cfl</code></h5><p>The CFL number sets how big a step each cycle takes, relative to the size of each cell and the speed of the flow
+through it. Too large and the run becomes unstable and fails; too small and it needs many more cycles.</p><ul>
+<li><code>cfl</code>: 50, the CFL number the run works at.</li>
+<li><code>cfl ramp</code>: how the CFL number climbs to 50. The single ramp here is <code>&quot;exponential&quot;</code>: it starts at the <code>initial</code>
+value of 1 and multiplies the CFL number by the <code>factor</code> 1.1 each cycle, reaching 50 after about 40 cycles. The
+first cycles, far from the answer, therefore take small steps.</li>
+</ul><p>See <a href="guide/choosing/choosing-a-time-marching-scheme/index.html#cfl-control">CFL control</a>.</p><h5 id="cycles"><code>cycles</code></h5><ul>
+<li><code>cycles</code>: 1500, the number of cycles the run takes before it stops. This case has settled well before then.</li>
+</ul><p>See <a href="reference/solver/convergence-control/index.html"><code>convergence control</code></a>.</p><h4 id="output-settings"><code>output settings</code></h4><p><code>output settings</code> sets what zCFD writes during and after the run. It has two parts: the report, a small table
+written as the run goes, and the solution, the full flow field written to files for viewing.</p><h5 id="report"><code>report</code></h5><p><code>report</code> writes one row of residuals and forces to <code>naca0012_report.csv</code> at a set interval, and prints the same
+values in the log. A residual measures how far the current solution is from satisfying one of the equations; the
+residuals fall as the run converges. zMon plots this file.</p><ul>
+<li>
+<p><code>frequency</code>: 10, so a row every 10 cycles.</p>
+</li>
+<li>
+<p><code>forces</code>: the force blocks. Each one sums the forces on a set of boundary zones and adds them to the report.
+The single block here, <code>FR_1</code>:</p>
+<ul>
+<li><code>name</code>: <code>&quot;wall&quot;</code>, which prefixes the columns it adds: <code>wall_Fx</code>, <code>wall_Fy</code> and <code>wall_Fz</code> for the total force,
+<code>wall_Fpx</code>… for its pressure part and <code>wall_Ffx</code>… for its friction part, and <code>wall_Mx</code>… for the moments about
+the origin.</li>
+<li><code>zones</code>: <code>[4]</code>, the aerofoil surface.</li>
+</ul>
+<p>Forces are reported as coefficients, divided by the dynamic pressure of <code>IC_1</code> and a reference area that
+defaults to 1. With the mesh&#x27;s 1 m chord and unit span, <code>wall_Fx</code> is the drag coefficient here.</p>
+</li>
+</ul><p>See <a href="reference/solver/output-settings/index.html#report"><code>report</code></a>.</p><h5 id="solution"><code>solution</code></h5><p><code>solution</code> lists the variables written to the flow-field files, for viewing in ParaView.</p><ul>
+<li><code>surface variables</code>: written on the boundaries, one file per boundary type: <code>naca0012_wall.vtkhdf</code>,
+<code>naca0012_farfield.vtkhdf</code> and <code>naca0012_symmetry.vtkhdf</code>. Here the velocity <code>V</code>, pressure <code>p</code>, Mach number,
+pressure and skin-friction coefficients <code>cp</code> and <code>cf</code>, and the pressure and friction forces on each face.</li>
+<li><code>volume variables</code>: written in every cell, to <code>naca0012.vtkhdf</code>. Here the velocity, pressure, temperature <code>T</code>,
+density <code>rho</code>, Mach number, <code>cp</code>, and the eddy viscosity <code>eddy</code>.</li>
+</ul><p>The control file sets no <code>frequency</code> for the solution, so the files are written once, at the end of the run, along
+with the checkpoint <code>naca0012_results.h5</code> used for restarts. The report frequency and the solution frequency are
+separate: the report is cheap and written often, the flow-field files are large and usually written rarely.
+See <a href="reference/solver/output-settings/index.html#solution"><code>solution</code></a> and
+<a href="guide/working-with/post-processing-and-visualisation/index.html#output-variables">Output variables</a>.</p><h3 id="model"><code>model</code></h3><p><code>model</code> holds one entry per mesh. Each entry is a model: a mesh with its own boundary conditions.</p><h4 id="naca0012"><code>naca0012</code></h4><p>The key, <code>naca0012</code>, names the model. It also names the model&#x27;s output folder and files:
+<code>naca0012_OUTPUT/naca0012/</code>, with <code>naca0012_report.csv</code>, <code>naca0012.vtkhdf</code> and the rest inside. The folder
+above, <code>naca0012_OUTPUT</code>, takes its name from the control file.</p><h5 id="mesh"><code>mesh</code></h5><ul>
+<li><code>mesh</code>: <code>&quot;naca0012.h5&quot;</code>, the mesh file, in zCFD&#x27;s own HDF5 format, read from the directory zCFD runs in. Meshes
+from other tools are converted to this format first; see <a href="guide/setting-up/preparing-a-mesh/index.html">Preparing a mesh</a>.</li>
+</ul><h5 id="boundary-conditions"><code>boundary conditions</code></h5><p><code>boundary conditions</code> assigns a condition to each group of boundary faces. The groups are the mesh&#x27;s zones,
+numbered when the mesh was made; each condition lists its zones by number in <code>zones</code>. A mesh converted with zCFD&#x27;s
+tools comes with a zone helper file that maps the zone names from the meshing tool to these numbers; see
+<a href="guide/setting-up/preparing-a-mesh/index.html#zone-identifiers">Zone identifiers</a>. This mesh has four zones: the outer
+boundary, the two side faces, and the aerofoil.</p><p>The keys <code>BC_1</code>, <code>BC_2</code> and <code>BC_3</code> are names; any name will do.</p><h6 id="bc_1"><code>BC_1</code></h6><p>The outer boundary of the domain.</p><ul>
+<li><code>zones</code>: <code>[1]</code>.</li>
+<li><code>type</code>: <code>&quot;farfield&quot;</code>, a boundary far enough from the aerofoil to see the undisturbed flow.</li>
+<li><code>condition</code>: <code>&quot;IC_1&quot;</code>, the flow state it imposes.</li>
+<li><code>kind</code>: <code>&quot;riemann&quot;</code> lets flow pass both in and out without reflecting waves back into the domain.</li>
+</ul><h6 id="bc_2"><code>BC_2</code></h6><p>The aerofoil surface.</p><ul>
+<li><code>zones</code>: <code>[4]</code>.</li>
+<li><code>type</code>: <code>&quot;wall&quot;</code>.</li>
+<li><code>kind</code>: <code>&quot;no slip&quot;</code>: the flow velocity is zero at the surface, as for any viscous flow. Note the space in the
+name.</li>
+</ul><h6 id="bc_3"><code>BC_3</code></h6><p>The two side faces of the mesh, normal to y.</p><ul>
+<li><code>zones</code>: <code>[2, 3]</code>.</li>
+<li><code>type</code>: <code>&quot;symmetry&quot;</code>: no flow passes through these faces, and the flow on each side mirrors the other. This makes
+the aerofoil behave as if it had an infinite span, so the mesh needs only one cell across it.</li>
+</ul><p>See <a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing boundary conditions</a>.</p><h2 id="step-3-run">Step 3. Run</h2><ol>
+<li>Activate your zCFD environment, which puts zCFD&#x27;s commands, and the Python it uses, on your path:</li>
+</ol><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><ol start="2">
+<li>Check the control file for errors with <code>validate_input</code>:</li>
+</ol><pre><code class="language-bash">cd ~/tutorial_1_aerofoil/
+validate_input naca0012.py
+</code></pre><ol start="3">
+<li>Run zCFD in the case directory:</li>
+</ol><pre><code class="language-bash">run_zcfd -c naca0012.py
+</code></pre><p>zCFD will attempt to detect the number of CPU cores and any GPUs present and make use of them. If you want to
+manually configure this see <a href="reference/command-line/invocation-and-flags/index.html">invocation and flags</a>.</p><p>zCFD writes its progress to the screen and to the log file <code>naca0012.log</code>. These are extracts from a run of this
+tutorial, with <code>...</code> marking lines left out:</p><pre><code class="language-text">Parameters validated successfully
+...
+ Reading file naca0012.h5
+ Global Mesh Stats: Cells: 57344 Faces: 229856
+...
+ Dimensional Conditions
+ ----------------------
+  Pressure:     101325 Pa
+  Temperature:  300 K
+  Density:      1.17683 kg/m^3
+  Viscosity:    1.02145e-05 Ns/m^2 @ 300 K
+  Speed:        52.0783 m/s
+...
+  Mach:         0.15
+  Reynolds No:  6.00003e+06 @ 300 K
+...
+Starting solve loop
+...
+Cycle     10 | Step    0 t=0s | CFL   2.358 | MG 1 |    17.8 ms | Total     0.271s
++------------------------------------------------------------------------------------------+
+| Report: Cycle 10  Wall time: 0.271s                                                      |
+...
+| Residuals:                                                                               |
+|   rho       1.4099E+01  rhoV[0]   1.5372E+02  rhoV[1]   1.0380E-10  rhoV[2]   6.7992E+01 |
+|   rhoE      4.3532E+01  rhok      1.2966E-05  rhoOmega  2.7047E+08                       |
++------------------------------------------------------------------------------------------+
+...
+ Solve Complete: 1500 cycles in 41.162s (avg 27.4 ms/cycle)
+...
+zCFD finished: all requested cycles are complete (1500 in total).
+</code></pre><ul>
+<li>First the control file is checked, and the mesh read: 57,344 cells.</li>
+<li>The reference conditions are printed in dimensional form. Check them against what you meant to set up; here
+the speed is 52 m/s and the Reynolds number 6 million.</li>
+<li>Each cycle then prints one line: the cycle number, the current CFL number (still ramping up at cycle 10), and the
+time the cycle took. Every 10 cycles, the report frequency, a box gives the residual of each equation.</li>
+<li>Between the cycle lines, the linear solver prints a short summary of each implicit solve.</li>
+<li>The run ends with a timing summary and a line saying why it stopped.</li>
+</ul><p>To stop a run early, see <a href="guide/working-with/monitoring-a-run/index.html#stopping-a-run">Stopping a run</a>.</p><p>The run takes under two minutes on an NVIDIA RTX 3060, and longer on a CPU.</p><h3 id="output-files">Output files</h3><p>A successful zCFD run creates the following files and directories. They are named after the control file,
+<code>naca0012.py</code>, and each model&#x27;s output is named after its key under <code>model</code>, which in this deck is also
+<code>naca0012</code>.</p><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File/Directory</th><th>Description</th></tr></thead><tbody><tr><td><code>naca0012.log</code></td><td>A copy of the output to screen during the run.</td></tr><tr><td><code>naca0012_status.yaml</code></td><td>A YAML file recording how the run was started: the zCFD version, the date, the control file, the mesh and its checksum, and the nodes and devices used.</td></tr><tr><td><code>naca0012_OUTPUT/naca0012/naca0012_report.csv</code></td><td>A .csv format table which shows the variation of flow statistics with cycle number.</td></tr><tr><td><code>naca0012_OUTPUT/naca0012/naca0012_results.h5</code></td><td>The checkpoint: the flow solution in zCFD format, used to restart the run.</td></tr><tr><td><code>naca0012_OUTPUT/naca0012/naca0012.vtkhdf</code></td><td>A VTK HDF file containing the volume data from the simulation, for visualisation.</td></tr><tr><td><code>naca0012_OUTPUT/naca0012/naca0012_wall.vtkhdf</code> etc</td><td>One VTK HDF file for each boundary condition type, containing the surface data for that boundary condition.</td></tr><tr><td><code>naca0012_OUTPUT/LOGGING/</code></td><td>A separate log for each MPI rank, used for debugging.</td></tr></tbody></table></div><p>The status file is described in <a href="guide/setting-up/running-zcfd/index.html#the-status-file">The status file</a>.</p><h2 id="step-4-monitor">Step 4. Monitor</h2><p>zMon shows the residuals and forces of a run as it goes, and of a finished run. Open it on the control file:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+cd ~/tutorial_1_aerofoil/
+zmon naca0012.py
+</code></pre><p>A browser opens on the zMon dashboard; <a href="guide/working-with/monitoring-a-run/index.html">Monitoring a run</a> describes each
+panel. The plots below are the residual and force panels as zMon draws them; <a href="tutorials/1-simple-aerofoil/index.html#step-5-post-process">Step 5</a> shows how to
+plot the same data yourself.</p><h3 id="residuals">Residuals</h3><p>The residual of each equation measures how far the current solution is from satisfying it: the lower the
+residual, the more converged the solution. There is one for each equation: density <code>rho</code>, momentum in each
+direction, energy <code>rhoE</code>, and the two turbulence variables <code>rhok</code> and <code>rhoOmega</code>. The report, the log and the
+script write the momentum residuals <code>rhoV[0]</code>, <code>rhoV[1]</code> and <code>rhoV[2]</code>, for x, y and z; zMon names them <code>rhoU</code>,
+<code>rhoV</code> and <code>rhoW</code>.</p><figure class="figure"><img src="images/tutorial-1-plot-1.png" alt="Residuals of the NACA0012 run against cycle" loading="lazy"/><figcaption>Residuals of the NACA0012 run against cycle</figcaption></figure><p>The residuals fall fastest in the first few hundred cycles, as the flow develops from the uniform initial state.
+The density residual falls about four orders of magnitude before levelling off. <code>rhoV[1]</code>, the momentum across the
+span, stays near round-off throughout, because the flow has no velocity across the span. The turbulence residuals behave differently: <code>rhok</code>
+rises as the boundary layer forms, and <code>rhoOmega</code> falls from a large initial value. By 1200 cycles every residual is
+flat, which, with the forces below, shows the solution has converged.</p><h3 id="forces">Forces</h3><p>The force panels show the x and z forces on the wall. The aerofoil is symmetrical and meets the flow at zero angle
+of attack, so the x force is the drag and the z force the lift. The lift should be zero and the drag positive.</p><figure class="figure"><img src="images/tutorial-1-plot-2.png" alt="Force on the aerofoil in x and z against cycle" loading="lazy"/><figcaption>Force on the aerofoil in x and z against cycle</figcaption></figure><p>The drag falls quickly from its initial value and settles after a few damped oscillations; the lift oscillates
+about zero at around <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup></mrow><annotation encoding="application/x-tex">10^{-5}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span> before dying away. Both traces are flat from 1200 cycles onwards. The drag
+coefficient settles at 0.0082, against 0.00828 from NASA&#x27;s CFL3D code on a finer grid of the same family
+(897 × 257 points).</p><h2 id="step-5-post-process">Step 5. Post-process</h2><p>First activate your zCFD environment, which provides Python with zutil, h5py and ParaView:</p><pre><code class="language-bash">source &lt;ZCFD_INSTALL_PATH&gt;/bin/activate
+</code></pre><h3 id="python">Python</h3><p>This script draws the residual and force plots shown in <a href="tutorials/1-simple-aerofoil/index.html#step-4-monitor">Step 4</a>. <code>get_zcfd_result</code> finds the
+run&#x27;s output from the control file, and <code>report.data</code> is the report as a table, one column per quantity. Save the
+script as <code>plot_convergence.py</code> in the case directory:</p><pre><code class="language-python">import matplotlib.pyplot as plt
+
+from zutil.fileutils import get_zcfd_result
+
+report = get_zcfd_result(&quot;naca0012.py&quot;).report.data
+
+fig, ax = plt.subplots()
+for column in [&quot;rho&quot;, &quot;rhoV[0]&quot;, &quot;rhoV[1]&quot;, &quot;rhoV[2]&quot;, &quot;rhoE&quot;, &quot;rhok&quot;, &quot;rhoOmega&quot;]:
+    ax.semilogy(report[&quot;Cycle&quot;], report[column], label=column)
+ax.set_xlabel(&quot;Cycle&quot;)
+ax.set_ylabel(&quot;Residual&quot;)
+ax.legend()
+fig.savefig(&quot;residuals.png&quot;, dpi=200)
+
+fig, (drag, lift) = plt.subplots(1, 2, figsize=(10, 4))
+drag.plot(report[&quot;Cycle&quot;], report[&quot;wall_Fx&quot;])
+drag.set_title(&quot;Drag coefficient (wall_Fx)&quot;)
+lift.plot(report[&quot;Cycle&quot;], report[&quot;wall_Fz&quot;])
+lift.set_title(&quot;Lift coefficient (wall_Fz)&quot;)
+for ax in (drag, lift):
+    ax.set_xlabel(&quot;Cycle&quot;)
+fig.savefig(&quot;forces.png&quot;, dpi=200)
+</code></pre><p>Run it:</p><pre><code class="language-bash">python plot_convergence.py
+</code></pre><p>It writes <code>residuals.png</code> and <code>forces.png</code>.
+<a href="guide/working-with/post-processing-and-visualisation/index.html#batch-post-processing-with-python-scripts">Batch post-processing with Python scripts</a>
+lists what <code>get_zcfd_result</code> provides.</p><h3 id="paraview">ParaView</h3><p>ParaView is a free, general-purpose tool for viewing simulation results, and the recommended way to look at zCFD&#x27;s
+flow fields. See <a href="https://www.paraview.org">ParaView.org</a> to download and install it.</p><aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The .vtkhdf output format requires <a href="https://www.paraview.org/download/">ParaView 6.1.1</a> or later.</p></div></aside></div>
+<h4 id="loading-your-data">Loading your data</h4>
+<p>The run wrote the flow in every cell to a single file, <code>naca0012_OUTPUT/naca0012/naca0012.vtkhdf</code>.</p>
+<p>After opening ParaView, click the &quot;Open&quot; icon shown below or go into File&gt;Open or press Ctrl+O. Locate
+the directory in which you have stored your data and open <code>naca0012.vtkhdf</code>.</p>
+<figure class="figure"><img src="images/tutorial-1-figure-1.png" alt="The Open icon on ParaView&#x27;s main toolbar" loading="lazy"/><figcaption>The Open icon on ParaView&#x27;s main toolbar</figcaption></figure>
+<p>Once the file is open, the Pipeline Browser on the left lists it, and the Properties panel below lists the variables
+the file holds under Array Selection:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-2.png" alt="The Pipeline Browser and the Properties panel after opening the file, before Apply" loading="lazy"/><figcaption>The Pipeline Browser and the Properties panel after opening the file, before Apply</figcaption></figure>
+<p>Click Apply to read them in, which leads to the following layout:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-3.png" alt="ParaView after loading naca0012.vtkhdf" loading="lazy"/><figcaption>ParaView after loading naca0012.vtkhdf</figcaption></figure>
+<p>To look at the aerofoil side-on, set the view direction to +Y with this button:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-17.png" alt="The +Y view direction button" loading="lazy"/><figcaption>The +Y view direction button</figcaption></figure>
+<h4 id="visualising-variables">Visualising variables</h4>
+<p>ParaView colours the mesh by one of the output variables. You can choose which in two places, and both do the same
+thing: the drop-down on the toolbar,</p>
+<figure class="figure"><img src="images/tutorial-1-figure-4.png" alt="The colouring drop-down on the toolbar" loading="lazy"/><figcaption>The colouring drop-down on the toolbar</figcaption></figure>
+<p>or the Coloring section of the Properties panel:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-4b.png" alt="The Coloring drop-down in the Properties panel" loading="lazy"/><figcaption>The Coloring drop-down in the Properties panel</figcaption></figure>
+<p>The Properties panel holds every setting for whichever object is selected in the Pipeline Browser, so as you get
+used to ParaView you will find yourself working there more and more.</p>
+<p>Select &quot;cp&quot; to colour the mesh by the pressure coefficient. It compares the local pressure with the freestream
+pressure, scaled by the dynamic pressure of the oncoming flow: it is negative where the flow speeds up and the
+pressure drops, as it does over the front of the aerofoil, and reaches 1 where the flow comes to rest at the nose.</p>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>The pressure coefficient is given by the following formula
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>p</mi></msub><mo>=</mo><mfrac><mrow><mi>p</mi><mo>−</mo><msub><mi>p</mi><mi mathvariant="normal">∞</mi></msub></mrow><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>ρ</mi><mi mathvariant="normal">∞</mi></msub><msubsup><mi>V</mi><mi mathvariant="normal">∞</mi><mn>2</mn></msubsup></mrow></mfrac></mrow><annotation encoding="application/x-tex">C_p = \frac{p-p_{\infty }}{\frac{1}{2}\rho _{\infty }V_{\infty }^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em"></span></span><span class="base"><span class="strut" style="height:1.4963em;vertical-align:-0.6418em"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8544em"><span style="top:-2.599em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em"><span style="top:-2.656em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.2255em"><span class="pstrut" style="height:3em"></span><span class="frac-line mtight" style="border-bottom-width:0.049em"></span></span><span style="top:-3.384em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span><span class="mord mtight"><span class="mord mathnormal mtight">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em"><span></span></span></span></span></span></span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.2222em">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7463em"><span style="top:-2.214em;margin-left:-0.2222em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span><span style="top:-2.786em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286em"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em"><span class="pstrut" style="height:3em"></span><span class="frac-line" style="border-bottom-width:0.04em"></span></span><span style="top:-3.4461em"><span class="pstrut" style="height:3em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em"><span class="pstrut" style="height:2.5em"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6418em"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p></div></aside>
+<p>The aerofoil is small compared with the mesh, so zoom in on the centre to see it:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-5.png" alt="Pressure coefficient around the aerofoil, in ParaView&#x27;s default colour map" loading="lazy"/><figcaption>Pressure coefficient around the aerofoil, in ParaView&#x27;s default colour map</figcaption></figure>
+<p>To change the colour map, open the Color Map Editor, again from either place: the Edit Color Map icon on the
+toolbar, the colour bar marked &quot;e&quot;,</p>
+<figure class="figure"><img src="images/tutorial-1-figure-6a.png" alt="The Edit Color Map icon on the toolbar" loading="lazy"/><figcaption>The Edit Color Map icon on the toolbar</figcaption></figure>
+<p>or Edit in the Coloring section of the Properties panel:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-6b.png" alt="Edit in the Coloring section of the Properties panel" loading="lazy"/><figcaption>Edit in the Coloring section of the Properties panel</figcaption></figure>
+<p>In the Color Map Editor, click Choose Preset:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-6.png" alt="Choose Preset in the Color Map Editor" loading="lazy"/><figcaption>Choose Preset in the Color Map Editor</figcaption></figure>
+<p>Here are the same results shown with two other presets, Viridis and Cool to Warm (Extended):</p>
+<figure class="figure"><img src="images/tutorial-1-figure-7.png" alt="The same view in Viridis" loading="lazy"/><figcaption>The same view in Viridis</figcaption></figure>
+<figure class="figure"><img src="images/tutorial-1-figure-8.png" alt="The same view in Cool to Warm (Extended)" loading="lazy"/><figcaption>The same view in Cool to Warm (Extended)</figcaption></figure>
+<p>A picture shows where the pressure is high or low. To compare with experiments you usually want numbers: most
+often, the pressure coefficient along the chord, the straight line from the front of the aerofoil to its back.</p>
+<h4 id="pressure-coefficient-plot">Pressure coefficient plot</h4>
+<p>Open <code>naca0012_wall.vtkhdf</code>. It holds only the boundaries with a <code>wall</code> condition, which here is the aerofoil
+surface.</p>
+<figure class="figure"><img src="images/tutorial-1-figure-9.png" alt="Wall.vtkhdf" loading="lazy"/><figcaption>Wall.vtkhdf</figcaption></figure>
+<p>The upper and lower surfaces are usually plotted as separate lines, so first separate them with a &quot;Clip&quot; filter.Right-click on the <code>naca0012_wall.vtkhdf</code> object in the
+Pipeline Browser, select Add Filter -&gt; Alphabetical -&gt; Clip. The properties of the &quot;Clip&quot; filter are displayed on
+the left. Firstly, untick the &quot;Invert&quot; option and then you should set them to the following combination:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-10.png" alt="Clip parameters" loading="lazy"/><figcaption>Clip parameters</figcaption></figure>
+<p>This removes the lower surface, leaving the upper one:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-11.png" alt="Aerofoil upper surface" loading="lazy"/><figcaption>Aerofoil upper surface</figcaption></figure>
+<aside class="admon admon-note"><div class="admon-h"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 8h.01M11 12h1v4h1"></path></svg>Note</div><div class="admon-b"><p>To remove the upper surface instead, tick the &quot;Invert&quot; option in the &quot;Clip&quot; filter&#x27;s properties.</p></div></aside>
+<p>Next, take a &quot;Slice&quot; of the remaining surface. To do so, follow the same procedure as for the &quot;Clip&quot;
+filter but select the &quot;Slice&quot; filter instead. When prompted, set the properties of the filter to be as follows:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-12.png" alt="Slice parameters" loading="lazy"/><figcaption>Slice parameters</figcaption></figure>
+<p>You should end up with this:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-13.png" alt="Upper aerofoil slice" loading="lazy"/><figcaption>Upper aerofoil slice</figcaption></figure>
+<p>zCFD writes one value per cell face (&quot;cell data&quot;). Line plots need values at points, so convert them with the
+&quot;CellDatatoPointData&quot; filter: right-click on the &quot;Slice&quot; object and choose it under &quot;Add Filter&quot;.</p>
+<p>Once this is done, a plot can be produced in ParaView using the &quot;PlotOnSortedLines&quot; filter. Right-click on the
+&quot;CellDatatoPointData1&quot; object created previously and add the &quot;PlotOnSortedLines&quot; filter. A plot should appear on
+the right. You can select the variables to plot in the &quot;Properties -&gt; Series Parameters&quot; window, as well as
+changing the settings of the axis.
+Select the &quot;cp&quot; variable in &quot;Series Parameters&#x27;, and use <code>Points_X</code> as the &#x27;X Array Name&#x27;. Untick &#x27;Show Legend&#x27;,
+set &#x27;Left Axis Title&#x27; to &#x27;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">C_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span></span></span></span>&#x27; and set the &#x27;Bottom Axis Title&#x27; to &#x27;x&#x27;. You can also use the &quot;Left Axis Use
+Custom Range&quot; option to change the y-axis range:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-14.png" alt="Left axis parameters" loading="lazy"/><figcaption>Left axis parameters</figcaption></figure>
+<p>Setting the maximum as a negative number inverts the y-axis and the negative numbers will be
+shown &quot;at the top&quot;.</p>
+<figure class="figure"><img src="images/tutorial-1-figure-15.png" alt="Cp vs Chord" loading="lazy"/><figcaption>Cp vs Chord</figcaption></figure>
+<p>The data can be exported as a .csv file, which can then be manipulated in Python, Excel, MATLAB or any other
+software. To do so, go to File -&gt; Save data -&gt; <em>select a folder and give a name to the file</em>. The following
+window should appear:</p>
+<figure class="figure"><img src="images/tutorial-1-figure-16.png" alt="CSV Writer tool" loading="lazy"/><figcaption>CSV Writer tool</figcaption></figure>
+<p>By default, ParaView writes all the variables into the .csv file. However, if only a few of them are of interest,
+you can use the &quot;Choose Arrays To Write&quot; option.</p>
+<p>Repeat these steps for the lower surface, with &quot;Invert&quot; ticked in the clip, to plot both surfaces for comparison
+with experiment.</p>
+<p>:::</p></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="tutorials/1-simple-aerofoil/index.html#what-is-in-this-tutorial">What is in this tutorial?</a><a href="tutorials/1-simple-aerofoil/index.html#what-you-need">What you need?</a><a href="tutorials/1-simple-aerofoil/index.html#step-1-download-the-files">Step 1. Download the files</a><a href="tutorials/1-simple-aerofoil/index.html#step-2-walk-through-the-input">Step 2. Walk through the input</a><a href="tutorials/1-simple-aerofoil/index.html#step-3-run">Step 3. Run</a><a href="tutorials/1-simple-aerofoil/index.html#step-4-monitor">Step 4. Monitor</a><a href="tutorials/1-simple-aerofoil/index.html#step-5-post-process">Step 5. Post-process</a></nav><div class="rail"></div></div></div><!--/$--></main></div></div></div>
+  </body>
+</html>

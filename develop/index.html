@@ -1,207 +1,44 @@
-<!DOCTYPE html>
-
-<html lang="en" data-content_root="./">
+<!doctype html>
+<html lang="en-GB">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Welcome to the zCFD User Guide &#8212; zCFD User Guide v2026.08.14860-141-g81a4e documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d9aafeaa" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=f70a89e2" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=659bf730" />
-    <script src="_static/documentation_options.js?v=79987908"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <link rel="icon" href="_static/fav.png"/>
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Overview" href="overview.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-
-  
-  
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="welcome-to-the-zcfd-user-guide">
-<h1>Welcome to the zCFD User Guide<a class="headerlink" href="#welcome-to-the-zcfd-user-guide" title="Link to this heading">¶</a></h1>
-<section id="version-version">
-<h2>Version: v2026.08.14860-141-g81a4e<a class="headerlink" href="#version-version" title="Link to this heading">¶</a></h2>
-<div class="toctree-wrapper compound">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="./">
+    <title>zCFD documentation · zCFD documentation</title>
+    <link rel="alternate" type="text/markdown" href="index.md">
+    <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
+    <link rel="modulepreload" href="./assets/pages-bgTlFhTH.js">
+    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
+  </head>
+  <body>
+    <div id="root"><div class="zdocs"><header class="topbar"><button type="button" class="iconbtn round hamburger" aria-label="Show or hide navigation"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a href="index.html" class="brand" aria-label="zCFD documentation, home"><span role="img" aria-label="zCFD"><svg viewBox="0 0 226.33 58" xmlns="http://www.w3.org/2000/svg"> <path fill="currentColor" d="M30,6.66l22.34,22.34-22.34,22.34L7.66,29,30,6.66M30,.67L1.67,29l28.33,28.33,28.33-28.33L30,.67h0Z"/> <polygon fill="currentColor" points="28.98 43.33 27.47 41.83 27.27 22.2 18.5 30.95 16.02 28.48 29.95 14.49 31.32 15.86 31.41 35.65 41.25 25.76 43.87 28.37 28.98 43.33"/> <path fill="currentColor" d="M93.48,18.14h-14.14c-2.27,0-3.81.38-4.64,1.15-.83.77-1.24,2.25-1.24,4.46v12.5c0,2.21.41,3.69,1.24,4.46.83.77,2.37,1.15,4.64,1.15h14.14c2.26,0,3.81-.38,4.64-1.15.83-.77,1.24-2.25,1.24-4.46v-2.8l-5.51-1.15v5.1h-14.88v-15.03h14.88v4.51l5.51-.87v-2.25c0-2.21-.41-3.69-1.24-4.46-.83-.77-2.37-1.15-4.64-1.15ZM110.74,41.86h5.51v-9.01h9.96v-4.32h-9.96v-6.25h18.46v-4.14h-23.97v23.71ZM166.84,21.22c-2.33-2.05-5.68-3.08-10.06-3.08h-15.24v23.71h13.82c3.76,0,6.6-.4,8.49-1.19,2.08-.89,3.7-2.34,4.87-4.37,1.07-1.93,1.61-4.07,1.61-6.43,0-3.71-1.16-6.59-3.49-8.64ZM162.02,35.79c-1.59,1.07-4.21,1.61-7.85,1.61h-7.12v-15.03h9.78c5.2,0,7.81,2.47,7.81,7.4,0,2.85-.87,4.86-2.62,6.02Z"/> </svg></span></a><nav class="topnav" aria-label="Sections"><a href="guide/concepts/what-zcfd-is/index.html" class="on">Guide</a><a href="reference/input-deck/index.html">Reference</a><a href="tutorials/index.html">Tutorials</a><a href="release-notes/unreleased/index.html">Release notes</a><a href="zCFDnumerics.pdf">Numerics</a><a href="zCFDvalidation.pdf">Validation</a></nav><span class="top-spacer"></span><span class="ver-pill" title="Documentation for zCFD develop">develop</span><div class="searchwrap"><div class="searchbox"><input type="search" placeholder="Search the docs" aria-label="Search the docs" value=""/><button type="button" aria-label="Search"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M21 21l-4.3-4.3"></path></svg></button></div></div><div class="seg theme-toggle" role="group" aria-label="Theme"><button type="button" data-v="light" aria-pressed="false" aria-label="Light"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></button><button type="button" data-v="system" aria-pressed="true" aria-label="Follow the system"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18z"></path><path d="M12 3a9 9 0 0 1 0 18"></path></svg></button><button type="button" data-v="dark" aria-pressed="false" aria-label="Dark"><svg class="ico " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div></header><div class="shell"><aside class="vc-tree" aria-label="Guide"><div class="vc-tree-head"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path></svg>Guide</div><nav class="tree-body"><div class="tsec">Concepts</div><div class="trow"><span class="tind conn mid"></span><a href="guide/concepts/what-zcfd-is/index.html" class="tlink"><span class="tlab dim">What is zCFD?</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/concepts/how-the-deck-works/index.html" class="tlink"><span class="tlab dim">How the deck works</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/concepts/converting-an-older-control-file/index.html" class="tlink"><span class="tlab dim">Converting an older control file</span></a></div><div class="tsec">Setting up…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/installation-and-licensing/index.html" class="tlink"><span class="tlab dim">Installation and licensing</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/preparing-a-mesh/index.html" class="tlink"><span class="tlab dim">Preparing a mesh</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/setting-up/running-zcfd/index.html" class="tlink"><span class="tlab dim">Running zCFD</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/setting-up/python-functions-in-the-deck/index.html" class="tlink"><span class="tlab dim">Python functions in the deck</span></a></div><div class="tsec">Choosing…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-an-equation-set/index.html" class="tlink"><span class="tlab dim">Choosing an equation set</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-turbulence-model/index.html" class="tlink"><span class="tlab dim">Choosing a turbulence model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-wall-model/index.html" class="tlink"><span class="tlab dim">Choosing a wall model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-time-marching-scheme/index.html" class="tlink"><span class="tlab dim">Choosing a time-marching scheme</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-spatial-scheme/index.html" class="tlink"><span class="tlab dim">Choosing a spatial scheme</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-limiter/index.html" class="tlink"><span class="tlab dim">Choosing a limiter</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-linear-solver/index.html" class="tlink"><span class="tlab dim">Choosing a linear solver</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-a-fluid-zone-model/index.html" class="tlink"><span class="tlab dim">Choosing a fluid-zone model</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/choosing/choosing-boundary-conditions/index.html" class="tlink"><span class="tlab dim">Choosing boundary conditions</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/choosing/choosing-initialisation-and-reference-state/index.html" class="tlink"><span class="tlab dim">Choosing initialisation and reference state</span></a></div><div class="tsec">Working with…</div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/aeroacoustics-fwh/index.html" class="tlink"><span class="tlab dim">Aeroacoustics (FWH)</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/fluid-structure-interaction/index.html" class="tlink"><span class="tlab dim">Fluid–structure interaction</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/monitoring-a-run/index.html" class="tlink"><span class="tlab dim">Monitoring a run</span></a></div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/overset-meshes/index.html" class="tlink"><span class="tlab dim">Overset meshes</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/working-with/post-processing-and-visualisation/index.html" class="tlink"><span class="tlab dim">Post-processing and visualisation</span></a></div><div class="tsec">Troubleshooting</div><div class="trow"><span class="tind conn"></span><a href="guide/troubleshooting/troubleshooting/index.html" class="tlink"><span class="tlab dim">Troubleshooting</span></a></div><div class="tsec">Working with</div><div class="trow"><span class="tind conn mid"></span><a href="guide/working-with/trimming-to-a-target/index.html" class="tlink"><span class="tlab dim">Trimming to a target</span></a></div><div class="trow"><span class="tind conn"></span><a href="guide/working-with/placing-and-moving-a-mesh/index.html" class="tlink"><span class="tlab dim">Placing and moving a mesh</span></a></div></nav></aside><main class="zmain" id="main"><!--$--><div class="pagehost guide" data-section=""><div class="crumb"><span>Guide</span><span> / <b>zCFD documentation</b></span></div><div class="guidewrap"><article class="guidedoc"><h1 id="welcome-to-the-zcfd-documentation">Welcome to the zCFD documentation!</h1>
+<p>zCFD is a GPU-accelerated finite-volume CFD solver. These pages cover installing it, setting up and running a case, and every setting the input deck accepts.</p>
+<h2 id="new-to-zcfd">New to zCFD</h2>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#system-requirements">System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#linux-unix">Linux / Unix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#windows">Windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#licence">Licence</a></li>
+<li><a href="guide/concepts/what-zcfd-is/index.html">What is zCFD?</a>: what the solver does and how it is put together.</li>
+<li><a href="guide/setting-up/installation-and-licensing/index.html">Installation and licensing</a>: installing zCFD and obtaining a licence.</li>
+<li><a href="tutorials/index.html">Tutorials</a>: five worked cases, from a simple aerofoil to overset meshes.</li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="running/intro.html">Running zCFD</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="running/execution.html">Running zCFD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running/parallel.html">Parallel Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running/jupyter.html">Using Jupyter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running/env.html">zCFD Environment Variables</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quick_start_1.html">Tutorial 1: Simple Aerofoil</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quick_start_2.html">Tutorial 2: Steady State RANS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quick_start_3.html">Tutorial 3: Time accurate solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/fwh_tutorial.html">Tutorial 4: FWH Solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/overset_tutorial.html">Tutorial 5: Overset Meshes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/reference.html">Reference Settings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/boundary.html">Boundary Conditions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/time.html">Time Marching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/linear_solver.html">Linear Solver Settings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/equations.html">Equations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/fsi.html">Fluid-structure interaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/materials.html">Material Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/initial.html">Initial Conditions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/reference_conditions.html">Reference Conditions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/fluid_zone.html">Fluid Zones</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/transforms.html">Mesh Transformation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/overset.html">Overset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/write_output.html">Write Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/report.html">Reporting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_guide/variables.html">Output variables</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#scale-mesh-function">Scale Mesh Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#transform-mesh-function">Transform Mesh Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#ramp-cfl-function">Ramp CFL Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#transform-function">Transform Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#initialisation-function">Initialisation Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#driven-initial-condition">Driven initial condition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#static-pressure-ratio">Static Pressure Ratio</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#total-pressure-ratio">Total Pressure Ratio</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#total-temperature-ratio">Total Temperature Ratio</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions.html#direction-vector">Direction Vector</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="meshutil.html#openfoam-x-x-x">OpenFOAM-x.x.x</a></li>
-<li class="toctree-l2"><a class="reference internal" href="meshutil.html#openfoam-mesh-converter">OpenFOAM Mesh Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="meshutil.html#zcfd-mesh-converter-utility">zCFD Mesh Converter Utility</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="fwh.html">FWH solver</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="fwh.html#what-is-an-fwh-solver-for">What is an FWH solver for?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fwh.html#how-does-an-fwh-solver-work">How does an FWH solver work?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fwh.html#running-the-zcfd-fwh-solver">Running the zCFD FWH solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fwh.html#fwh-file-utilities">FWH file utilities</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="zm3.html">zM3</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="zm3.html#execution">Execution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="zm3.html#options">Options</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#vtk-hdf-output">VTK HDF Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#ensight-output">EnSight Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#paraview-catalyst-scripts">ParaView Catalyst Scripts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#paraview-client">ParaView Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#paraview-client-server">ParaView Client-Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#paraview-post-processing-best-practices-for-parallel-zcfd-data">ParaView Post-Processing Best Practices for Parallel zCFD Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualisation.html#jupyter-notebooks">Jupyter Notebooks</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utilities.html#actuator-disc-modelling">Actuator disc modelling</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#crashing">Crashing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#convergence-stall">Convergence stall</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
-</ul>
-</div>
-</section>
-</section>
-
-
-          </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="#">
-              <img class="logo" src="_static/ZCFD_Mark_CMYK.png" alt="Logo of zCFD User Guide"/>
-            </a></p><h3>Navigation</h3>
+<h2 id="guide">Guide</h2>
+<p>How zCFD works and how to use it.</p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running/intro.html">Running zCFD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/intro.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference_guide/intro.html">Reference Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions.html">zCFD Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="meshutil.html">Mesh Conversion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fwh.html">FWH solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="zm3.html">zM3</a></li>
-<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pdf.html">PDF copy</a></li>
+<li><a href="guide/concepts/how-the-deck-works/index.html">Concepts</a>: the solver and its input deck.</li>
+<li><a href="guide/setting-up/preparing-a-mesh/index.html">Setting up…</a>: meshes, Python functions in the deck, and running a case.</li>
+<li><a href="guide/choosing/choosing-boundary-conditions/index.html">Choosing…</a>: boundary conditions, turbulence models, time-marching schemes and the other choices a case needs.</li>
+<li><a href="guide/working-with/monitoring-a-run/index.html">Working with…</a>: monitoring, post-processing, overset meshes, fluid–structure interaction and aeroacoustics.</li>
+<li><a href="guide/troubleshooting/troubleshooting/index.html">Troubleshooting</a>: when a run fails or will not converge.</li>
 </ul>
-
-
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &#169;2016-25, Zenotech Ltd.
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-    <script>
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-32675146-1']);
-      _gaq.push(['_setDomainName', 'none']);
-      _gaq.push(['_setAllowLinker', true]);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
-    </script>
-    
+<h2 id="reference">Reference</h2>
+<p>Every setting, output and command, in full.</p>
+<ul>
+<li><a href="reference/input-deck/index.html">Input deck</a>: every key the control dictionary accepts.</li>
+<li><a href="reference/output-variables/index.html">Output variables</a>: the fields zCFD can write.</li>
+<li><a href="reference/command-line/invocation-and-flags/index.html">Command line</a>: invocation, flags and environment variables.</li>
+</ul>
+<h2 id="release-notes">Release notes</h2>
+<ul>
+<li><a href="release-notes/unreleased/index.html">Release notes</a>: what has changed in each release.</li>
+</ul></article><nav class="guide-toc" aria-label="On this page"><div class="toc-lab">On this page</div><a href="index.html#new-to-zcfd">New to zCFD</a><a href="index.html#guide">Guide</a><a href="index.html#reference">Reference</a><a href="index.html#release-notes">Release notes</a></nav></div></div><!--/$--></main></div></div></div>
   </body>
 </html>
