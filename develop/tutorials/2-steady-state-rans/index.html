@@ -7,8 +7,8 @@
     <title>2 · Steady-state RANS · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/2-steady-state-rans.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/2-steady-state-rans-D6wTsJSq.js">
-    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="modulepreload" href="./assets/2-steady-state-rans-BpYGxZY_.js">
+    <script type="module" crossorigin src="./assets/index-DQ4EtPLU.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -65,7 +65,7 @@ def my_transform(*, vector):
 parameters = {
     &quot;config version&quot;: 2,
     &quot;solver&quot;: {
-        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;, &quot;partitioner&quot;: &quot;metis&quot;},
+        &quot;solver settings&quot;: {&quot;type&quot;: &quot;compressible&quot;},
         &quot;equations&quot;: {
             &quot;type&quot;: &quot;rans&quot;,
             &quot;turbulence&quot;: {
@@ -180,10 +180,8 @@ M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist
 </ul><p>To run a variation of the case, change one value here, and every setting that uses it follows.</p><h3 id="my_transform"><code>my_transform</code></h3><p>A function that turns a force from the mesh&#x27;s axes into the flow&#x27;s. Lift and drag are defined relative to the
 freestream, lift normal to it and drag along it. <code>zutil.rotate_vector(vector, alpha, 0.0)</code> rotates a vector through
 the angle of attack, so that its x component is the drag and its z component the lift. The force report below
-applies it.</p><h3 id="config-version"><code>config version</code></h3><p>The version of the control-file format. <code>2</code> is the current format.</p><h3 id="solver"><code>solver</code></h3><p>Everything shared by the whole simulation.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Which solver runs the case, and how it is parallelised. <a href="reference/solver/solver-settings/index.html">Reference</a>.</p><ul>
+applies it.</p><h3 id="config-version"><code>config version</code></h3><p>The version of the control-file format. <code>2</code> is the current format.</p><h3 id="solver"><code>solver</code></h3><p>Everything shared by the whole simulation.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Which solver runs the case. <a href="reference/solver/solver-settings/index.html">Reference</a>.</p><ul>
 <li><code>type</code>: <code>&quot;compressible&quot;</code>, the density-based solver.</li>
-<li><code>partitioner</code>: <code>&quot;metis&quot;</code>, the library that splits the mesh between processes when the run is parallel. The
-default is <code>&quot;scotch&quot;</code>; either works for this case.</li>
 </ul><h4 id="equations"><code>equations</code></h4><p>Which equations are solved. <a href="reference/solver/equations/index.html">Reference</a>.</p><ul>
 <li><code>type</code>: <code>&quot;rans&quot;</code>, the Reynolds-averaged Navier–Stokes equations, which solve for the average flow and use a
 turbulence model for the effect of turbulent eddies, as in <a href="tutorials/1-simple-aerofoil/index.html#equations">Simple aerofoil</a>.</li>

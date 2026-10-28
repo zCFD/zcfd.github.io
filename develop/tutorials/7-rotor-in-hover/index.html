@@ -7,8 +7,8 @@
     <title>7 · Rotor in hover · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/7-rotor-in-hover.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/7-rotor-in-hover-DrT_EvOg.js">
-    <script type="module" crossorigin src="./assets/index-CncnWetw.js"></script>
+    <link rel="modulepreload" href="./assets/7-rotor-in-hover-Db-Lj7l3.js">
+    <script type="module" crossorigin src="./assets/index-DQ4EtPLU.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -67,7 +67,6 @@ parameters = {
     &quot;solver&quot;: {
         &quot;solver settings&quot;: {
             &quot;type&quot;: &quot;compressible&quot;,
-            &quot;partitioner&quot;: &quot;metis&quot;,
         },
         &quot;equations&quot;: {
             &quot;type&quot;: &quot;rans&quot;,
@@ -194,11 +193,9 @@ generator named <code>farfield</code>, so the boundary conditions name their bou
 </ul><p>See <a href="guide/setting-up/preparing-a-mesh/index.html#zone-identifiers">Zone identifiers</a>.</p><h3 id="config-version"><code>config version</code></h3><p>Says which layout of control file this is, so zCFD knows how to read the rest.</p><ul>
 <li><code>config version</code>: <code>2</code>, the current layout, with <code>solver</code> and <code>model</code> at the top level.</li>
 </ul><h3 id="solver"><code>solver</code></h3><p>The settings shared by the whole simulation: which solver runs, what it solves, the fluid, the flow states, and how
-the run marches and what it writes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Chooses the solver and how the mesh is shared out.</p><ul>
+the run marches and what it writes.</p><h4 id="solver-settings"><code>solver settings</code></h4><p>Chooses the solver.</p><ul>
 <li><code>type</code>: <code>&quot;compressible&quot;</code>: the solver that lets the air&#x27;s density change. The tip moves at Mach 0.877, fast enough
 to squeeze the air noticeably.</li>
-<li><code>partitioner</code>: <code>&quot;metis&quot;</code>: when the run is spread over more than one processor or GPU, the METIS tool decides which
-cells each one handles.</li>
 </ul><p>See <a href="reference/solver/solver-settings/index.html"><code>solver settings</code></a>.</p><h4 id="equations"><code>equations</code></h4><p>Sets the equations being solved.</p><ul>
 <li><code>type</code>: <code>&quot;rans&quot;</code>, the Reynolds-averaged Navier–Stokes equations. These solve for the average flow and represent
 the effect of turbulence, the small chaotic eddies, with a turbulence model rather than resolving every eddy.</li>

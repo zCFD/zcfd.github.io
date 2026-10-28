@@ -10,7 +10,6 @@ Which solver runs the case, and how it is partitioned and parallelised
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `type` | choice | not set | The zCFD solver to be used |
-| `partitioner` | choice | `scotch` | Mesh partitioner for parallel decomposition |
 | [`linear solver options`](/reference/solver/solver-settings/linear-solver-options) | settings block |  | Linear solver options passed to C++. |
 | `solution smooth cycles` | int | `0` | Number of Laplace smoothing cycles for mapped solutions. |
 | `safe` | bool | `False` | Enable safe mode for extra checks and diagnostics. |
@@ -23,7 +22,6 @@ parameters = {
     "solver": {
         "solver settings": {
             "type": <choice>,
-            "partitioner": "scotch",
             "linear solver options": {...},
             "solution smooth cycles": 0,
             "safe": False,
@@ -49,19 +47,6 @@ The zCFD solver to be used
 | --- | --- | --- |
 | `compressible` | The density-based solver for the compressible equations: `euler`, `viscous`, `rans` or `les` with an ideal gas. | Where density varies with pressure and temperature, including transonic and supersonic flow. |
 | `incompressible` | The pressure-based solver for incompressible flow, coupling momentum and pressure with either the `coupled` or the `simple` scheme. | Low-speed flow in which density does not depend on pressure. Buoyancy and anelastic stratification are available through the energy equation. |
-
-## partitioner
-
-Mesh partitioner for parallel decomposition
-
-::: facts
-**Type** choice · **Default** `scotch`
-:::
-
-| Value | What it does | When to use it |
-| --- | --- | --- |
-| `metis` | Partitions the mesh with ParMETIS through Zoltan2, to the same objective and load-balance tolerance as `scotch`. |  |
-| `scotch` (default) | Partitions the mesh with Scotch through Zoltan2, minimising the number of faces cut between partitions. | The default. The partitioner runs only when the case runs on more than one process. |
 
 ## solution smooth cycles
 

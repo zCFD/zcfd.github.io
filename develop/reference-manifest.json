@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generated": "2026-10-28T16:59:43+00:00",
+  "generated": "2026-10-28T17:46:33+00:00",
   "pydantic": "2.14.1",
   "placeholder": "— no description —",
   "pages": [
@@ -537,7 +537,6 @@
     "reference/solver#numerical-scheme",
     "reference/solver#output-settings",
     "reference/solver/solver-settings#type",
-    "reference/solver/solver-settings#partitioner",
     "reference/solver/solver-settings#linear-solver-options",
     "reference/solver/solver-settings#solution-smooth-cycles",
     "reference/solver/solver-settings#safe",

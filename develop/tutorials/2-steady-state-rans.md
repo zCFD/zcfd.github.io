@@ -78,7 +78,7 @@ def my_transform(*, vector):
 parameters = {
     "config version": 2,
     "solver": {
-        "solver settings": {"type": "compressible", "partitioner": "metis"},
+        "solver settings": {"type": "compressible"},
         "equations": {
             "type": "rans",
             "turbulence": {
@@ -206,11 +206,9 @@ Everything shared by the whole simulation.
 
 #### `solver settings`
 
-Which solver runs the case, and how it is parallelised. [Reference](/reference/solver/solver-settings).
+Which solver runs the case. [Reference](/reference/solver/solver-settings).
 
 - `type`: `"compressible"`, the density-based solver.
-- `partitioner`: `"metis"`, the library that splits the mesh between processes when the run is parallel. The
-  default is `"scotch"`; either works for this case.
 
 #### `equations`
 

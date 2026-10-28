@@ -105,7 +105,6 @@ parameters = {
     "solver": {
         "solver settings": {
             "type": "compressible",
-            "partitioner": "metis",
         },
         "equations": {
             "type": "rans",
@@ -250,12 +249,10 @@ the run marches and what it writes.
 
 #### `solver settings`
 
-Chooses the solver and how the mesh is shared out.
+Chooses the solver.
 
 - `type`: `"compressible"`: the solver that lets the air's density change. The tip moves at Mach 0.877, fast enough
   to squeeze the air noticeably.
-- `partitioner`: `"metis"`: when the run is spread over more than one processor or GPU, the METIS tool decides which
-  cells each one handles.
 
 See [`solver settings`](/reference/solver/solver-settings).
 
