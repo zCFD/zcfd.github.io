@@ -7,8 +7,8 @@
     <title>3 · Time-accurate solution · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/3-time-accurate-solution.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/3-time-accurate-solution-D5we7fES.js">
-    <script type="module" crossorigin src="./assets/index-DYu-n-xi.js"></script>
+    <link rel="modulepreload" href="./assets/3-time-accurate-solution-BkWpOZNi.js">
+    <script type="module" crossorigin src="./assets/index-Bd9Ppi0y.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -25,9 +25,9 @@ it.</p>
 <h2 id="what-you-need">What you need?</h2>
 <p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for activating zCFD,
 running a case and reading its output. The run takes about four minutes on an NVIDIA RTX 3060.</p>
-<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/tutorial_3_cylinder_shedding.tgz">here</a>.
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.10.16153/tutorial_3_cylinder_shedding.tgz">here</a>.
 It contains a mesh file (<code>cylinder.h5</code>) and a zCFD control file (<code>cylinder.py</code>).</p><pre><code class="language-bash">cd ~
-wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_3_cylinder_shedding.tgz
+wget https://zcfd.zenotech.com/v2026.10.16153/tutorial_3_cylinder_shedding.tgz
 tar xzf tutorial_3_cylinder_shedding.tgz
 cd tutorial_3_cylinder_shedding
 </code></pre><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>cylinder.py</code>, is a short Python script. All it does is build one Python dictionary, called

@@ -7,8 +7,8 @@
     <title>2 · Steady-state RANS · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/2-steady-state-rans.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/2-steady-state-rans-BpYGxZY_.js">
-    <script type="module" crossorigin src="./assets/index-DYu-n-xi.js"></script>
+    <link rel="modulepreload" href="./assets/2-steady-state-rans-CZb6-nCl.js">
+    <script type="module" crossorigin src="./assets/index-Bd9Ppi0y.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -26,9 +26,9 @@ you then restart it from where it stopped and carry it on.</p>
 <p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for activating zCFD,
 running a case and reading its output. The case has 64,000 cells. On an NVIDIA RTX 3060 the
 first run takes under two minutes and the restart about a minute.</p>
-<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.08.14860/tutorial_2_high_lift_multi_element_aerofoil.tgz">here</a>.
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.10.16153/tutorial_2_high_lift_multi_element_aerofoil.tgz">here</a>.
 It contains a mesh file (<code>30p30n.h5</code>) and a zCFD control file (<code>30p30n.py</code>).</p><pre><code class="language-bash">cd ~
-wget https://zcfd.zenotech.com/v2026.08.14860/tutorial_2_high_lift_multi_element_aerofoil.tgz
+wget https://zcfd.zenotech.com/v2026.10.16153/tutorial_2_high_lift_multi_element_aerofoil.tgz
 tar xzf tutorial_2_high_lift_multi_element_aerofoil.tgz
 cd tutorial_2_high_lift_multi_element_aerofoil
 </code></pre><h2 id="step-2-walk-through-the-input">Step 2. Walk through the input</h2><p>The control file, <code>30p30n.py</code>, is a short Python script. All it does is build one Python dictionary, called
