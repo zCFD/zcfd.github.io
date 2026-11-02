@@ -7,8 +7,8 @@
     <title>5 · Overset meshes · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/5-overset-meshes.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/5-overset-meshes-Cxz65lO6.js">
-    <script type="module" crossorigin src="./assets/index-Bd9Ppi0y.js"></script>
+    <link rel="modulepreload" href="./assets/5-overset-meshes-DqCdL_1M.js">
+    <script type="module" crossorigin src="./assets/index-Dk5j0ksU.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -478,7 +478,13 @@ is covered briefly.</p>
             },
             &quot;boundary conditions&quot;: {
                 &quot;BC_1&quot;: {&quot;zones&quot;: [10], &quot;type&quot;: &quot;symmetry&quot;},
-                &quot;BC_2&quot;: {&quot;zones&quot;: [9], &quot;type&quot;: &quot;interface&quot;, &quot;kind&quot;: &quot;overset&quot;},
+                &quot;BC_2&quot;: {
+                    &quot;zones&quot;: [9],
+                    &quot;type&quot;: &quot;interface&quot;,
+                    &quot;kind&quot;: &quot;overset&quot;,
+                    &quot;create overset halos&quot;: False,
+                    &quot;interpolation method&quot;: &quot;nearest cell&quot;,
+                },
                 &quot;BC_3&quot;: {&quot;zones&quot;: [8], &quot;type&quot;: &quot;wall&quot;, &quot;kind&quot;: &quot;slip&quot;},
             },
         },
@@ -596,6 +602,10 @@ interface. <a href="guide/working-with/placing-and-moving-a-mesh/index.html">Pla
 <ul>
 <li><code>zones</code> [9], the outer boundary of the train mesh, <code>type</code> <code>interface</code>, <code>kind</code> <code>overset</code>. It names no
 <code>connection</code>, so it is mapped against every model before it: here only the tunnel.</li>
+<li><code>create overset halos</code>: <code>False</code>. Donor values are taken at the boundary face centres. The default samples
+at the halo cell centres, just outside the train mesh. On this moving train, some of those points have no donor
+in the tunnel mesh.</li>
+<li><code>interpolation method</code>: <code>nearest cell</code>: each point takes the value of the donor cell that contains it.</li>
 </ul>
 <h6 id="bc_3"><code>BC_3</code></h6>
 <ul>

@@ -681,7 +681,13 @@ parameters = {
             },
             "boundary conditions": {
                 "BC_1": {"zones": [10], "type": "symmetry"},
-                "BC_2": {"zones": [9], "type": "interface", "kind": "overset"},
+                "BC_2": {
+                    "zones": [9],
+                    "type": "interface",
+                    "kind": "overset",
+                    "create overset halos": False,
+                    "interpolation method": "nearest cell",
+                },
                 "BC_3": {"zones": [8], "type": "wall", "kind": "slip"},
             },
         },
@@ -815,6 +821,10 @@ interface. [Placing and moving a mesh](../guide/working-with/placing-and-moving-
 
 - \`zones\` [9], the outer boundary of the train mesh, \`type\` \`interface\`, \`kind\` \`overset\`. It names no
   \`connection\`, so it is mapped against every model before it: here only the tunnel.
+- \`create overset halos\`: \`False\`. Donor values are taken at the boundary face centres. The default samples
+  at the halo cell centres, just outside the train mesh. On this moving train, some of those points have no donor
+  in the tunnel mesh.
+- \`interpolation method\`: \`nearest cell\`: each point takes the value of the donor cell that contains it.
 
 ###### \`BC_3\`
 
