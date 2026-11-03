@@ -1,0 +1,40 @@
+var e=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 25 600 200" version="1.1" font-family="Lato, Manrope, sans-serif" font-size="13" class="zc-figure-svg" focusable="false" aria-hidden="true">
+ <g id="mesh-file-faces-cells">
+  <path class="zc-stroke-ink" d="M 160 60 L 60 60 L 60 160 L 160 160" style="fill: none; stroke: #262624; stroke-width: 1"/>
+  <path class="zc-stroke-ink" d="M 160 60 L 260 60 M 160 160 L 260 160" style="fill: none; stroke: #262624; stroke-width: 1"/>
+  <path class="zc-stroke-reference" d="M 260 60 L 360 60 L 360 160 L 260 160" style="fill: none; stroke: #6b6b6b; stroke-width: 1; stroke-dasharray: 4 3"/>
+  <path class="zc-stroke-series-1" d="M 160 60 L 160 160" style="fill: none; stroke: #2a78d6; stroke-width: 3"/>
+  <path class="zc-stroke-series-2" d="M 260 60 L 260 160" style="fill: none; stroke: #eb6834; stroke-width: 3"/>
+  <text class="zc-fill-ink" x="110" y="128" text-anchor="middle" style="fill: #262624">cell 0</text>
+  <text class="zc-fill-ink" x="210" y="128" text-anchor="middle" style="fill: #262624">cell 1</text>
+  <text class="zc-fill-ink" x="310" y="120" text-anchor="middle" style="fill: #262624">halo cell</text>
+  <text class="zc-fill-ink" x="310" y="138" font-size="12" text-anchor="middle" style="fill: #262624">\u2265 numCells</text>
+  <text class="zc-fill-ink" x="160" y="48" text-anchor="middle" style="fill: #262624">face f</text>
+  <text class="zc-fill-ink" x="260" y="48" text-anchor="middle" style="fill: #262624">face b</text>
+  <text class="zc-fill-ink" x="160" y="186" font-size="12" text-anchor="middle" style="fill: #262624">domain</text>
+  <text class="zc-fill-ink" x="310" y="186" font-size="12" text-anchor="middle" style="fill: #262624">outside</text>
+ </g>
+ <g id="mesh-file-faces-normals">
+  <path class="zc-stroke-series-1" d="M 160 85 L 196 85 M 189 80 L 196 85 L 189 90" style="fill: none; stroke: #2a78d6; stroke-width: 1.5"/>
+  <path class="zc-stroke-series-2" d="M 260 85 L 296 85 M 289 80 L 296 85 L 289 90" style="fill: none; stroke: #eb6834; stroke-width: 1.5"/>
+  <text class="zc-fill-ink" x="200" y="80" font-size="12" style="fill: #262624">n</text>
+  <text class="zc-fill-ink" x="300" y="80" font-size="12" style="fill: #262624">n</text>
+ </g>
+ <g id="mesh-file-faces-rows">
+  <path class="zc-stroke-series-1" d="M 395 66 L 415 66" style="fill: none; stroke: #2a78d6; stroke-width: 3"/>
+  <text class="zc-fill-ink" x="422" y="70" style="fill: #262624">face f, interior</text>
+  <text class="zc-fill-ink" x="395" y="92" font-size="12" style="fill: #262624">faceCell</text>
+  <text class="zc-fill-ink" x="460" y="92" font-size="12" style="fill: #262624">0, 1</text>
+  <text class="zc-fill-ink" x="395" y="110" font-size="12" style="fill: #262624">faceBC</text>
+  <text class="zc-fill-ink" x="460" y="110" font-size="12" style="fill: #262624">0</text>
+  <path class="zc-stroke-series-2" d="M 395 146 L 415 146" style="fill: none; stroke: #eb6834; stroke-width: 3"/>
+  <text class="zc-fill-ink" x="422" y="150" style="fill: #262624">face b, boundary</text>
+  <text class="zc-fill-ink" x="395" y="172" font-size="12" style="fill: #262624">faceCell</text>
+  <text class="zc-fill-ink" x="460" y="172" font-size="12" style="fill: #262624">1, halo cell</text>
+  <text class="zc-fill-ink" x="395" y="190" font-size="12" style="fill: #262624">faceBC</text>
+  <text class="zc-fill-ink" x="460" y="190" font-size="12" style="fill: #262624">boundary type code</text>
+  <text class="zc-fill-ink" x="395" y="208" font-size="12" style="fill: #262624">faceInfo</text>
+  <text class="zc-fill-ink" x="460" y="208" font-size="12" style="fill: #262624">zone identifier, 0</text>
+ </g>
+</svg>
+`;export{e as default};

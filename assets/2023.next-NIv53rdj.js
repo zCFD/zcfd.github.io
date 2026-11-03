@@ -1,0 +1,11 @@
+var e=`
+# 2023.next
+
+- Added anisotropy to FRPM
+- Added rotating terms to Jacobian
+- Bug fix in fluent convert
+- Added non-orthogonal correction to wall distance calculation
+- Improved startup time of large jobs on GPUs
+- Added force driver to alter boundary conditions to achieve a target lift
+- Linear solver performance improvements
+`;export{e as default};
