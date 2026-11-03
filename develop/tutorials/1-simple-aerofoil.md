@@ -28,14 +28,14 @@ The tutorial assumes that you are running all commands using a bash shell on Lin
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.10.16153/tutorial_1_aerofoil.tgz). It
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.11.16174/tutorial_1_aerofoil.tgz). It
 contains a mesh file (`naca0012.h5`) and a zCFD control file (`naca0012.py`).
 
 This tutorial assumes you unpack the bundle in your home directory, which creates a directory called `tutorial_1_aerofoil`.
 
 ```bash
 cd ~
-wget https://zcfd.zenotech.com/v2026.10.16153/tutorial_1_aerofoil.tgz
+wget https://zcfd.zenotech.com/v2026.11.16174/tutorial_1_aerofoil.tgz
 tar xzf tutorial_1_aerofoil.tgz
 cd tutorial_1_aerofoil
 ```

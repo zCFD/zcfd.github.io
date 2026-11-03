@@ -24,12 +24,12 @@ first run takes under two minutes and the restart about a minute.
 
 ## Step 1. Download the files
 
-The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.10.16153/tutorial_2_high_lift_multi_element_aerofoil.tgz).
+The tutorial bundle can be downloaded [here](https://zcfd.zenotech.com/v2026.11.16174/tutorial_2_high_lift_multi_element_aerofoil.tgz).
 It contains a mesh file (\`30p30n.h5\`) and a zCFD control file (\`30p30n.py\`).
 
 \`\`\`bash
 cd ~
-wget https://zcfd.zenotech.com/v2026.10.16153/tutorial_2_high_lift_multi_element_aerofoil.tgz
+wget https://zcfd.zenotech.com/v2026.11.16174/tutorial_2_high_lift_multi_element_aerofoil.tgz
 tar xzf tutorial_2_high_lift_multi_element_aerofoil.tgz
 cd tutorial_2_high_lift_multi_element_aerofoil
 \`\`\`

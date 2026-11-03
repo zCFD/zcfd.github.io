@@ -7,8 +7,8 @@
     <title>7 · Rotor in hover · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/7-rotor-in-hover.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/7-rotor-in-hover-Du8OXcyr.js">
-    <script type="module" crossorigin src="./assets/index-Dk5j0ksU.js"></script>
+    <link rel="modulepreload" href="./assets/7-rotor-in-hover-CGpme5g7.js">
+    <script type="module" crossorigin src="./assets/index-BSEADroh.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -28,8 +28,8 @@ surface at five distances from the shaft, and those measurements are the referen
 <p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for running zCFD, reading
 the log and monitoring a run in zMon. The mesh has 447,468 cells, and the run takes about nine and a half minutes on an NVIDIA
 RTX 3060. The Python step in Step 5 also uses ParaView&#x27;s Python modules, which come with zCFD.</p>
-<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.10.16153/tutorial_7_rotor_in_hover.tgz">here</a>.</p><pre><code class="language-bash">cd ~
-wget https://zcfd.zenotech.com/v2026.10.16153/tutorial_7_rotor_in_hover.tgz
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.11.16174/tutorial_7_rotor_in_hover.tgz">here</a>.</p><pre><code class="language-bash">cd ~
+wget https://zcfd.zenotech.com/v2026.11.16174/tutorial_7_rotor_in_hover.tgz
 tar xzf tutorial_7_rotor_in_hover.tgz
 cd tutorial_7_rotor_in_hover
 </code></pre><div class="ntable-scroll"><table class="gtable"><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody><tr><td><code>caradonna_tung.msh.h5</code></td><td>the mesh as Fluent wrote it</td></tr><tr><td><code>caradonna_tung.h5</code></td><td>the same mesh, converted for zCFD</td></tr><tr><td><code>caradonna_tung_zone.py</code></td><td>the zone helper written by the conversion</td></tr><tr><td><code>caradonna_tung.py</code></td><td>the control file</td></tr><tr><td><code>data/cp-0p50.txt</code> …</td><td>the measured surface pressure at r/R = 0.50, 0.68, 0.80, 0.89 and 0.96</td></tr></tbody></table></div><h3 id="converting-the-mesh">Converting the mesh</h3><p>zCFD reads its own mesh format. A mesh from another program is converted once, before the first run:</p><pre><code class="language-bash">convert_mesh caradonna_tung.msh.h5 caradonna_tung.h5

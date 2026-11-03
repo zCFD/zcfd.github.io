@@ -7,8 +7,8 @@
     <title>6 · Incompressible flow · zCFD documentation</title>
     <link rel="alternate" type="text/markdown" href="tutorials/6-incompressible-flow.md">
     <script>(function(){var d=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var t=g('zdocs.theme');if(t!=='light'&&t!=='dark')t='system';d.setAttribute('data-theme-pref',t);function r(){var m=false;try{m=window.matchMedia('(prefers-color-scheme: dark)').matches}catch(e){}var p=d.getAttribute('data-theme-pref');d.setAttribute('data-bs-theme',p==='light'||p==='dark'?p:(m?'dark':'light'))}r();try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',r)}catch(e){}window.__zdocsApplyTheme=r;d.setAttribute('data-track',g('zdocs.track')==='deck'?'deck':'zui');d.setAttribute('data-advanced',g('zdocs.advanced')==='show'?'show':'hide');})();</script>
-    <link rel="modulepreload" href="./assets/6-incompressible-flow-TSPMrftz.js">
-    <script type="module" crossorigin src="./assets/index-Dk5j0ksU.js"></script>
+    <link rel="modulepreload" href="./assets/6-incompressible-flow-BlMnVVC6.js">
+    <script type="module" crossorigin src="./assets/index-BSEADroh.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BzpB9kAT.css">
   </head>
   <body>
@@ -31,10 +31,10 @@ region.</p>
 <h2 id="what-you-need">What you need?</h2>
 <p>Work through <a href="tutorials/1-simple-aerofoil/index.html">Simple aerofoil</a> first: this tutorial relies on it for running zCFD, reading
 the log and monitoring a run in zMon. The run takes about fifteen seconds on an NVIDIA RTX 3060.</p>
-<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.10.16153/tutorial_6_lid_driven_cavity.tgz">here</a>.
+<div class="track-lone"><h2 id="step-1-download-the-files">Step 1. Download the files</h2><p>The tutorial bundle can be downloaded <a href="https://zcfd.zenotech.com/v2026.11.16174/tutorial_6_lid_driven_cavity.tgz">here</a>.
 It contains a mesh file (<code>cavity.h5</code>), a zCFD control file (<code>cavity.py</code>), and Ghia&#x27;s tabulated centreline velocities
 at Re 400 (<code>ghia_re400.csv</code>).</p><pre><code class="language-bash">cd ~
-wget https://zcfd.zenotech.com/v2026.10.16153/tutorial_6_lid_driven_cavity.tgz
+wget https://zcfd.zenotech.com/v2026.11.16174/tutorial_6_lid_driven_cavity.tgz
 tar xzf tutorial_6_lid_driven_cavity.tgz
 cd tutorial_6_lid_driven_cavity
 </code></pre><p>The cavity is 1 m square. The mesh has 127 × 127 cells, clustered towards the walls where the velocity changes
