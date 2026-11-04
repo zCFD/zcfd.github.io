@@ -13,7 +13,7 @@ guide_groups:
 books:
   - file: zCFDnumerics.pdf
     label: Numerics
-  - file: zCFDvalidation.pdf
+  - file: https://zcfd.zenotech.com/validation
     label: Validation
 ---
 

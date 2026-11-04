@@ -1,0 +1,2302 @@
+var e=`<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 504 302.4" xmlns="http://www.w3.org/2000/svg" version="1.1" class="zc-figure-svg" focusable="false" aria-hidden="true">
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="cylinder-convergence-scheme-figure_1">
+  <g id="cylinder-convergence-scheme-patch_1">
+   <path d="M 0 302.4 
+L 504 302.4 
+L 504 0 
+L 0 0 
+L 0 302.4 
+z
+" style="fill: none"/>
+  </g>
+  <g id="cylinder-convergence-scheme-axes_1">
+   <g id="cylinder-convergence-scheme-patch_2">
+    <path d="M 43.735553 269.39976 
+L 500.99976 269.39976 
+L 500.99976 3.00024 
+L 43.735553 3.00024 
+L 43.735553 269.39976 
+z
+" style="fill: none"/>
+   </g>
+   <g id="cylinder-convergence-scheme-matplotlib.axis_1">
+    <g id="cylinder-convergence-scheme-xtick_1">
+     <g id="cylinder-convergence-scheme-line2d_1">
+      <path class="zc-stroke-grid" d="M 65.351679 269.39976 
+L 65.351679 3.00024 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_2"/>
+     <g id="cylinder-convergence-scheme-text_1">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(57.674022 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="cylinder-convergence-scheme-Lato-Regular-8a" d="M 1914 4637 
+Q 2205 4637 2451 4553 
+Q 2698 4470 2875 4316 
+Q 3053 4163 3152 3945 
+Q 3251 3728 3251 3462 
+Q 3251 3245 3195 3073 
+Q 3139 2902 3035 2772 
+Q 2931 2643 2784 2553 
+Q 2637 2464 2454 2410 
+Q 2902 2291 3128 2012 
+Q 3354 1734 3354 1315 
+Q 3354 998 3234 745 
+Q 3114 493 2906 315 
+Q 2698 138 2421 43 
+Q 2144 -51 1827 -51 
+Q 1462 -51 1203 40 
+Q 944 131 765 291 
+Q 586 451 470 670 
+Q 355 890 275 1146 
+L 522 1248 
+Q 618 1290 709 1270 
+Q 800 1251 842 1165 
+Q 883 1075 945 950 
+Q 1008 826 1117 710 
+Q 1226 595 1394 515 
+Q 1562 435 1821 435 
+Q 2061 435 2241 513 
+Q 2422 592 2542 717 
+Q 2662 842 2723 995 
+Q 2784 1149 2784 1299 
+Q 2784 1485 2736 1638 
+Q 2688 1792 2557 1904 
+Q 2426 2016 2197 2080 
+Q 1968 2144 1610 2144 
+L 1610 2557 
+Q 1904 2560 2110 2621 
+Q 2317 2682 2446 2787 
+Q 2576 2893 2635 3040 
+Q 2694 3187 2694 3366 
+Q 2694 3565 2632 3712 
+Q 2570 3859 2461 3955 
+Q 2352 4051 2203 4099 
+Q 2054 4147 1882 4147 
+Q 1709 4147 1560 4096 
+Q 1411 4045 1297 3953 
+Q 1184 3862 1107 3737 
+Q 1030 3613 998 3462 
+Q 957 3350 894 3313 
+Q 832 3277 714 3293 
+L 416 3344 
+Q 461 3658 589 3899 
+Q 717 4141 913 4304 
+Q 1110 4467 1364 4552 
+Q 1619 4637 1914 4637 
+z
+" transform="scale(0.015625)"/>
+        <path id="cylinder-convergence-scheme-Lato-Regular-57" d="M 355 352 
+Q 355 435 385 508 
+Q 416 582 469 636 
+Q 522 691 595 723 
+Q 669 755 752 755 
+Q 835 755 908 723 
+Q 982 691 1036 636 
+Q 1091 582 1123 508 
+Q 1155 435 1155 352 
+Q 1155 266 1123 194 
+Q 1091 122 1036 67 
+Q 982 13 908 -17 
+Q 835 -48 752 -48 
+Q 669 -48 595 -17 
+Q 522 13 469 67 
+Q 416 122 385 194 
+Q 355 266 355 352 
+z
+" transform="scale(0.015625)"/>
+        <path id="cylinder-convergence-scheme-Lato-Regular-87" d="M 3520 2291 
+Q 3520 1690 3390 1250 
+Q 3261 810 3037 522 
+Q 2813 234 2507 93 
+Q 2202 -48 1853 -48 
+Q 1501 -48 1198 93 
+Q 896 234 672 522 
+Q 448 810 320 1250 
+Q 192 1690 192 2291 
+Q 192 2893 320 3334 
+Q 448 3776 672 4065 
+Q 896 4355 1198 4496 
+Q 1501 4637 1853 4637 
+Q 2202 4637 2507 4496 
+Q 2813 4355 3037 4065 
+Q 3261 3776 3390 3334 
+Q 3520 2893 3520 2291 
+z
+M 2928 2291 
+Q 2928 2816 2840 3173 
+Q 2752 3530 2603 3747 
+Q 2454 3965 2259 4059 
+Q 2064 4154 1853 4154 
+Q 1642 4154 1446 4059 
+Q 1251 3965 1104 3747 
+Q 957 3530 869 3173 
+Q 781 2816 781 2291 
+Q 781 1766 869 1411 
+Q 957 1056 1104 838 
+Q 1251 621 1446 526 
+Q 1642 432 1853 432 
+Q 2064 432 2259 526 
+Q 2454 621 2603 838 
+Q 2752 1056 2840 1411 
+Q 2928 1766 2928 2291 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8a"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(81.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-xtick_2">
+     <g id="cylinder-convergence-scheme-line2d_3">
+      <path class="zc-stroke-grid" d="M 148.490625 269.39976 
+L 148.490625 3.00024 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_4"/>
+     <g id="cylinder-convergence-scheme-text_2">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(140.812969 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="cylinder-convergence-scheme-Lato-Regular-89" d="M 1891 4637 
+Q 2182 4637 2435 4550 
+Q 2688 4464 2873 4299 
+Q 3059 4134 3164 3897 
+Q 3270 3661 3270 3360 
+Q 3270 3104 3193 2885 
+Q 3117 2666 2985 2467 
+Q 2854 2269 2683 2080 
+Q 2512 1891 2320 1699 
+L 1110 464 
+Q 1238 499 1369 520 
+Q 1501 541 1622 541 
+L 3158 541 
+Q 3251 541 3305 486 
+Q 3360 432 3360 346 
+L 3360 0 
+L 301 0 
+L 301 195 
+Q 301 256 326 320 
+Q 352 384 406 438 
+L 1875 1914 
+Q 2058 2099 2208 2270 
+Q 2358 2442 2464 2614 
+Q 2570 2787 2627 2964 
+Q 2685 3142 2685 3344 
+Q 2685 3546 2621 3698 
+Q 2557 3850 2446 3949 
+Q 2336 4048 2185 4097 
+Q 2035 4147 1862 4147 
+Q 1686 4147 1539 4096 
+Q 1392 4045 1278 3953 
+Q 1165 3862 1088 3737 
+Q 1011 3613 979 3462 
+Q 941 3350 875 3313 
+Q 810 3277 691 3293 
+L 394 3344 
+Q 438 3658 568 3899 
+Q 698 4141 894 4304 
+Q 1091 4467 1344 4552 
+Q 1597 4637 1891 4637 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8a"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-89" transform="translate(81.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-xtick_3">
+     <g id="cylinder-convergence-scheme-line2d_5">
+      <path class="zc-stroke-grid" d="M 231.629572 269.39976 
+L 231.629572 3.00024 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_6"/>
+     <g id="cylinder-convergence-scheme-text_3">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(223.951916 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="cylinder-convergence-scheme-Lato-Regular-8b" d="M 2835 1654 
+L 3530 1654 
+L 3530 1328 
+Q 3530 1277 3499 1241 
+Q 3469 1206 3405 1206 
+L 2835 1206 
+L 2835 0 
+L 2336 0 
+L 2336 1206 
+L 301 1206 
+Q 237 1206 190 1243 
+Q 144 1280 131 1334 
+L 74 1626 
+L 2304 4586 
+L 2835 4586 
+L 2835 1654 
+z
+M 2336 3546 
+Q 2336 3629 2341 3726 
+Q 2346 3824 2362 3926 
+L 691 1654 
+L 2336 1654 
+L 2336 3546 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8a"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8b" transform="translate(81.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-xtick_4">
+     <g id="cylinder-convergence-scheme-line2d_7">
+      <path class="zc-stroke-grid" d="M 314.768519 269.39976 
+L 314.768519 3.00024 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_8"/>
+     <g id="cylinder-convergence-scheme-text_4">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(307.090863 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="cylinder-convergence-scheme-Lato-Regular-a4" d="M 1517 2867 
+Q 1453 2790 1398 2716 
+Q 1344 2643 1290 2573 
+Q 1453 2685 1649 2747 
+Q 1846 2810 2077 2810 
+Q 2355 2810 2601 2718 
+Q 2848 2627 3032 2452 
+Q 3216 2278 3325 2024 
+Q 3434 1770 3434 1443 
+Q 3434 1126 3318 854 
+Q 3203 582 2996 380 
+Q 2790 179 2500 64 
+Q 2211 -51 1862 -51 
+Q 1517 -51 1235 59 
+Q 954 170 757 373 
+Q 560 576 453 865 
+Q 346 1155 346 1514 
+Q 346 1814 478 2155 
+Q 611 2496 902 2883 
+L 2067 4448 
+Q 2112 4506 2190 4546 
+Q 2269 4586 2371 4586 
+L 2877 4586 
+L 1517 2867 
+z
+M 893 1414 
+Q 893 1194 957 1011 
+Q 1021 829 1144 697 
+Q 1267 566 1444 494 
+Q 1622 422 1850 422 
+Q 2080 422 2267 496 
+Q 2454 570 2587 701 
+Q 2720 832 2792 1011 
+Q 2864 1190 2864 1402 
+Q 2864 1626 2793 1806 
+Q 2723 1987 2593 2113 
+Q 2464 2240 2285 2307 
+Q 2106 2374 1891 2374 
+Q 1661 2374 1475 2296 
+Q 1290 2218 1160 2085 
+Q 1030 1952 961 1777 
+Q 893 1603 893 1414 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8a"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a4" transform="translate(81.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-xtick_5">
+     <g id="cylinder-convergence-scheme-line2d_9">
+      <path class="zc-stroke-grid" d="M 397.907466 269.39976 
+L 397.907466 3.00024 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_10"/>
+     <g id="cylinder-convergence-scheme-text_5">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(390.22981 281.75476) scale(0.11 -0.11)">
+       <defs>
+        <path id="cylinder-convergence-scheme-Lato-Regular-a5" d="M 1856 -51 
+Q 1514 -51 1229 40 
+Q 944 131 739 300 
+Q 534 470 422 712 
+Q 310 954 310 1254 
+Q 310 1696 540 1982 
+Q 771 2269 1200 2390 
+Q 838 2525 654 2792 
+Q 470 3059 470 3430 
+Q 470 3683 569 3904 
+Q 669 4125 851 4288 
+Q 1034 4451 1288 4544 
+Q 1542 4637 1856 4637 
+Q 2166 4637 2422 4544 
+Q 2678 4451 2860 4288 
+Q 3043 4125 3142 3904 
+Q 3242 3683 3242 3430 
+Q 3242 3059 3056 2792 
+Q 2870 2525 2512 2390 
+Q 2941 2269 3171 1982 
+Q 3402 1696 3402 1254 
+Q 3402 954 3288 712 
+Q 3174 470 2971 300 
+Q 2768 131 2483 40 
+Q 2198 -51 1856 -51 
+z
+M 1856 403 
+Q 2080 403 2257 465 
+Q 2435 528 2558 641 
+Q 2682 755 2747 913 
+Q 2813 1072 2813 1264 
+Q 2813 1501 2734 1669 
+Q 2656 1837 2523 1942 
+Q 2390 2048 2217 2097 
+Q 2045 2147 1856 2147 
+Q 1667 2147 1494 2097 
+Q 1322 2048 1189 1942 
+Q 1056 1837 977 1669 
+Q 899 1501 899 1264 
+Q 899 1072 964 913 
+Q 1030 755 1153 641 
+Q 1277 528 1454 465 
+Q 1632 403 1856 403 
+z
+M 1856 2605 
+Q 2080 2605 2238 2673 
+Q 2397 2742 2496 2856 
+Q 2595 2970 2640 3117 
+Q 2685 3264 2685 3421 
+Q 2685 3581 2632 3721 
+Q 2579 3862 2475 3968 
+Q 2371 4074 2216 4134 
+Q 2061 4195 1856 4195 
+Q 1651 4195 1496 4134 
+Q 1341 4074 1237 3968 
+Q 1133 3862 1080 3721 
+Q 1027 3581 1027 3421 
+Q 1027 3264 1072 3117 
+Q 1117 2970 1216 2856 
+Q 1315 2742 1473 2673 
+Q 1632 2605 1856 2605 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8a"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a5" transform="translate(81.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-xtick_6">
+     <g id="cylinder-convergence-scheme-line2d_11">
+      <path class="zc-stroke-grid" d="M 481.046413 269.39976 
+L 481.046413 3.00024 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_12"/>
+     <g id="cylinder-convergence-scheme-text_6">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(473.368757 281.75476) scale(0.11 -0.11)">
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8b"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(81.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-text_7">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(252.692773 297.15726) scale(0.115 -0.115)">
+      <defs>
+       <path id="cylinder-convergence-scheme-Lato-Regular-1a" d="M 3686 4586 
+L 3686 4064 
+L 2202 4064 
+L 2202 0 
+L 1584 0 
+L 1584 4064 
+L 96 4064 
+L 96 4586 
+L 3686 4586 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-2d" d="M 1053 3242 
+L 1053 0 
+L 483 0 
+L 483 3242 
+L 1053 3242 
+z
+M 1174 4259 
+Q 1174 4176 1140 4104 
+Q 1107 4032 1051 3976 
+Q 995 3920 920 3888 
+Q 845 3856 762 3856 
+Q 678 3856 606 3888 
+Q 534 3920 480 3976 
+Q 426 4032 394 4104 
+Q 362 4176 362 4259 
+Q 362 4342 394 4417 
+Q 426 4493 480 4549 
+Q 534 4605 606 4637 
+Q 678 4669 762 4669 
+Q 845 4669 920 4637 
+Q 995 4605 1051 4549 
+Q 1107 4493 1140 4417 
+Q 1174 4342 1174 4259 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-31" d="M 451 0 
+L 451 3242 
+L 794 3242 
+Q 915 3242 944 3123 
+L 986 2790 
+Q 1165 3011 1389 3152 
+Q 1613 3293 1907 3293 
+Q 2234 3293 2437 3110 
+Q 2640 2928 2730 2618 
+Q 2800 2794 2910 2922 
+Q 3021 3050 3158 3133 
+Q 3296 3216 3451 3254 
+Q 3606 3293 3766 3293 
+Q 4022 3293 4222 3211 
+Q 4422 3130 4561 2973 
+Q 4701 2816 4774 2587 
+Q 4848 2358 4848 2064 
+L 4848 0 
+L 4275 0 
+L 4275 2064 
+Q 4275 2445 4108 2641 
+Q 3942 2838 3629 2838 
+Q 3488 2838 3361 2788 
+Q 3235 2739 3139 2643 
+Q 3043 2547 2987 2401 
+Q 2931 2256 2931 2064 
+L 2931 0 
+L 2358 0 
+L 2358 2064 
+Q 2358 2454 2201 2646 
+Q 2045 2838 1744 2838 
+Q 1533 2838 1353 2724 
+Q 1174 2611 1024 2416 
+L 1024 0 
+L 451 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-27" d="M 1779 3293 
+Q 2070 3293 2318 3195 
+Q 2566 3098 2747 2914 
+Q 2928 2730 3030 2459 
+Q 3133 2189 3133 1843 
+Q 3133 1709 3104 1664 
+Q 3075 1619 2995 1619 
+L 829 1619 
+Q 835 1312 912 1085 
+Q 989 858 1123 706 
+Q 1258 554 1443 478 
+Q 1629 403 1859 403 
+Q 2074 403 2229 452 
+Q 2384 502 2496 560 
+Q 2608 618 2683 667 
+Q 2758 717 2813 717 
+Q 2883 717 2922 662 
+L 3082 454 
+Q 2976 326 2829 232 
+Q 2682 138 2514 77 
+Q 2346 16 2166 -14 
+Q 1987 -45 1811 -45 
+Q 1475 -45 1192 68 
+Q 909 182 702 401 
+Q 496 621 381 944 
+Q 266 1267 266 1686 
+Q 266 2026 370 2320 
+Q 474 2614 669 2830 
+Q 864 3046 1145 3169 
+Q 1427 3293 1779 3293 
+z
+M 1792 2874 
+Q 1379 2874 1142 2635 
+Q 906 2397 848 1974 
+L 2621 1974 
+Q 2621 2173 2565 2337 
+Q 2509 2502 2401 2622 
+Q 2294 2742 2140 2808 
+Q 1987 2874 1792 2874 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-2" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-6e" d="M 582 -925 
+L 582 4906 
+L 1760 4906 
+L 1760 4682 
+Q 1760 4618 1717 4574 
+Q 1674 4531 1603 4531 
+L 1062 4531 
+L 1062 -547 
+L 1603 -547 
+Q 1674 -547 1717 -592 
+Q 1760 -637 1760 -701 
+L 1760 -925 
+L 582 -925 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-39" d="M 2339 2707 
+Q 2301 2637 2221 2637 
+Q 2173 2637 2112 2672 
+Q 2051 2707 1963 2750 
+Q 1875 2794 1753 2830 
+Q 1632 2867 1466 2867 
+Q 1322 2867 1206 2830 
+Q 1091 2794 1009 2730 
+Q 928 2666 885 2581 
+Q 842 2496 842 2397 
+Q 842 2272 914 2189 
+Q 986 2106 1104 2045 
+Q 1222 1984 1372 1937 
+Q 1523 1891 1681 1838 
+Q 1840 1786 1990 1722 
+Q 2141 1658 2259 1562 
+Q 2378 1466 2450 1326 
+Q 2522 1187 2522 992 
+Q 2522 768 2442 577 
+Q 2362 387 2205 248 
+Q 2048 109 1821 29 
+Q 1594 -51 1296 -51 
+Q 957 -51 681 59 
+Q 406 170 214 342 
+L 349 560 
+Q 374 602 409 624 
+Q 445 646 499 646 
+Q 557 646 621 601 
+Q 685 557 776 502 
+Q 867 448 998 403 
+Q 1130 358 1325 358 
+Q 1491 358 1616 401 
+Q 1741 445 1824 518 
+Q 1907 592 1947 688 
+Q 1987 784 1987 893 
+Q 1987 1027 1915 1115 
+Q 1843 1203 1724 1265 
+Q 1606 1328 1454 1374 
+Q 1302 1421 1144 1472 
+Q 986 1523 834 1588 
+Q 682 1654 563 1753 
+Q 445 1853 373 1998 
+Q 301 2144 301 2352 
+Q 301 2538 377 2709 
+Q 454 2880 601 3009 
+Q 749 3139 963 3216 
+Q 1178 3293 1453 3293 
+Q 1773 3293 2027 3192 
+Q 2282 3091 2467 2915 
+L 2339 2707 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-6f" d="M 198 -701 
+Q 198 -637 241 -592 
+Q 285 -547 355 -547 
+L 896 -547 
+L 896 4531 
+L 355 4531 
+Q 285 4531 241 4574 
+Q 198 4618 198 4682 
+L 198 4906 
+L 1376 4906 
+L 1376 -925 
+L 198 -925 
+L 198 -701 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-1a"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2d" transform="translate(59.046875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-31" transform="translate(83.046875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(165.296875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2" transform="translate(218.09375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-6e" transform="translate(243.6875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-39" transform="translate(271.28125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-6f" transform="translate(311.578125 0)"/>
+     </g>
+    </g>
+   </g>
+   <g id="cylinder-convergence-scheme-matplotlib.axis_2">
+    <g id="cylinder-convergence-scheme-ytick_1">
+     <g id="cylinder-convergence-scheme-line2d_13">
+      <path class="zc-stroke-grid" d="M 43.735553 226.87615 
+L 500.99976 226.87615 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_14"/>
+     <g id="cylinder-convergence-scheme-text_8">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 231.30365) scale(0.11 -0.11)">
+       <defs>
+        <path id="cylinder-convergence-scheme-Lato-Regular-204" d="M 480 2365 
+L 3232 2365 
+L 3232 1933 
+L 480 1933 
+L 480 2365 
+z
+" transform="scale(0.015625)"/>
+        <path id="cylinder-convergence-scheme-Lato-Regular-88" d="M 800 435 
+L 1782 435 
+L 1782 3562 
+Q 1782 3696 1792 3846 
+L 976 3146 
+Q 934 3110 892 3102 
+Q 851 3094 816 3100 
+Q 781 3107 750 3126 
+Q 720 3146 704 3168 
+L 525 3414 
+L 1891 4595 
+L 2355 4595 
+L 2355 435 
+L 3258 435 
+L 3258 0 
+L 800 0 
+L 800 435 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-204"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-88" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(116 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-89" transform="translate(139.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-ytick_2">
+     <g id="cylinder-convergence-scheme-line2d_15">
+      <path class="zc-stroke-grid" d="M 43.735553 183.746778 
+L 500.99976 183.746778 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_16"/>
+     <g id="cylinder-convergence-scheme-text_9">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 188.174278) scale(0.11 -0.11)">
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-204"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-88" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(116 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(139.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-ytick_3">
+     <g id="cylinder-convergence-scheme-line2d_17">
+      <path class="zc-stroke-grid" d="M 43.735553 140.617406 
+L 500.99976 140.617406 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_18"/>
+     <g id="cylinder-convergence-scheme-text_10">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 145.044906) scale(0.11 -0.11)">
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-204"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(116 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a5" transform="translate(139.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-ytick_4">
+     <g id="cylinder-convergence-scheme-line2d_19">
+      <path class="zc-stroke-grid" d="M 43.735553 97.488034 
+L 500.99976 97.488034 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_20"/>
+     <g id="cylinder-convergence-scheme-text_11">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 101.915534) scale(0.11 -0.11)">
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-204"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(116 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a4" transform="translate(139.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-ytick_5">
+     <g id="cylinder-convergence-scheme-line2d_21">
+      <path class="zc-stroke-grid" d="M 43.735553 54.358662 
+L 500.99976 54.358662 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_22"/>
+     <g id="cylinder-convergence-scheme-text_12">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 58.786162) scale(0.11 -0.11)">
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-204"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(116 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-8b" transform="translate(139.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-ytick_6">
+     <g id="cylinder-convergence-scheme-line2d_23">
+      <path class="zc-stroke-grid" d="M 43.735553 11.22929 
+L 500.99976 11.22929 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #d9d9d6; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="cylinder-convergence-scheme-line2d_24"/>
+     <g id="cylinder-convergence-scheme-text_13">
+      <g class="zc-fill-ink" style="fill: #262624" transform="translate(18.50024 15.65679) scale(0.11 -0.11)">
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-204"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-87" transform="translate(58 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-57" transform="translate(116 0)"/>
+       <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-89" transform="translate(139.59375 0)"/>
+      </g>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-text_14">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(12.25774 201.909023) rotate(-90) scale(0.115 -0.115)">
+      <defs>
+       <path id="cylinder-convergence-scheme-Lato-Regular-16" d="M 1203 1715 
+L 1203 0 
+L 586 0 
+L 586 4586 
+L 1939 4586 
+Q 2374 4586 2696 4485 
+Q 3018 4384 3229 4198 
+Q 3440 4013 3544 3750 
+Q 3648 3488 3648 3165 
+Q 3648 2845 3536 2579 
+Q 3424 2314 3208 2122 
+Q 2992 1930 2673 1822 
+Q 2355 1715 1939 1715 
+L 1203 1715 
+z
+M 1203 2208 
+L 1939 2208 
+Q 2205 2208 2408 2278 
+Q 2611 2349 2750 2475 
+Q 2890 2602 2960 2778 
+Q 3030 2954 3030 3165 
+Q 3030 3603 2760 3849 
+Q 2490 4096 1939 4096 
+L 1203 4096 
+L 1203 2208 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-38" d="M 451 0 
+L 451 3242 
+L 778 3242 
+Q 870 3242 905 3206 
+Q 941 3171 954 3085 
+L 989 2592 
+Q 1142 2925 1368 3112 
+Q 1594 3299 1917 3299 
+Q 2019 3299 2113 3276 
+Q 2208 3254 2282 3206 
+L 2240 2781 
+Q 2221 2701 2144 2701 
+Q 2099 2701 2012 2720 
+Q 1926 2739 1818 2739 
+Q 1664 2739 1542 2692 
+Q 1421 2646 1326 2558 
+Q 1232 2470 1158 2342 
+Q 1085 2214 1024 2048 
+L 1024 0 
+L 451 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-33" d="M 1818 3293 
+Q 2173 3293 2457 3174 
+Q 2742 3056 2944 2838 
+Q 3146 2621 3253 2312 
+Q 3360 2003 3360 1622 
+Q 3360 1238 3253 931 
+Q 3146 624 2944 406 
+Q 2742 189 2457 72 
+Q 2173 -45 1818 -45 
+Q 1459 -45 1172 72 
+Q 886 189 684 406 
+Q 483 624 376 931 
+Q 269 1238 269 1622 
+Q 269 2003 376 2312 
+Q 483 2621 684 2838 
+Q 886 3056 1172 3174 
+Q 1459 3293 1818 3293 
+z
+M 1818 400 
+Q 2298 400 2534 721 
+Q 2771 1043 2771 1619 
+Q 2771 2198 2534 2521 
+Q 2298 2845 1818 2845 
+Q 1574 2845 1393 2761 
+Q 1213 2678 1093 2521 
+Q 973 2365 913 2136 
+Q 854 1907 854 1619 
+Q 854 1043 1092 721 
+Q 1331 400 1818 400 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-23" d="M 451 0 
+L 451 4714 
+L 1024 4714 
+L 1024 2771 
+Q 1226 3011 1485 3152 
+Q 1744 3293 2080 3293 
+Q 2365 3293 2593 3184 
+Q 2822 3075 2982 2868 
+Q 3142 2662 3227 2368 
+Q 3312 2074 3312 1706 
+Q 3312 1312 3216 989 
+Q 3120 666 2939 437 
+Q 2758 208 2499 81 
+Q 2240 -45 1917 -45 
+Q 1597 -45 1377 75 
+Q 1158 195 995 416 
+L 966 122 
+Q 941 0 819 0 
+L 451 0 
+z
+M 1891 2838 
+Q 1613 2838 1405 2710 
+Q 1197 2582 1024 2349 
+L 1024 781 
+Q 1181 570 1368 483 
+Q 1555 397 1779 397 
+Q 2237 397 2480 720 
+Q 2723 1043 2723 1683 
+Q 2723 2278 2507 2558 
+Q 2291 2838 1891 2838 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-36" d="M 451 -1098 
+L 451 3242 
+L 794 3242 
+Q 915 3242 944 3123 
+L 992 2739 
+Q 1200 2992 1469 3145 
+Q 1738 3299 2083 3299 
+Q 2365 3299 2592 3192 
+Q 2819 3085 2979 2875 
+Q 3139 2666 3225 2355 
+Q 3312 2045 3312 1642 
+Q 3312 1283 3216 974 
+Q 3120 666 2939 440 
+Q 2758 214 2497 84 
+Q 2237 -45 1910 -45 
+Q 1613 -45 1400 54 
+Q 1187 154 1024 336 
+L 1024 -1098 
+L 451 -1098 
+z
+M 1898 2838 
+Q 1619 2838 1409 2710 
+Q 1200 2582 1024 2349 
+L 1024 781 
+Q 1178 570 1365 483 
+Q 1552 397 1782 397 
+Q 2237 397 2480 720 
+Q 2723 1043 2723 1642 
+Q 2723 1958 2667 2185 
+Q 2611 2413 2505 2558 
+Q 2400 2704 2246 2771 
+Q 2093 2838 1898 2838 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-3c" d="M 989 3242 
+L 989 1174 
+Q 989 806 1157 604 
+Q 1325 403 1670 403 
+Q 1920 403 2141 521 
+Q 2362 640 2547 851 
+L 2547 3242 
+L 3117 3242 
+L 3117 0 
+L 2778 0 
+Q 2656 0 2624 118 
+L 2579 467 
+Q 2368 234 2105 91 
+Q 1843 -51 1504 -51 
+Q 1238 -51 1035 37 
+Q 832 125 694 285 
+Q 557 445 488 672 
+Q 419 899 419 1174 
+L 419 3242 
+L 989 3242 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-24" d="M 2707 2666 
+Q 2682 2630 2656 2611 
+Q 2630 2592 2586 2592 
+Q 2538 2592 2480 2632 
+Q 2422 2672 2337 2720 
+Q 2253 2768 2129 2808 
+Q 2006 2848 1827 2848 
+Q 1587 2848 1404 2763 
+Q 1222 2678 1099 2518 
+Q 976 2358 913 2131 
+Q 851 1904 851 1622 
+Q 851 1328 918 1099 
+Q 986 870 1109 715 
+Q 1232 560 1406 478 
+Q 1581 397 1798 397 
+Q 2006 397 2140 446 
+Q 2275 496 2363 557 
+Q 2451 618 2510 667 
+Q 2570 717 2627 717 
+Q 2698 717 2736 662 
+L 2896 454 
+Q 2790 323 2656 230 
+Q 2522 138 2366 75 
+Q 2211 13 2041 -16 
+Q 1872 -45 1696 -45 
+Q 1392 -45 1131 67 
+Q 870 179 678 392 
+Q 486 605 377 915 
+Q 269 1226 269 1622 
+Q 269 1984 369 2291 
+Q 470 2598 664 2820 
+Q 858 3043 1141 3168 
+Q 1424 3293 1792 3293 
+Q 2134 3293 2395 3182 
+Q 2656 3072 2858 2870 
+L 2707 2666 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-103" d="M 669 0 
+L 669 2755 
+L 310 2797 
+Q 240 2813 198 2846 
+Q 157 2880 157 2944 
+L 157 3178 
+L 669 3178 
+L 669 3443 
+Q 669 3722 747 3938 
+Q 826 4154 970 4302 
+Q 1114 4451 1318 4528 
+Q 1523 4605 1779 4605 
+Q 1997 4605 2182 4541 
+L 2166 4253 
+Q 2160 4176 2083 4169 
+Q 2006 4163 1872 4163 
+Q 1725 4163 1605 4126 
+Q 1485 4090 1400 4003 
+Q 1315 3917 1268 3774 
+Q 1222 3632 1222 3424 
+L 1222 3178 
+L 2685 3178 
+L 2685 3357 
+Q 2685 3654 2777 3902 
+Q 2870 4150 3056 4329 
+Q 3242 4509 3518 4608 
+Q 3795 4707 4160 4707 
+Q 4282 4707 4410 4691 
+Q 4538 4675 4630 4643 
+L 4608 4346 
+Q 4605 4314 4584 4301 
+Q 4563 4288 4528 4285 
+Q 4493 4282 4440 4283 
+Q 4387 4285 4320 4285 
+Q 3750 4285 3494 4049 
+Q 3238 3814 3238 3341 
+L 3238 3178 
+L 5197 3178 
+L 5197 0 
+L 4624 0 
+L 4624 2765 
+L 3254 2765 
+L 3254 0 
+L 2685 0 
+L 2685 2765 
+L 1238 2765 
+L 1238 0 
+L 669 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-32" d="M 451 0 
+L 451 3242 
+L 794 3242 
+Q 915 3242 944 3123 
+L 989 2771 
+Q 1200 3005 1462 3149 
+Q 1725 3293 2067 3293 
+Q 2333 3293 2536 3205 
+Q 2739 3117 2875 2955 
+Q 3011 2794 3081 2566 
+Q 3152 2339 3152 2064 
+L 3152 0 
+L 2579 0 
+L 2579 2064 
+Q 2579 2432 2411 2635 
+Q 2243 2838 1901 2838 
+Q 1645 2838 1425 2716 
+Q 1206 2595 1024 2387 
+L 1024 0 
+L 451 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-3b" d="M 1446 -51 
+Q 1062 -51 856 163 
+Q 650 378 650 781 
+L 650 2765 
+L 259 2765 
+Q 208 2765 173 2795 
+Q 138 2826 138 2890 
+L 138 3117 
+L 669 3184 
+L 800 4186 
+Q 810 4234 843 4264 
+Q 877 4294 931 4294 
+L 1219 4294 
+L 1219 3178 
+L 2157 3178 
+L 2157 2765 
+L 1219 2765 
+L 1219 819 
+Q 1219 614 1318 515 
+Q 1418 416 1574 416 
+Q 1664 416 1729 440 
+Q 1795 464 1843 493 
+Q 1891 522 1924 546 
+Q 1958 570 1984 570 
+Q 2029 570 2064 515 
+L 2230 243 
+Q 2083 106 1875 27 
+Q 1667 -51 1446 -51 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-16"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-38" transform="translate(59.09375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-33" transform="translate(93.453125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-23" transform="translate(150.15625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(206.15625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2" transform="translate(258.953125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-36" transform="translate(284.546875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-38" transform="translate(340.59375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(374.953125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-39" transform="translate(427.75 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-39" transform="translate(471.046875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3c" transform="translate(514.34375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-38" transform="translate(570.09375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(604.453125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2" transform="translate(657.25 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-24" transform="translate(682.84375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-33" transform="translate(729.6875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(786.390625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-103" transform="translate(838.53125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-24" transform="translate(927.28125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2d" transform="translate(975.03125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(999.03125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-32" transform="translate(1051.828125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3b" transform="translate(1106.921875 0)"/>
+     </g>
+    </g>
+   </g>
+   <g id="cylinder-convergence-scheme-line2d_25">
+    <path class="zc-stroke-series-1" d="M 64.520289 179.100655 
+L 67.014458 217.185582 
+L 68.677237 238.213201 
+L 69.508626 246.452279 
+L 70.340015 252.951189 
+L 71.171405 257.397722 
+L 72.002794 259.761645 
+L 72.834184 259.935553 
+L 73.665573 257.934281 
+L 74.496963 253.844075 
+L 75.328352 247.816965 
+L 76.159742 240.092031 
+L 76.991131 230.896573 
+L 78.65391 208.93013 
+L 80.316689 183.294474 
+L 84.473636 113.461434 
+L 85.305026 101.999894 
+L 86.136415 94.02551 
+L 86.967805 89.554157 
+L 87.799194 88.950335 
+L 88.630584 91.818979 
+L 89.461973 97.215814 
+L 92.787531 123.989266 
+L 93.618921 128.265837 
+L 94.45031 131.671064 
+L 95.2817 134.411712 
+L 96.113089 136.519066 
+L 96.944478 139.776169 
+L 97.775868 144.924956 
+L 98.607257 151.834898 
+L 99.438647 161.227003 
+L 101.101426 185.318074 
+L 103.595594 222.76423 
+L 104.426984 233.340264 
+L 105.258373 242.411069 
+L 106.089763 249.825565 
+L 106.921152 255.324573 
+L 107.752542 258.78092 
+L 108.583931 260.085091 
+L 109.41532 259.199225 
+L 110.24671 256.171442 
+L 111.078099 251.126832 
+L 111.909489 244.249487 
+L 112.740878 235.79172 
+L 114.403657 214.984899 
+L 116.066436 190.206924 
+L 118.560605 148.054797 
+L 120.223384 119.986657 
+L 121.054773 107.474711 
+L 121.886163 97.756061 
+L 122.717552 91.382909 
+L 123.548941 88.795591 
+L 124.380331 89.960342 
+L 125.21172 94.192195 
+L 126.04311 100.397827 
+L 128.537278 121.298555 
+L 129.368668 126.177186 
+L 130.200057 130.000385 
+L 131.031447 133.103902 
+L 132.694226 137.877442 
+L 133.525615 141.884345 
+L 134.357005 147.945927 
+L 135.188394 156.032651 
+L 136.019783 166.5243 
+L 138.513952 204.475218 
+L 140.176731 228.019098 
+L 141.00812 237.904458 
+L 141.83951 246.181685 
+L 142.670899 252.739131 
+L 143.502289 257.250523 
+L 144.333678 259.690462 
+L 145.165068 259.936864 
+L 145.996457 258.002404 
+L 146.827847 253.978061 
+L 147.659236 248.015656 
+L 148.490625 240.35085 
+L 149.322015 231.207859 
+L 150.984794 209.325068 
+L 152.647573 183.756443 
+L 157.63591 102.348688 
+L 158.467299 94.264046 
+L 159.298689 89.653849 
+L 160.130078 88.913163 
+L 160.961468 91.676291 
+L 161.792857 97.007277 
+L 163.455636 111.336047 
+L 164.287025 118.229421 
+L 165.118415 123.804059 
+L 165.949804 128.113509 
+L 166.781194 131.549316 
+L 167.612583 134.316647 
+L 168.443973 136.433371 
+L 169.275362 139.617479 
+L 170.106752 144.685777 
+L 170.938141 151.517441 
+L 171.769531 160.809957 
+L 173.43231 184.809947 
+L 175.926478 222.321889 
+L 176.757867 232.947485 
+L 177.589257 242.07865 
+L 178.420646 249.55474 
+L 179.252036 255.140561 
+L 180.083425 258.683721 
+L 180.914815 260.076507 
+L 181.746204 259.268249 
+L 182.577594 256.312136 
+L 183.408983 251.326989 
+L 184.240373 244.52602 
+L 185.071762 236.122313 
+L 186.734541 215.404979 
+L 188.39732 190.693919 
+L 190.891488 148.605121 
+L 192.554267 120.470657 
+L 193.385657 107.924572 
+L 194.217046 98.065639 
+L 195.048436 91.563964 
+L 195.879825 88.82144 
+L 196.711215 89.843644 
+L 197.542604 93.972682 
+L 198.373994 100.119046 
+L 200.868162 121.062602 
+L 201.699551 125.99883 
+L 202.530941 129.858006 
+L 203.36233 132.976369 
+L 205.025109 137.72685 
+L 205.856499 141.669536 
+L 206.687888 147.663688 
+L 207.519278 155.647622 
+L 208.350667 166.055698 
+L 210.013446 191.035359 
+L 211.676225 216.274858 
+L 213.339004 237.511243 
+L 214.170393 245.853072 
+L 215.001783 252.490775 
+L 215.833172 257.082888 
+L 216.664562 259.609793 
+L 217.495951 259.947919 
+L 218.327341 258.107161 
+L 219.15873 254.169911 
+L 219.99012 248.282008 
+L 220.821509 240.681495 
+L 221.652899 231.591126 
+L 223.315678 209.791961 
+L 224.978457 184.288479 
+L 229.966793 102.706518 
+L 230.798183 94.505719 
+L 231.629572 89.749775 
+L 232.460962 88.86225 
+L 233.292351 91.493938 
+L 234.123741 96.738715 
+L 235.78652 111.012909 
+L 236.617909 117.964857 
+L 237.449299 123.597503 
+L 238.280688 127.951722 
+L 239.112078 131.410279 
+L 239.943467 134.203549 
+L 240.774856 136.336339 
+L 241.606246 139.451013 
+L 242.437635 144.431739 
+L 243.269025 151.189406 
+L 244.100414 160.381754 
+L 245.763193 184.280303 
+L 248.257362 221.856178 
+L 249.088751 232.536608 
+L 249.920141 241.730988 
+L 250.75153 249.269032 
+L 251.58292 254.942308 
+L 252.414309 258.567858 
+L 253.245698 260.048846 
+L 254.077088 259.327632 
+L 254.908477 256.457202 
+L 255.739867 251.561283 
+L 256.571256 244.818385 
+L 257.402646 236.474268 
+L 259.065425 215.855933 
+L 260.728204 191.212535 
+L 263.222372 149.174945 
+L 264.885151 121.003527 
+L 265.716541 108.418637 
+L 266.54793 98.392608 
+L 267.379319 91.746742 
+L 268.210709 88.845373 
+L 269.042098 89.730212 
+L 269.873488 93.757436 
+L 270.704877 99.842039 
+L 273.199046 120.827755 
+L 274.030435 125.808417 
+L 274.861825 129.703558 
+L 275.693214 132.853065 
+L 277.355993 137.593263 
+L 278.187383 141.460178 
+L 279.018772 147.375011 
+L 279.850161 155.255846 
+L 280.681551 165.583973 
+L 282.34433 190.494664 
+L 284.007109 215.777861 
+L 285.669888 237.120726 
+L 286.501277 245.542221 
+L 287.332667 252.256533 
+L 288.164056 256.917026 
+L 288.995446 259.527685 
+L 289.826835 259.952932 
+L 290.658225 258.195132 
+L 291.489614 254.338704 
+L 292.321003 248.528641 
+L 293.152393 240.997744 
+L 293.983782 231.969817 
+L 295.646561 210.265923 
+L 297.30934 184.83311 
+L 302.297677 103.120556 
+L 303.129067 94.782623 
+L 303.960456 89.864789 
+L 304.791846 88.823059 
+L 305.623235 91.322549 
+L 306.454624 96.479099 
+L 308.117403 110.68202 
+L 308.948793 117.685858 
+L 309.780182 123.375303 
+L 310.611572 127.772607 
+L 311.442961 131.26173 
+L 312.274351 134.086569 
+L 313.10574 136.235233 
+L 313.93713 139.268544 
+L 314.768519 144.153614 
+L 315.599909 150.833195 
+L 316.431298 159.916057 
+L 318.094077 183.700981 
+L 320.588245 221.342602 
+L 321.419635 232.080487 
+L 322.251024 241.34335 
+L 323.082414 248.950315 
+L 323.913803 254.717706 
+L 324.745193 258.433642 
+L 325.576582 260.010053 
+L 326.407972 259.383905 
+L 327.239361 256.606201 
+L 328.070751 251.79676 
+L 328.90214 245.130676 
+L 329.73353 236.856791 
+L 331.396308 216.339511 
+L 333.059087 191.775597 
+L 335.553256 149.80788 
+L 337.216035 121.566744 
+L 338.047424 108.950569 
+L 338.878814 98.760245 
+L 339.710203 91.970368 
+L 340.541593 88.889679 
+L 341.372982 89.60237 
+L 342.204372 93.504003 
+L 343.035761 99.520404 
+L 345.529929 120.554642 
+L 346.361319 125.596976 
+L 347.192708 129.535652 
+L 348.024098 132.712267 
+L 349.686877 137.441989 
+L 350.518266 141.242618 
+L 351.349656 147.077142 
+L 352.181045 154.843928 
+L 353.012435 165.078391 
+L 354.675214 189.904787 
+L 356.337993 215.236598 
+L 358.000771 236.685427 
+L 358.832161 245.180855 
+L 359.66355 251.990644 
+L 360.49494 256.73759 
+L 361.326329 259.438095 
+L 362.157719 259.960001 
+L 362.989108 258.303564 
+L 363.820498 254.543103 
+L 364.651887 248.816611 
+L 365.483277 241.356436 
+L 366.314666 232.388946 
+L 367.977445 210.782198 
+L 369.640224 185.425427 
+L 374.628561 103.568631 
+L 375.45995 95.095414 
+L 376.29134 90.008196 
+L 377.122729 88.789152 
+L 377.954119 91.136674 
+L 378.785508 96.195781 
+L 380.448287 110.333946 
+L 381.279677 117.400727 
+L 382.111066 123.151047 
+L 382.942456 127.590742 
+L 383.773845 131.117912 
+L 384.605234 133.98153 
+L 385.436624 136.151659 
+L 386.268013 139.098658 
+L 387.099403 143.882314 
+L 387.930792 150.488244 
+L 388.762182 159.456606 
+L 390.424961 183.13189 
+L 392.919129 220.810722 
+L 393.750519 231.610612 
+L 394.581908 240.954968 
+L 395.413298 248.643887 
+L 396.244687 254.510094 
+L 397.076076 258.314797 
+L 397.907466 259.985838 
+L 398.738855 259.460949 
+L 399.570245 256.780983 
+L 400.401634 252.048252 
+L 401.233024 245.470292 
+L 402.064413 237.261576 
+L 403.727192 216.854219 
+L 405.389971 192.375704 
+L 407.88414 150.474632 
+L 409.546918 122.197584 
+L 410.378308 109.537719 
+L 411.209697 99.161636 
+L 412.041087 92.214341 
+L 412.872476 88.954731 
+L 413.703866 89.5021 
+L 414.535255 93.278962 
+L 415.366645 99.221778 
+L 417.860813 120.298227 
+L 418.692203 125.406126 
+L 419.523592 129.388119 
+L 420.354982 132.587793 
+L 422.017761 137.312811 
+L 422.84915 141.047707 
+L 423.680539 146.794171 
+L 424.511929 154.439003 
+L 425.343318 164.565894 
+L 427.006097 189.31067 
+L 428.668876 214.679731 
+L 430.331655 236.247429 
+L 431.163045 244.825223 
+L 431.994434 251.728174 
+L 432.825824 256.572883 
+L 433.657213 259.382081 
+L 434.488603 260.01103 
+L 435.319992 258.455185 
+L 436.151381 254.789197 
+L 436.982771 249.14921 
+L 437.81416 241.764381 
+L 438.64555 232.861726 
+L 440.308329 211.359401 
+L 441.971108 186.072191 
+L 446.959445 104.071424 
+L 447.790834 95.454542 
+L 448.622224 90.184122 
+L 449.453613 88.77581 
+L 450.285002 90.968318 
+L 451.116392 95.923363 
+L 451.947781 102.502069 
+L 453.61056 117.104555 
+L 454.44195 122.915814 
+L 455.273339 127.413993 
+L 456.104729 130.979248 
+L 456.936118 133.879832 
+L 457.767508 136.073716 
+L 458.598897 138.935637 
+L 459.430287 143.609523 
+L 460.261676 150.138178 
+L 461.093066 158.988994 
+L 462.755844 182.515523 
+L 465.250013 220.265705 
+L 466.912792 240.550671 
+L 467.744181 248.324732 
+L 468.575571 254.28382 
+L 469.40696 258.185903 
+L 470.23835 259.961416 
+L 471.069739 259.542056 
+L 471.901129 256.965585 
+L 472.732518 252.328692 
+L 473.563908 245.835539 
+L 474.395297 237.699983 
+L 476.058076 217.40795 
+L 477.720855 193.014243 
+L 480.215023 151.19456 
+L 480.215023 151.19456 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="cylinder-convergence-scheme-line2d_26">
+    <path class="zc-stroke-series-2" d="M 64.520289 74.877191 
+L 65.351679 75.162964 
+L 66.183068 77.6412 
+L 67.014458 81.94867 
+L 67.845847 87.469233 
+L 69.508626 101.086083 
+L 72.834184 130.298292 
+L 74.496963 146.475712 
+L 76.159742 166.14467 
+L 80.316689 221.079362 
+L 81.148079 229.189439 
+L 81.979468 235.290251 
+L 82.810858 239.098117 
+L 83.642247 240.717922 
+L 84.473636 239.938739 
+L 85.305026 236.767048 
+L 86.136415 231.492386 
+L 86.967805 224.312905 
+L 87.799194 215.479017 
+L 89.461973 193.881009 
+L 91.956142 155.543084 
+L 94.45031 116.87314 
+L 95.2817 105.096469 
+L 96.113089 95.118872 
+L 96.944478 86.791799 
+L 97.775868 80.494573 
+L 98.607257 76.48492 
+L 99.438647 74.873952 
+L 100.270036 75.618468 
+L 101.101426 78.485614 
+L 101.932815 83.013021 
+L 102.764205 88.830373 
+L 105.258373 109.792644 
+L 107.752542 131.916259 
+L 109.41532 148.393205 
+L 111.078099 168.421948 
+L 114.403657 213.49435 
+L 115.235047 222.942098 
+L 116.066436 230.673178 
+L 116.897826 236.328845 
+L 117.729215 239.656552 
+L 118.560605 240.895147 
+L 119.391994 239.552129 
+L 120.223384 235.945629 
+L 121.054773 230.28279 
+L 121.886163 222.751455 
+L 122.717552 213.616022 
+L 124.380331 191.569786 
+L 126.874499 152.961551 
+L 129.368668 114.481723 
+L 130.200057 103.08832 
+L 131.031447 93.418257 
+L 131.862836 85.465814 
+L 132.694226 79.604901 
+L 133.525615 76.064634 
+L 134.357005 74.929672 
+L 135.188394 76.124172 
+L 136.019783 79.368486 
+L 136.851173 84.131666 
+L 137.682562 90.185755 
+L 141.00812 118.502932 
+L 142.670899 133.511295 
+L 144.333678 150.308757 
+L 145.996457 170.690626 
+L 149.322015 215.564545 
+L 150.153404 224.697509 
+L 150.984794 232.032879 
+L 151.816183 237.235972 
+L 152.647573 240.102005 
+L 153.478962 240.901574 
+L 154.310352 239.064416 
+L 155.141741 235.032923 
+L 155.973131 228.983962 
+L 156.80452 221.113063 
+L 157.63591 211.688657 
+L 159.298689 189.20833 
+L 161.792857 150.382421 
+L 164.287025 112.130808 
+L 165.118415 101.108153 
+L 165.949804 91.75813 
+L 166.781194 84.194032 
+L 167.612583 78.777878 
+L 168.443973 75.711309 
+L 169.275362 75.05081 
+L 170.106752 76.688494 
+L 170.938141 80.318415 
+L 171.769531 85.333666 
+L 173.43231 98.544653 
+L 176.757867 127.417566 
+L 178.420646 143.204688 
+L 180.083425 162.121418 
+L 181.746204 184.418736 
+L 183.408983 207.282871 
+L 184.240373 217.547308 
+L 185.071762 226.355026 
+L 185.903152 233.288849 
+L 186.734541 238.041503 
+L 187.56593 240.450902 
+L 188.39732 240.778077 
+L 189.228709 238.486905 
+L 190.060099 234.042274 
+L 190.891488 227.616474 
+L 191.722878 219.421818 
+L 193.385657 198.774433 
+L 195.048436 174.19043 
+L 199.205383 109.855279 
+L 200.036773 99.199644 
+L 200.868162 90.175986 
+L 201.699551 83.014937 
+L 202.530941 78.054531 
+L 203.36233 75.466629 
+L 204.19372 75.275953 
+L 205.025109 77.326994 
+L 205.856499 81.331057 
+L 206.687888 86.584394 
+L 208.350667 99.991539 
+L 211.676225 129.066163 
+L 213.339004 144.971023 
+L 215.001783 164.243964 
+L 219.15873 219.470276 
+L 219.99012 227.943134 
+L 220.821509 234.478472 
+L 221.652899 238.773797 
+L 222.484288 240.771392 
+L 223.315678 240.59936 
+L 224.147067 237.878418 
+L 224.978457 233.026715 
+L 225.809846 226.234383 
+L 226.641235 217.730959 
+L 228.304014 196.622903 
+L 229.966793 171.782664 
+L 234.123741 107.749649 
+L 234.95513 97.452293 
+L 235.78652 88.762892 
+L 236.617909 82.019737 
+L 237.449299 77.519682 
+L 238.280688 75.406551 
+L 239.112078 75.674542 
+L 239.943467 78.134198 
+L 240.774856 82.426038 
+L 241.606246 87.930663 
+L 243.269025 101.528207 
+L 246.594583 130.71611 
+L 248.257362 146.864634 
+L 249.920141 166.495714 
+L 254.077088 221.415995 
+L 254.908477 229.548004 
+L 255.739867 235.67771 
+L 256.571256 239.520871 
+L 257.402646 241.168952 
+L 258.234035 240.438793 
+L 259.065425 237.306434 
+L 259.896814 232.070615 
+L 260.728204 224.92931 
+L 261.559593 216.131616 
+L 263.222372 194.597979 
+L 265.716541 156.33318 
+L 268.210709 117.699341 
+L 269.042098 105.905253 
+L 269.873488 95.912939 
+L 270.704877 87.562126 
+L 271.536267 81.231454 
+L 272.367656 77.180438 
+L 273.199046 75.523358 
+L 274.030435 76.220818 
+L 274.861825 79.043381 
+L 275.693214 83.540416 
+L 276.524604 89.320595 
+L 279.018772 110.230256 
+L 281.51294 132.310413 
+L 283.175719 148.723837 
+L 284.838498 168.676294 
+L 288.164056 213.69615 
+L 288.995446 223.1667 
+L 289.826835 230.932407 
+L 290.658225 236.633422 
+L 291.489614 240.010437 
+L 292.321003 241.29574 
+L 293.152393 240.013085 
+L 293.983782 236.457303 
+L 294.815172 230.840427 
+L 295.646561 223.350841 
+L 296.477951 214.251348 
+L 298.14073 192.257861 
+L 300.634898 153.670964 
+L 303.129067 115.14489 
+L 303.960456 103.688285 
+L 304.791846 93.963864 
+L 305.623235 85.942809 
+L 306.454624 80.001935 
+L 307.286014 76.374135 
+L 308.117403 75.148021 
+L 308.948793 76.25173 
+L 309.780182 79.413371 
+L 310.611572 84.110265 
+L 311.442961 90.108351 
+L 314.768519 118.286568 
+L 316.431298 133.227064 
+L 318.094077 149.923922 
+L 319.756856 170.200545 
+L 323.082414 214.994618 
+L 323.913803 224.146039 
+L 324.745193 231.51105 
+L 325.576582 236.751109 
+L 326.407972 239.656834 
+L 327.239361 240.498152 
+L 328.070751 238.699168 
+L 328.90214 234.699501 
+L 329.73353 228.677226 
+L 330.564919 220.824784 
+L 331.396308 211.41115 
+L 333.059087 188.930256 
+L 335.553256 150.035928 
+L 338.047424 111.651204 
+L 338.878814 100.544653 
+L 339.710203 91.118576 
+L 340.541593 83.470647 
+L 341.372982 77.964582 
+L 342.204372 74.806689 
+L 343.035761 74.05732 
+L 343.867151 75.614201 
+L 344.69854 79.169809 
+L 345.529929 84.132862 
+L 347.192708 97.277562 
+L 350.518266 126.064215 
+L 352.181045 141.825411 
+L 353.843824 160.6929 
+L 355.506603 182.958392 
+L 357.169382 205.832089 
+L 358.000771 216.115242 
+L 358.832161 224.949233 
+L 359.66355 231.914471 
+L 360.49494 236.702317 
+L 361.326329 239.141973 
+L 362.157719 239.505316 
+L 362.989108 237.244787 
+L 363.820498 232.825506 
+L 364.651887 226.420065 
+L 365.483277 218.239368 
+L 367.146056 197.604991 
+L 368.808835 173.013983 
+L 372.965782 108.583651 
+L 373.797171 97.887245 
+L 374.628561 88.829936 
+L 375.45995 81.631624 
+L 376.29134 76.634085 
+L 377.122729 74.011735 
+L 377.954119 73.791721 
+L 378.785508 75.821638 
+L 379.616898 79.812152 
+L 380.448287 85.062739 
+L 382.111066 98.486118 
+L 385.436624 127.609791 
+L 387.099403 143.534625 
+L 388.762182 162.820407 
+L 392.919129 218.158546 
+L 393.750519 226.668422 
+L 394.581908 233.242679 
+L 395.413298 237.578852 
+L 396.244687 239.611949 
+L 397.076076 239.48285 
+L 397.907466 236.797305 
+L 398.738855 231.979278 
+L 399.570245 225.217614 
+L 400.401634 216.740566 
+L 402.064413 195.674363 
+L 403.727192 170.863673 
+L 407.88414 106.850208 
+L 408.715529 96.541375 
+L 409.546918 87.842012 
+L 410.378308 81.084937 
+L 411.209697 76.569792 
+L 412.041087 74.441821 
+L 412.872476 74.697196 
+L 413.703866 77.147867 
+L 414.535255 81.438821 
+L 415.366645 86.942726 
+L 417.029424 100.555154 
+L 420.354982 129.774934 
+L 422.017761 145.917096 
+L 423.680539 165.537353 
+L 427.837487 220.504963 
+L 428.668876 228.663884 
+L 429.500266 234.824052 
+L 430.331655 238.700402 
+L 431.163045 240.373368 
+L 431.994434 239.682466 
+L 432.825824 236.579077 
+L 433.657213 231.369351 
+L 434.488603 224.251618 
+L 435.319992 215.473952 
+L 436.982771 193.970186 
+L 439.476939 155.726119 
+L 441.971108 117.085751 
+L 442.802497 105.271663 
+L 443.633887 95.262729 
+L 444.465276 86.891119 
+L 445.296666 80.535846 
+L 446.128055 76.457786 
+L 446.959445 74.773038 
+L 447.790834 75.444469 
+L 448.622224 78.245407 
+L 449.453613 82.728894 
+L 450.285002 88.491296 
+L 452.779171 109.388721 
+L 455.273339 131.466295 
+L 456.936118 147.8645 
+L 458.598897 167.799257 
+L 461.924455 212.831956 
+L 462.755844 222.320655 
+L 463.587234 230.108906 
+L 464.418623 235.836167 
+L 465.250013 239.240353 
+L 466.081402 240.551135 
+L 466.912792 239.298709 
+L 467.744181 235.769329 
+L 468.575571 230.17631 
+L 469.40696 222.709167 
+L 470.23835 213.630059 
+L 471.901129 191.670944 
+L 474.395297 153.119071 
+L 476.889465 114.612084 
+L 477.720855 103.148834 
+L 478.552244 93.421213 
+L 479.383634 85.393525 
+L 480.215023 79.443833 
+L 480.215023 79.443833 
+" clip-path="url(#cylinder-convergence-scheme-p21af7263ad)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="cylinder-convergence-scheme-patch_3">
+    <path class="zc-stroke-ink" d="M 43.735553 269.39976 
+L 43.735553 3.00024 
+" style="fill: none; stroke: #262624; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="cylinder-convergence-scheme-patch_4">
+    <path class="zc-stroke-ink" d="M 43.735553 269.39976 
+L 500.99976 269.39976 
+" style="fill: none; stroke: #262624; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="cylinder-convergence-scheme-legend_1">
+    <g id="cylinder-convergence-scheme-line2d_27">
+     <path class="zc-stroke-series-1" d="M 351.229291 15.87274 
+L 360.729291 15.87274 
+L 370.229291 15.87274 
+" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: square"/>
+    </g>
+    <g id="cylinder-convergence-scheme-text_15">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(377.829291 19.19774) scale(0.095 -0.095)">
+      <defs>
+       <path id="cylinder-convergence-scheme-Lato-Regular-d" d="M 1206 0 
+L 586 0 
+L 586 4586 
+L 1206 4586 
+L 1206 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-a3" d="M 1040 4714 
+L 1040 0 
+L 470 0 
+L 470 4714 
+L 1040 4714 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-9" d="M 3411 4586 
+L 3411 4080 
+L 1206 4080 
+L 1206 2557 
+L 2992 2557 
+L 2992 2070 
+L 1206 2070 
+L 1206 506 
+L 3414 506 
+L 3411 0 
+L 586 0 
+L 586 4586 
+L 3411 4586 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-d"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-31" transform="translate(27.25 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-36" transform="translate(109.5 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a3" transform="translate(165.546875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2d" transform="translate(189.140625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-24" transform="translate(213.140625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2d" transform="translate(260.890625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3b" transform="translate(284.890625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2" transform="translate(320.734375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-9" transform="translate(346.328125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3c" transform="translate(401.921875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a3" transform="translate(457.671875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(481.265625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-38" transform="translate(534.0625 0)"/>
+     </g>
+    </g>
+    <g id="cylinder-convergence-scheme-line2d_28">
+     <path class="zc-stroke-series-2" d="M 351.229291 30.12274 
+L 360.729291 30.12274 
+L 370.229291 30.12274 
+" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
+    </g>
+    <g id="cylinder-convergence-scheme-text_16">
+     <g class="zc-fill-ink" style="fill: #262624" transform="translate(377.829291 33.44774) scale(0.095 -0.095)">
+      <defs>
+       <path id="cylinder-convergence-scheme-Lato-Regular-18" d="M 1203 1914 
+L 1203 0 
+L 586 0 
+L 586 4586 
+L 1882 4586 
+Q 2317 4586 2633 4498 
+Q 2950 4410 3156 4243 
+Q 3363 4077 3462 3841 
+Q 3562 3606 3562 3315 
+Q 3562 3072 3485 2861 
+Q 3408 2650 3262 2482 
+Q 3117 2314 2907 2194 
+Q 2698 2074 2432 2016 
+Q 2554 1939 2637 1821 
+L 3974 0 
+L 3424 0 
+Q 3254 0 3174 131 
+L 1984 1770 
+Q 1930 1846 1867 1880 
+Q 1805 1914 1674 1914 
+L 1203 1914 
+z
+M 1203 2365 
+L 1856 2365 
+Q 2125 2365 2331 2430 
+Q 2538 2496 2677 2616 
+Q 2816 2736 2886 2902 
+Q 2957 3069 2957 3270 
+Q 2957 3680 2688 3888 
+Q 2419 4096 1882 4096 
+L 1203 4096 
+L 1203 2365 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-2b" d="M 1581 3296 
+Q 1792 3296 1974 3249 
+Q 2157 3203 2307 3114 
+L 3187 3114 
+L 3187 2902 
+Q 3187 2797 3053 2768 
+L 2685 2717 
+Q 2794 2509 2794 2253 
+Q 2794 2016 2702 1822 
+Q 2611 1629 2451 1491 
+Q 2291 1354 2067 1280 
+Q 1843 1206 1581 1206 
+Q 1350 1206 1149 1261 
+Q 1046 1197 993 1123 
+Q 941 1050 941 979 
+Q 941 864 1035 805 
+Q 1130 746 1283 720 
+Q 1437 694 1633 688 
+Q 1830 682 2036 667 
+Q 2243 653 2440 617 
+Q 2637 582 2790 502 
+Q 2944 422 3038 281 
+Q 3133 141 3133 -83 
+Q 3133 -291 3029 -486 
+Q 2925 -682 2729 -834 
+Q 2534 -986 2251 -1077 
+Q 1968 -1168 1613 -1168 
+Q 1258 -1168 992 -1097 
+Q 726 -1027 550 -908 
+Q 374 -790 286 -635 
+Q 198 -480 198 -310 
+Q 198 -70 348 96 
+Q 499 262 758 362 
+Q 614 426 531 533 
+Q 448 640 448 822 
+Q 448 893 473 968 
+Q 499 1043 552 1116 
+Q 605 1190 681 1257 
+Q 758 1325 861 1376 
+Q 621 1510 486 1734 
+Q 352 1958 352 2253 
+Q 352 2490 443 2683 
+Q 534 2877 697 3013 
+Q 861 3149 1086 3222 
+Q 1312 3296 1581 3296 
+z
+M 2608 -176 
+Q 2608 -58 2541 16 
+Q 2474 90 2360 131 
+Q 2246 173 2096 190 
+Q 1946 208 1778 217 
+Q 1610 227 1437 236 
+Q 1264 246 1104 269 
+Q 925 186 811 61 
+Q 698 -64 698 -237 
+Q 698 -346 754 -440 
+Q 810 -534 925 -603 
+Q 1040 -672 1214 -712 
+Q 1389 -752 1626 -752 
+Q 1856 -752 2038 -710 
+Q 2221 -669 2347 -592 
+Q 2474 -515 2541 -409 
+Q 2608 -304 2608 -176 
+z
+M 1581 1584 
+Q 1754 1584 1885 1632 
+Q 2016 1680 2105 1766 
+Q 2195 1853 2240 1973 
+Q 2285 2093 2285 2237 
+Q 2285 2534 2104 2710 
+Q 1923 2886 1581 2886 
+Q 1235 2886 1054 2710 
+Q 874 2534 874 2237 
+Q 874 2093 920 1973 
+Q 966 1853 1056 1766 
+Q 1146 1680 1277 1632 
+Q 1408 1584 1581 1584 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-67" d="M 576 2096 
+L 3136 2096 
+L 3136 1680 
+L 576 1680 
+L 576 2096 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-f" d="M 1203 2576 
+L 1437 2576 
+Q 1558 2576 1632 2606 
+Q 1706 2637 1766 2710 
+L 3293 4438 
+Q 3357 4522 3427 4554 
+Q 3498 4586 3600 4586 
+L 4125 4586 
+L 2378 2611 
+Q 2314 2534 2254 2484 
+Q 2195 2435 2128 2403 
+Q 2214 2374 2284 2318 
+Q 2355 2262 2422 2173 
+L 4246 0 
+L 3709 0 
+Q 3648 0 3605 8 
+Q 3562 16 3530 33 
+Q 3498 51 3474 75 
+Q 3450 99 3427 131 
+L 1846 1952 
+Q 1782 2032 1708 2065 
+Q 1635 2099 1485 2099 
+L 1203 2099 
+L 1203 0 
+L 586 0 
+L 586 4586 
+L 1203 4586 
+L 1203 2576 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-127" d="M 1446 -51 
+Q 1062 -51 856 163 
+Q 650 378 650 781 
+L 650 2765 
+L 259 2765 
+Q 208 2765 173 2795 
+Q 138 2826 138 2890 
+L 138 3117 
+L 669 3184 
+L 800 4186 
+Q 810 4234 843 4264 
+Q 877 4294 931 4294 
+L 1219 4294 
+L 1219 3178 
+L 2746 3178 
+L 2877 4186 
+Q 2886 4234 2920 4264 
+Q 2954 4294 3008 4294 
+L 3296 4294 
+L 3296 3178 
+L 4234 3178 
+L 4234 2765 
+L 3296 2765 
+L 3296 819 
+Q 3296 614 3397 515 
+Q 3498 416 3651 416 
+Q 3741 416 3806 440 
+Q 3872 464 3920 493 
+Q 3968 522 4001 546 
+Q 4035 570 4061 570 
+Q 4109 570 4141 515 
+L 4310 243 
+Q 4160 106 3952 27 
+Q 3744 -51 3523 -51 
+Q 3142 -51 2934 163 
+Q 2726 378 2726 781 
+L 2726 2765 
+L 1219 2765 
+L 1219 819 
+Q 1219 614 1318 515 
+Q 1418 416 1574 416 
+Q 1664 416 1729 440 
+Q 1795 464 1843 493 
+Q 1891 522 1924 546 
+Q 1958 570 1984 570 
+Q 2029 570 2064 515 
+L 2230 243 
+Q 2083 106 1875 27 
+Q 1667 -51 1446 -51 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-21" d="M 2512 0 
+Q 2429 0 2384 27 
+Q 2339 54 2314 134 
+L 2250 438 
+Q 2122 323 1998 232 
+Q 1875 141 1742 78 
+Q 1610 16 1458 -17 
+Q 1306 -51 1120 -51 
+Q 931 -51 764 1 
+Q 598 54 475 160 
+Q 352 266 280 427 
+Q 208 589 208 810 
+Q 208 1002 313 1179 
+Q 419 1357 656 1494 
+Q 893 1632 1273 1720 
+Q 1654 1808 2208 1821 
+L 2208 2074 
+Q 2208 2451 2045 2644 
+Q 1882 2838 1568 2838 
+Q 1357 2838 1214 2785 
+Q 1072 2733 968 2667 
+Q 864 2602 789 2549 
+Q 714 2496 640 2496 
+Q 582 2496 540 2526 
+Q 499 2557 470 2602 
+L 368 2784 
+Q 637 3043 947 3171 
+Q 1258 3299 1635 3299 
+Q 1907 3299 2118 3209 
+Q 2330 3120 2474 2960 
+Q 2618 2800 2691 2573 
+Q 2765 2346 2765 2074 
+L 2765 0 
+L 2512 0 
+z
+M 1290 349 
+Q 1440 349 1565 379 
+Q 1690 410 1800 466 
+Q 1910 522 2011 603 
+Q 2112 685 2208 787 
+L 2208 1459 
+Q 1814 1446 1537 1396 
+Q 1261 1347 1086 1267 
+Q 912 1187 833 1078 
+Q 755 970 755 835 
+Q 755 707 796 614 
+Q 838 522 910 462 
+Q 982 403 1080 376 
+Q 1178 349 1290 349 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-3e" d="M 106 3242 
+L 554 3242 
+Q 621 3242 667 3206 
+Q 714 3171 730 3123 
+L 1350 1037 
+Q 1376 925 1398 817 
+Q 1421 710 1437 605 
+Q 1462 710 1494 817 
+Q 1526 925 1562 1037 
+L 2246 3136 
+Q 2262 3184 2302 3216 
+Q 2342 3248 2400 3248 
+L 2650 3248 
+Q 2714 3248 2755 3216 
+Q 2797 3184 2813 3136 
+L 3482 1037 
+Q 3514 925 3542 816 
+Q 3571 707 3597 602 
+Q 3616 707 3640 814 
+Q 3664 922 3693 1037 
+L 4326 3123 
+Q 4342 3174 4387 3208 
+Q 4432 3242 4493 3242 
+L 4922 3242 
+L 3872 0 
+L 3421 0 
+Q 3338 0 3306 109 
+L 2589 2307 
+Q 2563 2381 2547 2456 
+Q 2531 2531 2515 2605 
+Q 2499 2531 2481 2454 
+Q 2464 2378 2442 2304 
+L 1712 109 
+Q 1683 0 1584 0 
+L 1155 0 
+L 106 3242 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-2c" d="M 451 0 
+L 451 4714 
+L 1024 4714 
+L 1024 2806 
+Q 1232 3027 1485 3160 
+Q 1738 3293 2067 3293 
+Q 2333 3293 2536 3205 
+Q 2739 3117 2875 2955 
+Q 3011 2794 3081 2566 
+Q 3152 2339 3152 2064 
+L 3152 0 
+L 2579 0 
+L 2579 2064 
+Q 2579 2432 2411 2635 
+Q 2243 2838 1901 2838 
+Q 1645 2838 1425 2716 
+Q 1206 2595 1024 2387 
+L 1024 0 
+L 451 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-9a7" d="M 138 0 
+L 138 0 
+z
+M 1446 -51 
+Q 1062 -51 856 163 
+Q 650 378 650 781 
+L 650 2765 
+L 259 2765 
+Q 208 2765 173 2795 
+Q 138 2826 138 2890 
+L 138 3117 
+L 669 3184 
+L 800 4186 
+Q 810 4234 843 4264 
+Q 877 4294 931 4294 
+L 1219 4294 
+L 1219 3178 
+L 3459 3178 
+L 3459 0 
+L 2890 0 
+L 2890 2765 
+L 1219 2765 
+L 1219 819 
+Q 1219 614 1318 515 
+Q 1418 416 1574 416 
+Q 1664 416 1729 440 
+Q 1795 464 1843 493 
+Q 1891 522 1924 546 
+Q 1958 570 1984 570 
+Q 2029 570 2064 515 
+L 2230 243 
+Q 2083 106 1875 27 
+Q 1667 -51 1446 -51 
+z
+M 3600 4282 
+Q 3600 4198 3566 4126 
+Q 3533 4054 3477 4000 
+Q 3421 3946 3347 3914 
+Q 3274 3882 3191 3882 
+Q 3108 3882 3036 3914 
+Q 2964 3946 2909 4000 
+Q 2855 4054 2823 4126 
+Q 2791 4198 2791 4282 
+Q 2791 4365 2823 4440 
+Q 2855 4515 2909 4571 
+Q 2964 4627 3036 4659 
+Q 3108 4691 3191 4691 
+Q 3274 4691 3347 4659 
+Q 3421 4627 3477 4571 
+Q 3533 4515 3566 4440 
+Q 3600 4365 3600 4282 
+z
+" transform="scale(0.015625)"/>
+       <path id="cylinder-convergence-scheme-Lato-Regular-26" d="M 2794 0 
+Q 2672 0 2640 118 
+L 2589 512 
+Q 2381 259 2113 107 
+Q 1846 -45 1501 -45 
+Q 1222 -45 995 62 
+Q 768 170 608 378 
+Q 448 586 361 896 
+Q 275 1206 275 1610 
+Q 275 1968 371 2277 
+Q 467 2586 646 2813 
+Q 826 3040 1086 3169 
+Q 1347 3299 1674 3299 
+Q 1971 3299 2184 3198 
+Q 2397 3098 2563 2915 
+L 2563 4714 
+L 3133 4714 
+L 3133 0 
+L 2794 0 
+z
+M 1686 416 
+Q 1968 416 2177 544 
+Q 2387 672 2563 906 
+L 2563 2470 
+Q 2403 2682 2217 2768 
+Q 2032 2854 1802 2854 
+Q 1350 2854 1107 2531 
+Q 864 2208 864 1610 
+Q 864 1293 918 1067 
+Q 973 842 1078 696 
+Q 1184 550 1337 483 
+Q 1491 416 1686 416 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-18"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3c" transform="translate(60.609375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-32" transform="translate(116.359375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2b" transform="translate(172.15625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-27" transform="translate(223.359375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-67" transform="translate(276.15625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-f" transform="translate(334.15625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3c" transform="translate(397.859375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-127" transform="translate(453.609375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-21" transform="translate(521.90625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2" transform="translate(571.609375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3e" transform="translate(595.15625 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2d" transform="translate(673.703125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3b" transform="translate(697.703125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2c" transform="translate(733.546875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2" transform="translate(789.34375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-31" transform="translate(814.9375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-3c" transform="translate(897.1875 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-a3" transform="translate(952.9375 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-9a7" transform="translate(976.53125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2b" transform="translate(1038.125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-38" transform="translate(1090.125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-2d" transform="translate(1126.53125 0)"/>
+      <use xlink:href="#cylinder-convergence-scheme-Lato-Regular-26" transform="translate(1150.53125 0)"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="cylinder-convergence-scheme-p21af7263ad">
+   <rect x="43.735553" y="3.00024" width="457.264207" height="266.39952"/>
+  </clipPath>
+ </defs>
+</svg>
+`;export{e as default};

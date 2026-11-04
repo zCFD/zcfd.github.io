@@ -1382,14 +1382,14 @@ L 479.807055 7.42774
 " clip-path="url(#plate-wall-temperature-p4d4aa33039)" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #6b6b6b; stroke-width: 1.2"/>
    </g>
    <g id="plate-wall-temperature-line2d_30">
-    <path class="zc-stroke-series-1" d="M 478.164007 265.167149 
-L 477.520657 260.681296 
+    <path class="zc-stroke-series-1" d="M 478.164092 265.167149 
+L 477.520742 260.681296 
 L 477.141006 255.673807 
 L 476.829532 249.845077 
 L 476.543561 242.846369 
 L 476.261416 234.258937 
 L 475.967114 223.568987 
-L 475.643059 210.13693 
+L 475.642974 210.13693 
 L 475.230594 193.159106 
 L 474.679564 171.619711 
 L 474.139501 144.230032 
@@ -1412,14 +1412,14 @@ z
 " style="stroke: #2a78d6"/>
     </defs>
     <g clip-path="url(#plate-wall-temperature-p4d4aa33039)">
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="478.164007" y="265.167149" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="477.520657" y="260.681296" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="478.164092" y="265.167149" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="477.520742" y="260.681296" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="477.141006" y="255.673807" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="476.829532" y="249.845077" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="476.543561" y="242.846369" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="476.261416" y="234.258937" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="475.967114" y="223.568987" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="475.643059" y="210.13693" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="475.642974" y="210.13693" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="475.230594" y="193.159106" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="474.679564" y="171.619711" style="fill: #2a78d6; stroke: #2a78d6"/>
      <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-temperature-mee939779fa" x="474.139501" y="144.230032" style="fill: #2a78d6; stroke: #2a78d6"/>
@@ -1430,21 +1430,21 @@ z
     </g>
    </g>
    <g id="plate-wall-temperature-line2d_31">
-    <path class="zc-stroke-series-2" d="M 298.425768 265.167149 
-L 314.948158 260.681296 
-L 329.138107 255.673807 
-L 341.961448 249.845077 
-L 354.032203 242.846369 
-L 365.822725 234.258937 
-L 377.689925 223.568987 
-L 389.956414 210.13693 
-L 402.998611 193.159106 
-L 417.514528 171.619711 
-L 436.612952 144.230032 
-L 457.406289 109.351289 
-L 470.139478 64.896653 
-L 473.612359 8.206349 
-L 473.635605 -1 
+    <path class="zc-stroke-series-2" d="M 299.430832 265.167149 
+L 315.833061 260.681296 
+L 329.889928 255.673807 
+L 342.577893 249.845077 
+L 354.516926 242.846369 
+L 366.184269 234.258937 
+L 377.942063 223.568987 
+L 390.117676 210.13693 
+L 403.091016 193.159106 
+L 417.560858 171.619711 
+L 436.633949 144.230032 
+L 457.41564 109.351289 
+L 470.142368 64.896653 
+L 473.612104 8.206349 
+L 473.635285 -1 
 " clip-path="url(#plate-wall-temperature-p4d4aa33039)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
     <defs>
      <path class="zc-stroke-series-2" id="plate-wall-temperature-meef1cf6f35" d="M -2 2 
@@ -1455,21 +1455,21 @@ z
 " style="stroke: #eb6834; stroke-linejoin: miter"/>
     </defs>
     <g clip-path="url(#plate-wall-temperature-p4d4aa33039)">
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="298.425768" y="265.167149" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="314.948158" y="260.681296" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="329.138107" y="255.673807" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="341.961448" y="249.845077" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="354.032203" y="242.846369" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="365.822725" y="234.258937" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="377.689925" y="223.568987" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="389.956414" y="210.13693" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="402.998611" y="193.159106" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="417.514528" y="171.619711" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="436.612952" y="144.230032" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="457.406289" y="109.351289" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="470.139478" y="64.896653" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="473.612359" y="8.206349" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="473.635605" y="-1" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="299.430832" y="265.167149" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="315.833061" y="260.681296" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="329.889928" y="255.673807" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="342.577893" y="249.845077" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="354.516926" y="242.846369" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="366.184269" y="234.258937" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="377.942063" y="223.568987" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="390.117676" y="210.13693" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="403.091016" y="193.159106" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="417.560858" y="171.619711" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="436.633949" y="144.230032" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="457.41564" y="109.351289" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="470.142368" y="64.896653" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="473.612104" y="8.206349" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-temperature-meef1cf6f35" x="473.635285" y="-1" style="fill: #eb6834; stroke: #eb6834; stroke-linejoin: miter"/>
     </g>
    </g>
    <g id="plate-wall-temperature-patch_3">

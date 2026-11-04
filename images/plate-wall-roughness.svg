@@ -1301,145 +1301,145 @@ L 500.99976 14.746534
 " clip-path="url(#plate-wall-roughness-p38535d585d)" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #6b6b6b; stroke-width: 1.2"/>
    </g>
    <g id="plate-wall-roughness-line2d_49">
-    <path class="zc-stroke-reference" d="M 35.39274 260.925662 
-L 39.305404 259.576578 
-L 43.218068 258.227494 
-L 47.130732 256.878411 
-L 51.043396 255.529327 
-L 54.95606 254.180243 
-L 58.868724 252.83116 
-L 62.781388 251.482076 
-L 66.694052 250.132992 
-L 70.606716 248.783909 
-L 74.51938 247.434825 
-L 78.432044 246.085741 
-L 82.344708 244.736658 
-L 86.257372 243.387574 
-L 90.170036 242.03849 
-L 94.082701 240.689406 
-L 97.995365 239.340323 
-L 101.908029 237.991239 
-L 105.820693 236.642155 
-L 109.733357 235.293072 
-L 113.646021 233.943988 
-L 117.558685 232.594904 
-L 121.471349 231.245821 
-L 125.384013 229.896737 
-L 129.296677 228.547653 
-L 133.209341 227.19857 
-L 137.122005 225.849486 
-L 141.034669 224.500402 
-L 144.947333 223.151318 
-L 148.859997 221.802235 
-L 152.772661 220.453151 
-L 156.685325 219.104067 
-L 160.597989 217.754984 
-L 164.510653 216.4059 
-L 168.423317 215.056816 
-L 172.335981 213.707733 
-L 176.248645 212.358649 
-L 180.161309 211.009565 
-L 184.073973 209.660481 
-L 187.986637 208.311398 
-L 191.899301 206.962314 
-L 195.811965 205.61323 
-L 199.724629 204.264147 
-L 203.637293 202.915063 
-L 207.549957 201.565979 
-L 211.462622 200.216896 
-L 215.375286 198.867812 
-L 219.28795 197.518728 
-L 223.200614 196.169645 
-L 227.113278 194.820561 
-L 231.025942 193.471477 
-L 234.938606 192.122393 
-L 238.85127 190.77331 
-L 242.763934 189.424226 
-L 246.676598 188.075142 
-L 250.589262 186.726059 
-L 254.501926 185.376975 
-L 258.41459 184.027891 
-L 262.327254 182.678808 
-L 266.239918 181.329724 
-L 270.152582 179.98064 
-L 274.065246 178.631557 
-L 277.97791 177.282473 
-L 281.890574 175.933389 
-L 285.803238 174.584305 
-L 289.715902 173.235222 
-L 293.628566 171.886138 
-L 297.54123 170.537054 
-L 301.453894 169.187971 
-L 305.366558 167.838887 
-L 309.279222 166.489803 
-L 313.191886 165.14072 
-L 317.10455 163.791636 
-L 321.017214 162.442552 
-L 324.929878 161.093468 
-L 328.842543 159.744385 
-L 332.755207 158.395301 
-L 336.667871 157.046217 
-L 340.580535 155.697134 
-L 344.493199 154.34805 
-L 348.405863 152.998966 
-L 352.318527 151.649883 
-L 356.231191 150.300799 
-L 360.143855 148.951715 
-L 364.056519 147.602632 
-L 367.969183 146.253548 
-L 371.881847 144.904464 
-L 375.794511 143.55538 
-L 379.707175 142.206297 
-L 383.619839 140.857213 
-L 387.532503 139.508129 
-L 391.445167 138.159046 
-L 395.357831 136.809962 
-L 399.270495 135.460878 
-L 403.183159 134.111795 
-L 407.095823 132.762711 
-L 411.008487 131.413627 
-L 414.921151 130.064544 
-L 418.833815 128.71546 
-L 422.746479 127.366376 
-L 426.659143 126.017292 
-L 430.571807 124.668209 
-L 434.484471 123.319125 
-L 438.397135 121.970041 
-L 442.309799 120.620958 
-L 446.222464 119.271874 
-L 450.135128 117.92279 
-L 454.047792 116.573707 
-L 457.960456 115.224623 
-L 461.87312 113.875539 
-L 465.785784 112.526455 
-L 469.698448 111.177372 
-L 473.611112 109.828288 
-L 477.523776 108.479204 
-L 481.43644 107.130121 
-L 485.349104 105.781037 
-L 489.261768 104.431953 
-L 493.174432 103.08287 
-L 497.087096 101.733786 
-L 500.99976 100.384702 
+    <path class="zc-stroke-reference" d="M 35.39274 260.925654 
+L 39.305404 259.576571 
+L 43.218068 258.227487 
+L 47.130732 256.878403 
+L 51.043396 255.529319 
+L 54.95606 254.180236 
+L 58.868724 252.831152 
+L 62.781388 251.482068 
+L 66.694052 250.132985 
+L 70.606716 248.783901 
+L 74.51938 247.434817 
+L 78.432044 246.085734 
+L 82.344708 244.73665 
+L 86.257372 243.387566 
+L 90.170036 242.038483 
+L 94.082701 240.689399 
+L 97.995365 239.340315 
+L 101.908029 237.991231 
+L 105.820693 236.642148 
+L 109.733357 235.293064 
+L 113.646021 233.94398 
+L 117.558685 232.594897 
+L 121.471349 231.245813 
+L 125.384013 229.896729 
+L 129.296677 228.547646 
+L 133.209341 227.198562 
+L 137.122005 225.849478 
+L 141.034669 224.500395 
+L 144.947333 223.151311 
+L 148.859997 221.802227 
+L 152.772661 220.453143 
+L 156.685325 219.10406 
+L 160.597989 217.754976 
+L 164.510653 216.405892 
+L 168.423317 215.056809 
+L 172.335981 213.707725 
+L 176.248645 212.358641 
+L 180.161309 211.009558 
+L 184.073973 209.660474 
+L 187.986637 208.31139 
+L 191.899301 206.962306 
+L 195.811965 205.613223 
+L 199.724629 204.264139 
+L 203.637293 202.915055 
+L 207.549957 201.565972 
+L 211.462622 200.216888 
+L 215.375286 198.867804 
+L 219.28795 197.518721 
+L 223.200614 196.169637 
+L 227.113278 194.820553 
+L 231.025942 193.47147 
+L 234.938606 192.122386 
+L 238.85127 190.773302 
+L 242.763934 189.424218 
+L 246.676598 188.075135 
+L 250.589262 186.726051 
+L 254.501926 185.376967 
+L 258.41459 184.027884 
+L 262.327254 182.6788 
+L 266.239918 181.329716 
+L 270.152582 179.980633 
+L 274.065246 178.631549 
+L 277.97791 177.282465 
+L 281.890574 175.933382 
+L 285.803238 174.584298 
+L 289.715902 173.235214 
+L 293.628566 171.88613 
+L 297.54123 170.537047 
+L 301.453894 169.187963 
+L 305.366558 167.838879 
+L 309.279222 166.489796 
+L 313.191886 165.140712 
+L 317.10455 163.791628 
+L 321.017214 162.442545 
+L 324.929878 161.093461 
+L 328.842543 159.744377 
+L 332.755207 158.395293 
+L 336.667871 157.04621 
+L 340.580535 155.697126 
+L 344.493199 154.348042 
+L 348.405863 152.998959 
+L 352.318527 151.649875 
+L 356.231191 150.300791 
+L 360.143855 148.951708 
+L 364.056519 147.602624 
+L 367.969183 146.25354 
+L 371.881847 144.904457 
+L 375.794511 143.555373 
+L 379.707175 142.206289 
+L 383.619839 140.857205 
+L 387.532503 139.508122 
+L 391.445167 138.159038 
+L 395.357831 136.809954 
+L 399.270495 135.460871 
+L 403.183159 134.111787 
+L 407.095823 132.762703 
+L 411.008487 131.41362 
+L 414.921151 130.064536 
+L 418.833815 128.715452 
+L 422.746479 127.366368 
+L 426.659143 126.017285 
+L 430.571807 124.668201 
+L 434.484471 123.319117 
+L 438.397135 121.970034 
+L 442.309799 120.62095 
+L 446.222464 119.271866 
+L 450.135128 117.922783 
+L 454.047792 116.573699 
+L 457.960456 115.224615 
+L 461.87312 113.875532 
+L 465.785784 112.526448 
+L 469.698448 111.177364 
+L 473.611112 109.82828 
+L 477.523776 108.479197 
+L 481.43644 107.130113 
+L 485.349104 105.781029 
+L 489.261768 104.431946 
+L 493.174432 103.082862 
+L 497.087096 101.733778 
+L 500.99976 100.384695 
 " clip-path="url(#plate-wall-roughness-p38535d585d)" style="fill: none; stroke-dasharray: 1.4,2.31; stroke-dashoffset: 0; stroke: #6b6b6b; stroke-width: 1.4"/>
    </g>
    <g id="plate-wall-roughness-line2d_50">
-    <path class="zc-stroke-series-1" d="M 156.379181 135.291871 
-L 200.644825 112.884545 
-L 228.445939 101.425792 
-L 250.126339 92.642441 
-L 268.867412 84.983327 
-L 286.031939 77.76232 
-L 302.301273 70.552808 
-L 318.045897 62.969263 
-L 333.477256 53.851485 
-L 348.719525 42.518162 
-L 363.846902 32.466088 
-L 378.904197 27.683229 
-L 393.918635 26.763172 
-L 408.906828 26.725955 
-L 423.878929 26.727513 
-L 438.841169 26.729123 
+    <path class="zc-stroke-series-1" d="M 156.379165 135.291872 
+L 200.64481 112.884542 
+L 228.445924 101.425787 
+L 250.126323 92.642434 
+L 268.867397 84.983332 
+L 286.031923 77.762323 
+L 302.301258 70.55281 
+L 318.045882 62.969263 
+L 333.47724 53.851484 
+L 348.71951 42.518146 
+L 363.846887 32.466069 
+L 378.904182 27.68321 
+L 393.91862 26.763153 
+L 408.906813 26.725962 
+L 423.878914 26.727493 
+L 438.841153 26.72913 
 " clip-path="url(#plate-wall-roughness-p38535d585d)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: square"/>
     <defs>
      <path class="zc-stroke-series-1" id="plate-wall-roughness-m1ba0321b81" d="M 0 2.5 
@@ -1455,41 +1455,41 @@ z
 " style="stroke: #2a78d6"/>
     </defs>
     <g clip-path="url(#plate-wall-roughness-p38535d585d)">
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="156.379181" y="135.291871" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="200.644825" y="112.884545" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="228.445939" y="101.425792" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="250.126339" y="92.642441" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="268.867412" y="84.983327" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="286.031939" y="77.76232" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="302.301273" y="70.552808" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="318.045897" y="62.969263" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="333.477256" y="53.851485" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="348.719525" y="42.518162" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="363.846902" y="32.466088" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="378.904197" y="27.683229" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="393.918635" y="26.763172" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="408.906828" y="26.725955" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="423.878929" y="26.727513" style="fill: #2a78d6; stroke: #2a78d6"/>
-     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="438.841169" y="26.729123" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="156.379165" y="135.291872" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="200.64481" y="112.884542" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="228.445924" y="101.425787" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="250.126323" y="92.642434" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="268.867397" y="84.983332" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="286.031923" y="77.762323" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="302.301258" y="70.55281" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="318.045882" y="62.969263" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="333.47724" y="53.851484" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="348.71951" y="42.518146" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="363.846887" y="32.466069" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="378.904182" y="27.68321" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="393.91862" y="26.763153" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="408.906813" y="26.725962" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="423.878914" y="26.727493" style="fill: #2a78d6; stroke: #2a78d6"/>
+     <use class="zc-stroke-series-1 zc-fill-series-1" xlink:href="#plate-wall-roughness-m1ba0321b81" x="438.841153" y="26.72913" style="fill: #2a78d6; stroke: #2a78d6"/>
     </g>
    </g>
    <g id="plate-wall-roughness-line2d_51">
-    <path class="zc-stroke-series-2" d="M 175.086409 201.821651 
-L 219.352053 185.864511 
-L 247.153167 175.878133 
-L 268.833567 167.971898 
-L 287.57464 161.0227 
-L 304.739167 154.50994 
-L 321.008501 148.129683 
-L 336.753125 141.653555 
-L 352.184484 134.852889 
-L 367.426753 127.425779 
-L 382.55413 118.179198 
-L 397.611425 106.414447 
-L 412.625863 95.952897 
-L 427.614056 91.052681 
-L 442.586157 90.140543 
-L 457.548396 90.10235 
+    <path class="zc-stroke-series-2" d="M 175.086387 201.821662 
+L 219.352031 185.864525 
+L 247.153145 175.878146 
+L 268.833545 167.971908 
+L 287.574618 161.022716 
+L 304.739144 154.509943 
+L 321.008479 148.129683 
+L 336.753103 141.653551 
+L 352.184461 134.852883 
+L 367.426731 127.425769 
+L 382.554108 118.179183 
+L 397.611403 106.414416 
+L 412.625841 95.952872 
+L 427.614034 91.052652 
+L 442.586135 90.140514 
+L 457.548374 90.102321 
 " clip-path="url(#plate-wall-roughness-p38535d585d)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
     <defs>
      <path class="zc-stroke-series-2" id="plate-wall-roughness-mbfff46a2b5" d="M 0 2.5 
@@ -1505,22 +1505,22 @@ z
 " style="stroke: #eb6834"/>
     </defs>
     <g clip-path="url(#plate-wall-roughness-p38535d585d)">
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="175.086409" y="201.821651" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="219.352053" y="185.864511" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="247.153167" y="175.878133" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="268.833567" y="167.971898" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="287.57464" y="161.0227" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="304.739167" y="154.50994" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="321.008501" y="148.129683" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="336.753125" y="141.653555" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="352.184484" y="134.852889" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="367.426753" y="127.425779" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="382.55413" y="118.179198" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="397.611425" y="106.414447" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="412.625863" y="95.952897" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="427.614056" y="91.052681" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="442.586157" y="90.140543" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="457.548396" y="90.10235" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="175.086387" y="201.821662" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="219.352031" y="185.864525" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="247.153145" y="175.878146" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="268.833545" y="167.971908" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="287.574618" y="161.022716" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="304.739144" y="154.509943" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="321.008479" y="148.129683" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="336.753103" y="141.653551" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="352.184461" y="134.852883" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="367.426731" y="127.425769" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="382.554108" y="118.179183" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="397.611403" y="106.414416" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="412.625841" y="95.952872" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="427.614034" y="91.052652" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="442.586135" y="90.140514" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-roughness-mbfff46a2b5" x="457.548374" y="90.102321" style="fill: #eb6834; stroke: #eb6834"/>
     </g>
    </g>
    <g id="plate-wall-roughness-patch_3">

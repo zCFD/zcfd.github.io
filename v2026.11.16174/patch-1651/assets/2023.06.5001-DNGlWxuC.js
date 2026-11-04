@@ -1,0 +1,20 @@
+var e=`
+# 2023.06.5001
+
+## New features
+
+- Added incompressible LES, selected with the \`incomp les\` equation set.
+- The incompressible solver can time-average the solution, hold a fixed \`mass flow rate\` at inflow and outflow boundaries, and report the mass flow through each boundary.
+- Added FW-H surface data output for acoustic post-processing.
+- Mesh morphing can run on the GPU, new output variables are available, and \`vtkToEnsight\` converts output to EnSight format.
+
+## Changes in behaviour
+
+- \`run_zcfd\` takes the mesh with \`-m\`. The status file names the mesh under the key \`mesh\`.
+- \`cfl\` defaults to 1.0 when it is not set, and the incompressible \`relax\` must lie between 0.1 and 1.
+- Incompressible \`pressureforce\` output is relative to the reference pressure, and an inflow boundary's total pressure and total temperature ratios are relative to its own reference conditions.
+
+## Fixes
+
+- Improved robustness and accuracy of incompressible, overset and FSI workflows.
+`;export{e as default};

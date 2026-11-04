@@ -1,0 +1,7 @@
+var e=`
+# 2024.10.9337
+
+## Fixes
+
+- Improved robustness of rotating-frame, aeroelastic and acoustic workflows.
+`;export{e as default};

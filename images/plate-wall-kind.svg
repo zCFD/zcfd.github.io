@@ -1390,60 +1390,60 @@ L 500.99976 14.746534
 " clip-path="url(#plate-wall-kind-pbbacc3e313)" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #6b6b6b; stroke-width: 1.2"/>
    </g>
    <g id="plate-wall-kind-line2d_70">
-    <path class="zc-stroke-series-1" d="M 111.688117 260.763187 
-L 139.252988 253.921851 
-L 156.565156 246.295605 
-L 170.065861 237.467503 
-L 181.736205 227.05192 
-L 192.424808 214.877352 
-L 202.555965 201.394537 
-L 212.360375 188.009972 
-L 221.969712 176.408076 
-L 231.461296 167.232073 
-L 240.881342 159.97704 
-L 250.257743 153.875364 
-L 259.607455 148.374111 
-L 268.940823 143.154004 
-L 278.264176 138.045695 
-L 287.581383 132.961122 
-L 296.894822 127.851928 
-L 306.205944 122.685813 
-L 315.51565 117.433613 
-L 324.824482 112.061566 
-L 334.13278 106.526988 
-L 343.440749 100.775797 
-L 352.748517 94.741625 
-L 362.056163 88.346396 
-L 371.363732 81.502369 
-L 380.671254 74.118259 
-L 389.978747 66.116248 
-L 399.286223 57.480148 
-L 408.593686 48.393337 
-L 417.901146 39.89512 
-L 427.208602 34.868006 
-L 436.516052 33.655747 
-L 445.823502 33.587043 
-L 455.130952 33.587607 
-L 464.4384 33.588378 
+    <path class="zc-stroke-series-1" d="M 111.810534 260.742268 
+L 139.375406 253.878778 
+L 156.687574 246.227944 
+L 170.188279 237.371947 
+L 181.858623 226.925595 
+L 192.547226 214.72164 
+L 202.678382 201.221459 
+L 212.482792 187.842174 
+L 222.092129 176.262914 
+L 231.583714 167.109892 
+L 241.003759 159.869163 
+L 250.38016 153.773929 
+L 259.729872 148.274183 
+L 269.063241 143.05284 
+L 278.386593 137.941728 
+L 287.7038 132.853468 
+L 297.01724 127.73999 
+L 306.328362 122.56911 
+L 315.638067 117.3117 
+L 324.9469 111.93401 
+L 334.255197 106.393223 
+L 343.563167 100.635151 
+L 352.870934 94.593252 
+L 362.17858 88.189184 
+L 371.48615 81.334903 
+L 380.793672 73.938739 
+L 390.101165 65.922389 
+L 399.408641 57.269079 
+L 408.716104 48.161764 
+L 418.023563 39.636538 
+L 427.331019 34.584332 
+L 436.638469 33.361852 
+L 445.945919 33.29211 
+L 455.25337 33.292701 
+L 464.560817 33.293472 
 " clip-path="url(#plate-wall-kind-pbbacc3e313)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: square"/>
    </g>
    <g id="plate-wall-kind-line2d_71">
-    <path class="zc-stroke-series-2" d="M 287.825056 136.473625 
-L 315.389929 120.362273 
-L 332.702095 110.192009 
-L 346.202802 101.831468 
-L 357.873146 94.133936 
-L 368.561751 86.552804 
-L 378.692907 78.767094 
-L 388.497318 70.567735 
-L 398.106654 61.844865 
-L 407.598241 52.679845 
-L 417.018283 43.65244 
-L 426.394684 37.532336 
-L 435.744397 35.610118 
-L 445.077767 35.446175 
-L 454.401117 35.446226 
-L 463.718325 35.447676 
+    <path class="zc-stroke-series-2" d="M 287.825051 136.473626 
+L 315.389925 120.362271 
+L 332.702091 110.192006 
+L 346.202797 101.831463 
+L 357.873141 94.133942 
+L 368.561747 86.552809 
+L 378.692902 78.767085 
+L 388.497313 70.567725 
+L 398.106649 61.844853 
+L 407.598236 52.679856 
+L 417.018278 43.652424 
+L 426.394679 37.532319 
+L 435.744393 35.610076 
+L 445.077763 35.446158 
+L 454.401112 35.446209 
+L 463.71832 35.447659 
 " clip-path="url(#plate-wall-kind-pbbacc3e313)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: square"/>
     <defs>
      <path class="zc-stroke-series-2" id="plate-wall-kind-mf245181a2c" d="M 0 2.5 
@@ -1459,22 +1459,22 @@ z
 " style="stroke: #eb6834"/>
     </defs>
     <g clip-path="url(#plate-wall-kind-pbbacc3e313)">
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="287.825056" y="136.473625" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="315.389929" y="120.362273" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="332.702095" y="110.192009" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="346.202802" y="101.831468" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="357.873146" y="94.133936" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="368.561751" y="86.552804" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="378.692907" y="78.767094" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="388.497318" y="70.567735" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="398.106654" y="61.844865" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="407.598241" y="52.679845" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="417.018283" y="43.65244" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="426.394684" y="37.532336" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="435.744397" y="35.610118" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="445.077767" y="35.446175" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="454.401117" y="35.446226" style="fill: #eb6834; stroke: #eb6834"/>
-     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="463.718325" y="35.447676" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="287.825051" y="136.473626" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="315.389925" y="120.362271" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="332.702091" y="110.192006" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="346.202797" y="101.831463" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="357.873141" y="94.133942" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="368.561747" y="86.552809" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="378.692902" y="78.767085" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="388.497313" y="70.567725" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="398.106649" y="61.844853" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="407.598236" y="52.679856" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="417.018278" y="43.652424" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="426.394679" y="37.532319" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="435.744393" y="35.610076" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="445.077763" y="35.446158" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="454.401112" y="35.446209" style="fill: #eb6834; stroke: #eb6834"/>
+     <use class="zc-stroke-series-2 zc-fill-series-2" xlink:href="#plate-wall-kind-mf245181a2c" x="463.71832" y="35.447659" style="fill: #eb6834; stroke: #eb6834"/>
     </g>
    </g>
    <g id="plate-wall-kind-patch_3">
