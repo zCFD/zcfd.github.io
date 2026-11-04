@@ -8,8 +8,8 @@ var e=`
 | Operating system | 64-bit x86 Linux with glibc 2.28 or newer, such as RHEL, Rocky Linux or AlmaLinux 8 or newer, or Ubuntu 20.04 or newer                                             |
 | Windows          | Windows 10 or 11, through [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)                                                                            |
 | NVIDIA GPU       | Compute capability 8.0, 8.6, 8.9, 9.0, 10.0 or 12.x: Ampere, Ada Lovelace, Hopper and Blackwell (see [Compute Capability](https://developer.nvidia.com/cuda-gpus)) |
-| NVIDIA driver    | 570 or newer                                                                                                                                                       |
-| CUDA             | The CUDA 12.8 runtime is included with zCFD; no CUDA toolkit is needed                                                                                             |
+| NVIDIA driver    | 580 or newer                                                                                                                                                       |
+| CUDA             | The CUDA 13.4 runtime is included with zCFD; no CUDA toolkit is needed                                                                                             |
 | MPI              | Intel MPI 2021.13 is included with zCFD                                                                                                                            |
 | Python           | Python 3.12 is included with zCFD                                                                                                                                  |
 

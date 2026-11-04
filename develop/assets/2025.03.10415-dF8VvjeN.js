@@ -1,0 +1,12 @@
+var e=`
+# 2025.03.10415
+
+## Fixes
+
+- Improved robustness of rotating fluid zones and GPU device selection.
+
+## Platforms and packaging
+
+- The GPU build supports NVIDIA Hopper and Ada Lovelace GPUs and requires a driver compatible with CUDA 12.3.
+- zCFD runs on Linux distributions with glibc 2.28 or later.
+`;export{e as default};

@@ -900,7 +900,7 @@ Run it:
 python plot_entry_pressure_gradient.py
 ```
 
-It plots the entry pressure gradient against time. The maximum is 9660 Pa/s, within the 8800 Pa/s to 9700 Pa/s
+It plots the entry pressure gradient against time. The maximum is 9590 Pa/s, within the 8800 Pa/s to 9700 Pa/s
 the standard specifies.
 
 ![Entry Pressure Gradient.](/images/tutorial-5-entry-pressure-gradient.png)

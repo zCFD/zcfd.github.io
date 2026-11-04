@@ -1,0 +1,11 @@
+var e=`
+# 2022.03.1467
+
+## New features
+
+- Setting the environment variable \`ZCFD_DISABLE_PINNED\` lets the GPU solver run on systems that restrict pinned host memory.
+
+## Fixes
+
+- Improved robustness of moving-mesh workflows on the GPU.
+`;export{e as default};

@@ -1,0 +1,17 @@
+var e=`
+# 2016.1.1
+
+## New features
+
+- A parallel finite-volume solver for compressible inviscid, laminar and turbulent flow, with RANS, scale-adaptive and transition models.
+- A high-order discontinuous Galerkin solver for inviscid, viscous and LES flows on mixed-element meshes, with variable polynomial order.
+- Steady and unsteady time marching with convergence acceleration and low-Mach preconditioning.
+- A full set of boundary conditions, with rotating frames, moving walls and fluid zones for canopies, momentum sources and actuator discs.
+- Atmospheric boundary-layer flows with buoyancy and Coriolis effects.
+- Mesh import from Fluent, CGNS, STAR-CCM+ and UGRID, with run-time partitioning and mesh morphing.
+- Runs in parallel on CPUs and NVIDIA GPUs, with surface and volume output, in-situ processing through ParaView Catalyst, force reports and restarts.
+
+## Validation cases
+
+- The verification guide covers the Drag Prediction Workshop Common Research Model and the Ahmed body.
+`;export{e as default};
